@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=pobatch
+Exec=/usr/bin/pobatch %f
+Type=Application
+MimeType=application/x-pobatch
+Terminal=false
+Icon=x-pobatch
+Categories=Development;
+StartupWMClass=Padxml

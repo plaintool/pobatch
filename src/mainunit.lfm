@@ -1,0 +1,144 @@
+object formPoBatch: TformPoBatch
+  Left = 318
+  Height = 457
+  Top = 250
+  Width = 713
+  Caption = 'formPoBatch'
+  ClientHeight = 457
+  ClientWidth = 713
+  Color = clWindow
+  KeyPreview = True
+  Menu = MainMenu
+  LCLVersion = '4.6.0.0'
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnDropFiles = FormDropFiles
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 434
+    Width = 713
+    Panels = <>
+  end
+  object PanelFilter: TPanel
+    Left = 0
+    Height = 20
+    Top = 0
+    Width = 713
+    Align = alTop
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 20
+    ClientWidth = 713
+    ParentBackground = False
+    TabOrder = 1
+    object filter: TEdit
+      Left = 5
+      Height = 20
+      Top = 0
+      Width = 690
+      Align = alClient
+      BorderSpacing.Left = 5
+      BorderStyle = bsNone
+      Constraints.MinHeight = 20
+      TabOrder = 0
+      TextHint = 'Type to filter...'
+      OnChange = filterChange
+    end
+    object ButtonFilterClear: TSpeedButton
+      Left = 695
+      Height = 20
+      Top = 0
+      Width = 18
+      Align = alRight
+      Flat = True
+      Glyph.Data = {
+        32010000424D3201000000000000360000002800000009000000090000000100
+        180000000000FC00000064000000640000000000000000000000FFFFFFC9C9C9
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC9C9C9FFFFFF00F1F1F15C5C5CADADADFF
+        FFFFFFFFFFFFFFFFADADAD5C5C5CF1F1F100FFFFFFF1F1F15C5C5CADADADFFFF
+        FFADADAD5C5C5CF1F1F1FFFFFF00FFFFFFFFFFFFF1F1F15C5C5CADADAD5C5C5C
+        F1F1F1FFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFF1F1F15C5C5CF1F1F1FFFFFFFF
+        FFFFFFFFFF00FFFFFFFFFFFFF1F1F15C5C5CADADAD5C5C5CF1F1F1FFFFFFFFFF
+        FF00FFFFFFF1F1F15C5C5CADADADFFFFFFADADAD5C5C5CF1F1F1FFFFFF00F1F1
+        F15C5C5CADADADFFFFFFFFFFFFFFFFFFADADAD5C5C5CF1F1F100FFFFFFC9C9C9
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC9C9C9FFFFFF00
+      }
+      OnClick = ButtonFilterClearClick
+    end
+  end
+  object MainMenu: TMainMenu
+    Left = 72
+    Top = 40
+    object menuFile: TMenuItem
+      Caption = 'File'
+      object menuFileNew: TMenuItem
+        Caption = 'New'
+        ShortCut = 16462
+        OnClick = menuFileNewClick
+      end
+      object menuFileNewWindow: TMenuItem
+        Caption = 'New window'
+        ShortCut = 24654
+        OnClick = menuFileNewWindowClick
+      end
+      object menuFileOpen: TMenuItem
+        Caption = 'Open...'
+        ShortCut = 16463
+        OnClick = menuFileOpenClick
+      end
+      object menuFileSave: TMenuItem
+        Caption = 'Save'
+        ShortCut = 16467
+        OnClick = menuFileSaveClick
+      end
+      object menuFileSaveAs: TMenuItem
+        Caption = 'Save as...'
+        ShortCut = 24659
+        OnClick = menuFileSaveAsClick
+      end
+      object menuFileSeparator1: TMenuItem
+        Caption = '-'
+      end
+      object menuFileExit: TMenuItem
+        Caption = 'Exit'
+        OnClick = menuFileExitClick
+      end
+    end
+    object menuHelp: TMenuItem
+      Caption = 'Help'
+      object menuBuyMeACoffee: TMenuItem
+        Caption = 'Buy me a coffee...'
+        OnClick = menuBuyMeACoffeeClick
+      end
+      object menuAutoCheckUpdates: TMenuItem
+        AutoCheck = True
+        Caption = 'Auto check updates'
+        OnClick = menuAutoCheckUpdatesClick
+      end
+      object menuCheckForUpdates: TMenuItem
+        Caption = 'Check for updates'
+        OnClick = menuCheckForUpdatesClick
+      end
+      object menuAbout: TMenuItem
+        Caption = 'About...'
+        OnClick = menuAboutClick
+      end
+    end
+  end
+  object dialogOpen: TOpenDialog
+    Filter = 'Po File (*.po)|*.po'
+    Options = [ofOverwritePrompt, ofFileMustExist, ofEnableSizing, ofViewDetail]
+    Left = 144
+    Top = 40
+  end
+  object dialogSave: TSaveDialog
+    DefaultExt = '.po'
+    Filter = 'Po File (*.po)|*.po'
+    Left = 216
+    Top = 40
+  end
+end
