@@ -25,7 +25,7 @@ uses
   ExtCtrls,
   Process,
   Buttons,
-  LCLType,
+  LCLType, Grids,
   powrap;
 
 type
@@ -33,7 +33,7 @@ type
   { TformPoBatch }
 
   TformPoBatch = class(TForm)
-    filter: TEdit;
+    Filter: TEdit;
     MainMenu: TMainMenu;
     menuFile: TMenuItem;
     menuFileOpen: TMenuItem;
@@ -53,6 +53,7 @@ type
     menuFileSeparator1: TMenuItem;
     btnFilterClear: TSpeedButton;
     StatusBar: TStatusBar;
+    Grid: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -69,7 +70,7 @@ type
     procedure menuFileOpenClick(Sender: TObject);
     procedure menuFileSaveAsClick(Sender: TObject);
     procedure menuFileSaveClick(Sender: TObject);
-    procedure filterChange(Sender: TObject);
+    procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
   private
     PoFile: TPoFile;
@@ -289,7 +290,7 @@ begin
   end;
 end;
 
-procedure TformPoBatch.filterChange(Sender: TObject);
+procedure TformPoBatch.FilterChange(Sender: TObject);
 begin
   //propertyPad.TIObject := nil;
   //propertyPad.TIObject := PadFormat;
@@ -297,7 +298,7 @@ end;
 
 procedure TformPoBatch.btnFilterClearClick(Sender: TObject);
 begin
-  filter.Text := string.Empty;
+  Filter.Text := string.Empty;
   filterChange(Self);
 end;
 
@@ -632,14 +633,82 @@ begin
 end;
 
 procedure TformPoBatch.FillGrid;
-var test:TPoEntry;
+var
+  i, RowIndex: integer;
+  Entry: TPOEntry;
+  PrevStrings: TStrings;
+  PreviousText: string;
+  j: integer; // inner loop counter
 begin
-if FFileName = '' then exit;
-test:=PoFile.FindEntry('Parameters in the form key=value used by {key} in requests. If the value is omitted (key=), it will be requested from the user.');
+  // Guard: if PoFile is not assigned, just clear the grid
+  if not Assigned(PoFile) then
+  begin
+    Grid.RowCount := Grid.FixedRows;
+    Exit;
+  end;
 
-Test.IsFuzzy:=True;
-Test.IsPhpFormat:=False;
-Test.IsBoostFormat:=False;
+  // Disable visual updates for performance while filling
+  Grid.BeginUpdate;
+  try
+    // We will skip the header entry (MsgId = '') and count only translatable entries
+    RowIndex := Grid.FixedRows; // data rows start below fixed header rows
+    Grid.RowCount := RowIndex;  // reset to only fixed rows initially
+
+    for i := 0 to PoFile.Entries.Count - 1 do
+    begin
+      Entry := PoFile.Entries[i];
+
+      // Skip the header entry (empty msgid) – usually not shown in the grid
+      if Entry.MsgId = '' then
+        Continue;
+
+      // Add a new row
+      Grid.RowCount := Grid.RowCount + 1;
+
+      // Column 0: Row number (1-based)
+      Grid.Cells[0, RowIndex] := IntToStr(RowIndex - Grid.FixedRows + 1);
+
+      // Column 1: Original text (msgid)
+      Grid.Cells[1, RowIndex] := Entry.MsgId;
+
+      // Column 2: Translation (first msgstr, singular form)
+      Grid.Cells[2, RowIndex] := Entry.MsgStrSimple;
+
+      // Column 3: Previous untranslated text from "#|" comments
+      PrevStrings := Entry.GetCommentsOfType(poctPrevious);
+      try
+        if PrevStrings.Count > 0 then
+        begin
+          PreviousText := PrevStrings[0];
+          // Join multiple lines with the system default line break
+          for j := 1 to PrevStrings.Count - 1 do
+            PreviousText := PreviousText + sLineBreak + PrevStrings[j];
+        end
+        else
+          PreviousText := '';
+      finally
+        PrevStrings.Free;
+      end;
+      Grid.Cells[3, RowIndex] := PreviousText;
+
+      // Column 4: Fuzzy flag (1 if fuzzy, 0 otherwise)
+      if Entry.IsFuzzy then
+        Grid.Cells[4, RowIndex] := '1'
+      else
+        Grid.Cells[4, RowIndex] := '0';
+
+      Inc(RowIndex);
+    end;
+
+    // Optional: Make columns 3 and 4 invisible if they should stay hidden
+    // Grid.Columns[3].Visible := False;  // call these in form setup if needed
+    // Grid.Columns[4].Visible := False;
+
+    if (Grid.SortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
+      Grid.SortColRow(True, Grid.SortColumn);
+  finally
+    Grid.EndUpdate;
+  end;
 end;
 
 procedure TformPoBatch.SaveGrid;

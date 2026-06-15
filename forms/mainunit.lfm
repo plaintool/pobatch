@@ -9,6 +9,7 @@ object formPoBatch: TformPoBatch
   Color = clWindow
   KeyPreview = True
   Menu = MainMenu
+  ShowHint = True
   LCLVersion = '4.6.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -24,32 +25,34 @@ object formPoBatch: TformPoBatch
     Panels = <>
   end
   object PanelFilter: TPanel
-    Left = 0
+    Left = 1
     Height = 20
     Top = 0
-    Width = 713
+    Width = 707
     Align = alTop
     AutoSize = True
+    BorderSpacing.Left = 1
+    BorderSpacing.Right = 5
     BevelOuter = bvNone
     ClientHeight = 20
-    ClientWidth = 713
+    ClientWidth = 707
     ParentBackground = False
     TabOrder = 1
-    object filter: TEdit
+    object Filter: TEdit
       Left = 5
       Height = 20
       Top = 0
-      Width = 690
+      Width = 684
       Align = alClient
       BorderSpacing.Left = 5
       BorderStyle = bsNone
       Constraints.MinHeight = 20
       TabOrder = 0
       TextHint = 'Type to filter...'
-      OnChange = filterChange
+      OnChange = FilterChange
     end
     object btnFilterClear: TSpeedButton
-      Left = 695
+      Left = 689
       Height = 20
       Top = 0
       Width = 18
@@ -70,9 +73,45 @@ object formPoBatch: TformPoBatch
       OnClick = btnFilterClearClick
     end
   end
+  object Grid: TStringGrid
+    Left = 5
+    Height = 404
+    Top = 25
+    Width = 703
+    Align = alClient
+    BorderSpacing.Around = 5
+    BorderStyle = bsNone
+    ColumnClickSorts = True
+    Columns = <    
+      item
+        Title.Caption = 'Source Text'
+        Width = 320
+      end    
+      item
+        Title.Caption = 'Translation'
+        Width = 320
+      end    
+      item
+        Title.Caption = 'Old Text'
+        Visible = False
+      end    
+      item
+        ButtonStyle = cbsCheckboxColumn
+        Title.Caption = 'Fuzzy'
+        Visible = False
+      end>
+    DefaultColWidth = 48
+    FocusColor = clBlue
+    MouseWheelOption = mwGrid
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints]
+    Options2 = [goCopyWithoutTrailingLinebreak]
+    RowCount = 1
+    TabOrder = 2
+    TitleStyle = tsNative
+  end
   object MainMenu: TMainMenu
-    Left = 72
-    Top = 40
+    Left = 64
+    Top = 64
     object menuFile: TMenuItem
       Caption = 'File'
       object menuFileNew: TMenuItem
@@ -133,13 +172,13 @@ object formPoBatch: TformPoBatch
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 144
-    Top = 40
+    Top = 64
   end
   object dialogSave: TSaveDialog
     DefaultExt = '.po'
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
-    Left = 216
-    Top = 40
+    Left = 232
+    Top = 64
   end
 end
