@@ -49,7 +49,7 @@ type
     pofGccInternalFormat,
     pofQtPluralFormat,
     pofCppFormat
-  );
+    );
   TPOFlags = set of TPOFlag;
 
   TPOComment = class
@@ -308,9 +308,9 @@ const
     'gcc-internal-format',
     'qt-plural-format',
     'c++-format'
-  );
+    );
 
-{ TPOComment }
+  { TPOComment }
 
 constructor TPOComment.Create(AType: TPOCommentType; const AText: string);
 begin
@@ -471,8 +471,7 @@ var
   i: integer;
 begin
   for i := 0 to FComments.Count - 1 do
-    if (TPOComment(FComments[i]).CommentType = poctFlag) and
-       (SameText(Trim(TPOComment(FComments[i]).Text), AFlag)) then
+    if (TPOComment(FComments[i]).CommentType = poctFlag) and (SameText(Trim(TPOComment(FComments[i]).Text), AFlag)) then
       Exit(True);
   Result := False;
 end;
@@ -488,8 +487,7 @@ var
   i: integer;
 begin
   for i := FComments.Count - 1 downto 0 do
-    if (TPOComment(FComments[i]).CommentType = poctFlag) and
-       (SameText(Trim(TPOComment(FComments[i]).Text), AFlag)) then
+    if (TPOComment(FComments[i]).CommentType = poctFlag) and (SameText(Trim(TPOComment(FComments[i]).Text), AFlag)) then
       FComments.Delete(i);
 end;
 
@@ -541,8 +539,7 @@ var
 begin
   // Remove any existing range comments
   for i := FComments.Count - 1 downto 0 do
-    if (TPOComment(FComments[i]).CommentType = poctFlag) and
-       (Pos('range:', Trim(TPOComment(FComments[i]).Text)) = 1) then
+    if (TPOComment(FComments[i]).CommentType = poctFlag) and (Pos('range:', Trim(TPOComment(FComments[i]).Text)) = 1) then
       FComments.Delete(i);
   // Add if not empty
   if AValue <> '' then
@@ -551,56 +548,209 @@ end;
 
 // Boolean flag properties
 
-function TPOEntry.GetIsFuzzy: boolean; begin Result := HasFlag('fuzzy'); end;
-procedure TPOEntry.SetIsFuzzy(AValue: boolean); begin if AValue then AddFlag('fuzzy') else RemoveFlag('fuzzy'); end;
+function TPOEntry.GetIsFuzzy: boolean;
+begin
+  Result := HasFlag('fuzzy');
+end;
 
-function TPOEntry.GetIsCFormat: boolean; begin Result := HasFlag('c-format'); end;
-procedure TPOEntry.SetIsCFormat(AValue: boolean); begin if AValue then AddFlag('c-format') else RemoveFlag('c-format'); end;
+procedure TPOEntry.SetIsFuzzy(AValue: boolean);
+begin
+  if AValue then AddFlag('fuzzy')
+  else
+    RemoveFlag('fuzzy');
+end;
 
-function TPOEntry.GetIsNoWrap: boolean; begin Result := HasFlag('no-wrap'); end;
-procedure TPOEntry.SetIsNoWrap(AValue: boolean); begin if AValue then AddFlag('no-wrap') else RemoveFlag('no-wrap'); end;
+function TPOEntry.GetIsCFormat: boolean;
+begin
+  Result := HasFlag('c-format');
+end;
 
-function TPOEntry.GetIsPythonFormat: boolean; begin Result := HasFlag('python-format'); end;
-procedure TPOEntry.SetIsPythonFormat(AValue: boolean); begin if AValue then AddFlag('python-format') else RemoveFlag('python-format'); end;
+procedure TPOEntry.SetIsCFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('c-format')
+  else
+    RemoveFlag('c-format');
+end;
 
-function TPOEntry.GetIsJavaFormat: boolean; begin Result := HasFlag('java-format'); end;
-procedure TPOEntry.SetIsJavaFormat(AValue: boolean); begin if AValue then AddFlag('java-format') else RemoveFlag('java-format'); end;
+function TPOEntry.GetIsNoWrap: boolean;
+begin
+  Result := HasFlag('no-wrap');
+end;
 
-function TPOEntry.GetIsQtFormat: boolean; begin Result := HasFlag('qt-format'); end;
-procedure TPOEntry.SetIsQtFormat(AValue: boolean); begin if AValue then AddFlag('qt-format') else RemoveFlag('qt-format'); end;
+procedure TPOEntry.SetIsNoWrap(AValue: boolean);
+begin
+  if AValue then AddFlag('no-wrap')
+  else
+    RemoveFlag('no-wrap');
+end;
 
-function TPOEntry.GetIsBoostFormat: boolean; begin Result := HasFlag('boost-format'); end;
-procedure TPOEntry.SetIsBoostFormat(AValue: boolean); begin if AValue then AddFlag('boost-format') else RemoveFlag('boost-format'); end;
+function TPOEntry.GetIsPythonFormat: boolean;
+begin
+  Result := HasFlag('python-format');
+end;
 
-function TPOEntry.GetIsLispFormat: boolean; begin Result := HasFlag('lisp-format'); end;
-procedure TPOEntry.SetIsLispFormat(AValue: boolean); begin if AValue then AddFlag('lisp-format') else RemoveFlag('lisp-format'); end;
+procedure TPOEntry.SetIsPythonFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('python-format')
+  else
+    RemoveFlag('python-format');
+end;
 
-function TPOEntry.GetIsSchemeFormat: boolean; begin Result := HasFlag('scheme-format'); end;
-procedure TPOEntry.SetIsSchemeFormat(AValue: boolean); begin if AValue then AddFlag('scheme-format') else RemoveFlag('scheme-format'); end;
+function TPOEntry.GetIsJavaFormat: boolean;
+begin
+  Result := HasFlag('java-format');
+end;
 
-function TPOEntry.GetIsObjectiveCFormat: boolean; begin Result := HasFlag('objective-c-format'); end;
-procedure TPOEntry.SetIsObjectiveCFormat(AValue: boolean); begin if AValue then AddFlag('objective-c-format') else RemoveFlag('objective-c-format'); end;
+procedure TPOEntry.SetIsJavaFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('java-format')
+  else
+    RemoveFlag('java-format');
+end;
 
-function TPOEntry.GetIsYcpFormat: boolean; begin Result := HasFlag('ycp-format'); end;
-procedure TPOEntry.SetIsYcpFormat(AValue: boolean); begin if AValue then AddFlag('ycp-format') else RemoveFlag('ycp-format'); end;
+function TPOEntry.GetIsQtFormat: boolean;
+begin
+  Result := HasFlag('qt-format');
+end;
 
-function TPOEntry.GetIsTclFormat: boolean; begin Result := HasFlag('tcl-format'); end;
-procedure TPOEntry.SetIsTclFormat(AValue: boolean); begin if AValue then AddFlag('tcl-format') else RemoveFlag('tcl-format'); end;
+procedure TPOEntry.SetIsQtFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('qt-format')
+  else
+    RemoveFlag('qt-format');
+end;
 
-function TPOEntry.GetIsPerlFormat: boolean; begin Result := HasFlag('perl-format'); end;
-procedure TPOEntry.SetIsPerlFormat(AValue: boolean); begin if AValue then AddFlag('perl-format') else RemoveFlag('perl-format'); end;
+function TPOEntry.GetIsBoostFormat: boolean;
+begin
+  Result := HasFlag('boost-format');
+end;
 
-function TPOEntry.GetIsPhpFormat: boolean; begin Result := HasFlag('php-format'); end;
-procedure TPOEntry.SetIsPhpFormat(AValue: boolean); begin if AValue then AddFlag('php-format') else RemoveFlag('php-format'); end;
+procedure TPOEntry.SetIsBoostFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('boost-format')
+  else
+    RemoveFlag('boost-format');
+end;
 
-function TPOEntry.GetIsGccInternalFormat: boolean; begin Result := HasFlag('gcc-internal-format'); end;
-procedure TPOEntry.SetIsGccInternalFormat(AValue: boolean); begin if AValue then AddFlag('gcc-internal-format') else RemoveFlag('gcc-internal-format'); end;
+function TPOEntry.GetIsLispFormat: boolean;
+begin
+  Result := HasFlag('lisp-format');
+end;
 
-function TPOEntry.GetIsQtPluralFormat: boolean; begin Result := HasFlag('qt-plural-format'); end;
-procedure TPOEntry.SetIsQtPluralFormat(AValue: boolean); begin if AValue then AddFlag('qt-plural-format') else RemoveFlag('qt-plural-format'); end;
+procedure TPOEntry.SetIsLispFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('lisp-format')
+  else
+    RemoveFlag('lisp-format');
+end;
 
-function TPOEntry.GetIsCppFormat: boolean; begin Result := HasFlag('c++-format'); end;
-procedure TPOEntry.SetIsCppFormat(AValue: boolean); begin if AValue then AddFlag('c++-format') else RemoveFlag('c++-format'); end;
+function TPOEntry.GetIsSchemeFormat: boolean;
+begin
+  Result := HasFlag('scheme-format');
+end;
+
+procedure TPOEntry.SetIsSchemeFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('scheme-format')
+  else
+    RemoveFlag('scheme-format');
+end;
+
+function TPOEntry.GetIsObjectiveCFormat: boolean;
+begin
+  Result := HasFlag('objective-c-format');
+end;
+
+procedure TPOEntry.SetIsObjectiveCFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('objective-c-format')
+  else
+    RemoveFlag('objective-c-format');
+end;
+
+function TPOEntry.GetIsYcpFormat: boolean;
+begin
+  Result := HasFlag('ycp-format');
+end;
+
+procedure TPOEntry.SetIsYcpFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('ycp-format')
+  else
+    RemoveFlag('ycp-format');
+end;
+
+function TPOEntry.GetIsTclFormat: boolean;
+begin
+  Result := HasFlag('tcl-format');
+end;
+
+procedure TPOEntry.SetIsTclFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('tcl-format')
+  else
+    RemoveFlag('tcl-format');
+end;
+
+function TPOEntry.GetIsPerlFormat: boolean;
+begin
+  Result := HasFlag('perl-format');
+end;
+
+procedure TPOEntry.SetIsPerlFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('perl-format')
+  else
+    RemoveFlag('perl-format');
+end;
+
+function TPOEntry.GetIsPhpFormat: boolean;
+begin
+  Result := HasFlag('php-format');
+end;
+
+procedure TPOEntry.SetIsPhpFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('php-format')
+  else
+    RemoveFlag('php-format');
+end;
+
+function TPOEntry.GetIsGccInternalFormat: boolean;
+begin
+  Result := HasFlag('gcc-internal-format');
+end;
+
+procedure TPOEntry.SetIsGccInternalFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('gcc-internal-format')
+  else
+    RemoveFlag('gcc-internal-format');
+end;
+
+function TPOEntry.GetIsQtPluralFormat: boolean;
+begin
+  Result := HasFlag('qt-plural-format');
+end;
+
+procedure TPOEntry.SetIsQtPluralFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('qt-plural-format')
+  else
+    RemoveFlag('qt-plural-format');
+end;
+
+function TPOEntry.GetIsCppFormat: boolean;
+begin
+  Result := HasFlag('c++-format');
+end;
+
+procedure TPOEntry.SetIsCppFormat(AValue: boolean);
+begin
+  if AValue then AddFlag('c++-format')
+  else
+    RemoveFlag('c++-format');
+end;
 
 // Original string-based Flags property
 
@@ -762,21 +912,22 @@ begin
     else
       Prefix := '';
 
-    // Comments (all except flags, which will be merged into one line)
+    // 1. Translator comments
     for i := 0 to FComments.Count - 1 do
-    begin
-      case TPOComment(FComments[i]).CommentType of
-        poctTranslator: Lines.Add(Prefix + '# ' + TPOComment(FComments[i]).Text);
-        poctExtracted: Lines.Add(Prefix + '#. ' + TPOComment(FComments[i]).Text);
-        poctReference: Lines.Add(Prefix + '#: ' + TPOComment(FComments[i]).Text);
-        poctPrevious: Lines.Add(Prefix + '#| ' + TPOComment(FComments[i]).Text);
-        // poctFlag is handled separately below
-        else
-          ;
-      end;
-    end;
+      if TPOComment(FComments[i]).CommentType = poctTranslator then
+        Lines.Add(Prefix + '# ' + TPOComment(FComments[i]).Text);
 
-    // Collect all flags into a single #, line
+    // 2. Extracted comments
+    for i := 0 to FComments.Count - 1 do
+      if TPOComment(FComments[i]).CommentType = poctExtracted then
+        Lines.Add(Prefix + '#. ' + TPOComment(FComments[i]).Text);
+
+    // 3. Reference comments
+    for i := 0 to FComments.Count - 1 do
+      if TPOComment(FComments[i]).CommentType = poctReference then
+        Lines.Add(Prefix + '#: ' + TPOComment(FComments[i]).Text);
+
+    // 4. Flag comments (объединяем в одну строку)
     FlagStr := '';
     for i := 0 to FComments.Count - 1 do
       if TPOComment(FComments[i]).CommentType = poctFlag then
@@ -787,6 +938,11 @@ begin
       end;
     if FlagStr <> '' then
       Lines.Add(Prefix + '#, ' + FlagStr);
+
+    // 5. Previous comments (идут ПОСЛЕ флагов)
+    for i := 0 to FComments.Count - 1 do
+      if TPOComment(FComments[i]).CommentType = poctPrevious then
+        Lines.Add(Prefix + '#| ' + TPOComment(FComments[i]).Text);
 
     // msgctxt
     if FMsgCtxt <> '' then
@@ -819,7 +975,7 @@ begin
     end;
     Result := Lines.Text;
 
-    // TStrings.Text always appends a trailing LineBreak, we remove it to match PO entry block exactly
+    // Remove trailing LineBreak added by TStrings.Text
     if (Length(Result) >= Length(Lines.LineBreak)) and (Copy(Result, Length(Result) - Length(Lines.LineBreak) +
       1, Length(Lines.LineBreak)) = Lines.LineBreak) then
       SetLength(Result, Length(Result) - Length(Lines.LineBreak));
@@ -1234,26 +1390,25 @@ var
   Prefix: string;
   FlagStr: string;
 begin
-  if Entry.Obsolete then
-    Prefix := '#~ '
-  else
-    Prefix := '';
+  if Entry.Obsolete then Prefix := '#~ '
+  else Prefix := '';
 
-  // Comments (except flags, which are merged into one line)
+  // 1. Translator
   for i := 0 to Entry.FComments.Count - 1 do
-  begin
-    case TPOComment(Entry.FComments[i]).CommentType of
-      poctTranslator: Lines.Add(Prefix + '# ' + TPOComment(Entry.FComments[i]).Text);
-      poctExtracted: Lines.Add(Prefix + '#. ' + TPOComment(Entry.FComments[i]).Text);
-      poctReference: Lines.Add(Prefix + '#: ' + TPOComment(Entry.FComments[i]).Text);
-      poctPrevious: Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
-      // poctFlag handled separately
-      else
-        ;
-    end;
-  end;
+    if TPOComment(Entry.FComments[i]).CommentType = poctTranslator then
+      Lines.Add(Prefix + '# ' + TPOComment(Entry.FComments[i]).Text);
 
-  // Build single flag comment line
+  // 2. Extracted
+  for i := 0 to Entry.FComments.Count - 1 do
+    if TPOComment(Entry.FComments[i]).CommentType = poctExtracted then
+      Lines.Add(Prefix + '#. ' + TPOComment(Entry.FComments[i]).Text);
+
+  // 3. Reference
+  for i := 0 to Entry.FComments.Count - 1 do
+    if TPOComment(Entry.FComments[i]).CommentType = poctReference then
+      Lines.Add(Prefix + '#: ' + TPOComment(Entry.FComments[i]).Text);
+
+  // 4. Flags (строго до #|)
   FlagStr := '';
   for i := 0 to Entry.FComments.Count - 1 do
     if TPOComment(Entry.FComments[i]).CommentType = poctFlag then
@@ -1264,6 +1419,11 @@ begin
     end;
   if FlagStr <> '' then
     Lines.Add(Prefix + '#, ' + FlagStr);
+
+  // 5. Previous (после флагов)
+  for i := 0 to Entry.FComments.Count - 1 do
+    if TPOComment(Entry.FComments[i]).CommentType = poctPrevious then
+      Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
 
   // msgctxt
   if Entry.MsgCtxt <> '' then
