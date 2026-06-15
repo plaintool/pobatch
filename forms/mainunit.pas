@@ -77,8 +77,6 @@ type
     FChanged: boolean;
     FInitialized: boolean;
     FCommandLineFile: string;
-    //FFound: boolean;
-    //FFilterText: string;
     FAutoCheckUpdates: boolean;
 
     function IsCanClose: boolean;
@@ -86,8 +84,7 @@ type
     procedure HandleCommandLineParameters;
     function ValidateFileForOpen(const AFileName: string): boolean;
     function NewFile(AFileName: string = string.Empty): boolean;
-    procedure OpenFile(const AFileName: string);
-    procedure OpenFileFromCommandLine;
+    function OpenFile(const AFileName: string): boolean;
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
     procedure UpdateCaption;
@@ -148,8 +145,14 @@ begin
   begin
     FInitialized := True;
 
-    // Open file from command line if specified
-    OpenFileFromCommandLine;
+    // Open file from command line if specified, otherwise start with a new document
+    if FCommandLineFile <> '' then
+    begin
+      if not OpenFile(FCommandLineFile) then
+        NewFile;
+    end
+    else
+      NewFile;
   end;
 
   if AutoCheckUpdates then
@@ -470,8 +473,10 @@ begin
   end;
 end;
 
-procedure TformPoBatch.OpenFile(const AFileName: string);
+function TformPoBatch.OpenFile(const AFileName: string): boolean;
 begin
+  Result := False;
+
   // Validate file before opening
   if not ValidateFileForOpen(AFileName) then
     Exit;
@@ -485,31 +490,10 @@ begin
   begin
     FFileName := AFileName;
     FChanged := False;
+    FillGrid;
     UpdateCaption;
+    Result := True;
   end;
-end;
-
-procedure TformPoBatch.OpenFileFromCommandLine;
-begin
-  if FCommandLineFile <> '' then
-  begin
-    // Open file from command line
-    if ValidateFileForOpen(FCommandLineFile) then
-    begin
-      if LoadFromFile(FCommandLineFile) then
-      begin
-        FFileName := FCommandLineFile;
-        FChanged := False;
-        UpdateCaption;
-      end;
-    end
-    else
-      // File validation failed, create new empty document
-      NewFile;
-  end
-  else
-    // No file specified, create new empty document
-    NewFile;
 end;
 
 function TformPoBatch.SaveFile(AFileName: string): boolean;
@@ -609,7 +593,6 @@ begin
         Stream.Free;
       end;
 
-      FillGrid;
       Result := True;
     except
       on E: Exception do
@@ -649,16 +632,9 @@ begin
 end;
 
 procedure TformPoBatch.FillGrid;
-var test:TPOEntry;
-
 begin
   //ValueListHeaders.Strings.Assign(PoFile.Headers);
   //ValueListTrans.Strings.Assign(PoFile.Translations);
-//  test:=PoFile.FindEntry('Parameters in the form key=value used by {key} in requests. If the value is omitted (key=), it will be requested from the user.','tformconfigtrayslate.labelinitparameters4.caption');
-  test:=PoFile.Entries[PoFile.Entries.Count-1];
-
-  ShowMessage(test.ToString);
-
 end;
 
 procedure TformPoBatch.SaveGrid;
@@ -666,7 +642,6 @@ begin
   //PoFile.Headers := ValueListHeaders.Strings;
   //PoFile.Translations := ValueListTrans.Strings;
 end;
-
 
 //procedure TformPoBatch.propertyPadModified(Sender: TObject);
 //begin
