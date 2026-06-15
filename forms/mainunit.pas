@@ -632,15 +632,18 @@ begin
 end;
 
 procedure TformPoBatch.FillGrid;
+var test:TPoEntry;
 begin
-  //ValueListHeaders.Strings.Assign(PoFile.Headers);
-  //ValueListTrans.Strings.Assign(PoFile.Translations);
+if FFileName = '' then exit;
+test:=PoFile.FindEntry('Parameters in the form key=value used by {key} in requests. If the value is omitted (key=), it will be requested from the user.');
+
+Test.IsFuzzy:=True;
+Test.IsPhpFormat:=False;
+Test.IsBoostFormat:=False;
 end;
 
 procedure TformPoBatch.SaveGrid;
 begin
-  //PoFile.Headers := ValueListHeaders.Strings;
-  //PoFile.Translations := ValueListTrans.Strings;
 end;
 
 //procedure TformPoBatch.propertyPadModified(Sender: TObject);
