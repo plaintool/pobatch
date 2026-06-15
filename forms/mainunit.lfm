@@ -70,6 +70,36 @@ object formPoBatch: TformPoBatch
       OnClick = ButtonFilterClearClick
     end
   end
+  object ValueListHeaders: TValueListEditor
+    Left = 8
+    Height = 128
+    Top = 32
+    Width = 656
+    DefaultColWidth = 300
+    RowCount = 2
+    TabOrder = 2
+    KeyOptions = [keyEdit, keyAdd, keyDelete]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAutoAddRows, goAlwaysShowEditor, goThumbTracking]
+    ColWidths = (
+      300
+      356
+    )
+  end
+  object ValueListTrans: TValueListEditor
+    Left = 8
+    Height = 248
+    Top = 176
+    Width = 656
+    DefaultColWidth = 300
+    RowCount = 2
+    TabOrder = 3
+    KeyOptions = [keyEdit, keyAdd, keyDelete]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAutoAddRows, goAlwaysShowEditor, goThumbTracking]
+    ColWidths = (
+      300
+      356
+    )
+  end
   object MainMenu: TMainMenu
     Left = 72
     Top = 40
@@ -138,6 +168,7 @@ object formPoBatch: TformPoBatch
   object dialogSave: TSaveDialog
     DefaultExt = '.po'
     Filter = 'Po File (*.po)|*.po'
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
     Left = 216
     Top = 40
   end

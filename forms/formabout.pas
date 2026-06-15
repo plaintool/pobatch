@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------
-//  PoBatch © 2025 by Alexander Tverskoy
+//  PoBatch © 2026 by Alexander Tverskoy
 //  https://github.com/plaintool/pobatch
 //  Licensed under the MIT License
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
@@ -46,14 +46,14 @@ uses systemtool;
 
   { TformAboutPoBatch }
 
-procedure TformAboutPoBatch.LabelLicUrlClick(Sender: TObject);
-begin
-  OpenUrl(labelLicUrl.Hint);
-end;
-
 procedure TformAboutPoBatch.FormCreate(Sender: TObject);
 begin
   labelName.Caption := 'PoBatch © ' + GetAppVersion;
+end;
+
+procedure TformAboutPoBatch.LabelLicUrlClick(Sender: TObject);
+begin
+  OpenUrl(labelLicUrl.Hint);
 end;
 
 end.

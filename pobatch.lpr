@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------
-//  PoBatch © 2025 by Alexander Tverskoy
+//  PoBatch © 2026 by Alexander Tverskoy
 //  https://github.com/plaintool/pobatch
 //  Licensed under the MIT License
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
@@ -31,8 +31,8 @@ uses
 
 begin
   RequireDerivedFormResource := True;
-  Application.Title := 'PoBatch';
-  Application.Scaled := True;
+  Application.Title:='PoBatch';
+  Application.Scaled:=True;
   {$PUSH}
   {$WARN 5044 OFF}
   Application.MainFormOnTaskbar := True;

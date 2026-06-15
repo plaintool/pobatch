@@ -33,7 +33,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="src;common"/>
+            <OtherUnitFiles Value="common;forms;units"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -81,29 +81,29 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="src\mainunit.pas"/>
+        <Filename Value="forms\mainunit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="formPoBatch"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="src\settings.pas"/>
+        <Filename Value="units\settings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="src\systemtool.pas"/>
+        <Filename Value="units\systemtool.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="src\formabout.pas"/>
+        <Filename Value="forms\formabout.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="formAboutPoBatch"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="src\formdonate.pas"/>
+        <Filename Value="forms\formdonate.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="formDonatePoBatch"/>
         <HasResources Value="True"/>
@@ -133,7 +133,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="src\powrap.pas"/>
+        <Filename Value="common\powrap.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
@@ -146,7 +146,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="src;common"/>
+      <OtherUnitFiles Value="common;forms;units"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

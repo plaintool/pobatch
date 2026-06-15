@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------
-//  PoBatch © 2025 by Alexander Tverskoy
+//  PoBatch © 2026 by Alexander Tverskoy
 //  https://github.com/plaintool/pobatch
 //  Licensed under the MIT License
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
@@ -25,7 +25,7 @@ uses
   ExtCtrls,
   Process,
   Buttons,
-  LCLType,
+  LCLType, ValEdit,
   powrap;
 
 type
@@ -53,6 +53,8 @@ type
     menuFileSeparator1: TMenuItem;
     ButtonFilterClear: TSpeedButton;
     StatusBar: TStatusBar;
+    ValueListHeaders: TValueListEditor;
+    ValueListTrans: TValueListEditor;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -83,9 +85,12 @@ type
     //FFound: boolean;
     //FFilterText: string;
     FAutoCheckUpdates: boolean;
-    function SaveFile(AFileName: string): boolean;
+
+    function NewFile(AFileName: string = string.Empty): boolean;
     function LoadFromFile(AFileName: string): boolean;
+    function SaveFile(AFileName: string): boolean;
     procedure FillGrid;
+    procedure SaveGrid;
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
     procedure ClearEditor;
@@ -125,11 +130,9 @@ begin
 
   // Create PoFile object
   PoFile := TPoFile.Create;
-  ClearEditor;
-  UpdateCaption;
+  NewFile;
 
-  // Set up property grid
-  //propertyPad.TIObject := PadFormat;
+  // Load the menu state
   menuAutoCheckUpdates.Checked := FAutoCheckUpdates;
 
   // Handle command line parameters
@@ -231,11 +234,7 @@ procedure TformPoBatch.menuFileNewClick(Sender: TObject);
 begin
   if not IsCanClose then Exit;
 
-  ClearEditor;
-  FillGrid;
-  FFileName := '';
-  FChanged := False;
-  UpdateCaption;
+  NewFile;
 end;
 
 procedure TformPoBatch.menuFileOpenClick(Sender: TObject);
@@ -256,7 +255,7 @@ begin
   if FFileName <> '' then
     dialogSave.FileName := ExtractFileName(FFileName)
   else
-    dialogSave.FileName := 'untitled.xml';
+    dialogSave.FileName := 'untitled.po';
 
   if dialogSave.Execute then
   begin
@@ -264,7 +263,7 @@ begin
 
     // Ensure file has extension
     if ExtractFileExt(TempFileName) = '' then
-      TempFileName := TempFileName + '.xml';
+      TempFileName := TempFileName + '.po';
 
     if SaveFile(TempFileName) then
     begin
@@ -297,6 +296,75 @@ procedure TformPoBatch.filterChange(Sender: TObject);
 begin
   //propertyPad.TIObject := nil;
   //propertyPad.TIObject := PadFormat;
+end;
+
+function TformPoBatch.NewFile(AFileName: string = string.Empty): boolean;
+begin
+  Result := True;
+  try
+    PoFile.Reset;
+    PoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+    ClearEditor;
+    FillGrid;
+    FFileName := AFileName;
+    FChanged := False;
+    UpdateCaption;
+  except
+    Result := False;
+    raise;
+  end;
+end;
+
+function TformPoBatch.SaveFile(AFileName: string): boolean;
+var
+  Output: TStringList;
+  Stream: TStringStream;
+begin
+  Result := False;
+  SaveGrid;
+
+  // Validate filename
+  if Trim(AFileName) = '' then
+  begin
+    MessageDlg('Error', 'Invalid file name', mtError, [mbOK], 0);
+    Exit;
+  end;
+
+  Output := TStringList.Create;
+  try
+    try
+      // Save PoFile content into a string first
+      begin
+        Stream := TStringStream.Create('', TEncoding.UTF8);
+        try
+          PoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
+          Output.Text := Stream.DataString;     // get resulting string
+        finally
+          Stream.Free;
+        end;
+      end;
+
+      // Ensure the file ends with a line break (PO/POT standard)
+      Output.TrailingLineBreak := True;
+
+      // Ensure directory exists
+      ForceDirectories(ExtractFilePath(AFileName));
+
+      // Save file with UTF-8 encoding (without BOM)
+      Output.SaveToFile(AFileName, TEncoding.UTF8);
+
+      Result := True;
+    except
+      on E: Exception do
+      begin
+        MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
+          mtError, [mbOK], 0);
+        Result := False;
+      end;
+    end;
+  finally
+    Output.Free;
+  end;
 end;
 
 function TformPoBatch.LoadFromFile(AFileName: string): boolean;
@@ -359,60 +427,16 @@ begin
   end;
 end;
 
-function TformPoBatch.SaveFile(AFileName: string): boolean;
-var
-  Output: TStringList;
-  Stream: TStringStream;
-begin
-  Result := False;
-  //propertyPad.SaveChanges;
-
-  // Validate filename
-  if Trim(AFileName) = '' then
-  begin
-    MessageDlg('Error', 'Invalid file name', mtError, [mbOK], 0);
-    Exit;
-  end;
-
-  Output := TStringList.Create;
-  try
-    try
-      // Save PoFile content into a string first
-      begin
-        Stream := TStringStream.Create('', TEncoding.UTF8);
-        try
-          PoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
-          Output.Text := Stream.DataString;     // get resulting string
-        finally
-          Stream.Free;
-        end;
-      end;
-
-      // Ensure the file ends with a line break (PO/POT standard)
-      Output.TrailingLineBreak := True;
-
-      // Ensure directory exists
-      ForceDirectories(ExtractFilePath(AFileName));
-
-      // Save file with UTF-8 encoding (without BOM)
-      Output.SaveToFile(AFileName, TEncoding.UTF8);
-
-      Result := True;
-    except
-      on E: Exception do
-      begin
-        MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
-          mtError, [mbOK], 0);
-        Result := False;
-      end;
-    end;
-  finally
-    Output.Free;
-  end;
-end;
-
 procedure TformPoBatch.FillGrid;
 begin
+  ValueListHeaders.Strings.Assign(PoFile.Headers);
+  ValueListTrans.Strings.Assign(PoFile.Translations);
+end;
+
+procedure TformPoBatch.SaveGrid;
+begin
+  PoFile.Headers := ValueListHeaders.Strings;
+  PoFile.Translations := ValueListTrans.Strings;
 end;
 
 function TformPoBatch.IsCanClose: boolean;

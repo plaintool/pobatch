@@ -1,7 +1,8 @@
 //-----------------------------------------------------------------------------------
-//  PoFormat © 2026 by Alexander Tverskoy
-//  Licensed under the GNU General Public License, Version 3 (GPL-3.0)
-//  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
+//  PoBatch © 2026 by Alexander Tverskoy
+//  https://github.com/plaintool/pobatch
+//  Licensed under the MIT License
+//  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //-----------------------------------------------------------------------------------
 
 unit powrap;
@@ -21,6 +22,12 @@ type
     poctReference,    // #: (source file and line reference)
     poctPrevious,     // #| (previous untranslated string, after msgmerge)
     poctFlag          // #, (flags like fuzzy, c-format, etc.)
+    );
+
+  TPoLineEndingStyle = (
+    pleLF,    // Unix/Linux line ending   (LF -> \n)
+    pleCRLF,  // Windows line ending      (CRLF -> \r\n)
+    pleCR     // Classic Mac line ending  (CR -> \r)
     );
 
   TPOComment = class
@@ -47,12 +54,6 @@ type
     FMsgIdPlural: string;
     FMsgStr: TStringList;
     FObsolete: boolean;
-    // Raw storage for exact reproduction
-    FRawComments: TStringList;
-    FRawMsgCtxt: TStringList;
-    FRawMsgId: TStringList;
-    FRawMsgIdPlural: TStringList;
-    FRawMsgStr: array of TStringList; // per plural form
     function GetMsgStr(Index: integer): string;
     procedure SetMsgStr(Index: integer; const Value: string);
     function GetMsgStrCount: integer;
@@ -61,12 +62,6 @@ type
     function GetMsgStrSimple: string;
     procedure SetMsgStrSimple(const AValue: string);
     function GetIsPlural: boolean;
-    procedure ClearRawMsgStrArray;
-    procedure ClearRawComments;
-    procedure ClearRawCtxt;
-    procedure ClearRawId;
-    procedure ClearRawIdPlural;
-    procedure ClearRawMsgStr(Index: integer);
   public
     constructor Create;
     destructor Destroy; override;
@@ -91,12 +86,6 @@ type
     property Obsolete: boolean read FObsolete write FObsolete;
 
     property Comments: TPOCommentList read FComments;
-    property RawComments: TStringList read FRawComments;
-    property RawMsgCtxt: TStringList read FRawMsgCtxt;
-    property RawMsgId: TStringList read FRawMsgId;
-    property RawMsgIdPlural: TStringList read FRawMsgIdPlural;
-    function GetRawMsgStr(Index: integer): TStringList;
-    procedure SetRawMsgStr(Index: integer; AList: TStrings);
   end;
 
   TPOEntryList = class(TObjectList)
@@ -119,9 +108,16 @@ type
   private
     FEntries: TPOEntryList;
     FEncoding: TEncoding;
+    FLineEndingStyle: TPoLineEndingStyle;
+    FTrailingEmptyLines: integer;   // Number of empty lines at the end of the file
     procedure ParseLine(const Line: string; var CurrentEntry: TPOEntry; var PendingState: TParseState);
-    function UnescapeString(const S: string): string;
-    function EscapeString(const S: string): string;
+    function GetHeaders: TStrings;
+    procedure SetHeaders(AHeaders: TStrings);
+    function GetHeaderValue(const AKey: string): string;
+    procedure SetHeaderValue(const AKey, AValue: string);
+    function GetTranslations: TStrings;
+    procedure SetTranslations(AList: TStrings);
+    procedure AddFieldToStrings(Lines: TStrings; const Prefix, FieldKeyword: string; const Value: string);
   public
     constructor Create;
     destructor Destroy; override;
@@ -132,14 +128,68 @@ type
     procedure SaveToFile(const AFilename: string);
 
     procedure Clear;
+    procedure Reset;
     function FindEntry(const AMsgCtxt, AMsgId: string): TPOEntry;
     procedure WriteEntry(Entry: TPOEntry; Lines: TStrings);
 
     property Entries: TPOEntryList read FEntries;
     property Encoding: TEncoding read FEncoding write FEncoding;
+    property LineEndingStyle: TPoLineEndingStyle read FLineEndingStyle write FLineEndingStyle;
+    property Headers: TStrings read GetHeaders write SetHeaders;
+    property HeaderValue[const AKey: string]: string read GetHeaderValue write SetHeaderValue;
+    property Translations: TStrings read GetTranslations write SetTranslations;
+    property TrailingEmptyLines: integer read FTrailingEmptyLines write FTrailingEmptyLines;
   end;
 
 implementation
+
+// ---- plain utility functions ----
+
+function EscapeString(const S: string): string;
+var
+  i: integer;
+begin
+  Result := '';
+  for i := 1 to Length(S) do
+  begin
+    case S[i] of
+      '\': Result := Result + '\\';
+      '"': Result := Result + '\"';
+      #10: Result := Result + '\n';
+      #13: Result := Result + '\r';
+      #9: Result := Result + '\t';
+      else
+        Result := Result + S[i];
+    end;
+  end;
+end;
+
+function UnescapeString(const S: string): string;
+var
+  i: integer;
+begin
+  Result := '';
+  i := 1;
+  while i <= Length(S) do
+  begin
+    if (S[i] = '\') and (i < Length(S)) then
+    begin
+      Inc(i);
+      case S[i] of
+        'n': Result := Result + #10;
+        't': Result := Result + #9;
+        'r': Result := Result + #13;
+        '\': Result := Result + '\';
+        '"': Result := Result + '"';
+        else
+          Result := Result + '\' + S[i];
+      end;
+    end
+    else
+      Result := Result + S[i];
+    Inc(i);
+  end;
+end;
 
 { TPOComment }
 
@@ -174,21 +224,12 @@ begin
   inherited;
   FComments := TPOCommentList.Create(True);
   FMsgStr := TStringList.Create;
-  FRawComments := TStringList.Create;
-  FRawMsgCtxt := TStringList.Create;
-  FRawMsgId := TStringList.Create;
-  FRawMsgIdPlural := TStringList.Create;
 end;
 
 destructor TPOEntry.Destroy;
 begin
   FComments.Free;
   FMsgStr.Free;
-  FRawComments.Free;
-  FRawMsgCtxt.Free;
-  FRawMsgId.Free;
-  FRawMsgIdPlural.Free;
-  ClearRawMsgStrArray;
   inherited;
 end;
 
@@ -200,75 +241,6 @@ begin
   FMsgIdPlural := '';
   FMsgStr.Clear;
   FObsolete := False;
-  FRawComments.Clear;
-  FRawMsgCtxt.Clear;
-  FRawMsgId.Clear;
-  FRawMsgIdPlural.Clear;
-  ClearRawMsgStrArray;
-end;
-
-procedure TPOEntry.ClearRawComments;
-begin
-  FRawComments.Clear;
-end;
-
-procedure TPOEntry.ClearRawCtxt;
-begin
-  FRawMsgCtxt.Clear;
-end;
-
-procedure TPOEntry.ClearRawId;
-begin
-  FRawMsgId.Clear;
-end;
-
-procedure TPOEntry.ClearRawIdPlural;
-begin
-  FRawMsgIdPlural.Clear;
-end;
-
-procedure TPOEntry.ClearRawMsgStrArray;
-var
-  i: integer;
-begin
-  for i := 0 to High(FRawMsgStr) do
-    FRawMsgStr[i].Free;
-  SetLength(FRawMsgStr, 0);
-end;
-
-function TPOEntry.GetRawMsgStr(Index: integer): TStringList;
-begin
-  if (Index >= 0) and (Index < Length(FRawMsgStr)) then
-    Result := FRawMsgStr[Index]
-  else
-    Result := nil;
-end;
-
-procedure TPOEntry.SetRawMsgStr(Index: integer; AList: TStrings);
-var
-  i: integer;
-begin
-  if Index < 0 then Exit;
-  // Ensure array size
-  if Index >= Length(FRawMsgStr) then
-  begin
-    SetLength(FRawMsgStr, Index + 1);
-    for i := 0 to High(FRawMsgStr) do
-      if FRawMsgStr[i] = nil then
-        FRawMsgStr[i] := TStringList.Create;
-  end;
-  if FRawMsgStr[Index] = nil then
-    FRawMsgStr[Index] := TStringList.Create;
-  if AList <> nil then
-    FRawMsgStr[Index].Assign(AList)
-  else
-    FRawMsgStr[Index].Clear;
-end;
-
-procedure TPOEntry.ClearRawMsgStr(Index: integer);
-begin
-  if (Index >= 0) and (Index < Length(FRawMsgStr)) and (FRawMsgStr[Index] <> nil) then
-    FRawMsgStr[Index].Clear;
 end;
 
 function TPOEntry.GetCommentsAsStrings: TStrings;
@@ -295,7 +267,6 @@ var
   s: string;
 begin
   FComments.Clear;
-  ClearRawComments;
   for s in Lines do
   begin
     if s = '' then Continue;
@@ -317,7 +288,6 @@ end;
 procedure TPOEntry.AddComment(AType: TPOCommentType; const AText: string);
 begin
   FComments.Add(TPOComment.Create(AType, AText));
-  ClearRawComments;
 end;
 
 procedure TPOEntry.DeleteCommentsOfType(AType: TPOCommentType);
@@ -327,7 +297,6 @@ begin
   for i := FComments.Count - 1 downto 0 do
     if TPOComment(FComments[i]).CommentType = AType then
       FComments.Delete(i);
-  ClearRawComments;
 end;
 
 function TPOEntry.GetCommentsOfType(AType: TPOCommentType): TStrings;
@@ -378,7 +347,6 @@ begin
   finally
     sl.Free;
   end;
-  ClearRawComments;
 end;
 
 function TPOEntry.GetMsgStr(Index: integer): string;
@@ -394,7 +362,6 @@ begin
   while FMsgStr.Count <= Index do
     FMsgStr.Add('');
   FMsgStr[Index] := Value;
-  ClearRawMsgStr(Index);
 end;
 
 function TPOEntry.GetMsgStrCount: integer;
@@ -415,7 +382,6 @@ begin
   while FMsgStr.Count <= 0 do
     FMsgStr.Add('');
   FMsgStr[0] := AValue;
-  ClearRawMsgStr(0);
 end;
 
 function TPOEntry.GetIsPlural: boolean;
@@ -447,6 +413,9 @@ begin
   inherited;
   FEntries := TPOEntryList.Create(True);
   FEncoding := TEncoding.UTF8;
+  FLineEndingStyle := pleLF;   // default to Unix style
+  FTrailingEmptyLines := 0;
+  Reset;
 end;
 
 destructor TPOFile.Destroy;
@@ -460,54 +429,39 @@ begin
   FEntries.Clear;
 end;
 
-function TPOFile.UnescapeString(const S: string): string;
+procedure TPOFile.Reset;
 var
-  i: integer;
+  HeaderEntry: TPOEntry;
+  DefaultHeaders: TStrings;
 begin
-  Result := '';
-  i := 1;
-  while i <= Length(S) do
-  begin
-    if (S[i] = '\') and (i < Length(S)) then
-    begin
-      Inc(i);
-      case S[i] of
-        'n': Result := Result + #10;
-        't': Result := Result + #9;
-        'r': Result := Result + #13;
-        '\': Result := Result + '\';
-        '"': Result := Result + '"';
-        else
-          Result := Result + '\' + S[i];
-      end;
-    end
-    else
-      Result := Result + S[i];
-    Inc(i);
+  FEntries.Clear;
+
+  HeaderEntry := TPOEntry.Create;
+  HeaderEntry.MsgId := '';
+
+  DefaultHeaders := TStringList.Create;
+  try
+    DefaultHeaders.Add('Project-Id-Version: ');
+    DefaultHeaders.Add('Report-Msgid-Bugs-To: ');
+    DefaultHeaders.Add('POT-Creation-Date: ');
+    DefaultHeaders.Add('PO-Revision-Date: ');
+    DefaultHeaders.Add('Last-Translator: ');
+    DefaultHeaders.Add('Language-Team: ');
+    DefaultHeaders.Add('Language: ');
+    DefaultHeaders.Add('MIME-Version: 1.0');
+    DefaultHeaders.Add('Content-Type: text/plain; charset=UTF-8');
+    DefaultHeaders.Add('Content-Transfer-Encoding: 8bit');
+    DefaultHeaders.Add('Plural-Forms: ');
+    DefaultHeaders.Add('X-Generator: powrap');
+    HeaderEntry.MsgStrSimple := DefaultHeaders.Text;
+  finally
+    DefaultHeaders.Free;
   end;
+
+  FEntries.Add(HeaderEntry);
 end;
 
-function TPOFile.EscapeString(const S: string): string;
-var
-  i: integer;
-begin
-  Result := '';
-  for i := 1 to Length(S) do
-  begin
-    case S[i] of
-      '\': Result := Result + '\\';
-      '"': Result := Result + '\"';
-      #10: Result := Result + '\n';
-      #13: Result := Result + '\r';
-      #9: Result := Result + '\t';
-      else
-        Result := Result + S[i];
-    end;
-  end;
-end;
-
-procedure TPOFile.ParseLine(const Line: string; var CurrentEntry: TPOEntry;
-  var PendingState: TParseState);
+procedure TPOFile.ParseLine(const Line: string; var CurrentEntry: TPOEntry; var PendingState: TParseState);
 
   procedure FinalizeCurrentEntry;
   begin
@@ -522,91 +476,41 @@ procedure TPOFile.ParseLine(const Line: string; var CurrentEntry: TPOEntry;
   var
     TempStr: string;
     i: integer;
-    TempSL: TStringList;
   begin
     if PendingState.MultiBuffer.Count > 0 then
     begin
-      // Concatenate parts directly (no extra CR/LF)
       TempStr := '';
       for i := 0 to PendingState.MultiBuffer.Count - 1 do
         TempStr := TempStr + PendingState.MultiBuffer[i];
       TempStr := UnescapeString(TempStr);
 
       if PendingState.Field = 'msgid' then
-      begin
-        CurrentEntry.MsgId := TempStr;
-        CurrentEntry.RawMsgId.Clear;
-        CurrentEntry.RawMsgId.Assign(PendingState.MultiBuffer);
-      end
+        CurrentEntry.MsgId := TempStr
       else if PendingState.Field = 'msgid_plural' then
-      begin
-        CurrentEntry.MsgIdPlural := TempStr;
-        CurrentEntry.RawMsgIdPlural.Clear;
-        CurrentEntry.RawMsgIdPlural.Assign(PendingState.MultiBuffer);
-      end
+        CurrentEntry.MsgIdPlural := TempStr
       else if PendingState.Field = 'msgctxt' then
-      begin
-        CurrentEntry.MsgCtxt := TempStr;
-        CurrentEntry.RawMsgCtxt.Clear;
-        CurrentEntry.RawMsgCtxt.Assign(PendingState.MultiBuffer);
-      end
+        CurrentEntry.MsgCtxt := TempStr
       else if PendingState.Field = 'msgstr' then
-      begin
-        CurrentEntry.MsgStrSimple := TempStr;
-        CurrentEntry.SetRawMsgStr(0, PendingState.MultiBuffer);
-      end
+        CurrentEntry.MsgStrSimple := TempStr
       else if PendingState.Field = 'msgstrN' then
-      begin
         CurrentEntry.MsgStr[PendingState.PluralIndex] := TempStr;
-        CurrentEntry.SetRawMsgStr(PendingState.PluralIndex, PendingState.MultiBuffer);
-      end;
 
       PendingState.MultiBuffer.Clear;
       PendingState.Field := '';
     end
     else if PendingState.Field <> '' then
     begin
-      // Empty field without any continuation lines
+      // Empty field (e.g. msgid "")
       if PendingState.Field = 'msgid' then
-      begin
-        CurrentEntry.MsgId := '';
-        CurrentEntry.RawMsgId.Clear;
-        CurrentEntry.RawMsgId.Add('');
-      end
+        CurrentEntry.MsgId := ''
       else if PendingState.Field = 'msgid_plural' then
-      begin
-        CurrentEntry.MsgIdPlural := '';
-        CurrentEntry.RawMsgIdPlural.Clear;
-        CurrentEntry.RawMsgIdPlural.Add('');
-      end
+        CurrentEntry.MsgIdPlural := ''
       else if PendingState.Field = 'msgctxt' then
-      begin
-        CurrentEntry.MsgCtxt := '';
-        CurrentEntry.RawMsgCtxt.Clear;
-        CurrentEntry.RawMsgCtxt.Add('');
-      end
+        CurrentEntry.MsgCtxt := ''
       else if PendingState.Field = 'msgstr' then
-      begin
-        CurrentEntry.MsgStrSimple := '';
-        TempSL := TStringList.Create;
-        try
-          TempSL.Add('');
-          CurrentEntry.SetRawMsgStr(0, TempSL);
-        finally
-          TempSL.Free;
-        end;
-      end
+        CurrentEntry.MsgStrSimple := ''
       else if PendingState.Field = 'msgstrN' then
-      begin
         CurrentEntry.MsgStr[PendingState.PluralIndex] := '';
-        TempSL := TStringList.Create;
-        try
-          TempSL.Add('');
-          CurrentEntry.SetRawMsgStr(PendingState.PluralIndex, TempSL);
-        finally
-          TempSL.Free;
-        end;
-      end;
       PendingState.Field := '';
     end;
   end;
@@ -614,13 +518,12 @@ procedure TPOFile.ParseLine(const Line: string; var CurrentEntry: TPOEntry;
 var
   TrimmedLine: string;
   Key, Value: string;
-  EqPos: Integer;
+  EqPos: integer;
   TempStr: string;
   Content: string;
 begin
   TrimmedLine := TrimRight(Line);
 
-  // Empty line separates entries
   if TrimmedLine = '' then
   begin
     FinalizePendingField;
@@ -628,19 +531,15 @@ begin
     Exit;
   end;
 
-  // Comment line
   if (TrimmedLine[1] = '#') then
   begin
+    // Comment lines cannot appear in the middle of a field
     if PendingState.Field <> '' then
-      Exit; // comment cannot break a multi-line string
+      Exit;
 
     if CurrentEntry = nil then
       CurrentEntry := TPOEntry.Create;
 
-    // Store raw comment line
-    CurrentEntry.FRawComments.Add(TrimmedLine);
-
-    // Build typed comment without calling AddComment (which would clear RawComments)
     if Copy(TrimmedLine, 1, 2) = '#.' then
       CurrentEntry.FComments.Add(TPOComment.Create(poctExtracted, Trim(Copy(TrimmedLine, 3, MaxInt))))
     else if Copy(TrimmedLine, 1, 2) = '#:' then
@@ -650,34 +549,30 @@ begin
     else if (Length(TrimmedLine) >= 2) and (TrimmedLine[2] = ',') then
       CurrentEntry.FComments.Add(TPOComment.Create(poctFlag, Trim(Copy(TrimmedLine, 3, MaxInt))))
     else if Copy(TrimmedLine, 1, 2) = '#~' then
-    begin
-      CurrentEntry.Obsolete := True;
-      // In obsolete entries we might have content after #~, ignored for now
-    end
+      CurrentEntry.Obsolete := True
     else
       CurrentEntry.FComments.Add(TPOComment.Create(poctTranslator, Trim(Copy(TrimmedLine, 2, MaxInt))));
     Exit;
   end;
 
-  // Continuation of a multi-line string (starts with a quote)
+  // Continuation line (starts with ")
   if (TrimmedLine[1] = '"') and (PendingState.Field <> '') then
   begin
-    TempStr := Copy(TrimmedLine, 2, Length(TrimmedLine)-2);
+    TempStr := Copy(TrimmedLine, 2, Length(TrimmedLine) - 2);
     PendingState.MultiBuffer.Add(TempStr);
     Exit;
   end;
 
-  // If we are in the middle of a multi-line field, finalize it before new directive
+  // New field keyword
   FinalizePendingField;
 
-  // Parse key/value
   Key := TrimmedLine;
   EqPos := Pos(' ', Key);
   if EqPos > 0 then
-    Key := Copy(Key, 1, EqPos-1);
-  Value := Trim(Copy(TrimmedLine, Length(Key)+1, MaxInt));
+    Key := Copy(Key, 1, EqPos - 1);
+  Value := Trim(Copy(TrimmedLine, Length(Key) + 1, MaxInt));
 
-  // Start a new entry on msgid or msgctxt, but only if we already have a completed entry
+  // Start a new entry when we encounter msgid (unless it's the first entry still without msgid)
   if (Key = 'msgid') or (Key = 'msgctxt') then
   begin
     if (CurrentEntry <> nil) and (CurrentEntry.MsgId <> '') then
@@ -687,7 +582,6 @@ begin
   if CurrentEntry = nil then
     CurrentEntry := TPOEntry.Create;
 
-  // Set new field state
   if Key = 'msgctxt' then
   begin
     PendingState.Field := 'msgctxt';
@@ -711,27 +605,22 @@ begin
   else if (Copy(Key, 1, 6) = 'msgstr') and (Length(Key) > 6) and (Key[7] = '[') then
   begin
     PendingState.Field := 'msgstrN';
-    TempStr := Copy(Key, 8, Length(Key)-8);
+    TempStr := Copy(Key, 8, Length(Key) - 8);
     PendingState.PluralIndex := StrToIntDef(TempStr, -1);
   end
   else
     Exit;
 
-  // Process the value part
   if (Value <> '') and (Value[1] = '"') then
   begin
     PendingState.MultiBuffer.Clear;
-    Content := Copy(Value, 2, Length(Value)-2);
-    // Only add non-empty content; empty content means multi-line start
+    Content := Copy(Value, 2, Length(Value) - 2);
     if Content <> '' then
       PendingState.MultiBuffer.Add(Content);
-    // else leave MultiBuffer empty => ready for continuation lines
   end
   else
   begin
-    // Empty value, e.g. msgstr "" – keep state ready for continuation
     PendingState.MultiBuffer.Clear;
-    // No immediate assignment, will be handled by continuation or FinalizePendingField
   end;
 end;
 
@@ -752,6 +641,16 @@ begin
     sl := TStringList.Create;
     try
       sl.LoadFromStream(AStream, FEncoding);
+
+      // Count trailing empty lines
+      FTrailingEmptyLines := 0;
+      i := sl.Count - 1;
+      while (i >= 0) and (sl[i] = '') do
+      begin
+        Inc(FTrailingEmptyLines);
+        Dec(i);
+      end;
+
       for i := 0 to sl.Count - 1 do
       begin
         Line := sl[i];
@@ -761,15 +660,13 @@ begin
       sl.Free;
     end;
 
-    // Finalize any pending field and entry
+    // Finalize any pending field and the last entry
     if PendingState.Field <> '' then
     begin
-      // Force finalization of remaining multi buffer
       if PendingState.MultiBuffer.Count > 0 then
-        ParseLine('', CurrentEntry, PendingState)  // empty line triggers finalization
+        ParseLine('', CurrentEntry, PendingState)
       else
       begin
-        // Empty field finalize
         if CurrentEntry = nil then CurrentEntry := TPOEntry.Create;
         if PendingState.Field = 'msgid' then CurrentEntry.MsgId := ''
         else if PendingState.Field = 'msgid_plural' then CurrentEntry.MsgIdPlural := ''
@@ -797,120 +694,122 @@ begin
   end;
 end;
 
-procedure TPOFile.WriteEntry(Entry: TPOEntry; Lines: TStrings);
-
-  procedure WriteFieldLines(Raw: TStrings; const Value: string; const Prefix: string);
-  var
-    i: integer;
-    escapedLine: string;
-    subLines: TStringList;
+// Internal helper: normalise line endings and split into escaped PO quoted lines
+procedure TPOFile.AddFieldToStrings(Lines: TStrings; const Prefix, FieldKeyword: string; const Value: string);
+var
+  Normalized: string;
+  SepStr: string;   // the line break string according to style
+  SepEscape: string;
+  Parts: TStringArray;
+  i: integer;
+begin
+  if Value = '' then
   begin
-    if Raw.Count > 0 then
-    begin
-      // Output exactly as parsed
-      if Raw.Count = 1 then
-        Lines.Add(Prefix + '"' + Raw[0] + '"')
-      else
-      begin
-        Lines.Add(Prefix + '""');
-        for i := 0 to Raw.Count - 1 do
-          Lines.Add('"' + Raw[i] + '"');
-      end;
-    end
-    else
-    begin
-      // Generate new multi-line output based on value
-      if Value = '' then
-      begin
-        Lines.Add(Prefix + '""');
-        Exit;
-      end;
-      subLines := TStringList.Create;
-      try
-        subLines.Text := Value; // breaks by line endings
-        if subLines.Count <= 1 then
-        begin
-          Lines.Add(Prefix + '"' + EscapeString(Value) + '"');
-        end
-        else
-        begin
-          Lines.Add(Prefix + '""');
-          for i := 0 to subLines.Count - 1 do
-          begin
-            escapedLine := EscapeString(subLines[i]);
-            Lines.Add('"' + escapedLine + '"');
-          end;
-        end;
-      finally
-        subLines.Free;
-      end;
-    end;
+    Lines.Add(Prefix + FieldKeyword + ' ""');
+    Exit;
   end;
 
+  // Determine separator and its escape sequence
+  case FLineEndingStyle of
+    pleCRLF: begin
+      SepStr := #13#10;
+      SepEscape := '\r\n';
+    end;
+    pleCR: begin
+      SepStr := #13;
+      SepEscape := '\r';
+    end;
+    else       // pleLF
+      SepStr := #10;
+      SepEscape := '\n';
+  end;
+
+  // Normalise all line breaks to the chosen style
+  Normalized := StringReplace(Value, #13#10, SepStr, [rfReplaceAll]);
+  if SepStr <> #13 then
+    Normalized := StringReplace(Normalized, #13, SepStr, [rfReplaceAll]);
+  if SepStr <> #10 then
+    Normalized := StringReplace(Normalized, #10, SepStr, [rfReplaceAll]);
+
+  // Check if the string ends with the separator
+  if (Length(Normalized) >= Length(SepStr)) and (Copy(Normalized, Length(Normalized) - Length(SepStr) + 1, Length(SepStr)) =
+    SepStr) then
+  begin
+    SetLength(Normalized, Length(Normalized) - Length(SepStr));
+    // If the string is a single line (no more separators) and trailing separator was present
+    if Pos(SepStr, Normalized) = 0 then
+    begin
+      Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + SepEscape + '"');
+      Exit;
+    end;
+    // Multi-line with trailing separator: split, each part + escape
+    Parts := Normalized.Split(SepStr);
+    Lines.Add(Prefix + FieldKeyword + ' ""');
+    for i := 0 to High(Parts) do
+      Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+    Exit;
+  end
+  else
+  begin
+    // No trailing separator
+    if Pos(SepStr, Normalized) = 0 then
+    begin
+      // Single line
+      Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + '"');
+      Exit;
+    end;
+    // Multi-line, no trailing separator
+    Parts := Normalized.Split(SepStr);
+    Lines.Add(Prefix + FieldKeyword + ' ""');
+    for i := 0 to High(Parts) - 1 do
+      Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+    Lines.Add('"' + EscapeString(Parts[High(Parts)]) + '"');
+  end;
+end;
+
+procedure TPOFile.WriteEntry(Entry: TPOEntry; Lines: TStrings);
 var
   i: integer;
   Prefix: string;
-  rawMsg: TStringList;
 begin
   if Entry.Obsolete then
     Prefix := '#~ '
   else
     Prefix := '';
 
-  // Comments: raw lines have priority, preserving exact order
-  if Entry.RawComments.Count > 0 then
+  // Comments
+  for i := 0 to Entry.FComments.Count - 1 do
   begin
-    for i := 0 to Entry.RawComments.Count - 1 do
-      Lines.Add(Prefix + Entry.RawComments[i]);
-  end
-  else
-  begin
-    // Build from typed comments (when raw was cleared by editing)
-    for i := 0 to Entry.FComments.Count - 1 do
-    begin
-      case TPOComment(Entry.FComments[i]).CommentType of
-        poctTranslator: Lines.Add(Prefix + '# ' + TPOComment(Entry.FComments[i]).Text);
-        poctExtracted: Lines.Add(Prefix + '#. ' + TPOComment(Entry.FComments[i]).Text);
-        poctReference: Lines.Add(Prefix + '#: ' + TPOComment(Entry.FComments[i]).Text);
-        poctPrevious: Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
-        poctFlag: Lines.Add(Prefix + '#, ' + TPOComment(Entry.FComments[i]).Text);
-      end;
+    case TPOComment(Entry.FComments[i]).CommentType of
+      poctTranslator: Lines.Add(Prefix + '# ' + TPOComment(Entry.FComments[i]).Text);
+      poctExtracted: Lines.Add(Prefix + '#. ' + TPOComment(Entry.FComments[i]).Text);
+      poctReference: Lines.Add(Prefix + '#: ' + TPOComment(Entry.FComments[i]).Text);
+      poctPrevious: Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
+      poctFlag: Lines.Add(Prefix + '#, ' + TPOComment(Entry.FComments[i]).Text);
     end;
   end;
 
   // msgctxt
   if Entry.MsgCtxt <> '' then
-    WriteFieldLines(Entry.RawMsgCtxt, Entry.MsgCtxt, Prefix + 'msgctxt ');
+    AddFieldToStrings(Lines, Prefix, 'msgctxt', Entry.MsgCtxt);
 
   // msgid
-  WriteFieldLines(Entry.RawMsgId, Entry.MsgId, Prefix + 'msgid ');
+  AddFieldToStrings(Lines, Prefix, 'msgid', Entry.MsgId);
 
   // msgid_plural
   if Entry.IsPlural then
-    WriteFieldLines(Entry.RawMsgIdPlural, Entry.MsgIdPlural, Prefix + 'msgid_plural ');
+    AddFieldToStrings(Lines, Prefix, 'msgid_plural', Entry.MsgIdPlural);
 
-  // msgstr
+  // msgstr / msgstr[N]
   if Entry.IsPlural then
   begin
     for i := 0 to Entry.MsgStrCount - 1 do
-    begin
-      rawMsg := Entry.GetRawMsgStr(i);
-      if (rawMsg <> nil) and (rawMsg.Count > 0) then
-        WriteFieldLines(rawMsg, Entry.MsgStr[i], Prefix + 'msgstr[' + IntToStr(i) + '] ')
-      else
-        WriteFieldLines(nil, Entry.MsgStr[i], Prefix + 'msgstr[' + IntToStr(i) + '] ');
-    end;
+      AddFieldToStrings(Lines, Prefix, 'msgstr[' + IntToStr(i) + ']', Entry.MsgStr[i]);
     if Entry.MsgStrCount = 0 then
       Lines.Add(Prefix + 'msgstr[0] ""');
   end
   else
-  begin
-    rawMsg := Entry.GetRawMsgStr(0);
-    if (rawMsg <> nil) and (rawMsg.Count > 0) then
-      WriteFieldLines(rawMsg, Entry.MsgStrSimple, Prefix + 'msgstr ')
-    else
-      WriteFieldLines(nil, Entry.MsgStrSimple, Prefix + 'msgstr ');
-  end;
+    AddFieldToStrings(Lines, Prefix, 'msgstr', Entry.MsgStrSimple);
 end;
 
 procedure TPOFile.SaveToStream(AStream: TStream);
@@ -925,6 +824,18 @@ begin
       WriteEntry(TPOEntry(FEntries[i]), sl);
       if i < FEntries.Count - 1 then
         sl.Add('');
+    end;
+
+    // Preserve trailing empty lines as in the original file
+    for i := 1 to FTrailingEmptyLines do
+      sl.Add('');
+
+    // Set the file-level line break according to style (affects how the physical file is written)
+    case FLineEndingStyle of
+      pleCRLF: sl.LineBreak := #13#10;
+      pleCR: sl.LineBreak := #13;
+      else
+        sl.LineBreak := #10;
     end;
     sl.SaveToStream(AStream, FEncoding);
   finally
@@ -952,6 +863,173 @@ begin
     if (TPOEntry(FEntries[i]).MsgId = AMsgId) and (TPOEntry(FEntries[i]).MsgCtxt = AMsgCtxt) then
       Exit(TPOEntry(FEntries[i]));
   Result := nil;
+end;
+
+function TPOFile.GetHeaders: TStrings;
+var
+  Entry: TPOEntry;
+  sl: TStringList;
+  i: integer;
+  s: string;
+  p: integer;
+begin
+  Entry := FindEntry('', '');
+  if Entry = nil then
+  begin
+    Entry := TPOEntry.Create;
+    Entry.MsgId := '';
+    FEntries.Insert(0, Entry);
+  end;
+  sl := TStringList.Create;
+  try
+    sl.Text := Entry.MsgStrSimple;
+    Result := TStringList.Create;
+    for i := 0 to sl.Count - 1 do
+    begin
+      s := sl[i];
+      if s = '' then Continue;
+      p := Pos(': ', s);
+      if p > 0 then
+        Result.Add(Copy(s, 1, p - 1) + '=' + Copy(s, p + 2, MaxInt))
+      else
+        Result.Add(s);
+    end;
+  finally
+    sl.Free;
+  end;
+end;
+
+procedure TPOFile.SetHeaders(AHeaders: TStrings);
+var
+  Entry: TPOEntry;
+  sl: TStringList;
+  i: integer;
+  s: string;
+  p: integer;
+begin
+  Entry := FindEntry('', '');
+  if Entry = nil then
+  begin
+    Entry := TPOEntry.Create;
+    Entry.MsgId := '';
+    FEntries.Insert(0, Entry);
+  end;
+  sl := TStringList.Create;
+  try
+    for i := 0 to AHeaders.Count - 1 do
+    begin
+      s := AHeaders[i];
+      if s = '' then Continue;
+      p := Pos('=', s);
+      if p > 0 then
+        sl.Add(Copy(s, 1, p - 1) + ': ' + Copy(s, p + 1, MaxInt))
+      else
+        sl.Add(s);
+    end;
+    Entry.MsgStrSimple := sl.Text;
+  finally
+    sl.Free;
+  end;
+end;
+
+function TPOFile.GetHeaderValue(const AKey: string): string;
+var
+  H: TStrings;
+begin
+  H := GetHeaders;
+  try
+    Result := H.Values[AKey];
+  finally
+    H.Free;
+  end;
+end;
+
+procedure TPOFile.SetHeaderValue(const AKey, AValue: string);
+var
+  H: TStrings;
+begin
+  H := GetHeaders;
+  try
+    H.Values[AKey] := AValue;
+    SetHeaders(H);
+  finally
+    H.Free;
+  end;
+end;
+
+function TPOFile.GetTranslations: TStrings;
+var
+  i: integer;
+  Entry: TPOEntry;
+  KeyEscaped: string;
+begin
+  Result := TStringList.Create;
+  for i := 0 to FEntries.Count - 1 do
+  begin
+    Entry := TPOEntry(FEntries[i]);
+    if Entry.MsgId = '' then Continue;   // skip header(s)
+
+    // Escape '\' and '=' to safely embed Key in 'Key=Value' line
+    KeyEscaped := StringReplace(Entry.MsgId, '\', '\\', [rfReplaceAll]);
+    KeyEscaped := StringReplace(KeyEscaped, '=', '\=', [rfReplaceAll]);
+
+    Result.Add(KeyEscaped + '=' + Entry.MsgStrSimple);
+  end;
+end;
+
+procedure TPOFile.SetTranslations(AList: TStrings);
+var
+  i, j: integer;
+  Entry: TPOEntry;
+  S, KeyPart, ValuePart: string;
+  p: integer;
+  Escaped: boolean;
+begin
+  j := 0;
+  for i := 0 to FEntries.Count - 1 do
+  begin
+    Entry := TPOEntry(FEntries[i]);
+    if Entry.MsgId = '' then
+      Continue;
+
+    if j >= AList.Count then
+      raise Exception.CreateFmt('More translatable entries than provided strings (at entry "%s")', [Entry.MsgId]);
+
+    S := AList[j];
+
+    // Find first unescaped '='
+    p := 1;
+    Escaped := False;
+    while p <= Length(S) do
+    begin
+      if Escaped then
+        Escaped := False
+      else if S[p] = '\' then
+        Escaped := True
+      else if S[p] = '=' then
+        Break;
+      Inc(p);
+    end;
+
+    if p > Length(S) then
+      raise Exception.CreateFmt('Invalid translation line (missing =): %s', [S]);
+
+    KeyPart := Copy(S, 1, p - 1);
+    ValuePart := Copy(S, p + 1, MaxInt);
+
+    // Unescape the key
+    KeyPart := StringReplace(KeyPart, '\=', '=', [rfReplaceAll]);
+    KeyPart := StringReplace(KeyPart, '\\', '\', [rfReplaceAll]);
+
+    if KeyPart <> Entry.MsgId then
+      raise Exception.CreateFmt('Key mismatch at position %d: expected "%s" but got "%s"', [j, Entry.MsgId, KeyPart]);
+
+    Entry.MsgStrSimple := ValuePart;
+    Inc(j);
+  end;
+
+  if j <> AList.Count then
+    raise Exception.CreateFmt('Provided %d translations but there are %d translatable entries', [AList.Count, j]);
 end;
 
 end.
