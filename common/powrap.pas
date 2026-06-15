@@ -74,6 +74,10 @@ type
     procedure DeleteCommentsOfType(AType: TPOCommentType);
     function GetCommentsOfType(AType: TPOCommentType): TStrings;
 
+    // Render entry to PO string (without trailing newline)
+    function ToString(ALineEndingStyle: TPoLineEndingStyle): string; overload;
+    function ToString: string; overload; override;   // uses pleLF by default
+
     property Flags: string read GetFlagsString write SetFlagsString;
     property MsgStrSimple: string read GetMsgStrSimple write SetMsgStrSimple;
     property MsgStr[Index: integer]: string read GetMsgStr write SetMsgStr;
@@ -143,7 +147,7 @@ type
 
 implementation
 
-// ---- plain utility functions ----
+// Plain utility functions
 
 function EscapeString(const S: string): string;
 var
@@ -157,7 +161,7 @@ begin
       '"': Result := Result + '\"';
       #10: Result := Result + '\n';
       #13: Result := Result + '\r';
-      #9: Result := Result + '\t';
+      #9:  Result := Result + '\t';
       else
         Result := Result + S[i];
     end;
@@ -387,6 +391,130 @@ end;
 function TPOEntry.GetIsPlural: boolean;
 begin
   Result := FMsgIdPlural <> '';
+end;
+
+// ---- ToString implementation ----
+
+function TPOEntry.ToString(ALineEndingStyle: TPoLineEndingStyle): string;
+var
+  Lines: TStringList;
+  Prefix: string;
+
+  procedure AddField(const FieldKeyword: string; const Value: string);
+  var
+    Normalized, SepStr, SepEscape: string;
+    Parts: TStringArray;
+    i: Integer;
+  begin
+    if Value = '' then
+    begin
+      Lines.Add(Prefix + FieldKeyword + ' ""');
+      Exit;
+    end;
+
+    case ALineEndingStyle of
+      pleCRLF: begin SepStr := #13#10; SepEscape := '\r\n'; end;
+      pleCR:   begin SepStr := #13;    SepEscape := '\r';   end;
+      else     begin SepStr := #10;    SepEscape := '\n';   end;
+    end;
+
+    Normalized := StringReplace(Value, #13#10, SepStr, [rfReplaceAll]);
+    if SepStr <> #13 then
+      Normalized := StringReplace(Normalized, #13, SepStr, [rfReplaceAll]);
+    if SepStr <> #10 then
+      Normalized := StringReplace(Normalized, #10, SepStr, [rfReplaceAll]);
+
+    if (Length(Normalized) >= Length(SepStr)) and
+       (Copy(Normalized, Length(Normalized)-Length(SepStr)+1, Length(SepStr)) = SepStr) then
+    begin
+      SetLength(Normalized, Length(Normalized)-Length(SepStr));
+      if Pos(SepStr, Normalized) = 0 then
+      begin
+        Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + SepEscape + '"');
+        Exit;
+      end;
+      Parts := Normalized.Split(SepStr);
+      Lines.Add(Prefix + FieldKeyword + ' ""');
+      for i := 0 to High(Parts) do
+        Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+      Exit;
+    end
+    else
+    begin
+      if Pos(SepStr, Normalized) = 0 then
+      begin
+        Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + '"');
+        Exit;
+      end;
+      Parts := Normalized.Split(SepStr);
+      Lines.Add(Prefix + FieldKeyword + ' ""');
+      for i := 0 to High(Parts)-1 do
+        Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+      Lines.Add('"' + EscapeString(Parts[High(Parts)]) + '"');
+    end;
+  end;
+
+var
+  i: integer;
+begin
+  Lines := TStringList.Create;
+  try
+    if FObsolete then Prefix := '#~ ' else Prefix := '';
+
+    // Comments
+    for i := 0 to FComments.Count - 1 do
+    begin
+      case TPOComment(FComments[i]).CommentType of
+        poctTranslator: Lines.Add(Prefix + '# ' + TPOComment(FComments[i]).Text);
+        poctExtracted: Lines.Add(Prefix + '#. ' + TPOComment(FComments[i]).Text);
+        poctReference: Lines.Add(Prefix + '#: ' + TPOComment(FComments[i]).Text);
+        poctPrevious: Lines.Add(Prefix + '#| ' + TPOComment(FComments[i]).Text);
+        poctFlag: Lines.Add(Prefix + '#, ' + TPOComment(FComments[i]).Text);
+      end;
+    end;
+
+    // msgctxt
+    if FMsgCtxt <> '' then
+      AddField('msgctxt', FMsgCtxt);
+
+    // msgid
+    AddField('msgid', FMsgId);
+
+    // msgid_plural
+    if IsPlural then
+      AddField('msgid_plural', FMsgIdPlural);
+
+    // msgstr / msgstr[N]
+    if IsPlural then
+    begin
+      for i := 0 to MsgStrCount - 1 do
+        AddField('msgstr[' + IntToStr(i) + ']', MsgStr[i]);
+      if MsgStrCount = 0 then
+        Lines.Add(Prefix + 'msgstr[0] ""');
+    end
+    else
+      AddField('msgstr', MsgStrSimple);
+
+    // Set line break style for final string
+    case ALineEndingStyle of
+      pleCRLF: Lines.LineBreak := #13#10;
+      pleCR:   Lines.LineBreak := #13;
+      else     Lines.LineBreak := #10;
+    end;
+    Result := Lines.Text;
+
+    // TStrings.Text always appends a trailing LineBreak, we remove it to match PO entry block exactly
+    if (Length(Result) >= Length(Lines.LineBreak)) and
+       (Copy(Result, Length(Result)-Length(Lines.LineBreak)+1, Length(Lines.LineBreak)) = Lines.LineBreak) then
+      SetLength(Result, Length(Result) - Length(Lines.LineBreak));
+  finally
+    Lines.Free;
+  end;
+end;
+
+function TPOEntry.ToString: string;
+begin
+  Result := ToString(pleLF);
 end;
 
 { TPOEntryList }

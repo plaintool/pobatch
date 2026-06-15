@@ -23,7 +23,7 @@ uses
   formdonate
   {$IFDEF WINDOWS}
   ,uDarkStyle
-  ,uWin32WidgetSetDark
+  ,uWin32WidgetSetDark, formattool
   {$ENDIF}
   ;
 

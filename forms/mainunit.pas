@@ -25,7 +25,7 @@ uses
   ExtCtrls,
   Process,
   Buttons,
-  LCLType, ValEdit,
+  LCLType,
   powrap;
 
 type
@@ -51,10 +51,8 @@ type
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
     menuFileSeparator1: TMenuItem;
-    ButtonFilterClear: TSpeedButton;
+    btnFilterClear: TSpeedButton;
     StatusBar: TStatusBar;
-    ValueListHeaders: TValueListEditor;
-    ValueListTrans: TValueListEditor;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -72,10 +70,7 @@ type
     procedure menuFileSaveAsClick(Sender: TObject);
     procedure menuFileSaveClick(Sender: TObject);
     procedure filterChange(Sender: TObject);
-    function EndsWithLineBreak(const Buffer: TBytes): boolean;
-    function EndsWithLineBreak(const FileName: string): boolean;
-    function LoadFileAsBytes(const FileName: string): TBytes;
-    procedure ButtonFilterClearClick(Sender: TObject);
+    procedure btnFilterClearClick(Sender: TObject);
   private
     PoFile: TPoFile;
     FFileName: string;
@@ -86,19 +81,18 @@ type
     //FFilterText: string;
     FAutoCheckUpdates: boolean;
 
-    function NewFile(AFileName: string = string.Empty): boolean;
-    function LoadFromFile(AFileName: string): boolean;
-    function SaveFile(AFileName: string): boolean;
-    procedure FillGrid;
-    procedure SaveGrid;
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
-    procedure ClearEditor;
-    procedure UpdateCaption;
-    procedure OpenFile(const AFileName: string);
-    procedure OpenFileFromCommandLine;
     procedure HandleCommandLineParameters;
     function ValidateFileForOpen(const AFileName: string): boolean;
+    function NewFile(AFileName: string = string.Empty): boolean;
+    procedure OpenFile(const AFileName: string);
+    procedure OpenFileFromCommandLine;
+    function LoadFromFile(AFileName: string): boolean;
+    function SaveFile(AFileName: string): boolean;
+    procedure UpdateCaption;
+    procedure FillGrid;
+    procedure SaveGrid;
   public
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
   end;
@@ -108,7 +102,7 @@ var
 
 implementation
 
-uses formabout, formdonate, systemtool, settings;
+uses formabout, formdonate, systemtool, formattool, settings;
 
   {$R *.lfm}
 
@@ -298,13 +292,174 @@ begin
   //propertyPad.TIObject := PadFormat;
 end;
 
+procedure TformPoBatch.btnFilterClearClick(Sender: TObject);
+begin
+  filter.Text := string.Empty;
+  filterChange(Self);
+end;
+
+function TformPoBatch.IsCanClose: boolean;
+var
+  mr: TModalResult;
+begin
+  Result := True;
+  SaveGrid;
+
+  if FChanged then
+  begin
+    mr := PromptSaveChanges;
+
+    case mr of
+      mrYes:
+      begin
+        // Try to save
+        if FFileName = '' then
+        begin
+          // No filename, show Save As dialog
+          dialogSave.FileName := '';
+          if dialogSave.Execute then
+          begin
+            if not SaveFile(dialogSave.FileName) then
+              Result := False  // Save was cancelled or failed
+            else
+            begin
+              FFileName := dialogSave.FileName;
+              FChanged := False;
+            end;
+          end
+          else
+            Result := False;  // User cancelled Save As dialog
+        end
+        else
+        begin
+          // Save to current file
+          if not SaveFile(FFileName) then
+            Result := False  // Save failed
+          else
+            FChanged := False;
+        end;
+      end;
+      mrNo:
+      begin
+        // Don't save, just close
+        Result := True;
+      end;
+      mrCancel:
+      begin
+        // Cancel closing
+        Result := False;
+      end;
+    end;
+  end;
+end;
+
+function TformPoBatch.PromptSaveChanges: TModalResult;
+var
+  FileNameDisplay: string;
+begin
+  if FFileName = '' then
+    FileNameDisplay := 'Untitled'
+  else
+    FileNameDisplay := ExtractFileName(FFileName);
+
+  Result := MessageDlg('Save Changes', 'The document "' + FileNameDisplay + '" has been modified.' +
+    sLineBreak + 'Do you want to save your changes?', mtConfirmation, [mbYes, mbNo, mbCancel], 0);
+end;
+
+procedure TformPoBatch.HandleCommandLineParameters;
+var
+  i: integer;
+  Param: string;
+  ValidExtensions: array of string;
+  FileExt: string;
+  j: integer;
+begin
+  ValidExtensions := ['.po'];
+
+  // Skip the first parameter (executable path)
+  for i := 1 to ParamCount do
+  begin
+    Param := ParamStr(i);
+
+    // Skip empty parameters and command-line switches
+    if (Param = '') or (Param[1] in ['-', '/']) then
+      Continue;
+
+    // Check if parameter is a file
+    if FileExists(Param) then
+    begin
+      // Check file extension
+      FileExt := LowerCase(ExtractFileExt(Param));
+      for j := 0 to High(ValidExtensions) do
+      begin
+        if FileExt = ValidExtensions[j] then
+        begin
+          FCommandLineFile := Param;
+          Break;
+        end;
+      end;
+
+      if FCommandLineFile <> '' then
+        Break;
+    end
+    else
+    begin
+      // Parameter might be a file path with spaces (passed without quotes)
+      // Try to see if it's a partial path
+      if Pos(' ', Param) > 0 then
+      begin
+        // This might be part of a path with spaces, we could try to reconstruct
+        // For simplicity, we'll just store the first parameter that looks like a file
+        FCommandLineFile := Param;
+        // Note: In real application, you might want to handle quoted paths properly
+      end;
+    end;
+  end;
+end;
+
+function TformPoBatch.ValidateFileForOpen(const AFileName: string): boolean;
+var
+  ValidExtensions: array of string;
+  FileExt: string;
+  i: integer;
+begin
+  Result := False;
+
+  // Check if file exists
+  if not FileExists(AFileName) then
+  begin
+    MessageDlg('Error', 'File does not exist:' + sLineBreak + AFileName,
+      mtError, [mbOK], 0);
+    Exit;
+  end;
+
+  // Check if file is valid (optional - you can remove this if you want to accept any file)
+  ValidExtensions := ['.po'];
+  FileExt := LowerCase(ExtractFileExt(AFileName));
+
+  for i := 0 to High(ValidExtensions) do
+  begin
+    if FileExt = ValidExtensions[i] then
+    begin
+      Result := True;
+      Exit;
+    end;
+  end;
+
+  // If file extension is not in our list, ask for confirmation
+  if MessageDlg('Open File', 'The file "' + ExtractFileName(AFileName) + '" has an unrecognized extension.' +
+    sLineBreak + 'Do you want to try opening it anyway?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    Result := True;
+  end;
+end;
+
 function TformPoBatch.NewFile(AFileName: string = string.Empty): boolean;
 begin
   Result := True;
   try
     PoFile.Reset;
     PoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
-    ClearEditor;
     FillGrid;
     FFileName := AFileName;
     FChanged := False;
@@ -313,6 +468,48 @@ begin
     Result := False;
     raise;
   end;
+end;
+
+procedure TformPoBatch.OpenFile(const AFileName: string);
+begin
+  // Validate file before opening
+  if not ValidateFileForOpen(AFileName) then
+    Exit;
+
+  // Check if we need to save current changes
+  if not IsCanClose then
+    Exit;
+
+  // Try to load the file
+  if LoadFromFile(AFileName) then
+  begin
+    FFileName := AFileName;
+    FChanged := False;
+    UpdateCaption;
+  end;
+end;
+
+procedure TformPoBatch.OpenFileFromCommandLine;
+begin
+  if FCommandLineFile <> '' then
+  begin
+    // Open file from command line
+    if ValidateFileForOpen(FCommandLineFile) then
+    begin
+      if LoadFromFile(FCommandLineFile) then
+      begin
+        FFileName := FCommandLineFile;
+        FChanged := False;
+        UpdateCaption;
+      end;
+    end
+    else
+      // File validation failed, create new empty document
+      NewFile;
+  end
+  else
+    // No file specified, create new empty document
+    NewFile;
 end;
 
 function TformPoBatch.SaveFile(AFileName: string): boolean;
@@ -427,237 +624,6 @@ begin
   end;
 end;
 
-procedure TformPoBatch.FillGrid;
-begin
-  ValueListHeaders.Strings.Assign(PoFile.Headers);
-  ValueListTrans.Strings.Assign(PoFile.Translations);
-end;
-
-procedure TformPoBatch.SaveGrid;
-begin
-  PoFile.Headers := ValueListHeaders.Strings;
-  PoFile.Translations := ValueListTrans.Strings;
-end;
-
-function TformPoBatch.IsCanClose: boolean;
-var
-  mr: TModalResult;
-begin
-  Result := True;
-  //propertyPad.SaveChanges;
-
-  if FChanged then
-  begin
-    mr := PromptSaveChanges;
-
-    case mr of
-      mrYes:
-      begin
-        // Try to save
-        if FFileName = '' then
-        begin
-          // No filename, show Save As dialog
-          dialogSave.FileName := '';
-          if dialogSave.Execute then
-          begin
-            if not SaveFile(dialogSave.FileName) then
-              Result := False  // Save was cancelled or failed
-            else
-            begin
-              FFileName := dialogSave.FileName;
-              FChanged := False;
-            end;
-          end
-          else
-            Result := False;  // User cancelled Save As dialog
-        end
-        else
-        begin
-          // Save to current file
-          if not SaveFile(FFileName) then
-            Result := False  // Save failed
-          else
-            FChanged := False;
-        end;
-      end;
-      mrNo:
-      begin
-        // Don't save, just close
-        Result := True;
-      end;
-      mrCancel:
-      begin
-        // Cancel closing
-        Result := False;
-      end;
-    end;
-  end;
-end;
-
-function TformPoBatch.PromptSaveChanges: TModalResult;
-var
-  FileNameDisplay: string;
-begin
-  if FFileName = '' then
-    FileNameDisplay := 'Untitled'
-  else
-    FileNameDisplay := ExtractFileName(FFileName);
-
-  Result := MessageDlg('Save Changes', 'The document "' + FileNameDisplay + '" has been modified.' +
-    sLineBreak + 'Do you want to save your changes?', mtConfirmation, [mbYes, mbNo, mbCancel], 0);
-end;
-
-procedure TformPoBatch.ClearEditor;
-begin
-  // Clear the PadFormat object
-  //PadFormat.Clear;
-  //PadFormat.MasterPadVersionInfo.MasterPadEditor := 'PoBatch 1.1.0';
-
-  // Refresh property grid
-  //propertyPad.TIObject := nil;
-  //propertyPad.TIObject := PadFormat;
-end;
-
-procedure TformPoBatch.OpenFile(const AFileName: string);
-begin
-  // Validate file before opening
-  if not ValidateFileForOpen(AFileName) then
-    Exit;
-
-  // Check if we need to save current changes
-  if not IsCanClose then
-    Exit;
-
-  // Try to load the file
-  if LoadFromFile(AFileName) then
-  begin
-    FFileName := AFileName;
-    FChanged := False;
-    UpdateCaption;
-  end;
-end;
-
-procedure TformPoBatch.OpenFileFromCommandLine;
-begin
-  if FCommandLineFile <> '' then
-  begin
-    // Open file from command line
-    if ValidateFileForOpen(FCommandLineFile) then
-    begin
-      if LoadFromFile(FCommandLineFile) then
-      begin
-        FFileName := FCommandLineFile;
-        FChanged := False;
-        UpdateCaption;
-      end;
-    end
-    else
-    begin
-      // File validation failed, create new empty document
-      ClearEditor;
-      FFileName := '';
-      FChanged := False;
-      UpdateCaption;
-    end;
-  end
-  else
-  begin
-    // No file specified, create new empty document
-    ClearEditor;
-    FFileName := '';
-    FChanged := False;
-    UpdateCaption;
-  end;
-end;
-
-procedure TformPoBatch.HandleCommandLineParameters;
-var
-  i: integer;
-  Param: string;
-  ValidExtensions: array of string;
-  FileExt: string;
-  j: integer;
-begin
-  ValidExtensions := ['.po'];
-
-  // Skip the first parameter (executable path)
-  for i := 1 to ParamCount do
-  begin
-    Param := ParamStr(i);
-
-    // Skip empty parameters and command-line switches
-    if (Param = '') or (Param[1] in ['-', '/']) then
-      Continue;
-
-    // Check if parameter is a file
-    if FileExists(Param) then
-    begin
-      // Check file extension
-      FileExt := LowerCase(ExtractFileExt(Param));
-      for j := 0 to High(ValidExtensions) do
-      begin
-        if FileExt = ValidExtensions[j] then
-        begin
-          FCommandLineFile := Param;
-          Break;
-        end;
-      end;
-
-      if FCommandLineFile <> '' then
-        Break;
-    end
-    else
-    begin
-      // Parameter might be a file path with spaces (passed without quotes)
-      // Try to see if it's a partial path
-      if Pos(' ', Param) > 0 then
-      begin
-        // This might be part of a path with spaces, we could try to reconstruct
-        // For simplicity, we'll just store the first parameter that looks like a file
-        FCommandLineFile := Param;
-        // Note: In real application, you might want to handle quoted paths properly
-      end;
-    end;
-  end;
-end;
-
-function TformPoBatch.ValidateFileForOpen(const AFileName: string): boolean;
-var
-  ValidExtensions: array of string;
-  FileExt: string;
-  i: integer;
-begin
-  Result := False;
-
-  // Check if file exists
-  if not FileExists(AFileName) then
-  begin
-    MessageDlg('Error', 'File does not exist:' + sLineBreak + AFileName,
-      mtError, [mbOK], 0);
-    Exit;
-  end;
-
-  // Check if file is valid (optional - you can remove this if you want to accept any file)
-  ValidExtensions := ['.po'];
-  FileExt := LowerCase(ExtractFileExt(AFileName));
-
-  for i := 0 to High(ValidExtensions) do
-  begin
-    if FileExt = ValidExtensions[i] then
-    begin
-      Result := True;
-      Exit;
-    end;
-  end;
-
-  // If file extension is not in our list, ask for confirmation
-  if MessageDlg('Open File', 'The file "' + ExtractFileName(AFileName) + '" has an unrecognized extension.' +
-    sLineBreak + 'Do you want to try opening it anyway?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  begin
-    Result := True;
-  end;
-end;
-
 procedure TformPoBatch.UpdateCaption;
 var
   BaseTitle: string;
@@ -682,40 +648,25 @@ begin
     Application.Title := Application.Title + '*';
 end;
 
-function TformPoBatch.EndsWithLineBreak(const Buffer: TBytes): boolean;
-begin
-  Result := False;
-  if Length(Buffer) = 0 then Exit;
+procedure TformPoBatch.FillGrid;
+var test:TPOEntry;
 
-  if (Buffer[High(Buffer)] = byte(#10)) or (Buffer[High(Buffer)] = byte(#13)) then
-    Result := True;
+begin
+  //ValueListHeaders.Strings.Assign(PoFile.Headers);
+  //ValueListTrans.Strings.Assign(PoFile.Translations);
+//  test:=PoFile.FindEntry('Parameters in the form key=value used by {key} in requests. If the value is omitted (key=), it will be requested from the user.','tformconfigtrayslate.labelinitparameters4.caption');
+  test:=PoFile.Entries[PoFile.Entries.Count-1];
+
+  ShowMessage(test.ToString);
+
 end;
 
-function TformPoBatch.EndsWithLineBreak(const FileName: string): boolean;
-var
-  Bytes: TBytes;
+procedure TformPoBatch.SaveGrid;
 begin
-  Bytes := LoadFileAsBytes(FileName);
-  Result := EndsWithLineBreak(Bytes);
+  //PoFile.Headers := ValueListHeaders.Strings;
+  //PoFile.Translations := ValueListTrans.Strings;
 end;
 
-function TformPoBatch.LoadFileAsBytes(const FileName: string): TBytes;
-var
-  FS: TFileStream;
-begin
-  Result := nil;
-  SetLength(Result, 0);
-  if not FileExists(FileName) then Exit;
-
-  FS := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
-  try
-    SetLength(Result, FS.Size);
-    if FS.Size > 0 then
-      FS.ReadBuffer(Result[0], FS.Size);
-  finally
-    FS.Free;
-  end;
-end;
 
 //procedure TformPoBatch.propertyPadModified(Sender: TObject);
 //begin
@@ -725,11 +676,5 @@ end;
 //    UpdateCaption;
 //  end;
 //end;
-
-procedure TformPoBatch.ButtonFilterClearClick(Sender: TObject);
-begin
-  filter.Text := string.Empty;
-  filterChange(Self);
-end;
 
 end.
