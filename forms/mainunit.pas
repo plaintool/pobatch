@@ -132,11 +132,13 @@ type
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
     procedure UpdateRowHeights;
+    procedure SetChanges(Value: boolean);
     procedure UpdateCaption;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     procedure FillGrids;
     procedure SaveGrids;
   public
+    property Changed: boolean read FChanged write SetChanges;
     property Path: string read FPath write FPath;
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
     property SortOrder: TSortOrder read FSortOrder write FSortOrder;
@@ -173,7 +175,6 @@ begin
   // Initialize state
   FInitialized := False;
   FAutoCheckUpdates := True;
-  FChanged := False;
   FFileName := string.Empty;
   FPath := string.Empty;
   FPoFiles := TStringList.Create;
@@ -357,8 +358,7 @@ begin
     if SaveFile(TempFileName) then
     begin
       FFileName := TempFileName;
-      FChanged := False;
-      UpdateCaption;
+      Changed := False;
     end;
   end;
 end;
@@ -374,10 +374,7 @@ begin
   begin
     // Save to current file
     if SaveFile(FFileName) then
-    begin
-      FChanged := False;
-      UpdateCaption;
-    end;
+      Changed := False;
   end;
 end;
 
@@ -390,6 +387,7 @@ end;
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
 begin
   FillGrids;
+  Changed := False;
 end;
 
 procedure TformPoBatch.AAllowEditingAllExecute(Sender: TObject);
@@ -427,10 +425,7 @@ end;
 procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
   if OldValue <> NewValue then
-  begin
-    FChanged := True;
-    UpdateCaption;
-  end;
+    Changed := True;
 end;
 
 procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
@@ -483,10 +478,7 @@ end;
 procedure TformPoBatch.GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
   if OldValue <> NewValue then
-  begin
-    FChanged := True;
-    UpdateCaption;
-  end;
+    Changed := True;
 end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
@@ -519,9 +511,8 @@ begin
   if LoadFromFile(FullPath) then
   begin
     FFileName := FullPath;
-    FChanged := False;
+    Changed := False;
     FillGrids;
-    UpdateCaption;
     // FLastPathIndex already points to Idx – no change needed
   end
   else
@@ -549,15 +540,17 @@ var
   mr: TModalResult;
 begin
   Result := True;
-  SaveGrids;
 
-  if FChanged then
+  if Changed then
   begin
     mr := PromptSaveChanges;
 
     case mr of
       mrYes:
       begin
+        // Save to Po
+        SaveGrids;
+
         // Try to save
         if FFileName = string.Empty then
         begin
@@ -570,7 +563,7 @@ begin
             else
             begin
               FFileName := dialogSave.FileName;
-              FChanged := False;
+              Changed := False;
             end;
           end
           else
@@ -582,7 +575,7 @@ begin
           if not SaveFile(FFileName) then
             Result := False  // Save failed
           else
-            FChanged := False;
+            Changed := False;
         end;
       end;
       mrNo:
@@ -708,8 +701,7 @@ begin
     PoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
     FillGrids;
     FFileName := AFileName;
-    FChanged := False;
-    UpdateCaption;
+    Changed := False;
   except
     Result := False;
     raise;
@@ -732,9 +724,8 @@ begin
   if LoadFromFile(AFileName) then
   begin
     FFileName := AFileName;
-    FChanged := False;
+    Changed := False;
     FillGrids;
-    UpdateCaption;
     Result := True;
   end;
 end;
@@ -949,6 +940,13 @@ begin
   end;
 end;
 
+procedure TformPoBatch.SetChanges(Value: boolean);
+begin
+  FChanged := Value;
+  AUndoChanges.Enabled := FChanged;
+  UpdateCaption;
+end;
+
 procedure TformPoBatch.UpdateCaption;
 var
   BaseTitle: string;
@@ -958,18 +956,18 @@ begin
   AppName := 'PoBatch';
 
   if FFileName = string.Empty then
-    BaseTitle := 'Untitled'
+    BaseTitle := FPath + ifthen(FPath = string.Empty, '', ' - ') + 'Untitled'
   else
     BaseTitle := FPath + ifthen(FPath = string.Empty, '', ' - ') + ExtractFileName(FFileName);
 
-  if FChanged then
+  if Changed then
     Caption := BaseTitle + '* - ' + AppName
   else
     Caption := BaseTitle + ' - ' + AppName;
 
   // You can also set the application title for taskbar
   Application.Title := BaseTitle;
-  if FChanged then
+  if Changed then
     Application.Title := Application.Title + '*';
 end;
 
@@ -1145,6 +1143,8 @@ begin
     // Update fuzzy flag from column 6
     Entry.IsFuzzy := (Grid.Cells[6, Row] = '1');
   end;
+
+  AUndoChanges.Enabled := False;
 end;
 
 end.

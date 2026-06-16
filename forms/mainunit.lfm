@@ -115,7 +115,6 @@ object formPoBatch: TformPoBatch
       Columns = <      
         item
           Layout = tlTop
-          ReadOnly = False
           Title.Caption = 'Name'
           Width = 320
         end      
