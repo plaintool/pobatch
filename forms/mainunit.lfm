@@ -15,7 +15,6 @@ object formPoBatch: TformPoBatch
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDropFiles = FormDropFiles
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
   object StatusBar: TStatusBar
     Left = 0
@@ -87,6 +86,7 @@ object formPoBatch: TformPoBatch
     Columns = <    
       item
         Layout = tlTop
+        ReadOnly = True
         Title.Caption = 'Source Text'
         Width = 320
       end    
@@ -96,11 +96,13 @@ object formPoBatch: TformPoBatch
         Width = 320
       end    
       item
+        ReadOnly = True
         Title.Caption = 'Old Text'
         Visible = False
       end    
       item
         ButtonStyle = cbsCheckboxColumn
+        ReadOnly = True
         Title.Caption = 'Fuzzy'
         Visible = False
       end>
@@ -112,6 +114,7 @@ object formPoBatch: TformPoBatch
     RowCount = 1
     TabOrder = 2
     TitleStyle = tsNative
+    OnEditingDone = GridEditingDone
     OnHeaderClick = GridHeaderClick
     OnHeaderSized = GridHeaderSized
     OnPrepareCanvas = GridPrepareCanvas
@@ -128,12 +131,15 @@ object formPoBatch: TformPoBatch
     BorderStyle = bsNone
     ItemHeight = 0
     TabOrder = 3
+    Visible = False
+    OnClick = ListPathClick
   end
   object SplitterPath: TSplitter
     Left = 149
     Height = 414
     Top = 20
     Width = 10
+    Visible = False
   end
   object MainMenu: TMainMenu
     Left = 64
@@ -159,6 +165,11 @@ object formPoBatch: TformPoBatch
         Caption = 'Open Path...'
         ShortCut = 16464
         OnClick = menuPathOpenClick
+      end
+      object menuClosePath: TMenuItem
+        Caption = 'Close Path'
+        Enabled = False
+        OnClick = menuClosePathClick
       end
       object menuFileSave: TMenuItem
         Caption = 'Save'
@@ -211,5 +222,9 @@ object formPoBatch: TformPoBatch
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
     Left = 232
     Top = 64
+  end
+  object dialogPath: TSelectDirectoryDialog
+    Left = 144
+    Top = 136
   end
 end

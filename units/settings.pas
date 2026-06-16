@@ -86,10 +86,12 @@ begin
 
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
 
+    JSONObj.Add('Path', Form.Path);
+
     // Write to file
     with TStringList.Create do
     try
-      Add(JSONObj.AsJSON);
+      Add(JSONObj.FormatJSON);
       SaveToFile(FileName);
     finally
       Free;
@@ -139,6 +141,9 @@ begin
 
       if JSONObj.FindPath('AutoCheckUpdates') <> nil then
         Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
+
+      if JSONObj.FindPath('Path') <> nil then
+        Form.Path := JSONObj.FindPath('Path').AsString;
 
       Result := True;
     finally
