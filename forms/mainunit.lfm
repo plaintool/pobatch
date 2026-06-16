@@ -84,10 +84,12 @@ object formPoBatch: TformPoBatch
     ColumnClickSorts = True
     Columns = <    
       item
+        Layout = tlTop
         Title.Caption = 'Source Text'
         Width = 320
       end    
       item
+        Layout = tlTop
         Title.Caption = 'Translation'
         Width = 320
       end    
@@ -108,6 +110,8 @@ object formPoBatch: TformPoBatch
     RowCount = 1
     TabOrder = 2
     TitleStyle = tsNative
+    OnHeaderSized = GridHeaderSized
+    OnPrepareCanvas = GridPrepareCanvas
   end
   object MainMenu: TMainMenu
     Left = 64

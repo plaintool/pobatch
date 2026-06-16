@@ -23,9 +23,11 @@ uses
   ComCtrls,
   StdCtrls,
   ExtCtrls,
+  Grids,
   Process,
   Buttons,
-  LCLType, Grids,
+  LCLType,
+  LCLIntf,
   powrap;
 
 type
@@ -60,6 +62,10 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure GridHeaderSized(Sender: TObject; IsColumn: Boolean; Index: Integer
+      );
+    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: Integer;
+      aState: TGridDrawState);
     procedure menuAboutClick(Sender: TObject);
     procedure menuAutoCheckUpdatesClick(Sender: TObject);
     procedure menuFileNewWindowClick(Sender: TObject);
@@ -88,6 +94,7 @@ type
     function OpenFile(const AFileName: string): boolean;
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
+    procedure UpdateRowHeights;
     procedure UpdateCaption;
     procedure FillGrid;
     procedure SaveGrid;
@@ -181,6 +188,23 @@ procedure TformPoBatch.FormKeyDown(Sender: TObject; var Key: word; Shift: TShift
 begin
   if Key = VK_ESCAPE then
     Close;
+end;
+
+procedure TformPoBatch.GridHeaderSized(Sender: TObject; IsColumn: Boolean;
+  Index: Integer);
+begin
+  UpdateRowHeights;
+end;
+
+procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: Integer;
+  aState: TGridDrawState);
+var
+  TS: TTextStyle;
+begin
+  TS := Grid.Canvas.TextStyle;
+  TS.Wordbreak := True;
+  TS.SingleLine := False;
+  Grid.Canvas.TextStyle := TS;
 end;
 
 procedure TformPoBatch.menuAboutClick(Sender: TObject);
@@ -497,58 +521,6 @@ begin
   end;
 end;
 
-function TformPoBatch.SaveFile(AFileName: string): boolean;
-var
-  Output: TStringList;
-  Stream: TStringStream;
-begin
-  Result := False;
-  SaveGrid;
-
-  // Validate filename
-  if Trim(AFileName) = '' then
-  begin
-    MessageDlg('Error', 'Invalid file name', mtError, [mbOK], 0);
-    Exit;
-  end;
-
-  Output := TStringList.Create;
-  try
-    try
-      // Save PoFile content into a string first
-      begin
-        Stream := TStringStream.Create('', TEncoding.UTF8);
-        try
-          PoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
-          Output.Text := Stream.DataString;     // get resulting string
-        finally
-          Stream.Free;
-        end;
-      end;
-
-      // Ensure the file ends with a line break (PO/POT standard)
-      Output.TrailingLineBreak := True;
-
-      // Ensure directory exists
-      ForceDirectories(ExtractFilePath(AFileName));
-
-      // Save file with UTF-8 encoding (without BOM)
-      Output.SaveToFile(AFileName, TEncoding.UTF8);
-
-      Result := True;
-    except
-      on E: Exception do
-      begin
-        MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
-          mtError, [mbOK], 0);
-        Result := False;
-      end;
-    end;
-  finally
-    Output.Free;
-  end;
-end;
-
 function TformPoBatch.LoadFromFile(AFileName: string): boolean;
 var
   Input: TStringList;
@@ -605,6 +577,88 @@ begin
     end;
   finally
     Input.Free;
+  end;
+end;
+
+function TformPoBatch.SaveFile(AFileName: string): boolean;
+var
+  Output: TStringList;
+  Stream: TStringStream;
+begin
+  Result := False;
+  SaveGrid;
+
+  // Validate filename
+  if Trim(AFileName) = '' then
+  begin
+    MessageDlg('Error', 'Invalid file name', mtError, [mbOK], 0);
+    Exit;
+  end;
+
+  Output := TStringList.Create;
+  try
+    try
+      // Save PoFile content into a string first
+      begin
+        Stream := TStringStream.Create('', TEncoding.UTF8);
+        try
+          PoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
+          Output.Text := Stream.DataString;     // get resulting string
+        finally
+          Stream.Free;
+        end;
+      end;
+
+      // Ensure the file ends with a line break (PO/POT standard)
+      Output.TrailingLineBreak := True;
+
+      // Ensure directory exists
+      ForceDirectories(ExtractFilePath(AFileName));
+
+      // Save file with UTF-8 encoding (without BOM)
+      Output.SaveToFile(AFileName, TEncoding.UTF8);
+
+      Result := True;
+    except
+      on E: Exception do
+      begin
+        MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
+          mtError, [mbOK], 0);
+        Result := False;
+      end;
+    end;
+  finally
+    Output.Free;
+  end;
+end;
+
+procedure TformPoBatch.UpdateRowHeights;
+var
+  Row, Col: Integer;
+  R: TRect;
+  H, MaxH: Integer;
+begin
+  for Row := Grid.FixedRows to Grid.RowCount - 1 do
+  begin
+    MaxH := Grid.DefaultRowHeight;
+
+    for Col := 0 to Grid.ColCount - 1 do
+    begin
+      R := Rect(0, 0, Grid.ColWidths[Col] - 4, 0);
+
+      DrawText(Grid.Canvas.Handle,
+               PChar(Grid.Cells[Col, Row]),
+               Length(Grid.Cells[Col, Row]),
+               R,
+               DT_WORDBREAK or DT_CALCRECT);
+
+      H := R.Bottom - R.Top + 4;
+
+      if H > MaxH then
+        MaxH := H;
+    end;
+
+    Grid.RowHeights[Row] := MaxH;
   end;
 end;
 
