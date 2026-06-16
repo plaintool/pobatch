@@ -74,12 +74,14 @@ object formPoBatch: TformPoBatch
     end
   end
   object Grid: TStringGrid
-    Left = 5
+    Left = 159
     Height = 404
     Top = 25
-    Width = 703
+    Width = 549
     Align = alClient
-    BorderSpacing.Around = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    BorderSpacing.Bottom = 5
     BorderStyle = bsNone
     ColumnClickSorts = True
     Columns = <    
@@ -105,13 +107,33 @@ object formPoBatch: TformPoBatch
     DefaultColWidth = 48
     FocusColor = clBlue
     MouseWheelOption = mwGrid
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints]
     Options2 = [goCopyWithoutTrailingLinebreak]
     RowCount = 1
     TabOrder = 2
     TitleStyle = tsNative
+    OnHeaderClick = GridHeaderClick
     OnHeaderSized = GridHeaderSized
     OnPrepareCanvas = GridPrepareCanvas
+  end
+  object ListPath: TListBox
+    Left = 5
+    Height = 404
+    Top = 25
+    Width = 144
+    Align = alLeft
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Bottom = 5
+    BorderStyle = bsNone
+    ItemHeight = 0
+    TabOrder = 3
+  end
+  object SplitterPath: TSplitter
+    Left = 149
+    Height = 414
+    Top = 20
+    Width = 10
   end
   object MainMenu: TMainMenu
     Left = 64
@@ -124,7 +146,7 @@ object formPoBatch: TformPoBatch
         OnClick = menuFileNewClick
       end
       object menuFileNewWindow: TMenuItem
-        Caption = 'New window'
+        Caption = 'New Window'
         ShortCut = 24654
         OnClick = menuFileNewWindowClick
       end
@@ -133,13 +155,18 @@ object formPoBatch: TformPoBatch
         ShortCut = 16463
         OnClick = menuFileOpenClick
       end
+      object menuPathOpen: TMenuItem
+        Caption = 'Open Path...'
+        ShortCut = 16464
+        OnClick = menuPathOpenClick
+      end
       object menuFileSave: TMenuItem
         Caption = 'Save'
         ShortCut = 16467
         OnClick = menuFileSaveClick
       end
       object menuFileSaveAs: TMenuItem
-        Caption = 'Save as...'
+        Caption = 'Save As...'
         ShortCut = 24659
         OnClick = menuFileSaveAsClick
       end
@@ -154,16 +181,16 @@ object formPoBatch: TformPoBatch
     object menuHelp: TMenuItem
       Caption = 'Help'
       object menuBuyMeACoffee: TMenuItem
-        Caption = 'Buy me a coffee...'
+        Caption = 'Buy Me a Coffee...'
         OnClick = menuBuyMeACoffeeClick
       end
       object menuAutoCheckUpdates: TMenuItem
         AutoCheck = True
-        Caption = 'Auto check updates'
+        Caption = 'Auto Check Updates'
         OnClick = menuAutoCheckUpdatesClick
       end
       object menuCheckForUpdates: TMenuItem
-        Caption = 'Check for updates'
+        Caption = 'Check For Updates'
         OnClick = menuCheckForUpdatesClick
       end
       object menuAbout: TMenuItem

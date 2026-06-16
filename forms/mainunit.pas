@@ -36,6 +36,7 @@ type
 
   TformPoBatch = class(TForm)
     Filter: TEdit;
+    ListPath: TListBox;
     MainMenu: TMainMenu;
     menuFile: TMenuItem;
     menuFileOpen: TMenuItem;
@@ -50,10 +51,12 @@ type
     menuAbout: TMenuItem;
     menuFileNewWindow: TMenuItem;
     menuAutoCheckUpdates: TMenuItem;
+    menuPathOpen: TMenuItem;
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
     menuFileSeparator1: TMenuItem;
     btnFilterClear: TSpeedButton;
+    SplitterPath: TSplitter;
     StatusBar: TStatusBar;
     Grid: TStringGrid;
     procedure FormCreate(Sender: TObject);
@@ -62,10 +65,9 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-    procedure GridHeaderSized(Sender: TObject; IsColumn: Boolean; Index: Integer
-      );
-    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: Integer;
-      aState: TGridDrawState);
+    procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
+    procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
+    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure menuAboutClick(Sender: TObject);
     procedure menuAutoCheckUpdatesClick(Sender: TObject);
     procedure menuFileNewWindowClick(Sender: TObject);
@@ -78,13 +80,17 @@ type
     procedure menuFileSaveClick(Sender: TObject);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
+    procedure menuPathOpenClick(Sender: TObject);
   private
     PoFile: TPoFile;
     FFileName: string;
+    FPath:string;
     FChanged: boolean;
     FInitialized: boolean;
     FCommandLineFile: string;
     FAutoCheckUpdates: boolean;
+    FSortOrder: TSortOrder;
+    FSortColumn: integer;
 
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
@@ -100,6 +106,8 @@ type
     procedure SaveGrid;
   public
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
+    property SortOrder: TSortOrder read FSortOrder write FSortOrder;
+    property SortColumn: integer read FSortColumn write FSortColumn;
   end;
 
 var
@@ -122,8 +130,11 @@ begin
   FInitialized := False;
   FAutoCheckUpdates := True;
   FChanged := False;
-  FFileName := '';
-  FCommandLineFile := '';
+  FFileName := string.Empty;
+  FPath:=string.Empty;
+  FCommandLineFile := string.Empty;
+  FSortColumn := -1;
+  FSortOrder := soAscending;
 
   LoadFormSettings(Self);
 
@@ -154,7 +165,7 @@ begin
     FInitialized := True;
 
     // Open file from command line if specified, otherwise start with a new document
-    if FCommandLineFile <> '' then
+    if FCommandLineFile <> string.Empty then
     begin
       if not OpenFile(FCommandLineFile) then
         NewFile;
@@ -190,14 +201,44 @@ begin
     Close;
 end;
 
-procedure TformPoBatch.GridHeaderSized(Sender: TObject; IsColumn: Boolean;
-  Index: Integer);
+procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: Boolean; Index: Integer);
+begin
+  if not IsColumn then Exit;   // handle column clicks only
+
+  if Index = 0 then
+  begin
+    // Column 0 contains original loading order numbers – reset sorting
+    FSortColumn := -1;
+    FillGrid;  // rows return to the loading order
+    Exit;
+  end;
+
+  // For other columns: toggle direction if same column, else start new ascending sort
+  if Index = FSortColumn then
+  begin
+    // Switch between ascending and descending
+    if FSortOrder = soAscending then
+      FSortOrder := soDescending
+    else
+      FSortOrder := soAscending;
+  end
+  else
+  begin
+    FSortColumn := Index;
+    FSortOrder := soAscending;
+  end;
+
+  // Apply sorting to the data rows only (skip fixed rows)
+  if (Grid.RowCount > Grid.FixedRows) and (FSortColumn >= 0) then
+    Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+end;
+
+procedure TformPoBatch.GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
 begin
   UpdateRowHeights;
 end;
 
-procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: Integer;
-  aState: TGridDrawState);
+procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 var
   TS: TTextStyle;
 begin
@@ -269,12 +310,17 @@ begin
   end;
 end;
 
+procedure TformPoBatch.menuPathOpenClick(Sender: TObject);
+begin
+// TODO OpenPath
+end;
+
 procedure TformPoBatch.menuFileSaveAsClick(Sender: TObject);
 var
   TempFileName: string;
 begin
   // Set initial filename in dialog
-  if FFileName <> '' then
+  if FFileName <> string.Empty then
     dialogSave.FileName := ExtractFileName(FFileName)
   else
     dialogSave.FileName := 'untitled.po';
@@ -284,7 +330,7 @@ begin
     TempFileName := dialogSave.FileName;
 
     // Ensure file has extension
-    if ExtractFileExt(TempFileName) = '' then
+    if ExtractFileExt(TempFileName) = string.Empty then
       TempFileName := TempFileName + '.po';
 
     if SaveFile(TempFileName) then
@@ -298,7 +344,7 @@ end;
 
 procedure TformPoBatch.menuFileSaveClick(Sender: TObject);
 begin
-  if FFileName = '' then
+  if FFileName = string.Empty then
   begin
     // No filename yet, use Save As dialog
     menuFileSaveAsClick(Sender);
@@ -341,10 +387,10 @@ begin
       mrYes:
       begin
         // Try to save
-        if FFileName = '' then
+        if FFileName = string.Empty then
         begin
           // No filename, show Save As dialog
-          dialogSave.FileName := '';
+          dialogSave.FileName := string.Empty;
           if dialogSave.Execute then
           begin
             if not SaveFile(dialogSave.FileName) then
@@ -385,7 +431,7 @@ function TformPoBatch.PromptSaveChanges: TModalResult;
 var
   FileNameDisplay: string;
 begin
-  if FFileName = '' then
+  if FFileName = string.Empty then
     FileNameDisplay := 'Untitled'
   else
     FileNameDisplay := ExtractFileName(FFileName);
@@ -410,7 +456,7 @@ begin
     Param := ParamStr(i);
 
     // Skip empty parameters and command-line switches
-    if (Param = '') or (Param[1] in ['-', '/']) then
+    if (Param = string.Empty) or (Param[1] in ['-', '/']) then
       Continue;
 
     // Check if parameter is a file
@@ -427,7 +473,7 @@ begin
         end;
       end;
 
-      if FCommandLineFile <> '' then
+      if FCommandLineFile <> string.Empty then
         Break;
     end
     else
@@ -589,7 +635,7 @@ begin
   SaveGrid;
 
   // Validate filename
-  if Trim(AFileName) = '' then
+  if Trim(AFileName) = string.Empty then
   begin
     MessageDlg('Error', 'Invalid file name', mtError, [mbOK], 0);
     Exit;
@@ -600,7 +646,7 @@ begin
     try
       // Save PoFile content into a string first
       begin
-        Stream := TStringStream.Create('', TEncoding.UTF8);
+        Stream := TStringStream.Create(string.Empty, TEncoding.UTF8);
         try
           PoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
           Output.Text := Stream.DataString;     // get resulting string
@@ -634,9 +680,9 @@ end;
 
 procedure TformPoBatch.UpdateRowHeights;
 var
-  Row, Col: Integer;
+  Row, Col: integer;
   R: TRect;
-  H, MaxH: Integer;
+  H, MaxH: integer;
 begin
   for Row := Grid.FixedRows to Grid.RowCount - 1 do
   begin
@@ -647,10 +693,10 @@ begin
       R := Rect(0, 0, Grid.ColWidths[Col] - 4, 0);
 
       DrawText(Grid.Canvas.Handle,
-               PChar(Grid.Cells[Col, Row]),
-               Length(Grid.Cells[Col, Row]),
-               R,
-               DT_WORDBREAK or DT_CALCRECT);
+        PChar(Grid.Cells[Col, Row]),
+        Length(Grid.Cells[Col, Row]),
+        R,
+        DT_WORDBREAK or DT_CALCRECT);
 
       H := R.Bottom - R.Top + 4;
 
@@ -670,7 +716,7 @@ begin
   // Get application name from project settings or use default
   AppName := 'PoBatch';
 
-  if FFileName = '' then
+  if FFileName = string.Empty then
     BaseTitle := 'Untitled'
   else
     BaseTitle := ExtractFileName(FFileName);
@@ -704,7 +750,7 @@ begin
   // Disable visual updates for performance while filling
   Grid.BeginUpdate;
   try
-    // We will skip the header entry (MsgId = '') and count only translatable entries
+    // We will skip the header entry (MsgId = string.Empty) and count only translatable entries
     RowIndex := Grid.FixedRows; // data rows start below fixed header rows
     Grid.RowCount := RowIndex;  // reset to only fixed rows initially
 
@@ -713,7 +759,7 @@ begin
       Entry := PoFile.Entries[i];
 
       // Skip the header entry (empty msgid) – usually not shown in the grid
-      if Entry.MsgId = '' then
+      if Entry.MsgId = string.Empty then
         Continue;
 
       // Add a new row
@@ -739,7 +785,7 @@ begin
             PreviousText := PreviousText + sLineBreak + PrevStrings[j];
         end
         else
-          PreviousText := '';
+          PreviousText := string.Empty;
       finally
         PrevStrings.Free;
       end;
@@ -753,29 +799,39 @@ begin
 
       Inc(RowIndex);
     end;
-
-    // Optional: Make columns 3 and 4 invisible if they should stay hidden
-    // Grid.Columns[3].Visible := False;  // call these in form setup if needed
-    // Grid.Columns[4].Visible := False;
-
-    if (Grid.SortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
-      Grid.SortColRow(True, Grid.SortColumn);
   finally
     Grid.EndUpdate;
   end;
 end;
 
 procedure TformPoBatch.SaveGrid;
+var
+  Row: Integer;
+  EntryIndex: Integer;
+  Entry: TPOEntry;
 begin
-end;
+  if not Assigned(PoFile) then Exit;
 
-//procedure TformPoBatch.propertyPadModified(Sender: TObject);
-//begin
-//  if not FChanged then
-//  begin
-//    FChanged := True;
-//    UpdateCaption;
-//  end;
-//end;
+  // Iterate over all data rows (skip fixed header rows)
+  for Row := Grid.FixedRows to Grid.RowCount - 1 do
+  begin
+    // Column 0 holds the permanent entry number (1‑based, matches index in Entries)
+    EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
+    // Validate: must be a valid index, skip header (index 0) and out‑of‑range
+    if (EntryIndex < 1) or (EntryIndex >= PoFile.Entries.Count) then
+      Continue;
+
+    Entry := PoFile.Entries[EntryIndex];
+
+    // Update translation from column 2
+    Entry.MsgStrSimple := Grid.Cells[2, Row];
+
+    // Update fuzzy flag from column 4 ("1" or "0")
+    Entry.IsFuzzy := (Grid.Cells[4, Row] = '1');
+
+    // Column 3 (previous text) is intentionally left untouched,
+    // as it reflects #| comments which are normally managed by the PO tools.
+  end;
+end;
 
 end.
