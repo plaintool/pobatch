@@ -84,6 +84,15 @@ begin
     end;
     JSONObj.Add('WindowState', Ord(Form.WindowState));
 
+    JSONObj.Add('ListPathWidth', Form.ListPath.Width);
+    JSONObj.Add('GridHeadersHeight', Form.GridHeaders.Height);
+    JSONObj.Add('GridHeadersColumnNameWidth', Form.GridHeaders.Columns[0].Width);
+    JSONObj.Add('GridHeadersColumnValueWidth', Form.GridHeaders.Columns[1].Width);
+    JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[0].Width);
+    JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[1].Width);
+
+    JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
+
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
 
     JSONObj.Add('Path', Form.Path);
@@ -139,11 +148,36 @@ begin
       if JSONObj.FindPath('WindowState') <> nil then
         Form.WindowState := TWindowState(JSONObj.FindPath('WindowState').AsInteger);
 
-      if JSONObj.FindPath('AutoCheckUpdates') <> nil then
-        Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
+      if JSONObj.FindPath('ListPathWidth') <> nil then
+        Form.ListPath.Width := JSONObj.FindPath('ListPathWidth').AsInteger;
+
+      if JSONObj.FindPath('GridHeadersHeight') <> nil then
+        Form.GridHeaders.Height := JSONObj.FindPath('GridHeadersHeight').AsInteger;
+
+      if JSONObj.FindPath('GridHeadersColumnNameWidth') <> nil then
+        Form.GridHeaders.Columns[0].Width := JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger;
+
+      if JSONObj.FindPath('GridHeadersColumnValueWidth') <> nil then
+        Form.GridHeaders.Columns[1].Width := JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger;
+
+      if JSONObj.FindPath('GridColumnSourceTextWidth') <> nil then
+        Form.Grid.Columns[0].Width := JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger;
+
+      if JSONObj.FindPath('GridColumnTranslationWidth') <> nil then
+        Form.Grid.Columns[1].Width := JSONObj.FindPath('GridColumnTranslationWidth').AsInteger;
+
+      if JSONObj.FindPath('MenuHeadersChecked') <> nil then
+      begin
+        Form.MenuHeaders.Checked := JSONObj.FindPath('MenuHeadersChecked').AsBoolean;
+        if Form.MenuHeaders.Checked and Assigned(Form.MenuHeaders.OnClick) then
+          Form.MenuHeaders.OnClick(Form.MenuHeaders);
+      end;
 
       if JSONObj.FindPath('Path') <> nil then
         Form.Path := JSONObj.FindPath('Path').AsString;
+
+      if JSONObj.FindPath('AutoCheckUpdates') <> nil then
+        Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
 
       Result := True;
     finally

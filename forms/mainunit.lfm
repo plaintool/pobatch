@@ -16,13 +16,6 @@ object formPoBatch: TformPoBatch
   OnDestroy = FormDestroy
   OnDropFiles = FormDropFiles
   OnShow = FormShow
-  object StatusBar: TStatusBar
-    Left = 0
-    Height = 23
-    Top = 434
-    Width = 713
-    Panels = <>
-  end
   object PanelFilter: TPanel
     Left = 1
     Height = 20
@@ -36,7 +29,7 @@ object formPoBatch: TformPoBatch
     ClientHeight = 20
     ClientWidth = 707
     ParentBackground = False
-    TabOrder = 1
+    TabOrder = 0
     object Filter: TEdit
       Left = 5
       Height = 20
@@ -72,53 +65,6 @@ object formPoBatch: TformPoBatch
       OnClick = btnFilterClearClick
     end
   end
-  object Grid: TStringGrid
-    Left = 159
-    Height = 404
-    Top = 25
-    Width = 549
-    Align = alClient
-    BorderSpacing.Top = 5
-    BorderSpacing.Right = 5
-    BorderSpacing.Bottom = 5
-    BorderStyle = bsNone
-    ColumnClickSorts = True
-    Columns = <    
-      item
-        Layout = tlTop
-        ReadOnly = True
-        Title.Caption = 'Source Text'
-        Width = 320
-      end    
-      item
-        Layout = tlTop
-        Title.Caption = 'Translation'
-        Width = 320
-      end    
-      item
-        ReadOnly = True
-        Title.Caption = 'Old Text'
-        Visible = False
-      end    
-      item
-        ButtonStyle = cbsCheckboxColumn
-        ReadOnly = True
-        Title.Caption = 'Fuzzy'
-        Visible = False
-      end>
-    DefaultColWidth = 48
-    FocusColor = clBlue
-    MouseWheelOption = mwGrid
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints]
-    Options2 = [goCopyWithoutTrailingLinebreak]
-    RowCount = 1
-    TabOrder = 2
-    TitleStyle = tsNative
-    OnEditingDone = GridEditingDone
-    OnHeaderClick = GridHeaderClick
-    OnHeaderSized = GridHeaderSized
-    OnPrepareCanvas = GridPrepareCanvas
-  end
   object ListPath: TListBox
     Left = 5
     Height = 404
@@ -130,7 +76,7 @@ object formPoBatch: TformPoBatch
     BorderSpacing.Bottom = 5
     BorderStyle = bsNone
     ItemHeight = 0
-    TabOrder = 3
+    TabOrder = 2
     Visible = False
     OnClick = ListPathClick
   end
@@ -139,92 +85,220 @@ object formPoBatch: TformPoBatch
     Height = 414
     Top = 20
     Width = 10
+    AutoSnap = False
+    Color = clBtnFace
+    ParentColor = False
     Visible = False
   end
+  object PanelClient: TPanel
+    Left = 159
+    Height = 404
+    Top = 25
+    Width = 549
+    Align = alClient
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    BorderSpacing.Bottom = 5
+    ClientHeight = 404
+    ClientWidth = 549
+    ParentBackground = False
+    TabOrder = 4
+    object GridHeaders: TStringGrid
+      Left = 1
+      Height = 80
+      Top = 1
+      Width = 547
+      Align = alTop
+      BorderStyle = bsNone
+      ColCount = 3
+      ColumnClickSorts = True
+      Columns = <      
+        item
+          Layout = tlTop
+          ReadOnly = False
+          Title.Caption = 'Name'
+          Width = 320
+        end      
+        item
+          Layout = tlTop
+          Title.Caption = 'Value'
+          Width = 320
+        end>
+      DefaultColWidth = 48
+      FocusColor = clBlue
+      MouseWheelOption = mwGrid
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goAutoAddRows, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints]
+      Options2 = [goCopyWithoutTrailingLinebreak]
+      RowCount = 1
+      TabOrder = 2
+      TitleStyle = tsNative
+      Visible = False
+      OnEditingDone = GridEditingDone
+      OnHeaderClick = GridHeaderClick
+      OnHeaderSized = GridHeaderSized
+      OnKeyDown = GridHeadersKeyDown
+      OnPrepareCanvas = GridPrepareCanvas
+    end
+    object SplitterTop: TSplitter
+      Cursor = crVSplit
+      Left = 1
+      Height = 10
+      Top = 81
+      Width = 547
+      Align = alTop
+      AutoSnap = False
+      Color = clBtnFace
+      ParentColor = False
+      ResizeAnchor = akTop
+      Visible = False
+    end
+    object Grid: TStringGrid
+      Left = 1
+      Height = 312
+      Top = 91
+      Width = 547
+      Align = alClient
+      BorderStyle = bsNone
+      ColumnClickSorts = True
+      Columns = <      
+        item
+          Layout = tlTop
+          ReadOnly = True
+          Title.Caption = 'Source Text'
+          Width = 320
+        end      
+        item
+          Layout = tlTop
+          Title.Caption = 'Translation'
+          Width = 320
+        end      
+        item
+          ReadOnly = True
+          Title.Caption = 'Old Text'
+          Visible = False
+        end      
+        item
+          ButtonStyle = cbsCheckboxColumn
+          ReadOnly = True
+          Title.Caption = 'Fuzzy'
+          Visible = False
+        end>
+      DefaultColWidth = 48
+      FocusColor = clBlue
+      MouseWheelOption = mwGrid
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goAutoAddRows, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints]
+      Options2 = [goCopyWithoutTrailingLinebreak]
+      RowCount = 1
+      TabOrder = 0
+      TitleStyle = tsNative
+      OnEditingDone = GridEditingDone
+      OnHeaderClick = GridHeaderClick
+      OnHeaderSized = GridHeaderSized
+      OnPrepareCanvas = GridPrepareCanvas
+    end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 434
+    Width = 713
+    Panels = <>
+  end
   object MainMenu: TMainMenu
-    Left = 64
-    Top = 64
-    object menuFile: TMenuItem
+    Left = 192
+    Top = 192
+    object MenuFile: TMenuItem
       Caption = 'File'
-      object menuFileNew: TMenuItem
+      object MenuFileNew: TMenuItem
         Caption = 'New'
         ShortCut = 16462
-        OnClick = menuFileNewClick
+        OnClick = MenuFileNewClick
       end
-      object menuFileNewWindow: TMenuItem
+      object MenuFileNewWindow: TMenuItem
         Caption = 'New Window'
         ShortCut = 24654
-        OnClick = menuFileNewWindowClick
+        OnClick = MenuFileNewWindowClick
       end
-      object menuFileOpen: TMenuItem
+      object MenuFileOpen: TMenuItem
         Caption = 'Open...'
         ShortCut = 16463
-        OnClick = menuFileOpenClick
+        OnClick = MenuFileOpenClick
       end
-      object menuPathOpen: TMenuItem
-        Caption = 'Open Path...'
-        ShortCut = 16464
-        OnClick = menuPathOpenClick
-      end
-      object menuClosePath: TMenuItem
-        Caption = 'Close Path'
-        Enabled = False
-        OnClick = menuClosePathClick
-      end
-      object menuFileSave: TMenuItem
+      object MenuFileSave: TMenuItem
         Caption = 'Save'
         ShortCut = 16467
-        OnClick = menuFileSaveClick
+        OnClick = MenuFileSaveClick
       end
-      object menuFileSaveAs: TMenuItem
+      object MenuFileSaveAs: TMenuItem
         Caption = 'Save As...'
         ShortCut = 24659
-        OnClick = menuFileSaveAsClick
+        OnClick = MenuFileSaveAsClick
       end
-      object menuFileSeparator1: TMenuItem
+      object Separator1: TMenuItem
         Caption = '-'
       end
-      object menuFileExit: TMenuItem
+      object MenuPathOpen: TMenuItem
+        Caption = 'Open Path...'
+        ShortCut = 16464
+        OnClick = MenuPathOpenClick
+      end
+      object MenuClosePath: TMenuItem
+        Caption = 'Close Path'
+        Enabled = False
+        OnClick = MenuClosePathClick
+      end
+      object Separator2: TMenuItem
+        Caption = '-'
+      end
+      object MenuFileExit: TMenuItem
         Caption = 'Exit'
-        OnClick = menuFileExitClick
+        OnClick = MenuFileExitClick
+      end
+    end
+    object MenuView: TMenuItem
+      Caption = 'View'
+      object MenuHeaders: TMenuItem
+        AutoCheck = True
+        Caption = 'Headers'
+        OnClick = MenuHeadersClick
       end
     end
     object menuHelp: TMenuItem
       Caption = 'Help'
-      object menuBuyMeACoffee: TMenuItem
+      object MenuBuyMeACoffee: TMenuItem
         Caption = 'Buy Me a Coffee...'
-        OnClick = menuBuyMeACoffeeClick
+        OnClick = MenuBuyMeACoffeeClick
       end
-      object menuAutoCheckUpdates: TMenuItem
+      object MenuAutoCheckUpdates: TMenuItem
         AutoCheck = True
         Caption = 'Auto Check Updates'
-        OnClick = menuAutoCheckUpdatesClick
+        OnClick = MenuAutoCheckUpdatesClick
       end
-      object menuCheckForUpdates: TMenuItem
+      object MenuCheckForUpdates: TMenuItem
         Caption = 'Check For Updates'
-        OnClick = menuCheckForUpdatesClick
+        OnClick = MenuCheckForUpdatesClick
       end
-      object menuAbout: TMenuItem
+      object MenuAbout: TMenuItem
         Caption = 'About...'
-        OnClick = menuAboutClick
+        OnClick = MenuAboutClick
       end
     end
   end
   object dialogOpen: TOpenDialog
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofFileMustExist, ofEnableSizing, ofViewDetail]
-    Left = 144
-    Top = 64
+    Left = 272
+    Top = 192
   end
   object dialogSave: TSaveDialog
     DefaultExt = '.po'
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
-    Left = 232
-    Top = 64
+    Left = 360
+    Top = 192
   end
   object dialogPath: TSelectDirectoryDialog
-    Left = 144
-    Top = 136
+    Left = 272
+    Top = 264
   end
 end
