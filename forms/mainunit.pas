@@ -28,7 +28,7 @@ uses
   Buttons,
   StrUtils,
   LCLType,
-  LCLIntf,
+  LCLIntf, ActnList,
   powrap;
 
 type
@@ -36,6 +36,9 @@ type
   { TformPoBatch }
 
   TformPoBatch = class(TForm)
+    AAllowEditingAll: TAction;
+    AUndoChanges: TAction;
+    ActionList: TActionList;
     Filter: TEdit;
     GridHeaders: TStringGrid;
     ListPath: TListBox;
@@ -55,6 +58,10 @@ type
     MenuAutoCheckUpdates: TMenuItem;
     MenuClosePath: TMenuItem;
     MenuHeaders: TMenuItem;
+    MenuColumnReference: TMenuItem;
+    MenuEdit: TMenuItem;
+    MenuAllowEditAll: TMenuItem;
+    MenuUndoChanges: TMenuItem;
     MenuView: TMenuItem;
     MenuPathOpen: TMenuItem;
     PanelClient: TPanel;
@@ -64,6 +71,7 @@ type
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
     Separator1: TMenuItem;
+    Separator3: TMenuItem;
     SplitterTop: TSplitter;
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
@@ -73,9 +81,11 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
+    procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure MenuAboutClick(Sender: TObject);
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
     procedure MenuClosePathClick(Sender: TObject);
+    procedure MenuColumnReferenceClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
     procedure MenuBuyMeACoffeeClick(Sender: TObject);
     procedure MenuCheckForUpdatesClick(Sender: TObject);
@@ -84,11 +94,13 @@ type
     procedure MenuFileOpenClick(Sender: TObject);
     procedure MenuFileSaveAsClick(Sender: TObject);
     procedure MenuFileSaveClick(Sender: TObject);
+    procedure AUndoChangesExecute(Sender: TObject);
+    procedure AAllowEditingAllExecute(Sender: TObject);
+    procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
-    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
-    procedure GridEditingDone(Sender: TObject);
-    procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure ListPathClick(Sender: TObject);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
@@ -133,6 +145,17 @@ type
 
 var
   formPoBatch: TformPoBatch;
+
+const
+  COL_HEADERS_NAME = 0;
+  COL_HEADERS_VALUE = 1;
+
+  COL_TEXT = 0;
+  COL_TRANSLATION = 1;
+  COL_REFERENCE = 2;
+  COL_CONTEXT = 3;
+  COL_PREVIOUS = 4;
+  COL_FUZZY = 5;
 
 implementation
 
@@ -306,6 +329,13 @@ begin
   ClosePath;
 end;
 
+procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
+begin
+  Grid.Columns[COL_REFERENCE].Visible := MenuColumnReference.Checked;
+  if Grid.Columns[COL_REFERENCE].Visible and (Grid.Columns[COL_REFERENCE].Width = 0) then
+    Grid.Columns[COL_REFERENCE].Width := 240;
+end;
+
 procedure TformPoBatch.MenuFileSaveAsClick(Sender: TObject);
 var
   TempFileName: string;
@@ -357,6 +387,62 @@ begin
   SplitterTop.Visible := MenuHeaders.Checked;
 end;
 
+procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
+begin
+  FillGrids;
+end;
+
+procedure TformPoBatch.AAllowEditingAllExecute(Sender: TObject);
+begin
+  GridHeaders.Columns[COL_HEADERS_NAME].ReadOnly := not AAllowEditingAll.Checked;
+
+  Grid.Columns[COL_TEXT].ReadOnly := not AAllowEditingAll.Checked;
+  Grid.Columns[COL_REFERENCE].ReadOnly := not AAllowEditingAll.Checked;
+  Grid.Columns[COL_CONTEXT].ReadOnly := not AAllowEditingAll.Checked;
+  Grid.Columns[COL_PREVIOUS].ReadOnly := not AAllowEditingAll.Checked;
+  Grid.Columns[COL_FUZZY].ReadOnly := not AAllowEditingAll.Checked;
+end;
+
+procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  SelRow: integer;
+begin
+  if (Key = VK_DELETE) and (ssCtrl in Shift) then
+  begin
+    Key := 0; // swallow the key to prevent default handling
+
+    SelRow := GridHeaders.Row;
+    // Do not delete fixed header rows
+    if SelRow < GridHeaders.FixedRows then Exit;
+
+    // Ask for confirmation before deleting
+    if MessageDlg('Delete header?', 'Are you sure you want to delete the selected header?', mtConfirmation, mbYesNo, 0) <> mrYes then
+      Exit;
+
+    // Remove the selected row from the grid
+    GridHeaders.DeleteRow(SelRow);
+  end;
+end;
+
+procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+begin
+  if OldValue <> NewValue then
+  begin
+    FChanged := True;
+    UpdateCaption;
+  end;
+end;
+
+procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+var
+  TS: TTextStyle;
+begin
+  TS := Grid.Canvas.TextStyle;
+  TS.Wordbreak := True;
+  TS.SingleLine := False;
+  Grid.Canvas.TextStyle := TS;
+end;
+
 procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
 begin
   if not IsColumn then Exit;   // handle column clicks only
@@ -394,40 +480,12 @@ begin
   UpdateRowHeights;
 end;
 
-procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
-var
-  TS: TTextStyle;
+procedure TformPoBatch.GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
-  TS := Grid.Canvas.TextStyle;
-  TS.Wordbreak := True;
-  TS.SingleLine := False;
-  Grid.Canvas.TextStyle := TS;
-end;
-
-procedure TformPoBatch.GridEditingDone(Sender: TObject);
-begin
-  FChanged := True;
-  UpdateCaption;
-end;
-
-procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-var
-  SelRow: integer;
-begin
-  if (Key = VK_DELETE) and (ssCtrl in Shift) then
+  if OldValue <> NewValue then
   begin
-    Key := 0; // swallow the key to prevent default handling
-
-    SelRow := GridHeaders.Row;
-    // Do not delete fixed header rows
-    if SelRow < GridHeaders.FixedRows then Exit;
-
-    // Ask for confirmation before deleting
-    if MessageDlg('Delete header?', 'Are you sure you want to delete the selected header?', mtConfirmation, mbYesNo, 0) <> mrYes then
-      Exit;
-
-    // Remove the selected row from the grid
-    GridHeaders.DeleteRow(SelRow);
+    FChanged := True;
+    UpdateCaption;
   end;
 end;
 
@@ -442,6 +500,7 @@ begin
 
   // Remember the previous valid selection
   SavedIndex := FLastPathIndex;
+
   // Tentatively accept the new index (will be confirmed or reverted)
   FLastPathIndex := Idx;
 
@@ -1007,8 +1066,12 @@ begin
       Grid.Cells[1, RowIndex] := Entry.MsgId;
       // Column 2: translation (msgstr)
       Grid.Cells[2, RowIndex] := Entry.MsgStrSimple;
+      // Column 3: referenct (#:)
+      Grid.Cells[3, RowIndex] := Entry.Reference;
+      // Column 4: context (msgctxt)
+      Grid.Cells[4, RowIndex] := Entry.MsgCtxt;
 
-      // Column 3: previous untranslated text from #| comments
+      // Column 5: previous untranslated text from #| comments
       PrevStrings := Entry.GetCommentsOfType(poctPrevious);
       try
         if PrevStrings.Count > 0 then
@@ -1022,13 +1085,13 @@ begin
       finally
         PrevStrings.Free;
       end;
-      Grid.Cells[3, RowIndex] := PreviousText;
+      Grid.Cells[5, RowIndex] := PreviousText;
 
-      // Column 4: fuzzy flag (1 if fuzzy, 0 otherwise)
+      // Column 6: fuzzy flag (1 if fuzzy, 0 otherwise)
       if Entry.IsFuzzy then
-        Grid.Cells[4, RowIndex] := '1'
+        Grid.Cells[6, RowIndex] := '1'
       else
-        Grid.Cells[4, RowIndex] := '0';
+        Grid.Cells[6, RowIndex] := '0';
 
       Inc(RowIndex);
     end;
@@ -1079,10 +1142,8 @@ begin
     // Update translation from column 2
     Entry.MsgStrSimple := Grid.Cells[2, Row];
 
-    // Update fuzzy flag from column 4
-    Entry.IsFuzzy := (Grid.Cells[4, Row] = '1');
-
-    // Column 3 (previous text) is intentionally left untouched
+    // Update fuzzy flag from column 6
+    Entry.IsFuzzy := (Grid.Cells[6, Row] = '1');
   end;
 end;
 

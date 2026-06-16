@@ -126,6 +126,7 @@ object formPoBatch: TformPoBatch
         end>
       DefaultColWidth = 48
       FocusColor = clBlue
+      GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goAutoAddRows, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints]
       Options2 = [goCopyWithoutTrailingLinebreak]
@@ -133,11 +134,8 @@ object formPoBatch: TformPoBatch
       TabOrder = 2
       TitleStyle = tsNative
       Visible = False
-      OnEditingDone = GridEditingDone
-      OnHeaderClick = GridHeaderClick
-      OnHeaderSized = GridHeaderSized
       OnKeyDown = GridHeadersKeyDown
-      OnPrepareCanvas = GridPrepareCanvas
+      OnValidateEntry = GridHeadersValidateEntry
     end
     object SplitterTop: TSplitter
       Cursor = crVSplit
@@ -159,6 +157,7 @@ object formPoBatch: TformPoBatch
       Width = 547
       Align = alClient
       BorderStyle = bsNone
+      ColCount = 7
       ColumnClickSorts = True
       Columns = <      
         item
@@ -174,6 +173,17 @@ object formPoBatch: TformPoBatch
         end      
         item
           ReadOnly = True
+          Title.Caption = 'Reference'
+          Width = 0
+          Visible = False
+        end      
+        item
+          ReadOnly = True
+          Title.Caption = 'Context'
+          Visible = False
+        end      
+        item
+          ReadOnly = True
           Title.Caption = 'Old Text'
           Visible = False
         end      
@@ -185,16 +195,17 @@ object formPoBatch: TformPoBatch
         end>
       DefaultColWidth = 48
       FocusColor = clBlue
+      GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goAutoAddRows, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
       TabOrder = 0
       TitleStyle = tsNative
-      OnEditingDone = GridEditingDone
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized
       OnPrepareCanvas = GridPrepareCanvas
+      OnValidateEntry = GridValidateEntry
     end
   end
   object StatusBar: TStatusBar
@@ -255,12 +266,31 @@ object formPoBatch: TformPoBatch
         OnClick = MenuFileExitClick
       end
     end
+    object MenuEdit: TMenuItem
+      Caption = 'Edit'
+      object MenuUndoChanges: TMenuItem
+        Action = AUndoChanges
+        ShortCut = 24666
+      end
+      object Separator3: TMenuItem
+        Caption = '-'
+      end
+      object MenuAllowEditAll: TMenuItem
+        Action = AAllowEditingAll
+        AutoCheck = True
+      end
+    end
     object MenuView: TMenuItem
       Caption = 'View'
       object MenuHeaders: TMenuItem
         AutoCheck = True
         Caption = 'Headers'
         OnClick = MenuHeadersClick
+      end
+      object MenuColumnReference: TMenuItem
+        AutoCheck = True
+        Caption = 'Column Reference'
+        OnClick = MenuColumnReferenceClick
       end
     end
     object menuHelp: TMenuItem
@@ -300,5 +330,20 @@ object formPoBatch: TformPoBatch
   object dialogPath: TSelectDirectoryDialog
     Left = 272
     Top = 264
+  end
+  object ActionList: TActionList
+    Left = 192
+    Top = 264
+    object AUndoChanges: TAction
+      Category = 'Edit'
+      Caption = 'Undo Changes'
+      OnExecute = AUndoChangesExecute
+    end
+    object AAllowEditingAll: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Allow Editing All'
+      OnExecute = AAllowEditingAllExecute
+    end
   end
 end

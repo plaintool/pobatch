@@ -124,6 +124,13 @@ type
     function GetIsCppFormat: boolean;
     procedure SetIsCppFormat(AValue: boolean);
 
+    function GetExtractedComment: string;
+    procedure SetExtractedComment(const AValue: string);
+    function GetReference: string;
+    procedure SetReference(const AValue: string);
+    function GetPreviousComment: string;
+    procedure SetPreviousComment(const AValue: string);
+
     function GetMsgStr(Index: integer): string;
     procedure SetMsgStr(Index: integer; const Value: string);
     function GetMsgStrCount: integer;
@@ -161,7 +168,7 @@ type
 
     property Comments: TPOCommentList read FComments;
 
-    // New properties for convenient flag manipulation
+    // Properties for convenient flag manipulation
     property FlagsSet: TPOFlags read GetFlagsSet write SetFlagsSet;
     property Range: string read GetRange write SetRange;
 
@@ -182,6 +189,11 @@ type
     property IsGccInternalFormat: boolean read GetIsGccInternalFormat write SetIsGccInternalFormat;
     property IsQtPluralFormat: boolean read GetIsQtPluralFormat write SetIsQtPluralFormat;
     property IsCppFormat: boolean read GetIsCppFormat write SetIsCppFormat;
+
+    // String properties for standard comment types
+    property ExtractedComment: string read GetExtractedComment write SetExtractedComment;
+    property Reference: string read GetReference write SetReference;
+    property PreviousComment: string read GetPreviousComment write SetPreviousComment;
   end;
 
   TPOEntryList = class(TObjectList)
@@ -752,6 +764,114 @@ begin
     RemoveFlag('c++-format');
 end;
 
+function TPOEntry.GetExtractedComment: string;
+var
+  sl: TStrings;
+  i: integer;
+begin
+  sl := GetCommentsOfType(poctExtracted);
+  try
+    Result := '';
+    for i := 0 to sl.Count - 1 do
+    begin
+      if i > 0 then
+        Result := Result + #10;
+      Result := Result + sl[i];
+    end;
+  finally
+    sl.Free;
+  end;
+end;
+
+procedure TPOEntry.SetExtractedComment(const AValue: string);
+var
+  sl: TStringList;
+  i: integer;
+begin
+  DeleteCommentsOfType(poctExtracted);
+  sl := TStringList.Create;
+  try
+    sl.Text := AValue;   // splits into lines using any standard line breaks
+    for i := 0 to sl.Count - 1 do
+      if sl[i] <> '' then
+        AddComment(poctExtracted, sl[i]);
+  finally
+    sl.Free;
+  end;
+end;
+
+function TPOEntry.GetReference: string;
+var
+  sl: TStrings;
+  i: integer;
+begin
+  sl := GetCommentsOfType(poctReference);
+  try
+    Result := '';
+    for i := 0 to sl.Count - 1 do
+    begin
+      if i > 0 then
+        Result := Result + #10;
+      Result := Result + sl[i];
+    end;
+  finally
+    sl.Free;
+  end;
+end;
+
+procedure TPOEntry.SetReference(const AValue: string);
+var
+  sl: TStringList;
+  i: integer;
+begin
+  DeleteCommentsOfType(poctReference);
+  sl := TStringList.Create;
+  try
+    sl.Text := AValue;
+    for i := 0 to sl.Count - 1 do
+      if sl[i] <> '' then
+        AddComment(poctReference, sl[i]);
+  finally
+    sl.Free;
+  end;
+end;
+
+function TPOEntry.GetPreviousComment: string;
+var
+  sl: TStrings;
+  i: integer;
+begin
+  sl := GetCommentsOfType(poctPrevious);
+  try
+    Result := '';
+    for i := 0 to sl.Count - 1 do
+    begin
+      if i > 0 then
+        Result := Result + #10;
+      Result := Result + sl[i];
+    end;
+  finally
+    sl.Free;
+  end;
+end;
+
+procedure TPOEntry.SetPreviousComment(const AValue: string);
+var
+  sl: TStringList;
+  i: integer;
+begin
+  DeleteCommentsOfType(poctPrevious);
+  sl := TStringList.Create;
+  try
+    sl.Text := AValue;
+    for i := 0 to sl.Count - 1 do
+      if sl[i] <> '' then
+        AddComment(poctPrevious, sl[i]);
+  finally
+    sl.Free;
+  end;
+end;
+
 // Original string-based Flags property
 
 function TPOEntry.GetFlagsString: string;
@@ -927,7 +1047,7 @@ begin
       if TPOComment(FComments[i]).CommentType = poctReference then
         Lines.Add(Prefix + '#: ' + TPOComment(FComments[i]).Text);
 
-    // 4. Flag comments (объединяем в одну строку)
+    // 4. Flag comments (combine into one line)
     FlagStr := '';
     for i := 0 to FComments.Count - 1 do
       if TPOComment(FComments[i]).CommentType = poctFlag then
@@ -939,7 +1059,7 @@ begin
     if FlagStr <> '' then
       Lines.Add(Prefix + '#, ' + FlagStr);
 
-    // 5. Previous comments (идут ПОСЛЕ флагов)
+    // 5. Previous comments (must go after flags)
     for i := 0 to FComments.Count - 1 do
       if TPOComment(FComments[i]).CommentType = poctPrevious then
         Lines.Add(Prefix + '#| ' + TPOComment(FComments[i]).Text);
@@ -1408,7 +1528,7 @@ begin
     if TPOComment(Entry.FComments[i]).CommentType = poctReference then
       Lines.Add(Prefix + '#: ' + TPOComment(Entry.FComments[i]).Text);
 
-  // 4. Flags (строго до #|)
+  // 4. Flags (strictly before #|)
   FlagStr := '';
   for i := 0 to Entry.FComments.Count - 1 do
     if TPOComment(Entry.FComments[i]).CommentType = poctFlag then
@@ -1420,7 +1540,7 @@ begin
   if FlagStr <> '' then
     Lines.Add(Prefix + '#, ' + FlagStr);
 
-  // 5. Previous (после флагов)
+  // 5. Previous (after flags)
   for i := 0 to Entry.FComments.Count - 1 do
     if TPOComment(Entry.FComments[i]).CommentType = poctPrevious then
       Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
@@ -1466,7 +1586,7 @@ begin
     for i := 1 to FTrailingEmptyLines do
       sl.Add('');
 
-    // Set the file-level line break according to style (affects how the physical file is written)
+    // Set the file-level line break according to style
     case FLineEndingStyle of
       pleCRLF: sl.LineBreak := #13#10;
       pleCR: sl.LineBreak := #13;
