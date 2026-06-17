@@ -465,6 +465,13 @@ begin
       Changed := True;
       Key := 0;
     end;
+  end
+  else
+  if not AEditTranslationOnly.Checked and (Key = VK_INSERT) then
+  begin
+    GridHeaders.InsertColRow(False, GridHeaders.Row + 1);
+    GridHeaders.Row := GridHeaders.ROw + 1;
+    Changed := True;
   end;
 end;
 
@@ -516,6 +523,13 @@ begin
       Changed := True;
       Key := 0;
     end;
+  end
+  else
+  if not AEditTranslationOnly.Checked and (Key = VK_INSERT) then
+  begin
+    Grid.InsertColRow(False, Grid.Row + 1);
+    Grid.Row := Grid.Row + 1;
+    Changed := True;
   end;
 end;
 

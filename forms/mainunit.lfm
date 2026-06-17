@@ -125,6 +125,7 @@ object formPoBatch: TformPoBatch
           Width = 320
         end>
       DefaultColWidth = 48
+      FadeUnfocusedSelection = True
       FocusColor = clBlue
       GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
@@ -200,6 +201,7 @@ object formPoBatch: TformPoBatch
           Visible = False
         end>
       DefaultColWidth = 48
+      FadeUnfocusedSelection = True
       FocusColor = clBlue
       GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
