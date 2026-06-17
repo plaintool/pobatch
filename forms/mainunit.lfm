@@ -216,7 +216,9 @@ object formPoBatch: TformPoBatch
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized
       OnKeyDown = GridKeyDown
+      OnMouseWheel = GridMouseWheel
       OnPrepareCanvas = GridPrepareCanvas
+      OnSelectEditor = GridSelectEditor
       OnValidateEntry = GridValidateEntry
     end
   end

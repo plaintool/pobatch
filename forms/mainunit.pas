@@ -16,8 +16,10 @@ uses
   SysUtils,
   FileUtil,
   Forms,
+  ActnList,
   Controls,
   Graphics,
+  Math,
   Dialogs,
   Menus,
   ComCtrls,
@@ -28,8 +30,8 @@ uses
   Buttons,
   StrUtils,
   LCLType,
-  LCLIntf, ActnList,
-  powrap;
+  LCLIntf,
+  powrap, Types;
 
 type
 
@@ -108,10 +110,23 @@ type
     procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
     procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+    procedure GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
+    procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+    procedure PanelMemoEnter(Sender: TObject);
+    procedure PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
+    procedure DelayedSetMemoFocus(Data: PtrInt);
+    procedure EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer = 0;
+      OffsetTop: integer = 3; OffsetRight: integer = -1; OffsetBottom: integer = 0);
+    procedure MemoEnter(Sender: TObject);
+    procedure MemoExit(Sender: TObject);
+    procedure MemoChange(Sender: TObject);
     procedure ListPathClick(Sender: TObject);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
   private
+    Memo: TMemo;
+    PanelMemo: TPanel;
+
     PoFile: TPoFile;
     FFileName: string;
     FInitialized: boolean;
@@ -172,7 +187,9 @@ const
 
   // Colors
   clRowHighlight = TColor($FFF0DC);
-  clRowHighlight_Dark = TColor($463027);
+  clRowHighlightDark = TColor($463027);
+  clRowFocused = TColor($FFDCC8);
+  clRowFocusedDark = TColor($6C4C38);
 
 implementation
 
@@ -489,7 +506,7 @@ end;
 procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
-    GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlight_Dark);
+    GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
 end;
 
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -555,8 +572,14 @@ begin
   Grid.Canvas.TextStyle := TS;
 
   // Color Cells
-  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
-    Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlight_Dark);
+    if Grid.EditorMode and (aCol = Grid.Col) and (aRow = Grid.Row) then
+  begin
+    Grid.Canvas.Brush.Color := clWhite;
+    Exit;
+  end;
+
+   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
+    Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
 
   if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
     CustomColor := clInfoBk;
@@ -671,6 +694,111 @@ begin
 
   FChanged := True;
   UpdateCaption;
+end;
+
+procedure TformPoBatch.GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
+begin
+  Grid.EditorMode := False;
+end;
+
+procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+begin
+  if (aCol in [COL_TEXT, COL_TRANSLATION, COL_REFERENCE]) then
+  begin
+    PanelMemo := TPanel.Create(Self);
+    PanelMemo.Parent := Grid;
+    PanelMemo.BorderStyle := bsNone;
+    PanelMemo.Caption := string.Empty;
+    PanelMemo.BevelOuter := bvNone;
+    PanelMemo.TabStop := False;
+    PanelMemo.Visible := False;
+    PanelMemo.OnEnter := @PanelMemoEnter; // Event Enter
+    PanelMemo.OnUTF8KeyPress := @PanelMemoUTF8KeyPress; // Event UTF8KeyPress
+    Memo := TMemo.Create(Self);
+    Memo.Parent := PanelMemo;
+    Memo.Align := alClient;
+    if (Grid.IsCellSelected[aCol, aRow]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
+    begin
+      Memo.Color := clHighlight;
+      Memo.Font.Color := clWhite;
+    end;
+    Memo.HideSelection := False;
+    Memo.BorderStyle := bsNone;
+    Memo.ScrollBars := ssNone;
+    Memo.TabStop := False;
+    Memo.WantTabs := True;
+    Memo.WordWrap := True;
+    Memo.WantReturns := True;
+    Memo.BiDiMode := bdLeftToRight;
+    EditControlSetBounds(PanelMemo, aCol, aRow);
+    Memo.OnEnter := @MemoEnter; // Event Enter
+    Memo.OnExit := @MemoExit; // Event Exit
+    Memo.OnChange := @MemoChange; // Event Change
+    Memo.Text := Grid.Cells[aCol, aRow];
+    Memo.SelStart := Length(Memo.Text);
+    Memo.SelLength := 0;
+
+    Editor := PanelMemo;
+  end;
+end;
+
+procedure TformPoBatch.PanelMemoEnter(Sender: TObject);
+begin
+  Application.QueueAsyncCall(@DelayedSetMemoFocus, 0);
+end;
+
+procedure TformPoBatch.PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
+begin
+  if UTF8Key = #8 then  // backspace
+    Memo.SelText := string.Empty
+  else
+    Memo.SelText := UTF8Key;
+end;
+
+procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
+begin
+  if Assigned(Memo) and (Memo.CanFocus) then
+  begin
+    Memo.SetFocus;
+    if (Memo.SelLength = 0) then
+      Memo.SelStart := Length(Memo.Text);
+  end;
+end;
+
+procedure TformPoBatch.EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer;
+  OffsetTop: integer; OffsetRight: integer; OffsetBottom: integer);
+var
+  Rect: TRect;
+begin
+  if Assigned(Sender) then
+  begin
+    Rect := Grid.CellRect(aCol, aRow);
+    Sender.SetBounds(Rect.Left + OffsetLeft, Max(Rect.Top, Grid.RowHeights[0]) + OffsetTop,
+      Rect.Right - Rect.Left + OffsetRight,
+      Rect.Bottom - Rect.Top + OffsetBottom);
+  end;
+end;
+
+procedure TformPoBatch.MemoEnter(Sender: TObject);
+begin
+  if (Grid.IsCellSelected[Grid.Col, Grid.Row]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
+  begin
+    Memo.Color := clHighlight;
+    Memo.Font.Color := clWhite;
+  end;
+end;
+
+procedure TformPoBatch.MemoExit(Sender: TObject);
+begin
+  Grid.EditorMode := False;
+end;
+
+procedure TformPoBatch.MemoChange(Sender: TObject);
+begin
+  Grid.Cells[Grid.Col, Grid.Row] := TMemo(Sender).Text;
+  Changed := True;
+  UpdateRowHeights;
+  EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
 end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
