@@ -436,20 +436,34 @@ end;
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
   c, r: integer;
+  SelIndexes: array of integer = ();
+  Count: integer;
 begin
-  // Delete rows
+  // Delete rows via Ctrl+Del (only when not in translation-only mode)
   if not AEditTranslationOnly.Checked and (Key = VK_DELETE) and (ssCtrl in Shift) then
   begin
     if MessageDlg('Delete selected rows?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
 
-    for r := Grid.Selection.Bottom downto Grid.Selection.Top do
-      Grid.DeleteRow(r);
+    // Collect persistent entry indexes from column 0 of the selected rows
+    Count := Grid.Selection.Bottom - Grid.Selection.Top + 1;
+    SetLength(SelIndexes, Count);
+    for r := Grid.Selection.Top to Grid.Selection.Bottom do
+      SelIndexes[r - Grid.Selection.Top] := StrToIntDef(Grid.Cells[0, r], -1);
 
-    Changed := True;
+    // Save any unsaved changes from the grid back to PoFile
+    SaveGrids;   // or SaveGrids, depending on your code
+
+    // Delete the entries from PoFile (handles index ordering internally)
+    PoFile.DeleteEntriesByIndexes(SelIndexes);
+
+    FChanged := True;
+    FillGrids;   // rebuild the grid from updated PoFile (preserves filter & sort)
+    UpdateCaption;
     Key := 0;
   end
-  else  // Delete clears selection
+  else
+  // Plain Delete clears cell contents
   if Key = VK_DELETE then
   begin
     if (not AEditTranslationOnly.Checked or ((Grid.Selection.Left = COL_TRANSLATION + 1) and
@@ -459,7 +473,7 @@ begin
         for c := Grid.Selection.Left to Grid.Selection.Right do
           Grid.Cells[c, r] := '';
 
-      Changed := True;
+      FChanged := True;
       Key := 0;
     end;
   end;
@@ -664,6 +678,8 @@ begin
         // Cancel closing
         Result := False;
       end;
+      else
+        ;
     end;
   end;
 end;
@@ -908,7 +924,7 @@ begin
         Exit;
     end;
   except
-    // Ignore file size check errors
+    ; // Ignore file size check errors
   end;
 
   Input := TStringList.Create;

@@ -241,6 +241,7 @@ type
     procedure Reset;
     function FindEntry(const AMsgCtxt, AMsgId: string): TPOEntry; overload;
     function FindEntry(const AMsgId: string): TPOEntry; overload;
+    procedure DeleteEntriesByIndexes(const AIndexes: array of integer);
     procedure WriteEntry(Entry: TPOEntry; Lines: TStrings);
 
     property Entries: TPOEntryList read FEntries;
@@ -300,6 +301,12 @@ begin
       Result := Result + S[i];
     Inc(i);
   end;
+end;
+
+function CompareIndexStringsDesc(List: TStringList; Index1, Index2: Integer): Integer;
+begin
+  // Sort as numbers in descending order
+  Result := StrToIntDef(List[Index2], 0) - StrToIntDef(List[Index1], 0);
 end;
 
 const
@@ -1637,6 +1644,29 @@ begin
     if (TPOEntry(FEntries[i]).MsgId = AMsgId) then
       Exit(TPOEntry(FEntries[i]));
   Result := nil;
+end;
+
+procedure TPOFile.DeleteEntriesByIndexes(const AIndexes: array of Integer);
+var
+  i, Idx: Integer;
+  sl: TStringList;
+begin
+  if Length(AIndexes) = 0 then Exit;
+  sl := TStringList.Create;
+  try
+    for i := 0 to High(AIndexes) do
+      sl.Add(IntToStr(AIndexes[i]));
+    // Sort descending so we delete from highest to lowest index
+    sl.CustomSort(@CompareIndexStringsDesc);
+    for i := 0 to sl.Count - 1 do
+    begin
+      Idx := StrToInt(sl[i]);
+      if (Idx >= 0) and (Idx < FEntries.Count) then
+        FEntries.Delete(Idx);
+    end;
+  finally
+    sl.Free;
+  end;
 end;
 
 function TPOFile.GetHeaders: TStrings;
