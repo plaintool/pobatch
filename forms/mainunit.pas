@@ -223,8 +223,13 @@ begin
     FInitialized := True;
 
     // Open Path
-    if (Path <> string.Empty) and OpenPath(Path) then
-      UpdatePath;
+    if (Path <> string.Empty) then
+    begin
+      if OpenPath(Path) then
+        UpdatePath
+      else
+        Path := string.Empty;
+    end;
 
     // Open file from command line if specified, otherwise start with a new document
     if FCommandLineFile <> string.Empty then
