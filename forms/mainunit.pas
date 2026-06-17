@@ -528,6 +528,14 @@ procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: boolean; Index
 begin
   if not IsColumn then Exit;
 
+  // Click on the fixed row-number column (Index=0) resets sorting
+  if Index = 0 then
+  begin
+    FSortColumn := -1;
+    FillGrids;
+    Exit;
+  end;
+
   // Ctrl+click on any column resets sorting to original order
   if GetKeyState(VK_CONTROL) and $8000 <> 0 then
   begin
