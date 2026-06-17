@@ -81,6 +81,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
+    procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
     procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure MenuAboutClick(Sender: TObject);
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
@@ -152,12 +153,13 @@ const
   COL_HEADERS_NAME = 0;
   COL_HEADERS_VALUE = 1;
 
-  COL_TEXT = 0;
-  COL_TRANSLATION = 1;
-  COL_REFERENCE = 2;
-  COL_CONTEXT = 3;
-  COL_PREVIOUS = 4;
-  COL_FUZZY = 5;
+  COL_VALID = 0;
+  COL_TEXT = 1;
+  COL_TRANSLATION = 2;
+  COL_REFERENCE = 3;
+  COL_CONTEXT = 4;
+  COL_PREVIOUS = 5;
+  COL_FUZZY = 6;
 
 implementation
 
@@ -303,12 +305,7 @@ begin
   if not IsCanClose then Exit;
 
   if dialogOpen.Execute then
-  begin
-    FPath := string.Empty;
-    UpdatePath;
-
     OpenFile(dialogOpen.FileName);
-  end;
 end;
 
 procedure TformPoBatch.MenuPathOpenClick(Sender: TObject);
@@ -440,20 +437,19 @@ end;
 
 procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
 begin
-  if not IsColumn then Exit;   // handle column clicks only
+  if not IsColumn then Exit;
 
-  if Index = 0 then
+  // Ctrl+click on any column resets sorting to original order
+  if GetKeyState(VK_CONTROL) and $8000 <> 0 then
   begin
-    // Column 0 contains original loading order numbers – reset sorting
     FSortColumn := -1;
-    FillGrids;  // rows return to the loading order
+    FillGrids;
     Exit;
   end;
 
-  // For other columns: toggle direction if same column, else start new ascending sort
+  // Toggle direction if same column, otherwise start ascending
   if Index = FSortColumn then
   begin
-    // Switch between ascending and descending
     if FSortOrder = soAscending then
       FSortOrder := soDescending
     else
@@ -465,7 +461,6 @@ begin
     FSortOrder := soAscending;
   end;
 
-  // Apply sorting to the data rows only (skip fixed rows)
   if (Grid.RowCount > Grid.FixedRows) and (FSortColumn >= 0) then
     Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
 end;
@@ -479,6 +474,44 @@ procedure TformPoBatch.GridValidateEntry(Sender: TObject; aCol, aRow: integer; c
 begin
   if OldValue <> NewValue then
     Changed := True;
+end;
+
+procedure TformPoBatch.GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
+var
+  ValA, ValB: string;
+  NumA, NumB: integer;
+begin
+  // Special rule: when sorting by COL_VALID or COL_TRANSLATION,
+  // put fuzzy entries first (fuzzy flag = '1' before '0').
+  if (FSortColumn = COL_VALID + 1) then
+  begin
+    ValA := Grid.Cells[COL_FUZZY + 1, ARow];   // +1 because Cells[0] is row number
+    ValB := Grid.Cells[COL_FUZZY + 1, BRow];
+    Result := CompareStr(ValA, ValB);          // '1' < '0'
+    if FSortOrder = soAscending then
+      Result := -Result;
+    if Result <> 0 then
+      Exit;
+  end;
+
+  // 1. Primary column (the one we clicked)
+  ValA := Grid.Cells[ACol, ARow];
+  ValB := Grid.Cells[ACol, BRow];
+  Result := CompareStr(ValA, ValB);
+
+  // Apply user-chosen sort direction
+  if (FSortOrder = soDescending) and (Result <> 0) then
+    Result := -Result;
+
+  // 3. Final tie-breaker: row number stored in Cells[0, row] (always numeric, ascending)
+  if Result = 0 then
+  begin
+    ValA := Grid.Cells[0, ARow];
+    ValB := Grid.Cells[0, BRow];
+    NumA := StrToIntDef(ValA, 0);
+    NumB := StrToIntDef(ValB, 0);
+    Result := NumA - NumB;
+  end;
 end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
@@ -1060,16 +1093,23 @@ begin
 
       // Column 0: permanent index of the entry in the PO list
       Grid.Cells[0, RowIndex] := IntToStr(i);
-      // Column 1: original text (msgid)
-      Grid.Cells[1, RowIndex] := Entry.MsgId;
-      // Column 2: translation (msgstr)
-      Grid.Cells[2, RowIndex] := Entry.MsgStrSimple;
-      // Column 3: referenct (#:)
-      Grid.Cells[3, RowIndex] := Entry.Reference;
-      // Column 4: context (msgctxt)
-      Grid.Cells[4, RowIndex] := Entry.MsgCtxt;
 
-      // Column 5: previous untranslated text from #| comments
+      // Column 1: valid calculate
+      Grid.Cells[COL_VALID + 1, RowIndex] := IfThen(Entry.IsValid, '1', '0');
+
+      // Column 2: original text (msgid)
+      Grid.Cells[COL_TEXT + 1, RowIndex] := Entry.MsgId;
+
+      // Column 3: translation (msgstr)
+      Grid.Cells[COL_TRANSLATION + 1, RowIndex] := Entry.MsgStrSimple;
+
+      // Column 4: referenct (#:)
+      Grid.Cells[COL_REFERENCE + 1, RowIndex] := Entry.Reference;
+
+      // Column 5: context (msgctxt)
+      Grid.Cells[COL_CONTEXT + 1, RowIndex] := Entry.MsgCtxt;
+
+      // Column 6: previous untranslated text from #| comments
       PrevStrings := Entry.GetCommentsOfType(poctPrevious);
       try
         if PrevStrings.Count > 0 then
@@ -1085,11 +1125,8 @@ begin
       end;
       Grid.Cells[5, RowIndex] := PreviousText;
 
-      // Column 6: fuzzy flag (1 if fuzzy, 0 otherwise)
-      if Entry.IsFuzzy then
-        Grid.Cells[6, RowIndex] := '1'
-      else
-        Grid.Cells[6, RowIndex] := '0';
+      // Column 7: fuzzy flag (1 if fuzzy, 0 otherwise)
+      Grid.Cells[COL_FUZZY + 1, RowIndex] := IfThen(Entry.IsFuzzy, '1', '0');
 
       Inc(RowIndex);
     end;
@@ -1097,6 +1134,8 @@ begin
     // Re-apply active column sort if any
     if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
       Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+
+    UpdateRowHeights;
   finally
     Grid.EndUpdate;
   end;
@@ -1137,11 +1176,11 @@ begin
 
     Entry := PoFile.Entries[EntryIndex];
 
-    // Update translation from column 2
-    Entry.MsgStrSimple := Grid.Cells[2, Row];
+    // Update translation from column COL_TRANSLATION
+    Entry.MsgStrSimple := Grid.Cells[COL_TRANSLATION + 1, Row];
 
-    // Update fuzzy flag from column 6
-    Entry.IsFuzzy := (Grid.Cells[6, Row] = '1');
+    // Update fuzzy flag from column COL_FUZZY
+    Entry.IsFuzzy := (Grid.Cells[COL_FUZZY + 1, Row] = '1');
   end;
 
   AUndoChanges.Enabled := False;

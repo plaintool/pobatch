@@ -155,6 +155,8 @@ type
     function ToString(ALineEndingStyle: TPoLineEndingStyle): string; overload;
     function ToString: string; overload; override;   // uses pleLF by default
 
+    function IsValid: boolean;
+
     property Flags: string read GetFlagsString write SetFlagsString;
     property MsgStrSimple: string read GetMsgStrSimple write SetMsgStrSimple;
     property MsgStr[Index: integer]: string read GetMsgStr write SetMsgStr;
@@ -1109,6 +1111,11 @@ begin
   Result := ToString(pleLF);
 end;
 
+function TPOEntry.IsValid: boolean;
+begin
+  Result := not IsFuzzy and ((MsgStrSimple <> '') or (MsgStrSimple = MsgId));
+end;
+
 { TPOEntryList }
 
 function TPOEntryList.GetItem(Index: integer): TPOEntry;
@@ -1511,7 +1518,8 @@ var
   FlagStr: string;
 begin
   if Entry.Obsolete then Prefix := '#~ '
-  else Prefix := '';
+  else
+    Prefix := '';
 
   // 1. Translator
   for i := 0 to Entry.FComments.Count - 1 do
