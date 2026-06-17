@@ -1224,6 +1224,8 @@ begin
   if Pos(LowerFilter, LowerCase(Entry.MsgId)) > 0 then Exit(True);
   // Check translation
   if Pos(LowerFilter, LowerCase(Entry.MsgStrSimple)) > 0 then Exit(True);
+  // Check reference
+  if Pos(LowerFilter, LowerCase(Entry.Reference)) > 0 then Exit(True);
   // Check previous text
   PrevStrings := Entry.GetCommentsOfType(poctPrevious);
   try
