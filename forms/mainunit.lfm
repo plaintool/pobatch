@@ -136,6 +136,7 @@ object formPoBatch: TformPoBatch
       TitleStyle = tsNative
       Visible = False
       OnKeyDown = GridHeadersKeyDown
+      OnPrepareCanvas = GridHeadersPrepareCanvas
       OnValidateEntry = GridHeadersValidateEntry
     end
     object SplitterHeaders: TSplitter

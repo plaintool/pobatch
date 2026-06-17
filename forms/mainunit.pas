@@ -82,6 +82,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
+    procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
     procedure MenuFileOpenClick(Sender: TObject);
@@ -481,6 +482,12 @@ begin
     Changed := True;
 end;
 
+procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+begin
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
+    GridHeaders.Canvas.Brush.Color := clSkyBlue;
+end;
+
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
   c, r: integer;
@@ -541,6 +548,9 @@ begin
   TS.Wordbreak := True;
   TS.SingleLine := False;
   Grid.Canvas.TextStyle := TS;
+
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
+    Grid.Canvas.Brush.Color := clSkyBlue;
 end;
 
 procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -1193,6 +1203,11 @@ var
 begin
   if AFilter = '' then Exit(True);
   LowerFilter := LowerCase(AFilter);
+
+  if (AFilter = '1') or (AFilter = '=1') then Exit(Entry.IsValid)
+  else
+  if (AFilter = '0') or (AFilter = '=0') then Exit(not Entry.IsValid);
+
   // Check original
   if Pos(LowerFilter, LowerCase(Entry.MsgId)) > 0 then Exit(True);
   // Check translation
