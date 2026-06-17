@@ -1,8 +1,12 @@
-# PoBatch
+<p align="center">
+  <img src="samples/pobatch128.png" width="128" />
+</p>
 
-A lightweight application designed to create, edit, and maintain PAD (Portable Application Description) XML files. PAD files are used to describe software products in a standardized format for software directories, download sites, and application catalogs, helping automate software listing and distribution.
+<h1 align="center">PoBatch</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file.
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Build with: Lazarus](https://img.shields.io/badge/Build_with-Lazarus-blueviolet)](https://www.lazarus-ide.org/)
 [![Platform: Windows Linux](https://img.shields.io/badge/Platform-Windows_Linux-yellow)](#)
 [![Latest Release](https://img.shields.io/github/v/release/plaintool/pobatch?label=Release)](https://github.com/plaintool/pobatch/releases/latest)
@@ -60,4 +64,6 @@ If you like this application, you can read how to support it [here](https://plai
 
 ## Licensing
 
-PoBatch is licensed under the MIT License. See the LICENSE file for details.
+PoBatch is licensed under the GPL v3 license. See the LICENSE file for details.
+
+The PoBatch application uses third-party resources licensed as described in the [THIRD_PARTIES](THIRD_PARTIES) file.
