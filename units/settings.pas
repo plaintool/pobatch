@@ -94,7 +94,7 @@ begin
 
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
-    JSONObj.Add('ActionAllowEditingAllChecked', Form.AAllowEditingAll.Checked);
+    JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
 
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
 
@@ -186,11 +186,11 @@ begin
           Form.MenuColumnReference.OnClick(Form.MenuColumnReference);
       end;
 
-      if JSONObj.FindPath('ActionAllowEditingAllChecked') <> nil then
+      if JSONObj.FindPath('ActionEditTranslationOnly') <> nil then
       begin
-        Form.AAllowEditingAll.Checked := JSONObj.FindPath('ActionAllowEditingAllChecked').AsBoolean;
-        if Form.AAllowEditingAll.Checked and Assigned(Form.AAllowEditingAll.OnExecute) then
-          Form.AAllowEditingAll.OnExecute(Form.AAllowEditingAll);
+        Form.AEditTranslationOnly.Checked := JSONObj.FindPath('ActionEditTranslationOnly').AsBoolean;
+        if Form.AEditTranslationOnly.Checked and Assigned(Form.AEditTranslationOnly.OnExecute) then
+          Form.AEditTranslationOnly.OnExecute(Form.AEditTranslationOnly);
       end;
 
       if JSONObj.FindPath('Path') <> nil then

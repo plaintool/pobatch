@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------------------
+//  PoBatch © 2026 by Alexander Tverskoy
+//  https://github.com/plaintool/pobatch
+//  Licensed under the MIT License
+//  You may obtain a copy of the License at https://opensource.org/licenses/MIT
+//-----------------------------------------------------------------------------------
+
 unit formattool;
 
 {$mode ObjFPC}{$H+}

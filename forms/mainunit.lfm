@@ -283,7 +283,7 @@ object formPoBatch: TformPoBatch
         Caption = '-'
       end
       object MenuAllowEditAll: TMenuItem
-        Action = AAllowEditingAll
+        Action = AEditTranslationOnly
         AutoCheck = True
       end
     end
@@ -346,11 +346,12 @@ object formPoBatch: TformPoBatch
       Caption = 'Undo Changes'
       OnExecute = AUndoChangesExecute
     end
-    object AAllowEditingAll: TAction
+    object AEditTranslationOnly: TAction
       Category = 'Edit'
       AutoCheck = True
-      Caption = 'Allow Editing All'
-      OnExecute = AAllowEditingAllExecute
+      Caption = 'Edit Translation Only'
+      Checked = True
+      OnExecute = AEditTranslationOnlyExecute
     end
   end
 end

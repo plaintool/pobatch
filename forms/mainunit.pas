@@ -36,7 +36,7 @@ type
   { TformPoBatch }
 
   TformPoBatch = class(TForm)
-    AAllowEditingAll: TAction;
+    AEditTranslationOnly: TAction;
     AUndoChanges: TAction;
     ActionList: TActionList;
     Filter: TEdit;
@@ -97,7 +97,7 @@ type
     procedure MenuFileSaveAsClick(Sender: TObject);
     procedure MenuFileSaveClick(Sender: TObject);
     procedure AUndoChangesExecute(Sender: TObject);
-    procedure AAllowEditingAllExecute(Sender: TObject);
+    procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
@@ -402,15 +402,17 @@ begin
   Changed := False;
 end;
 
-procedure TformPoBatch.AAllowEditingAllExecute(Sender: TObject);
+procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
 begin
-  GridHeaders.Columns[COL_HEADERS_NAME].ReadOnly := not AAllowEditingAll.Checked;
+  GridHeaders.EditorMode := False;
+  GridHeaders.Columns[COL_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
 
-  Grid.Columns[COL_TEXT].ReadOnly := not AAllowEditingAll.Checked;
-  Grid.Columns[COL_REFERENCE].ReadOnly := not AAllowEditingAll.Checked;
-  Grid.Columns[COL_CONTEXT].ReadOnly := not AAllowEditingAll.Checked;
-  Grid.Columns[COL_PREVIOUS].ReadOnly := not AAllowEditingAll.Checked;
-  Grid.Columns[COL_FUZZY].ReadOnly := not AAllowEditingAll.Checked;
+  Grid.EditorMode := False;
+  Grid.Columns[COL_TEXT].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COL_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COL_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COL_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COL_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
 end;
 
 procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
