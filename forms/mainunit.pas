@@ -72,12 +72,13 @@ type
     dialogPath: TSelectDirectoryDialog;
     Separator1: TMenuItem;
     Separator3: TMenuItem;
-    SplitterTop: TSplitter;
+    SplitterHeaders: TSplitter;
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
     Grid: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
@@ -107,6 +108,7 @@ type
     procedure btnFilterClearClick(Sender: TObject);
     procedure MenuHeadersClick(Sender: TObject);
     procedure MenuPathOpenClick(Sender: TObject);
+    procedure PanelClientResize(Sender: TObject);
   private
     PoFile: TPoFile;
     FFileName: string;
@@ -130,11 +132,13 @@ type
     function OpenPath(const AFileName: string): boolean;
     procedure ClosePath;
     procedure UpdatePath;
+    procedure SyncPath;
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
     procedure UpdateRowHeights;
     procedure SetChanges(Value: boolean);
     procedure UpdateCaption;
+    procedure FixSplitters(Data: PtrInt);
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     procedure FillGrids;
     procedure SaveGrids;
@@ -214,6 +218,10 @@ begin
   begin
     FInitialized := True;
 
+    // Open Path
+    if (Path <> string.Empty) and OpenPath(Path) then
+      UpdatePath;
+
     // Open file from command line if specified, otherwise start with a new document
     if FCommandLineFile <> string.Empty then
     begin
@@ -222,9 +230,6 @@ begin
     end
     else
       NewFile;
-
-    if (Path <> string.Empty) and OpenPath(Path) then
-      UpdatePath;
   end;
 
   if AutoCheckUpdates then
@@ -246,6 +251,11 @@ begin
 
   // Get the first dropped file
   OpenFile(FileNames[0]);
+end;
+
+procedure TformPoBatch.FormResize(Sender: TObject);
+begin
+  Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
 procedure TformPoBatch.MenuAboutClick(Sender: TObject);
@@ -322,6 +332,11 @@ begin
   end;
 end;
 
+procedure TformPoBatch.PanelClientResize(Sender: TObject);
+begin
+
+end;
+
 procedure TformPoBatch.MenuClosePathClick(Sender: TObject);
 begin
   ClosePath;
@@ -378,7 +393,7 @@ end;
 procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
 begin
   GridHeaders.Visible := MenuHeaders.Checked;
-  SplitterTop.Visible := MenuHeaders.Checked;
+  SplitterHeaders.Visible := MenuHeaders.Checked;
 end;
 
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
@@ -759,6 +774,7 @@ begin
     FFileName := AFileName;
     Changed := False;
     FillGrids;
+    SyncPath;
     Result := True;
   end;
 end;
@@ -823,6 +839,21 @@ begin
   MenuClosePath.Enabled := Enable;
   if not Enabled then
     FLastPathIndex := -1;
+end;
+
+procedure TformPoBatch.SyncPath;
+var
+  Idx: integer;
+begin
+  ListPath.ItemIndex := -1;
+  if (Path = '') or (FFileName = '') then Exit;
+  if ExtractFilePath(FFileName) <> IncludeTrailingPathDelimiter(Path) then Exit;
+
+  Idx := FPoFiles.IndexOf(FFileName);
+  if Idx < 0 then Exit;
+
+  ListPath.ItemIndex := Idx;
+  FLastPathIndex := Idx;
 end;
 
 function TformPoBatch.LoadFromFile(AFileName: string): boolean;
@@ -984,24 +1015,52 @@ procedure TformPoBatch.UpdateCaption;
 var
   BaseTitle: string;
   AppName: string;
+  FileInPath: boolean;
 begin
-  // Get application name from project settings or use default
   AppName := 'PoBatch';
 
-  if FFileName = string.Empty then
-    BaseTitle := FPath + ifthen(FPath = string.Empty, '', ' - ') + 'Untitled'
+  if FFileName = '' then
+  begin
+    // No file loaded – show path (if any) with "Untitled"
+    if FPath <> '' then
+      BaseTitle := FPath + ' - Untitled'
+    else
+      BaseTitle := 'Untitled';
+  end
   else
-    BaseTitle := FPath + ifthen(FPath = string.Empty, '', ' - ') + ExtractFileName(FFileName);
+  begin
+    // Check whether the opened file resides inside the currently open folder
+    FileInPath := (FPath <> '') and (ExtractFilePath(FFileName) = IncludeTrailingPathDelimiter(FPath));
 
+    if not FileInPath then
+      // File belongs to the open folder: display folder and file name only
+      BaseTitle := FPath + ', ' + FFileName
+    else
+      // File is outside the open folder (or no folder open): show full file path
+      BaseTitle := FFileName;
+  end;
+
+  // Append modification marker and application name
   if Changed then
     Caption := BaseTitle + '* - ' + AppName
   else
     Caption := BaseTitle + ' - ' + AppName;
 
-  // You can also set the application title for taskbar
+  // Taskbar title (same logic, without the app name suffix)
   Application.Title := BaseTitle;
   if Changed then
     Application.Title := Application.Title + '*';
+
+  Application.QueueAsyncCall(@FixSplitters, 0);
+end;
+
+procedure TformPoBatch.FixSplitters(Data: PtrInt);
+begin
+  ListPath.Left := 0;
+  SplitterPath.Left := ListPath.Left + ListPath.Width;
+
+  GridHeaders.Top := 0;
+  SplitterHeaders.Top := GridHeaders.Top + GridHeaders.Height;
 end;
 
 function TformPoBatch.EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;

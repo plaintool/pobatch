@@ -15,6 +15,7 @@ object formPoBatch: TformPoBatch
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDropFiles = FormDropFiles
+  OnResize = FormResize
   OnShow = FormShow
   object PanelFilter: TPanel
     Left = 1
@@ -136,7 +137,7 @@ object formPoBatch: TformPoBatch
       OnKeyDown = GridHeadersKeyDown
       OnValidateEntry = GridHeadersValidateEntry
     end
-    object SplitterTop: TSplitter
+    object SplitterHeaders: TSplitter
       Cursor = crVSplit
       Left = 1
       Height = 10
