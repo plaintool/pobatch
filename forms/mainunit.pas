@@ -82,7 +82,6 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
-    procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
     procedure MenuFileOpenClick(Sender: TObject);
@@ -101,6 +100,7 @@ type
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -169,6 +169,10 @@ const
   COL_FUZZY = 6;
 
   UNDEFINED = 'undefined';
+
+  // Colors
+  clRowHighlight = TColor($FFF0DC);
+  clRowHighlight_Dark = TColor($463027);
 
 implementation
 
@@ -485,7 +489,7 @@ end;
 procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
-    GridHeaders.Canvas.Brush.Color := clSkyBlue;
+    GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlight_Dark);
 end;
 
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -543,14 +547,22 @@ end;
 procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 var
   TS: TTextStyle;
+  CustomColor: TColor = clWhite;
 begin
   TS := Grid.Canvas.TextStyle;
   TS.Wordbreak := True;
   TS.SingleLine := False;
   Grid.Canvas.TextStyle := TS;
 
+  // Color Cells
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
-    Grid.Canvas.Brush.Color := clSkyBlue;
+    Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlight_Dark);
+
+  if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
+    CustomColor := clInfoBk;
+
+  if (CustomColor <> clWhite) and (Grid.Canvas.Brush.Color <> clWhite) then
+    Grid.Canvas.Brush.Color := BlendColors(Grid.Canvas.Brush.Color, CustomColor, 50);
 end;
 
 procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);

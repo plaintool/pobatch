@@ -12,13 +12,18 @@ unit formattool;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes,
+  SysUtils,
+  Graphics,
+  LCLIntf;
 
 function EndsWithLineBreak(const Buffer: TBytes): boolean;
 
 function EndsWithLineBreak(const FileName: string): boolean;
 
 function LoadFileAsBytes(const FileName: string): TBytes;
+
+function BlendColors(Color1, Color2: TColor; Intensity: integer): TColor;
 
 implementation
 
@@ -55,6 +60,40 @@ begin
   finally
     FS.Free;
   end;
+end;
+
+function BlendColors(Color1, Color2: TColor; Intensity: integer): TColor;
+var
+  R1, G1, B1: byte;
+  R2, G2, B2: byte;
+  Alpha: double;
+begin
+  // Return original color if no blending needed
+  if Intensity <= 0 then
+    Exit(Color1);
+
+  // Return full blend color if maximum intensity
+  if Intensity >= 100 then
+    Exit(Color2);
+
+  // Calculate blend factor (0.0 to 1.0)
+  Alpha := Intensity / 100.0;
+
+  // Extract RGB components from first color
+  Color1 := ColorToRGB(Color1);
+  R1 := GetRValue(Color1);
+  G1 := GetGValue(Color1);
+  B1 := GetBValue(Color1);
+
+  // Extract RGB components from second color
+  Color2 := ColorToRGB(Color2);
+  R2 := GetRValue(Color2);
+  G2 := GetGValue(Color2);
+  B2 := GetBValue(Color2);
+
+  // Linear interpolation: result = color1 * (1-alpha) + color2 * alpha
+  Result := RGBToColor(Round(R1 * (1 - Alpha) + R2 * Alpha), Round(G1 * (1 - Alpha) + G2 * Alpha),
+    Round(B1 * (1 - Alpha) + B2 * Alpha));
 end;
 
 end.
