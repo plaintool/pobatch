@@ -56,7 +56,7 @@ type
     MenuAbout: TMenuItem;
     MenuFileNewWindow: TMenuItem;
     MenuAutoCheckUpdates: TMenuItem;
-    MenuClosePath: TMenuItem;
+    MenuPathClose: TMenuItem;
     MenuHeaders: TMenuItem;
     MenuColumnReference: TMenuItem;
     MenuEdit: TMenuItem;
@@ -78,24 +78,24 @@ type
     Grid: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
-    procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
-    procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-    procedure MenuAboutClick(Sender: TObject);
-    procedure MenuAutoCheckUpdatesClick(Sender: TObject);
-    procedure MenuClosePathClick(Sender: TObject);
-    procedure MenuColumnReferenceClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
+    procedure MenuFileOpenClick(Sender: TObject);
+    procedure MenuFileSaveClick(Sender: TObject);
+    procedure MenuFileSaveAsClick(Sender: TObject);
+    procedure MenuPathOpenClick(Sender: TObject);
+    procedure MenuPathCloseClick(Sender: TObject);
+    procedure MenuFileExitClick(Sender: TObject);
+    procedure MenuHeadersClick(Sender: TObject);
+    procedure MenuColumnReferenceClick(Sender: TObject);
     procedure MenuBuyMeACoffeeClick(Sender: TObject);
     procedure MenuCheckForUpdatesClick(Sender: TObject);
-    procedure MenuFileExitClick(Sender: TObject);
-    procedure MenuFileNewClick(Sender: TObject);
-    procedure MenuFileOpenClick(Sender: TObject);
-    procedure MenuFileSaveAsClick(Sender: TObject);
-    procedure MenuFileSaveClick(Sender: TObject);
+    procedure MenuAutoCheckUpdatesClick(Sender: TObject);
+    procedure MenuAboutClick(Sender: TObject);
     procedure AUndoChangesExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -103,12 +103,11 @@ type
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
+    procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
     procedure ListPathClick(Sender: TObject);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
-    procedure MenuHeadersClick(Sender: TObject);
-    procedure MenuPathOpenClick(Sender: TObject);
-    procedure PanelClientResize(Sender: TObject);
   private
     PoFile: TPoFile;
     FFileName: string;
@@ -258,9 +257,11 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-procedure TformPoBatch.MenuAboutClick(Sender: TObject);
+procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
 begin
-  formAboutPoBatch.ShowModal;
+  if not IsCanClose then Exit;
+
+  NewFile;
 end;
 
 procedure TformPoBatch.MenuFileNewWindowClick(Sender: TObject);
@@ -281,35 +282,6 @@ begin
   end;
 end;
 
-procedure TformPoBatch.MenuBuyMeACoffeeClick(Sender: TObject);
-begin
-  formDonatePoBatch.ShowModal;
-end;
-
-procedure TformPoBatch.MenuAutoCheckUpdatesClick(Sender: TObject);
-begin
-  FAutoCheckUpdates := MenuAutoCheckUpdates.Checked;
-end;
-
-procedure TformPoBatch.MenuCheckForUpdatesClick(Sender: TObject);
-var
-  LatestVersion: string;
-begin
-  CheckGithubLatestVersion(LatestVersion, REPO);
-end;
-
-procedure TformPoBatch.MenuFileExitClick(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
-begin
-  if not IsCanClose then Exit;
-
-  NewFile;
-end;
-
 procedure TformPoBatch.MenuFileOpenClick(Sender: TObject);
 begin
   if not IsCanClose then Exit;
@@ -318,35 +290,19 @@ begin
     OpenFile(dialogOpen.FileName);
 end;
 
-procedure TformPoBatch.MenuPathOpenClick(Sender: TObject);
+procedure TformPoBatch.MenuFileSaveClick(Sender: TObject);
 begin
-  if dialogPath.Execute then
+  if FFileName = string.Empty then
   begin
-    if not OpenPath(dialogPath.FileName) then
-    begin
-      ShowMessage('No .po files found in the selected directory!');
-      Exit;
-    end;
-    FPath := dialogPath.FileName;
-    UpdatePath;
+    // No filename yet, use Save As dialog
+    menuFileSaveAsClick(Sender);
+  end
+  else
+  begin
+    // Save to current file
+    if SaveFile(FFileName) then
+      Changed := False;
   end;
-end;
-
-procedure TformPoBatch.PanelClientResize(Sender: TObject);
-begin
-
-end;
-
-procedure TformPoBatch.MenuClosePathClick(Sender: TObject);
-begin
-  ClosePath;
-end;
-
-procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
-begin
-  Grid.Columns[COL_REFERENCE].Visible := MenuColumnReference.Checked;
-  if Grid.Columns[COL_REFERENCE].Visible and (Grid.Columns[COL_REFERENCE].Width = 0) then
-    Grid.Columns[COL_REFERENCE].Width := 240;
 end;
 
 procedure TformPoBatch.MenuFileSaveAsClick(Sender: TObject);
@@ -375,25 +331,63 @@ begin
   end;
 end;
 
-procedure TformPoBatch.MenuFileSaveClick(Sender: TObject);
+procedure TformPoBatch.MenuPathOpenClick(Sender: TObject);
 begin
-  if FFileName = string.Empty then
+  if dialogPath.Execute then
   begin
-    // No filename yet, use Save As dialog
-    menuFileSaveAsClick(Sender);
-  end
-  else
-  begin
-    // Save to current file
-    if SaveFile(FFileName) then
-      Changed := False;
+    if not OpenPath(dialogPath.FileName) then
+    begin
+      ShowMessage('No .po files found in the selected directory!');
+      Exit;
+    end;
+    FPath := dialogPath.FileName;
+    UpdatePath;
   end;
+end;
+
+procedure TformPoBatch.MenuPathCloseClick(Sender: TObject);
+begin
+  ClosePath;
+end;
+
+procedure TformPoBatch.MenuFileExitClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
 begin
   GridHeaders.Visible := MenuHeaders.Checked;
   SplitterHeaders.Visible := MenuHeaders.Checked;
+end;
+
+procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
+begin
+  Grid.Columns[COL_REFERENCE].Visible := MenuColumnReference.Checked;
+  if Grid.Columns[COL_REFERENCE].Visible and (Grid.Columns[COL_REFERENCE].Width = 0) then
+    Grid.Columns[COL_REFERENCE].Width := 240;
+end;
+
+procedure TformPoBatch.MenuBuyMeACoffeeClick(Sender: TObject);
+begin
+  formDonatePoBatch.ShowModal;
+end;
+
+procedure TformPoBatch.MenuCheckForUpdatesClick(Sender: TObject);
+var
+  LatestVersion: string;
+begin
+  CheckGithubLatestVersion(LatestVersion, REPO);
+end;
+
+procedure TformPoBatch.MenuAutoCheckUpdatesClick(Sender: TObject);
+begin
+  FAutoCheckUpdates := MenuAutoCheckUpdates.Checked;
+end;
+
+procedure TformPoBatch.MenuAboutClick(Sender: TObject);
+begin
+  formAboutPoBatch.ShowModal;
 end;
 
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
@@ -749,9 +743,10 @@ begin
   try
     PoFile.Reset;
     PoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
-    FillGrids;
     FFileName := AFileName;
     Changed := False;
+    FillGrids;
+    SyncPath;
   except
     Result := False;
     raise;
@@ -838,7 +833,7 @@ begin
   Enable := FPath <> string.Empty;
   ListPath.Visible := Enable;
   SplitterPath.Visible := Enable;
-  MenuClosePath.Enabled := Enable;
+  MenuPathClose.Enabled := Enable;
   if not Enabled then
     FLastPathIndex := -1;
 end;

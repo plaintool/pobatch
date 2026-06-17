@@ -260,10 +260,10 @@ object formPoBatch: TformPoBatch
         ShortCut = 16464
         OnClick = MenuPathOpenClick
       end
-      object MenuClosePath: TMenuItem
+      object MenuPathClose: TMenuItem
         Caption = 'Close Path'
         Enabled = False
-        OnClick = MenuClosePathClick
+        OnClick = MenuPathCloseClick
       end
       object Separator2: TMenuItem
         Caption = '-'
