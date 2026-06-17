@@ -100,6 +100,7 @@ type
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -327,6 +328,8 @@ begin
     begin
       FFileName := TempFileName;
       Changed := False;
+      if ExtractFilePath(TempFileName) = IncludeTrailingPathDelimiter(FPath) then
+        OpenPath(FPath);
     end;
   end;
 end;
@@ -427,6 +430,38 @@ begin
 
     // Remove the selected row from the grid
     GridHeaders.DeleteRow(SelRow);
+  end;
+end;
+
+procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  c, r: integer;
+begin
+  // Delete rows
+  if not AEditTranslationOnly.Checked and (Key = VK_DELETE) and (ssCtrl in Shift) then
+  begin
+    if MessageDlg('Delete selected rows?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+      Exit;
+
+    for r := Grid.Selection.Bottom downto Grid.Selection.Top do
+      Grid.DeleteRow(r);
+
+    Changed := True;
+    Key := 0;
+  end
+  else  // Delete clears selection
+  if Key = VK_DELETE then
+  begin
+    if (not AEditTranslationOnly.Checked or ((Grid.Selection.Left = COL_TRANSLATION + 1) and
+      (Grid.Selection.Right = COL_TRANSLATION + 1))) and (Grid.Selection.Height > 0) then
+    begin
+      for r := Grid.Selection.Top to Grid.Selection.Bottom do
+        for c := Grid.Selection.Left to Grid.Selection.Right do
+          Grid.Cells[c, r] := '';
+
+      Changed := True;
+      Key := 0;
+    end;
   end;
 end;
 
@@ -592,9 +627,6 @@ begin
     case mr of
       mrYes:
       begin
-        // Save to Po
-        SaveGrids;
-
         // Try to save
         if FFileName = string.Empty then
         begin
@@ -811,6 +843,7 @@ begin
     FLastPathIndex := -1;   // no file is selected in the new folder
 
     UpdateCaption;
+    SyncPath;
 
     Result := True;
   finally

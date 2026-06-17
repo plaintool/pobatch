@@ -30,7 +30,7 @@ object formPoBatch: TformPoBatch
     ClientHeight = 20
     ClientWidth = 707
     ParentBackground = False
-    TabOrder = 0
+    TabOrder = 1
     object Filter: TEdit
       Left = 5
       Height = 20
@@ -103,7 +103,7 @@ object formPoBatch: TformPoBatch
     ClientHeight = 404
     ClientWidth = 549
     ParentBackground = False
-    TabOrder = 4
+    TabOrder = 0
     object GridHeaders: TStringGrid
       Left = 1
       Height = 80
@@ -211,6 +211,7 @@ object formPoBatch: TformPoBatch
       OnCompareCells = GridCompareCells
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized
+      OnKeyDown = GridKeyDown
       OnPrepareCanvas = GridPrepareCanvas
       OnValidateEntry = GridValidateEntry
     end
