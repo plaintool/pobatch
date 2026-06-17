@@ -128,7 +128,7 @@ object formPoBatch: TformPoBatch
       FocusColor = clBlue
       GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goAutoAddRows, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goRowHighlight]
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
       TabOrder = 2
@@ -203,11 +203,12 @@ object formPoBatch: TformPoBatch
       FocusColor = clBlue
       GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goAutoAddRows, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints, goRowHighlight]
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
       TabOrder = 0
       TitleStyle = tsNative
+      OnColRowInserted = GridColRowInserted
       OnCompareCells = GridCompareCells
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized

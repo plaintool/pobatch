@@ -189,7 +189,7 @@ begin
       if JSONObj.FindPath('ActionEditTranslationOnly') <> nil then
       begin
         Form.AEditTranslationOnly.Checked := JSONObj.FindPath('ActionEditTranslationOnly').AsBoolean;
-        if Form.AEditTranslationOnly.Checked and Assigned(Form.AEditTranslationOnly.OnExecute) then
+        if not Form.AEditTranslationOnly.Checked and Assigned(Form.AEditTranslationOnly.OnExecute) then
           Form.AEditTranslationOnly.OnExecute(Form.AEditTranslationOnly);
       end;
 

@@ -106,22 +106,24 @@ type
     procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
+    procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure ListPathClick(Sender: TObject);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
   private
     PoFile: TPoFile;
     FFileName: string;
-    FPath: string;
-    FPoFiles: TStringList;
-    FChanged: boolean;
     FInitialized: boolean;
     FCommandLineFile: string;
+    FUpdatingGrid: boolean;
+    FLastPathIndex: integer;
+    FPoFiles: TStringList;
+
+    FChanged: boolean;
+    FPath: string;
     FAutoCheckUpdates: boolean;
     FSortOrder: TSortOrder;
     FSortColumn: integer;
-
-    FLastPathIndex: integer;
 
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
@@ -164,6 +166,8 @@ const
   COL_CONTEXT = 4;
   COL_PREVIOUS = 5;
   COL_FUZZY = 6;
+
+  UNDEFINED = 'undefined';
 
 implementation
 
@@ -403,6 +407,10 @@ procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
 begin
   GridHeaders.EditorMode := False;
   GridHeaders.Columns[COL_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
+  if AEditTranslationOnly.Checked then
+    GridHeaders.Options := GridHeaders.Options - [goAutoAddRows]
+  else
+    GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
 
   Grid.EditorMode := False;
   Grid.Columns[COL_TEXT].ReadOnly := AEditTranslationOnly.Checked;
@@ -410,13 +418,18 @@ begin
   Grid.Columns[COL_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COL_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COL_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
+  if AEditTranslationOnly.Checked then
+    Grid.Options := Grid.Options - [goAutoAddRows]
+  else
+    Grid.Options := Grid.Options + [goAutoAddRows];
 end;
 
 procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
+  c, r: integer;
   SelRow: integer;
 begin
-  if (Key = VK_DELETE) and (ssCtrl in Shift) then
+  if not AEditTranslationOnly.Checked and (ssCtrl in Shift) and (Key = VK_DELETE) then
   begin
     Key := 0; // swallow the key to prevent default handling
 
@@ -430,7 +443,30 @@ begin
 
     // Remove the selected row from the grid
     GridHeaders.DeleteRow(SelRow);
+
+    Changed := True;
+  end
+  else
+  // Plain Delete clears cell contents
+  if Key = VK_DELETE then
+  begin
+    if (not AEditTranslationOnly.Checked or ((GridHeaders.Selection.Left = COL_HEADERS_VALUE + 1) and
+      (GridHeaders.Selection.Right = COL_HEADERS_VALUE + 1))) and (GridHeaders.Selection.Height > 0) then
+    begin
+      for r := GridHeaders.Selection.Top to GridHeaders.Selection.Bottom do
+        for c := GridHeaders.Selection.Left to GridHeaders.Selection.Right do
+          GridHeaders.Cells[c, r] := '';
+
+      Changed := True;
+      Key := 0;
+    end;
   end;
+end;
+
+procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+begin
+  if OldValue <> NewValue then
+    Changed := True;
 end;
 
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -440,7 +476,7 @@ var
   Count: integer;
 begin
   // Delete rows via Ctrl+Del (only when not in translation-only mode)
-  if not AEditTranslationOnly.Checked and (Key = VK_DELETE) and (ssCtrl in Shift) then
+  if not AEditTranslationOnly.Checked and (ssCtrl in Shift) and (Key = VK_DELETE) then
   begin
     if MessageDlg('Delete selected rows?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
@@ -457,9 +493,8 @@ begin
     // Delete the entries from PoFile (handles index ordering internally)
     PoFile.DeleteEntriesByIndexes(SelIndexes);
 
-    FChanged := True;
+    Changed := True;
     FillGrids;   // rebuild the grid from updated PoFile (preserves filter & sort)
-    UpdateCaption;
     Key := 0;
   end
   else
@@ -473,16 +508,10 @@ begin
         for c := Grid.Selection.Left to Grid.Selection.Right do
           Grid.Cells[c, r] := '';
 
-      FChanged := True;
+      Changed := True;
       Key := 0;
     end;
   end;
-end;
-
-procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-begin
-  if OldValue <> NewValue then
-    Changed := True;
 end;
 
 procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
@@ -572,6 +601,27 @@ begin
     NumB := StrToIntDef(ValB, 0);
     Result := NumA - NumB;
   end;
+end;
+
+procedure TformPoBatch.GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+var
+  NewEntry: TPOEntry;
+  NewIndex: integer;
+begin
+  if IsColumn or FUpdatingGrid then Exit;   // ignore column inserts and programmatic updates
+
+  // Create a new translatable entry and add it to the end of the model
+  NewEntry := TPOEntry.Create;
+  NewEntry.MsgId := '';
+  NewEntry.MsgStrSimple := '';
+  NewEntry.IsFuzzy := False;
+  NewIndex := PoFile.Entries.Add(NewEntry);   // returns the new index
+
+  // Put the permanent index into column 0 of the newly inserted row
+  Grid.Cells[0, tIndex] := IntToStr(NewIndex);
+
+  FChanged := True;
+  UpdateCaption;
 end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
@@ -1148,6 +1198,7 @@ begin
   end;
 
   // Fill the headers grid
+  FUpdatingGrid := True;
   GridHeaders.BeginUpdate;
   try
     Headers := PoFile.Headers;
@@ -1243,6 +1294,7 @@ begin
     UpdateRowHeights;
   finally
     Grid.EndUpdate;
+    FUpdatingGrid := False;
   end;
 end;
 
@@ -1282,7 +1334,16 @@ begin
     Entry := PoFile.Entries[EntryIndex];
 
     // Update translation from column COL_TRANSLATION
+    if Trim(Grid.Cells[COL_TEXT + 1, Row]) = string.Empty then
+      Entry.MsgId := UNDEFINED
+    else
+      Entry.MsgId := Grid.Cells[COL_TEXT + 1, Row];
+
+    // Update translation from column COL_TRANSLATION
     Entry.MsgStrSimple := Grid.Cells[COL_TRANSLATION + 1, Row];
+
+    // Update translation from column COL_TRANSLATION
+    Entry.Reference := Grid.Cells[COL_REFERENCE + 1, Row];
 
     // Update fuzzy flag from column COL_FUZZY
     Entry.IsFuzzy := (Grid.Cells[COL_FUZZY + 1, Row] = '1');
