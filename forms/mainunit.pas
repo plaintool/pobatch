@@ -78,12 +78,14 @@ type
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
     Grid: TStringGrid;
+    { Form Events }
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
+    { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
     procedure MenuFileOpenClick(Sender: TObject);
@@ -98,11 +100,14 @@ type
     procedure MenuCheckForUpdatesClick(Sender: TObject);
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
     procedure MenuAboutClick(Sender: TObject);
+    { Action Events }
     procedure AUndoChangesExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
+    { Grid Headers Events }
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+    { Grid Events }
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -112,14 +117,16 @@ type
     procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
     procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+    { Inline Editor Events}
     procedure PanelMemoEnter(Sender: TObject);
     procedure PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
-    procedure DelayedSetMemoFocus(Data: PtrInt);
-    procedure EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer = 0;
-      OffsetTop: integer = 3; OffsetRight: integer = -1; OffsetBottom: integer = 0);
     procedure MemoEnter(Sender: TObject);
     procedure MemoExit(Sender: TObject);
     procedure MemoChange(Sender: TObject);
+    procedure MemoKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    { Other Events }
+    procedure EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer = 0;
+      OffsetTop: integer = 3; OffsetRight: integer = -1; OffsetBottom: integer = 0);
     procedure ListPathClick(Sender: TObject);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
@@ -134,6 +141,7 @@ type
     FUpdatingGrid: boolean;
     FLastPathIndex: integer;
     FPoFiles: TStringList;
+    FCellValue: string;
 
     FChanged: boolean;
     FPath: string;
@@ -141,6 +149,7 @@ type
     FSortOrder: TSortOrder;
     FSortColumn: integer;
 
+    { Methods }
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
     procedure HandleCommandLineParameters;
@@ -154,6 +163,7 @@ type
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
     procedure UpdateRowHeights;
+    procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure SetChanges(Value: boolean);
     procedure UpdateCaption;
     procedure FixSplitters(Data: PtrInt);
@@ -188,8 +198,10 @@ const
   // Colors
   clRowHighlight = TColor($FFF0DC);
   clRowHighlightDark = TColor($463027);
-  clRowFocused = TColor($FFDCC8);
-  clRowFocusedDark = TColor($6C4C38);
+  //clRowFocused = TColor($FFDCC8);
+  //clRowFocusedDark = TColor($6C4C38);
+  clRowFuzzy = TColor($96FFFF);
+  clRowFuzzyDark = TColor($009696);
 
 implementation
 
@@ -198,6 +210,8 @@ uses formabout, formdonate, systemtool, formattool, settings;
   {$R *.lfm}
 
   { TformPoBatch }
+
+  { Form Events }
 
 procedure TformPoBatch.FormCreate(Sender: TObject);
 begin
@@ -288,6 +302,8 @@ procedure TformPoBatch.FormResize(Sender: TObject);
 begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
+
+{ Menu Events }
 
 procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
 begin
@@ -424,6 +440,8 @@ begin
   formAboutPoBatch.ShowModal;
 end;
 
+{ Action Events }
+
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
 begin
   FillGrids;
@@ -450,6 +468,8 @@ begin
   else
     Grid.Options := Grid.Options + [goAutoAddRows];
 end;
+
+{ Grid Headers Events }
 
 procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
@@ -508,6 +528,8 @@ begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
     GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
 end;
+
+{ Grid Events }
 
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
@@ -572,17 +594,17 @@ begin
   Grid.Canvas.TextStyle := TS;
 
   // Color Cells
-    if Grid.EditorMode and (aCol = Grid.Col) and (aRow = Grid.Row) then
+  if Grid.EditorMode and (aCol = Grid.Col) and (aRow = Grid.Row) then
   begin
     Grid.Canvas.Brush.Color := clWhite;
     Exit;
   end;
 
-   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
     Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
 
   if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
-    CustomColor := clInfoBk;
+    CustomColor := ThemeColor(clRowFuzzy, clRowFuzzyDark);
 
   if (CustomColor <> clWhite) and (Grid.Canvas.Brush.Color <> clWhite) then
     Grid.Canvas.Brush.Color := BlendColors(Grid.Canvas.Brush.Color, CustomColor, 50);
@@ -731,16 +753,19 @@ begin
     Memo.WantReturns := True;
     Memo.BiDiMode := bdLeftToRight;
     EditControlSetBounds(PanelMemo, aCol, aRow);
-    Memo.OnEnter := @MemoEnter; // Event Enter
-    Memo.OnExit := @MemoExit; // Event Exit
-    Memo.OnChange := @MemoChange; // Event Change
+    Memo.OnKeyDown := @MemoKeyDown;
+    Memo.OnEnter := @MemoEnter;
+    Memo.OnExit := @MemoExit;
+    Memo.OnChange := @MemoChange;
     Memo.Text := Grid.Cells[aCol, aRow];
-    Memo.SelStart := Length(Memo.Text);
-    Memo.SelLength := 0;
+    Memo.SelStart := 0;
+    Memo.SelLength := Length(Memo.Text);
 
     Editor := PanelMemo;
   end;
 end;
+
+{ Inline Editor Events}
 
 procedure TformPoBatch.PanelMemoEnter(Sender: TObject);
 begin
@@ -755,32 +780,10 @@ begin
     Memo.SelText := UTF8Key;
 end;
 
-procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
-begin
-  if Assigned(Memo) and (Memo.CanFocus) then
-  begin
-    Memo.SetFocus;
-    if (Memo.SelLength = 0) then
-      Memo.SelStart := Length(Memo.Text);
-  end;
-end;
-
-procedure TformPoBatch.EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer;
-  OffsetTop: integer; OffsetRight: integer; OffsetBottom: integer);
-var
-  Rect: TRect;
-begin
-  if Assigned(Sender) then
-  begin
-    Rect := Grid.CellRect(aCol, aRow);
-    Sender.SetBounds(Rect.Left + OffsetLeft, Max(Rect.Top, Grid.RowHeights[0]) + OffsetTop,
-      Rect.Right - Rect.Left + OffsetRight,
-      Rect.Bottom - Rect.Top + OffsetBottom);
-  end;
-end;
-
 procedure TformPoBatch.MemoEnter(Sender: TObject);
 begin
+  FCellValue := Grid.Cells[Grid.Col, Grid.Row];
+
   if (Grid.IsCellSelected[Grid.Col, Grid.Row]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
   begin
     Memo.Color := clHighlight;
@@ -799,6 +802,38 @@ begin
   Changed := True;
   UpdateRowHeights;
   EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
+end;
+
+procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+  begin
+    Grid.EditorMode := False;
+    Grid.Cells[Grid.Col, Grid.Row] := FCellValue;
+    Key := 0;
+  end
+  else
+  if (Key = VK_RETURN) and not ((ssCtrl in Shift) or (ssShift in Shift)) then
+  begin
+    Grid.EditorMode := False;
+    Key := 0;
+  end;
+end;
+
+{ Other Events }
+
+procedure TformPoBatch.EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer;
+  OffsetTop: integer; OffsetRight: integer; OffsetBottom: integer);
+var
+  Rect: TRect;
+begin
+  if Assigned(Sender) then
+  begin
+    Rect := Grid.CellRect(aCol, aRow);
+    Sender.SetBounds(Rect.Left + OffsetLeft, Max(Rect.Top, Grid.RowHeights[0]) + OffsetTop,
+      Rect.Right - Rect.Left + OffsetRight,
+      Rect.Bottom - Rect.Top + OffsetBottom);
+  end;
 end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
@@ -854,6 +889,8 @@ begin
   Filter.Text := string.Empty;
   filterChange(Self);
 end;
+
+{ Methods }
 
 function TformPoBatch.IsCanClose: boolean;
 var
@@ -1274,6 +1311,16 @@ begin
     end;
 
     Grid.RowHeights[Row] := MaxH;
+  end;
+end;
+
+procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
+begin
+  if Assigned(Memo) and (Memo.CanFocus) then
+  begin
+    Memo.SetFocus;
+    if (Memo.SelLength = 0) then
+      Memo.SelStart := Length(Memo.Text);
   end;
 end;
 
