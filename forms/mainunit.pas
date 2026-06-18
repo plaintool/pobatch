@@ -31,13 +31,19 @@ uses
   StrUtils,
   LCLType,
   LCLIntf,
-  powrap, Types;
+  powrap;
 
 type
 
   { TformPoBatch }
 
   TformPoBatch = class(TForm)
+    ACopySourceText: TAction;
+    ACleanEqual: TAction;
+    ACut: TAction;
+    ACopy: TAction;
+    APaste: TAction;
+    ADelete: TAction;
     AEditTranslationOnly: TAction;
     AUndoChanges: TAction;
     ActionList: TActionList;
@@ -85,7 +91,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
-    procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
+    procedure GridTopLeftChanged(Sender: TObject);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -104,13 +110,13 @@ type
     { Action Events }
     procedure AUndoChangesExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
+    procedure ADeleteExecute(Sender: TObject);
     { Grid Headers Events }
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     { Grid Events }
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
@@ -118,6 +124,8 @@ type
     procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
     procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+    procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+    procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     { Inline Editor Events}
     procedure PanelMemoEnter(Sender: TObject);
     procedure PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
@@ -150,7 +158,10 @@ type
     FSortOrder: TSortOrder;
     FSortColumn: integer;
 
-    { Methods }
+    { Properties Methods }
+    procedure SetChanges(Value: boolean);
+
+    { Methods File Operations }
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
     procedure HandleCommandLineParameters;
@@ -163,11 +174,12 @@ type
     procedure SyncPath;
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
+    { Methods }
     procedure UpdateRowHeights;
     procedure DelayedSetMemoFocus(Data: PtrInt);
-    procedure SetChanges(Value: boolean);
     procedure UpdateCaption;
     procedure FixSplitters(Data: PtrInt);
+    function CleanGridSelection: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     procedure FillGrids;
     procedure SaveGrids;
@@ -198,11 +210,11 @@ const
 
   // Colors
   clRowHighlight = TColor($FFF0DC);
-  clRowHighlightDark = TColor($463027);
-  //clRowFocused = TColor($FFDCC8);
-  //clRowFocusedDark = TColor($6C4C38);
-  clRowInfo = TColor($96FFFF);
-  clRowInfoDark = TColor($009696);
+  clRowHighlightDark = TColor($5A4037);
+  clInfo = TColor($96FFFF);
+  clInfoDark = TColor($009696);
+  clLine = TColor($E8E8E8);
+  clLineDark = TColor($484848);
 
 implementation
 
@@ -229,6 +241,10 @@ begin
   FSortColumn := -1;
   FSortOrder := soAscending;
   FLastPathIndex := -1;
+
+  // Initialize components
+  Grid.GridLineColor := ThemeColor(clLine, clLineDark);
+  GridHeaders.GridLineColor := ThemeColor(clLine, clLineDark);
 
   LoadFormSettings(Self);
 
@@ -470,6 +486,11 @@ begin
     Grid.Options := Grid.Options + [goAutoAddRows];
 end;
 
+procedure TformPoBatch.ADeleteExecute(Sender: TObject);
+begin
+  CleanGridSelection;
+end;
+
 { Grid Headers Events }
 
 procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -534,9 +555,8 @@ end;
 
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
-  c, r: integer;
   SelIndexes: array of integer = ();
-  Count: integer;
+  i, Count: integer;
 begin
   // Delete rows via Ctrl+Del (only when not in translation-only mode)
   if not AEditTranslationOnly.Checked and (ssCtrl in Shift) and (Key = VK_DELETE) then
@@ -547,8 +567,8 @@ begin
     // Collect persistent entry indexes from column 0 of the selected rows
     Count := Grid.Selection.Bottom - Grid.Selection.Top + 1;
     SetLength(SelIndexes, Count);
-    for r := Grid.Selection.Top to Grid.Selection.Bottom do
-      SelIndexes[r - Grid.Selection.Top] := StrToIntDef(Grid.Cells[0, r], -1);
+    for i := Grid.Selection.Top to Grid.Selection.Bottom do
+      SelIndexes[i - Grid.Selection.Top] := StrToIntDef(Grid.Cells[0, i], -1);
 
     // Save any unsaved changes from the grid back to PoFile
     SaveGrids;   // or SaveGrids, depending on your code
@@ -564,16 +584,8 @@ begin
   // Plain Delete clears cell contents
   if Key = VK_DELETE then
   begin
-    if (not AEditTranslationOnly.Checked or ((Grid.Selection.Left = COL_TRANSLATION + 1) and
-      (Grid.Selection.Right = COL_TRANSLATION + 1))) and (Grid.Selection.Height > 0) then
-    begin
-      for r := Grid.Selection.Top to Grid.Selection.Bottom do
-        for c := Grid.Selection.Left to Grid.Selection.Right do
-          Grid.Cells[c, r] := '';
-
-      Changed := True;
+    if CleanGridSelection then
       Key := 0;
-    end;
   end
   else
   if not AEditTranslationOnly.Checked and (Key = VK_INSERT) then
@@ -582,33 +594,6 @@ begin
     Grid.Row := Grid.Row + 1;
     Changed := True;
   end;
-end;
-
-procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
-var
-  TS: TTextStyle;
-  CustomColor: TColor = clWhite;
-begin
-  TS := Grid.Canvas.TextStyle;
-  TS.Wordbreak := True;
-  TS.SingleLine := False;
-  Grid.Canvas.TextStyle := TS;
-
-  // Color Cells
-  if Grid.EditorMode and (aCol = Grid.Col) and (aRow = Grid.Row) then
-  begin
-    Grid.Canvas.Brush.Color := clWhite;
-    Exit;
-  end;
-
-  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
-    Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
-
-  if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
-    CustomColor := ThemeColor(clRowInfo, clRowInfoDark);
-
-  if (CustomColor <> clWhite) and (Grid.Canvas.Brush.Color <> clWhite) then
-    Grid.Canvas.Brush.Color := BlendColors(Grid.Canvas.Brush.Color, CustomColor, 50);
 end;
 
 procedure TformPoBatch.GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -724,6 +709,11 @@ begin
   Grid.EditorMode := False;
 end;
 
+procedure TformPoBatch.GridTopLeftChanged(Sender: TObject);
+begin
+  Grid.EditorMode := False;
+end;
+
 procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
 begin
   if (aCol in [COL_TEXT, COL_TRANSLATION, COL_REFERENCE]) then
@@ -766,6 +756,33 @@ begin
   end;
 end;
 
+procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+var
+  TS: TTextStyle;
+  CustomColor: TColor = clWindow;
+begin
+  TS := Grid.Canvas.TextStyle;
+  TS.Wordbreak := True;
+  TS.SingleLine := False;
+  Grid.Canvas.TextStyle := TS;
+
+  // Color Cells
+  if Grid.EditorMode and (aCol = Grid.Col) and (aRow = Grid.Row) then
+  begin
+    Grid.Canvas.Brush.Color := clWindow;
+    Exit;
+  end;
+
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
+    Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+
+  if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
+    CustomColor := ThemeColor(clInfo, clInfoDark);
+
+  if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
+    Grid.Canvas.Brush.Color := BlendColors(Grid.Canvas.Brush.Color, CustomColor, 50);
+end;
+
 procedure TformPoBatch.GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
 var
   CellText: string;
@@ -793,7 +810,7 @@ begin
   DrawHighlightedText(
     Grid.Canvas,
     aRect,
-    ThemeColor(clRowInfo, clRowInfoDark),
+    ThemeColor(clInfo, clInfoDark),
     clMaroon,
     CellText,
     Filter.Text,
@@ -928,7 +945,16 @@ begin
   filterChange(Self);
 end;
 
-{ Methods }
+{ Properties Methods }
+
+procedure TformPoBatch.SetChanges(Value: boolean);
+begin
+  FChanged := Value;
+  AUndoChanges.Enabled := FChanged;
+  UpdateCaption;
+end;
+
+{ Methods File Operations }
 
 function TformPoBatch.IsCanClose: boolean;
 var
@@ -1322,6 +1348,8 @@ begin
   end;
 end;
 
+{ Methods }
+
 procedure TformPoBatch.UpdateRowHeights;
 var
   Row, Col: integer;
@@ -1360,13 +1388,6 @@ begin
     if (Memo.SelLength = 0) then
       Memo.SelStart := Length(Memo.Text);
   end;
-end;
-
-procedure TformPoBatch.SetChanges(Value: boolean);
-begin
-  FChanged := Value;
-  AUndoChanges.Enabled := FChanged;
-  UpdateCaption;
 end;
 
 procedure TformPoBatch.UpdateCaption;
@@ -1421,6 +1442,22 @@ begin
   SplitterHeaders.Top := GridHeaders.Top + GridHeaders.Height;
 end;
 
+function TformPoBatch.CleanGridSelection: boolean;
+begin
+  Result := False;
+  if (not AEditTranslationOnly.Checked or ((Grid.Selection.Left = COL_TRANSLATION + 1) and
+    (Grid.Selection.Right = COL_TRANSLATION + 1))) then
+  begin
+    if (Grid.Selection.Height > 0) then
+      Grid.Clean(Max(Grid.Selection.Left, COL_TEXT + 1), Grid.Selection.Top, Grid.Selection.Right, Grid.Selection.Bottom, [gzNormal])
+    else
+      Grid.Clean(Grid.Col, Grid.Row, Grid.Col, Grid.Row, [gzNormal]);
+
+    Changed := True;
+    Result := True;
+  end;
+end;
+
 function TformPoBatch.EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
 var
   PrevStrings: TStrings;
@@ -1435,12 +1472,16 @@ begin
 
   // Check original
   if Pos(LowerFilter, LowerCase(Entry.MsgId)) > 0 then Exit(True);
+
   // Check translation
   if Pos(LowerFilter, LowerCase(Entry.MsgStrSimple)) > 0 then Exit(True);
+
   // Check reference
   if Pos(LowerFilter, LowerCase(Entry.Reference)) > 0 then Exit(True);
+
   // Check previous text
   PrevStrings := Entry.GetCommentsOfType(poctPrevious);
+
   try
     Result := Pos(LowerFilter, LowerCase(PrevStrings.Text)) > 0;
   finally

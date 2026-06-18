@@ -127,7 +127,6 @@ object formPoBatch: TformPoBatch
       DefaultColWidth = 48
       FadeUnfocusedSelection = True
       FocusColor = clBlue
-      GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
@@ -204,7 +203,6 @@ object formPoBatch: TformPoBatch
       DefaultColWidth = 48
       FadeUnfocusedSelection = True
       FocusColor = clBlue
-      GridLineColor = cl3DLight
       MouseWheelOption = mwGrid
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
@@ -220,6 +218,7 @@ object formPoBatch: TformPoBatch
       OnMouseWheel = GridMouseWheel
       OnPrepareCanvas = GridPrepareCanvas
       OnSelectEditor = GridSelectEditor
+      OnTopLeftChanged = GridTopLeftChanged
       OnValidateEntry = GridValidateEntry
     end
   end
@@ -354,12 +353,41 @@ object formPoBatch: TformPoBatch
       Caption = 'Undo Changes'
       OnExecute = AUndoChangesExecute
     end
+    object ACut: TAction
+      Category = 'Edit'
+      Caption = 'Cut'
+      ShortCut = 16472
+    end
+    object ACopy: TAction
+      Category = 'Edit'
+      Caption = 'Copy'
+      ShortCut = 16451
+    end
+    object APaste: TAction
+      Category = 'Edit'
+      Caption = 'Paste'
+      ShortCut = 16470
+    end
+    object ADelete: TAction
+      Category = 'Edit'
+      Caption = 'Delete'
+      ShortCut = 46
+      OnExecute = ADeleteExecute
+    end
     object AEditTranslationOnly: TAction
       Category = 'Edit'
       AutoCheck = True
       Caption = 'Edit Translation Only'
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
+    end
+    object ACopySourceText: TAction
+      Category = 'Edit'
+      Caption = 'Copy Source Text'
+    end
+    object ACleanEqual: TAction
+      Category = 'Edit'
+      Caption = 'ACleanEqual'
     end
   end
 end
