@@ -235,7 +235,7 @@ const
 
 implementation
 
-uses formabout, formdonate, systemtool, formattool, settings;
+uses formabout, formdonate, systemtool, formattool, settings, gridhelper;
 
   {$R *.lfm}
 
@@ -492,6 +492,7 @@ begin
     GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
 
   Grid.EditorMode := False;
+  Grid.Columns[COL_VALID].ReadOnly := True;
   Grid.Columns[COL_TEXT].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COL_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COL_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
@@ -569,6 +570,24 @@ begin
     GridHeaders.InsertColRow(False, GridHeaders.Row + 1);
     GridHeaders.Row := GridHeaders.ROw + 1;
     Changed := True;
+  end
+  else
+  if (ssCtrl in Shift) and (Key = VK_X) then
+  begin
+    CutGridsSelection;
+    Key := 0;
+  end
+  else
+  if (ssCtrl in Shift) and (Key = VK_C) then
+  begin
+    CopyGridsSelection;
+    Key := 0;
+  end
+  else
+  if (ssCtrl in Shift) and (Key = VK_V) then
+  begin
+    PasteGridsSelection;
+    Key := 0;
   end;
 end;
 
@@ -626,6 +645,24 @@ begin
     Grid.InsertColRow(False, Grid.Row + 1);
     Grid.Row := Grid.Row + 1;
     Changed := True;
+  end
+  else
+  if (ssCtrl in Shift) and (Key = VK_X) then
+  begin
+    CutGridsSelection;
+    Key := 0;
+  end
+  else
+  if (ssCtrl in Shift) and (Key = VK_C) then
+  begin
+    CopyGridsSelection;
+    Key := 0;
+  end
+  else
+  if (ssCtrl in Shift) and (Key = VK_V) then
+  begin
+    PasteGridsSelection;
+    Key := 0;
   end;
 end;
 
@@ -1484,294 +1521,35 @@ begin
 end;
 
 function TformPoBatch.CopyGridsSelection: boolean;
-var
-  SrcGrid: TStringGrid;
-  Col0Visible: boolean;
 begin
-  Result := False;
-
-  // Determine the active grid
-  if ActiveControl = Grid then
-    SrcGrid := Grid
-  else if ActiveControl = GridHeaders then
-    SrcGrid := GridHeaders
-  else
-    Exit;
-
-  // Temporarily hide the index column (0) to exclude it from the copy
-  Col0Visible := SrcGrid.Columns[0].Visible;
   try
-    SrcGrid.Columns[0].Visible := False;
-    // Use the built-in copy to clipboard (TSV format)
-    SrcGrid.CopyToClipboard(True);
-    Result := True;
+    if ActiveControl = Grid then
+      Grid.CopyToClipboard(True)
+    else if ActiveControl = GridHeaders then
+      GridHeaders.CopyToClipboard(True)
+    else
+      Exit;
   except
-    // Clipboard operation may fail silently in some environments
+    Result := False;
   end;
-  // Restore original visibility of the index column
-  SrcGrid.Columns[0].Visible := Col0Visible;
+  Result := True;
 end;
 
 function TformPoBatch.PasteGridsSelection: boolean;
-var
-  Target: TStringGrid;
-  TextData: string;
-  Stream: TStringStream;
-  StartCol, StartRow, MaxRow, MaxCol: integer;
-  bSelRect: boolean;
-
-  //----------------------------------------------------------------------------
-  // Internal TSV parser – works exactly like the LCL's LoadFromCSVStream
-  // and handles quoted fields, embedded newlines, and doubled quotes.
-  //----------------------------------------------------------------------------
-  procedure ParseTSV(AStream: TStream);
-  var
-    Buffer: ansistring;
-    BytesRead, BufLen, BufDelta: LongInt;
-    leadPtr, tailPtr, wordPtr: PChar;
-    curWord: string;
-    Line: TStringList;
-    I: Integer;
-    ColIdx: Integer;
-
-    procedure NotifyLine;
-    var J:Integer;
-    begin
-      if Assigned(Line) and (Line.Count > 0) then
-      begin
-        if StartRow <= MaxRow then
-        begin
-          for J := 0 to Line.Count - 1 do
-          begin
-            ColIdx := StartCol + J;
-            if ColIdx <= MaxCol then
-              if not Target.Columns[ColIdx].ReadOnly then
-                Target.Cells[ColIdx, StartRow] := Line[J];
-          end;
-          Inc(StartRow);
-        end;
-        Line.Clear;
-      end;
-    end;
-
-    procedure StoreWord; inline;
-    begin
-      if not Assigned(Line) then
-        Line := TStringList.Create;
-      Line.Add(curWord);
-      curWord := '';
-    end;
-
-    function SkipSet(const aSet: TSysCharSet): boolean; inline;
-    begin
-      while (leadPtr < tailPtr) and (leadPtr^ in aSet) do Inc(leadPtr);
-      Result := leadPtr < tailPtr;
-    end;
-
-    function FindSet(const aSet: TSysCharSet): boolean; inline;
-    begin
-      while (leadPtr < tailPtr) and (not (leadPtr^ in aSet)) do Inc(leadPtr);
-      Result := leadPtr < tailPtr;
-    end;
-
-    procedure ProcessEndline; inline;
-    begin
-      if curWord <> '' then
-        StoreWord;
-      NotifyLine;
-      if leadPtr < tailPtr then
-      begin
-        if (leadPtr^ = #13) and ((leadPtr + 1)^ = #10) then
-          Inc(leadPtr);
-        Inc(leadPtr);
-        wordPtr := leadPtr;
-      end;
-    end;
-
-    procedure ProcessQuote;
-    var
-      endQuote, endField: PChar;
-      isDelimiter: boolean;
-    begin
-      Inc(leadPtr); // skip opening quote
-      wordPtr := leadPtr;
-      while leadPtr < tailPtr do
-      begin
-        if not FindSet(['"']) then
-          break; // should not happen with valid TSV
-        if (leadPtr + 1)^ = '"' then
-        begin
-          Inc(leadPtr); // point to second quote (escaped)
-          // Append everything up to and including the first quote
-          SetLength(curWord, Length(curWord) + (leadPtr - wordPtr));
-          Move(wordPtr^, curWord[Length(curWord) - (leadPtr - wordPtr) + 1], leadPtr - wordPtr);
-          Inc(leadPtr); // skip second quote
-          wordPtr := leadPtr;
-        end
-        else
-        begin
-          // closing quote
-          endQuote := leadPtr;
-          Inc(leadPtr);
-          SkipSet([' ']); // spaces before delimiter / EOL
-          endField := leadPtr;
-          if (leadPtr >= tailPtr) or (leadPtr^ in [#9, #10, #13]) then
-          begin
-            isDelimiter := (leadPtr < tailPtr) and (leadPtr^ = #9);
-            // Append part before closing quote
-            SetLength(curWord, Length(curWord) + (endQuote - wordPtr));
-            Move(wordPtr^, curWord[Length(curWord) - (endQuote - wordPtr) + 1], endQuote - wordPtr);
-            if isDelimiter then
-              StoreWord
-            else
-            begin
-              StoreWord;
-              NotifyLine;
-            end;
-            leadPtr := endField;
-            wordPtr := leadPtr;
-            break;
-          end;
-          // Quote not at field boundary – continue scanning
-        end;
-      end;
-      if leadPtr <> wordPtr then
-      begin
-        // Unfinished field – grab the rest and finish the line
-        SetLength(curWord, Length(curWord) + (tailPtr - wordPtr));
-        Move(wordPtr^, curWord[Length(curWord) - (tailPtr - wordPtr) + 1], tailPtr - wordPtr);
-        leadPtr := tailPtr;
-        StoreWord;
-        NotifyLine;
-      end;
-    end;
-
-  begin
-    // Read the whole stream into a single buffer (like LCL does)
-    Buffer := '';
-    BufLen := 0;
-    I := 1;
-    repeat
-      BufDelta := 1024 * I;
-      SetLength(Buffer, BufLen + BufDelta);
-      BytesRead := AStream.Read(Buffer[BufLen + 1], BufDelta);
-      Inc(BufLen, BufDelta);
-      if I < 10 then
-        I := I shl 1;
-    until BytesRead <> BufDelta;
-    BufLen := BufLen - BufDelta + BytesRead;
-    SetLength(Buffer, BufLen);
-    if BufLen = 0 then
-      Exit;
-
-    curWord := '';
-    leadPtr := @Buffer[1];
-    tailPtr := leadPtr + BufLen;
-    wordPtr := leadPtr;
-    Line := nil;
-    try
-      while leadPtr < tailPtr do
-      begin
-        SkipSet([' ']); // leading spaces
-        if leadPtr >= tailPtr then
-          break;
-        if leadPtr^ = '"' then
-          ProcessQuote
-        else if leadPtr^ in [#10, #13] then
-          ProcessEndline
-        else if leadPtr^ = #9 then
-        begin
-          StoreWord;
-          Inc(leadPtr);
-          wordPtr := leadPtr;
-        end
-        else
-        begin
-          // Regular text – scan until next special char
-          if FindSet([#9, #10, #13, '"']) then
-          begin
-            SetLength(curWord, Length(curWord) + (leadPtr - wordPtr));
-            Move(wordPtr^, curWord[Length(curWord) - (leadPtr - wordPtr) + 1], leadPtr - wordPtr);
-            // leadPtr now points to the delimiter / quote / EOL
-          end
-          else
-          begin
-            // No more separators – take the rest
-            SetLength(curWord, Length(curWord) + (tailPtr - wordPtr));
-            Move(wordPtr^, curWord[Length(curWord) - (tailPtr - wordPtr) + 1], tailPtr - wordPtr);
-            leadPtr := tailPtr;
-            StoreWord;
-            NotifyLine;
-            break;
-          end;
-        end;
-      end;
-      if wordPtr < tailPtr then
-      begin
-        SetLength(curWord, Length(curWord) + (tailPtr - wordPtr));
-        Move(wordPtr^, curWord[Length(curWord) - (tailPtr - wordPtr) + 1], tailPtr - wordPtr);
-        StoreWord;
-        NotifyLine;
-      end;
-    finally
-      Line.Free;
-    end;
-  end;
-
 begin
   Result := False;
-
-  // Determine the target grid
   if ActiveControl = Grid then
-    Target := Grid
-  else if ActiveControl = GridHeaders then
-    Target := GridHeaders
-  else
-    Exit;
-
-  if not Clipboard.HasFormat(CF_TEXT) then
-    Exit;
-
-  TextData := Clipboard.AsText;
-  if TextData = '' then
-    Exit;
-
-  Stream := TStringStream.Create(TextData);
-  try
-    // Define paste area
-    bSelRect := (Target.Selection.Left <> Target.Selection.Right) or
-                (Target.Selection.Top <> Target.Selection.Bottom);
-    if bSelRect then
-    begin
-      StartCol := Target.Selection.Left;
-      StartRow := Target.Selection.Top;
-      MaxRow   := Target.Selection.Bottom;
-      MaxCol   := Target.Selection.Right;
-    end
-    else
-    begin
-      StartCol := Target.Col;
-      StartRow := Target.Row;
-      MaxRow   := Target.RowCount - 1;
-      MaxCol   := Target.ColCount - 1;
-    end;
-
-    // Never overwrite fixed (header / index) cells
-    if StartCol < Target.FixedCols then
-      StartCol := Target.FixedCols;
-    if StartRow < Target.FixedRows then
-      StartRow := Target.FixedRows;
-
-    if (StartRow > MaxRow) or (StartCol > MaxCol) then
-      Exit;
-
-    ParseTSV(Stream);
-
-    Changed := True;
+  begin
+    Grid.PasteFromClipboard;
     Result := True;
-  finally
-    Stream.Free;
+  end
+  else if ActiveControl = GridHeaders then
+  begin
+    GridHeaders.PasteFromClipboard;
+    Result := True;
   end;
+  if Result then
+    Changed := True;
 end;
 
 function TformPoBatch.DeleteGridsSelection: boolean;

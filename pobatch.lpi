@@ -140,6 +140,11 @@
         <Filename Value="units\formattool.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\gridhelper.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="GridHelper"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
