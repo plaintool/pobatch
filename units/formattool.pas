@@ -15,6 +15,7 @@ uses
   Classes,
   SysUtils,
   Graphics,
+  Math,
   LCLIntf,
   LCLType,
   LazUTF8;
@@ -25,9 +26,11 @@ function EndsWithLineBreak(const FileName: string): boolean;
 
 function LoadFileAsBytes(const FileName: string): TBytes;
 
+function GetContrastTextColor(BackColor, FontColor: TColor; MidLevel: integer = 128): TColor;
+
 function BlendColors(Color1, Color2: TColor; Intensity: integer): TColor;
 
-procedure DrawHighlightedText(aCanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
+procedure DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
   const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False; ABiDiRightToLeft: boolean = False);
 
 implementation
@@ -101,7 +104,41 @@ begin
     Round(B1 * (1 - Alpha) + B2 * Alpha));
 end;
 
-procedure DrawHighlightedText(aCanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
+function GetContrastTextColor(BackColor, FontColor: TColor; MidLevel: integer = 128): TColor;
+var
+  Rb, Gb, Bb: byte;
+  Rf, Gf, Bf: byte;
+  BrightnessBack, BrightnessFont: Double;
+begin
+  // Clamp MidLevel to valid byte range
+  if MidLevel < 0 then MidLevel := 0;
+  if MidLevel > 255 then MidLevel := 255;
+
+  // Resolve system colors to actual RGB
+  BackColor := ColorToRGB(BackColor);
+  FontColor := ColorToRGB(FontColor);
+
+  Rb := GetRValue(BackColor);
+  Gb := GetGValue(BackColor);
+  Bb := GetBValue(BackColor);
+
+  Rf := GetRValue(FontColor);
+  Gf := GetGValue(FontColor);
+  Bf := GetBValue(FontColor);
+
+  // Perceived luminance using ITU-R BT.709 coefficients
+  BrightnessBack := 0.299 * Rb + 0.587 * Gb + 0.114 * Bb;
+  BrightnessFont := 0.299 * Rf + 0.587 * Gf + 0.114 * Bf;
+
+  // If both colors are on the same side of the brightness threshold,
+  // invert the font color to ensure contrast; otherwise keep it.
+  if (BrightnessBack < MidLevel) = (BrightnessFont < MidLevel) then
+    Result := RGBToColor(255 - Rf, 255 - Gf, 255 - Bf)
+  else
+    Result := FontColor;
+end;
+
+procedure DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
   const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False; ABiDiRightToLeft: boolean = False);
 type
   TTextRange = record
@@ -205,12 +242,13 @@ var
     J, X: integer;
     DrawRect: TRect;
     TotalLineWidth: integer;
+    FontColor: TColor;
   begin
     // Remove last space
     LineWords[LineEnd].word := TrimRight(LineWords[LineEnd].word);
-    LineWords[LineEnd].Width := aCanvas.TextWidth(LineWords[LineEnd].word);
+    LineWords[LineEnd].Width := ACanvas.TextWidth(LineWords[LineEnd].word);
     LineWords[LineStart].word := TrimLeft(LineWords[LineStart].word);
-    LineWords[LineStart].Width := aCanvas.TextWidth(LineWords[LineStart].word);
+    LineWords[LineStart].Width := ACanvas.TextWidth(LineWords[LineStart].word);
 
     // Calculate total width of this line
     TotalLineWidth := 0;
@@ -240,15 +278,17 @@ var
       if (X + LineWords[J].Width > ARect.Right) then
         Break;
 
+      FontColor := ACanvas.Font.Color;
       DrawRect := Rect(X, Y, X + LineWords[J].Width, Y + LineHeight);
       if LineWords[J].IsMatch then
       begin
-        aCanvas.Brush.Style := bsSolid;
-        aCanvas.Brush.Color := aColorHighlight;
-        aCanvas.FillRect(DrawRect);
+        ACanvas.Font.Color := GetContrastTextColor(aColorHighlight, FontColor);
+        ACanvas.Brush.Style := bsSolid;
+        ACanvas.Brush.Color := aColorHighlight;
+        ACanvas.FillRect(DrawRect);
       end
       else
-        aCanvas.Brush.Style := bsClear;
+        ACanvas.Brush.Style := bsClear;
 
       Flags := DT_NOPREFIX;
       if ABiDiRightToLeft then
@@ -258,16 +298,17 @@ var
       if AWordWrap then
         Flags := Flags or DT_WORDBREAK;
 
-      DrawText(aCanvas.handle, PChar(LineWords[J].word), Length(LineWords[J].word), DrawRect, Flags);
+      DrawText(ACanvas.handle, PChar(LineWords[J].word), Length(LineWords[J].word), DrawRect, Flags);
       X := X + LineWords[J].Width;
+      ACanvas.Font.Color := FontColor;
     end;
 
     // Draw red \n at the end if line ended with explicit line break and feature enabled
     if AIsLineBreakEnd and AShowLineBreaks then
     begin
-      aCanvas.Font.Color := AColorLineBreak;
-      aCanvas.TextOut(X, Y, '\n');
-      aCanvas.Font.Color := SavedTextColor;
+      ACanvas.Font.Color := GetContrastTextColor(ACanvas.Brush.Color,  AColorLineBreak);
+      ACanvas.TextOut(X, Y, '\n');
+      ACanvas.Font.Color := SavedTextColor;
     end;
   end;
 
@@ -275,14 +316,14 @@ begin
   TextRanges := TList.Create;
   try
     // Save canvas state
-    SavedBrushStyle := aCanvas.Brush.Style;
-    SavedBrushColor := aCanvas.Brush.Color;
-    SavedTextColor := aCanvas.Font.Color;
+    SavedBrushStyle := ACanvas.Brush.Style;
+    SavedBrushColor := ACanvas.Brush.Color;
+    SavedTextColor := ACanvas.Font.Color;
 
     try
       BuildTextRanges;
       if TextRanges.Count = 0 then Exit;
-      LineHeight := aCanvas.TextHeight('Wg');
+      LineHeight := ACanvas.TextHeight('Wg');
 
       // First, extract all words from all text ranges
       SetLength(LineWords, 0);
@@ -334,11 +375,11 @@ begin
 
             // Optionally, you could replace line break with a visible character for debugging
             // CurrentWord := '¶'; // Uncomment for debugging
-            // WordWidth := aCanvas.TextWidth('¶'); // Uncomment for debugging
+            // WordWidth := ACanvas.TextWidth('¶'); // Uncomment for debugging
           end
           else
           begin
-            WordWidth := aCanvas.TextWidth(CurrentWord);
+            WordWidth := ACanvas.TextWidth(CurrentWord);
           end;
 
           // Add word to array
@@ -401,9 +442,9 @@ begin
 
     finally
       // Restore canvas state
-      aCanvas.Brush.Style := SavedBrushStyle;
-      aCanvas.Brush.Color := SavedBrushColor;
-      aCanvas.Font.Color := SavedTextColor;
+      ACanvas.Brush.Style := SavedBrushStyle;
+      ACanvas.Brush.Color := SavedBrushColor;
+      ACanvas.Font.Color := SavedTextColor;
     end;
 
   finally

@@ -794,7 +794,7 @@ begin
     Grid.Canvas,
     aRect,
     ThemeColor(clRowInfo, clRowInfoDark),
-    clRed,
+    clMaroon,
     CellText,
     Filter.Text,
     True,
