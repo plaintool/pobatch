@@ -286,10 +286,34 @@ object formPoBatch: TformPoBatch
         Action = AUndoChanges
         ShortCut = 24666
       end
+      object Separator4: TMenuItem
+        Caption = '-'
+      end
+      object MenuCut: TMenuItem
+        Action = ACut
+      end
+      object MenuCopy: TMenuItem
+        Action = ACopy
+      end
+      object MenuPaste: TMenuItem
+        Action = APaste
+      end
+      object MenuDelete: TMenuItem
+        Action = ADelete
+      end
+      object Separator5: TMenuItem
+        Caption = '-'
+      end
+      object MenuCopySourceText: TMenuItem
+        Action = ACopySourceText
+      end
+      object MenuClearIdentical: TMenuItem
+        Action = AClearIdentical
+      end
       object Separator3: TMenuItem
         Caption = '-'
       end
-      object MenuAllowEditAll: TMenuItem
+      object MenuEditTranslationOnly: TMenuItem
         Action = AEditTranslationOnly
         AutoCheck = True
       end
@@ -357,16 +381,19 @@ object formPoBatch: TformPoBatch
       Category = 'Edit'
       Caption = 'Cut'
       ShortCut = 16472
+      OnExecute = ACutExecute
     end
     object ACopy: TAction
       Category = 'Edit'
       Caption = 'Copy'
       ShortCut = 16451
+      OnExecute = ACopyExecute
     end
     object APaste: TAction
       Category = 'Edit'
       Caption = 'Paste'
       ShortCut = 16470
+      OnExecute = APasteExecute
     end
     object ADelete: TAction
       Category = 'Edit'
@@ -374,20 +401,24 @@ object formPoBatch: TformPoBatch
       ShortCut = 46
       OnExecute = ADeleteExecute
     end
+    object ACopySourceText: TAction
+      Category = 'Edit'
+      Caption = 'Copy Source Text'
+      ShortCut = 32835
+      OnExecute = ACopySourceTextExecute
+    end
+    object AClearIdentical: TAction
+      Category = 'Edit'
+      Caption = 'Clear Identical'
+      ShortCut = 32836
+      OnExecute = AClearIdenticalExecute
+    end
     object AEditTranslationOnly: TAction
       Category = 'Edit'
       AutoCheck = True
       Caption = 'Edit Translation Only'
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
-    end
-    object ACopySourceText: TAction
-      Category = 'Edit'
-      Caption = 'Copy Source Text'
-    end
-    object ACleanEqual: TAction
-      Category = 'Edit'
-      Caption = 'ACleanEqual'
     end
   end
 end
