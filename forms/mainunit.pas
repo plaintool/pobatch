@@ -85,6 +85,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
+    procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -200,8 +201,8 @@ const
   clRowHighlightDark = TColor($463027);
   //clRowFocused = TColor($FFDCC8);
   //clRowFocusedDark = TColor($6C4C38);
-  clRowFuzzy = TColor($96FFFF);
-  clRowFuzzyDark = TColor($009696);
+  clRowInfo = TColor($96FFFF);
+  clRowInfoDark = TColor($009696);
 
 implementation
 
@@ -604,7 +605,7 @@ begin
     Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
 
   if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
-    CustomColor := ThemeColor(clRowFuzzy, clRowFuzzyDark);
+    CustomColor := ThemeColor(clRowInfo, clRowInfoDark);
 
   if (CustomColor <> clWhite) and (Grid.Canvas.Brush.Color <> clWhite) then
     Grid.Canvas.Brush.Color := BlendColors(Grid.Canvas.Brush.Color, CustomColor, 50);
@@ -763,6 +764,43 @@ begin
 
     Editor := PanelMemo;
   end;
+end;
+
+procedure TformPoBatch.GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
+var
+  CellText: string;
+begin
+  CellText := Grid.Cells[aCol, aRow];
+
+  // Skip fixed cells
+  if (aCol < Grid.FixedCols) or (aRow < Grid.FixedRows) then
+    Exit;
+
+  // Only these columns use custom drawing
+  if not (aCol in [COL_TEXT + 1, COL_TRANSLATION + 1, COL_REFERENCE + 1]) then
+    Exit;
+
+  // Need custom drawing if:
+  // - filter is active
+  // - or text contains line breaks
+  if (Filter.Text = string.Empty) and (Pos(#10, CellText) = 0) and (Pos(#13, CellText) = 0) then
+    Exit;
+
+  Grid.Canvas.FillRect(aRect);
+
+  InflateRect(aRect, -2, -2);
+
+  DrawHighlightedText(
+    Grid.Canvas,
+    aRect,
+    ThemeColor(clRowInfo, clRowInfoDark),
+    clRed,
+    CellText,
+    Filter.Text,
+    True,
+    True,
+    False
+    );
 end;
 
 { Inline Editor Events}

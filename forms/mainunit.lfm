@@ -213,6 +213,7 @@ object formPoBatch: TformPoBatch
       TitleStyle = tsNative
       OnColRowInserted = GridColRowInserted
       OnCompareCells = GridCompareCells
+      OnDrawCell = GridDrawCell
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized
       OnKeyDown = GridKeyDown
@@ -338,7 +339,7 @@ object formPoBatch: TformPoBatch
     DefaultExt = '.po'
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
-    Left = 360
+    Left = 352
     Top = 192
   end
   object dialogPath: TSelectDirectoryDialog
