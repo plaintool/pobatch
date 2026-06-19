@@ -134,6 +134,7 @@ object formPoBatch: TformPoBatch
       TabOrder = 2
       TitleStyle = tsNative
       Visible = False
+      OnExit = GridHeadersExit
       OnKeyDown = GridHeadersKeyDown
       OnPrepareCanvas = GridHeadersPrepareCanvas
       OnValidateEntry = GridHeadersValidateEntry
@@ -212,6 +213,7 @@ object formPoBatch: TformPoBatch
       OnColRowInserted = GridColRowInserted
       OnCompareCells = GridCompareCells
       OnDrawCell = GridDrawCell
+      OnExit = GridExit
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized
       OnKeyDown = GridKeyDown

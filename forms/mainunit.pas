@@ -105,6 +105,8 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
+    procedure GridExit(Sender: TObject);
+    procedure GridHeadersExit(Sender: TObject);
     procedure GridTopLeftChanged(Sender: TObject);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
@@ -190,8 +192,8 @@ type
     function SaveFile(AFileName: string): boolean;
     { Methods }
     procedure UpdateRowHeights;
-    procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure UpdateCaption;
+    procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure FixSplitters(Data: PtrInt);
     function CutGridsSelection: boolean;
     function CopyGridsSelection: boolean;
@@ -212,16 +214,25 @@ var
   formPoBatch: TformPoBatch;
 
 const
-  COL_HEADERS_NAME = 0;
-  COL_HEADERS_VALUE = 1;
+  COLUMN_HEADERS_NAME = 0;
+  COLUMN_HEADERS_VALUE = 1;
+  CELL_HEADERS_NAME = 1;
+  CELL_HEADERS_VALUE = 2;
 
-  COL_VALID = 0;
-  COL_TEXT = 1;
-  COL_TRANSLATION = 2;
-  COL_REFERENCE = 3;
-  COL_CONTEXT = 4;
-  COL_PREVIOUS = 5;
-  COL_FUZZY = 6;
+  COLUMN_VALID = 0;
+  COLUMN_TEXT = 1;
+  COLUMN_TRANSLATION = 2;
+  COLUMN_REFERENCE = 3;
+  COLUMN_CONTEXT = 4;
+  COLUMN_PREVIOUS = 5;
+  COLUMN_FUZZY = 6;
+  CELL_VALID = 1;
+  CELL_TEXT = 2;
+  CELL_TRANSLATION = 3;
+  CELL_REFERENCE = 4;
+  CELL_CONTEXT = 5;
+  CELL_PREVIOUS = 6;
+  CELL_FUZZY = 7;
 
   UNDEFINED = 'undefined';
 
@@ -232,6 +243,10 @@ const
   clInfoDark = TColor($009696);
   clLine = TColor($E8E8E8);
   clLineDark = TColor($484848);
+  clMidGray = TColor($A0A0A0);
+  clMidGrayDark = TColor($404040);
+  clMidBlue = TColor($D87040);
+  clMidBlueDark = TColor($4A1A14);
 
 implementation
 
@@ -447,9 +462,9 @@ end;
 
 procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
 begin
-  Grid.Columns[COL_REFERENCE].Visible := MenuColumnReference.Checked;
-  if Grid.Columns[COL_REFERENCE].Visible and (Grid.Columns[COL_REFERENCE].Width = 0) then
-    Grid.Columns[COL_REFERENCE].Width := 240;
+  Grid.Columns[COLUMN_REFERENCE].Visible := MenuColumnReference.Checked;
+  if Grid.Columns[COLUMN_REFERENCE].Visible and (Grid.Columns[COLUMN_REFERENCE].Width = 0) then
+    Grid.Columns[COLUMN_REFERENCE].Width := 240;
 end;
 
 procedure TformPoBatch.MenuBuyMeACoffeeClick(Sender: TObject);
@@ -485,19 +500,19 @@ end;
 procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
 begin
   GridHeaders.EditorMode := False;
-  GridHeaders.Columns[COL_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
+  GridHeaders.Columns[COLUMN_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
   if AEditTranslationOnly.Checked then
     GridHeaders.Options := GridHeaders.Options - [goAutoAddRows]
   else
     GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
 
   Grid.EditorMode := False;
-  Grid.Columns[COL_VALID].ReadOnly := True;
-  Grid.Columns[COL_TEXT].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COL_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COL_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COL_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COL_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_VALID].ReadOnly := True;
+  Grid.Columns[COLUMN_TEXT].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
   if AEditTranslationOnly.Checked then
     Grid.Options := Grid.Options - [goAutoAddRows]
   else
@@ -601,6 +616,11 @@ procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: int
 begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
     GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+end;
+
+procedure TformPoBatch.GridHeadersExit(Sender: TObject);
+begin
+  (Sender as TStringGrid).Invalidate;
 end;
 
 { Grid Events }
@@ -722,10 +742,10 @@ var
 begin
   // Special rule: when sorting by COL_VALID or COL_TRANSLATION,
   // put fuzzy entries first (fuzzy flag = '1' before '0').
-  if (FSortColumn = COL_VALID + 1) then
+  if (FSortColumn = CELL_VALID) then
   begin
-    ValA := Grid.Cells[COL_FUZZY + 1, ARow];   // +1 because Cells[0] is row number
-    ValB := Grid.Cells[COL_FUZZY + 1, BRow];
+    ValA := Grid.Cells[CELL_FUZZY, ARow];   // +1 because Cells[0] is row number
+    ValB := Grid.Cells[CELL_FUZZY, BRow];
     Result := CompareStr(ValA, ValB);          // '1' < '0'
     if FSortOrder = soAscending then
       Result := -Result;
@@ -784,9 +804,14 @@ begin
   Grid.EditorMode := False;
 end;
 
+procedure TformPoBatch.GridExit(Sender: TObject);
+begin
+  (Sender as TStringGrid).Invalidate;
+end;
+
 procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
 begin
-  if (aCol in [COL_TEXT, COL_TRANSLATION, COL_REFERENCE]) then
+  if (aCol in [COLUMN_TEXT, COLUMN_TRANSLATION, COLUMN_REFERENCE]) then
   begin
     PanelMemo := TPanel.Create(Self);
     PanelMemo.Parent := Grid;
@@ -846,7 +871,7 @@ begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
     Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
 
-  if Grid.Cells[COL_FUZZY + 1, aRow] = '1' then
+  if Grid.Cells[CELL_FUZZY, aRow] = '1' then
     CustomColor := ThemeColor(clInfo, clInfoDark);
 
   if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
@@ -856,6 +881,7 @@ end;
 procedure TformPoBatch.GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
 var
   CellText: string;
+  MsgCtxt: string;
 begin
   CellText := Grid.Cells[aCol, aRow];
 
@@ -864,13 +890,15 @@ begin
     Exit;
 
   // Only these columns use custom drawing
-  if not (aCol in [COL_TEXT + 1, COL_TRANSLATION + 1, COL_REFERENCE + 1]) then
+  if not (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_REFERENCE]) then
     Exit;
+
+  MsgCtxt := ifthen(aCol = CELL_TEXT, Grid.Cells[CELL_CONTEXT, aRow], string.Empty);
 
   // Need custom drawing if:
   // - filter is active
   // - or text contains line breaks
-  if (Filter.Text = string.Empty) and (Pos(#10, CellText) = 0) and (Pos(#13, CellText) = 0) then
+  if (Filter.Text = string.Empty) and (MsgCtxt = string.empty) and (Pos(#10, CellText) = 0) and (Pos(#13, CellText) = 0) then
     Exit;
 
   Grid.Canvas.FillRect(aRect);
@@ -879,14 +907,16 @@ begin
 
   Grid.DrawHighlightedText(
     Grid.Canvas,
-    aRect,
+    Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
     ThemeColor(clInfo, clInfoDark),
     clMaroon,
     CellText,
     Filter.Text,
     True,
     True,
-    False
+    False,
+    MsgCtxt,
+    ThemeColor(clMidBlue, clMidBlueDark)
     );
 end;
 
@@ -914,11 +944,13 @@ begin
     Memo.Color := clHighlight;
     Memo.Font.Color := clWhite;
   end;
+  Grid.Invalidate;
 end;
 
 procedure TformPoBatch.MemoExit(Sender: TObject);
 begin
   Grid.EditorMode := False;
+  Grid.Invalidate;
 end;
 
 procedure TformPoBatch.MemoChange(Sender: TObject);
@@ -1440,23 +1472,13 @@ begin
         R,
         DT_WORDBREAK or DT_CALCRECT);
 
-      H := R.Bottom - R.Top + 4;
+      H := R.Bottom - R.Top + 8;
 
       if H > MaxH then
         MaxH := H;
     end;
 
     Grid.RowHeights[Row] := MaxH;
-  end;
-end;
-
-procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
-begin
-  if Assigned(Memo) and (Memo.CanFocus) then
-  begin
-    Memo.SetFocus;
-    if (Memo.SelLength = 0) then
-      Memo.SelStart := Length(Memo.Text);
   end;
 end;
 
@@ -1501,6 +1523,16 @@ begin
     Application.Title := Application.Title + '*';
 
   Application.QueueAsyncCall(@FixSplitters, 0);
+end;
+
+procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
+begin
+  if Assigned(Memo) and (Memo.CanFocus) then
+  begin
+    Memo.SetFocus;
+    if (Memo.SelLength = 0) then
+      Memo.SelStart := Length(Memo.Text);
+  end;
 end;
 
 procedure TformPoBatch.FixSplitters(Data: PtrInt);
@@ -1558,11 +1590,11 @@ begin
 
   if ActiveControl = Grid then
   begin
-    if (not AEditTranslationOnly.Checked or ((Grid.Selection.Left = COL_TRANSLATION + 1) and
-      (Grid.Selection.Right = COL_TRANSLATION + 1))) then
+    if (not AEditTranslationOnly.Checked or ((Grid.Selection.Left = CELL_TRANSLATION) and
+      (Grid.Selection.Right = CELL_TRANSLATION))) then
     begin
       if (Grid.Selection.Height > 0) then
-        Grid.Clean(Max(Grid.Selection.Left, COL_TEXT + 1), Grid.Selection.Top, Grid.Selection.Right, Grid.Selection.Bottom, [gzNormal])
+        Grid.Clean(Max(Grid.Selection.Left, CELL_TEXT), Grid.Selection.Top, Grid.Selection.Right, Grid.Selection.Bottom, [gzNormal])
       else
         Grid.Clean(Grid.Col, Grid.Row, Grid.Col, Grid.Row, [gzNormal]);
 
@@ -1573,8 +1605,8 @@ begin
   else
   if ActiveControl = GridHeaders then
   begin
-    if (not AEditTranslationOnly.Checked or ((GridHeaders.Selection.Left = COL_HEADERS_VALUE + 1) and
-      (GridHeaders.Selection.Right = COL_HEADERS_VALUE + 1))) and (GridHeaders.Selection.Height > 0) then
+    if (not AEditTranslationOnly.Checked or ((GridHeaders.Selection.Left = CELL_HEADERS_VALUE) and
+      (GridHeaders.Selection.Right = CELL_HEADERS_VALUE))) and (GridHeaders.Selection.Height > 0) then
     begin
       if (GridHeaders.Selection.Height > 0) then
         GridHeaders.Clean(GridHeaders.Selection, [gzNormal])
@@ -1690,19 +1722,19 @@ begin
       Grid.Cells[0, RowIndex] := IntToStr(i);
 
       // Column 1: valid calculate
-      Grid.Cells[COL_VALID + 1, RowIndex] := IfThen(Entry.IsValid, '1', '0');
+      Grid.Cells[CELL_VALID, RowIndex] := IfThen(Entry.IsValid, '1', '0');
 
       // Column 2: original text (msgid)
-      Grid.Cells[COL_TEXT + 1, RowIndex] := Entry.MsgId;
+      Grid.Cells[CELL_TEXT, RowIndex] := Entry.MsgId;
 
       // Column 3: translation (msgstr)
-      Grid.Cells[COL_TRANSLATION + 1, RowIndex] := Entry.MsgStrSimple;
+      Grid.Cells[CELL_TRANSLATION, RowIndex] := Entry.MsgStrSimple;
 
       // Column 4: referenct (#:)
-      Grid.Cells[COL_REFERENCE + 1, RowIndex] := Entry.Reference;
+      Grid.Cells[CELL_REFERENCE, RowIndex] := Entry.Reference;
 
       // Column 5: context (msgctxt)
-      Grid.Cells[COL_CONTEXT + 1, RowIndex] := Entry.MsgCtxt;
+      Grid.Cells[CELL_CONTEXT, RowIndex] := Entry.MsgCtxt;
 
       // Column 6: previous untranslated text from #| comments
       PrevStrings := Entry.GetCommentsOfType(poctPrevious);
@@ -1718,10 +1750,10 @@ begin
       finally
         PrevStrings.Free;
       end;
-      Grid.Cells[5, RowIndex] := PreviousText;
+      Grid.Cells[CELL_PREVIOUS, RowIndex] := PreviousText;
 
       // Column 7: fuzzy flag (1 if fuzzy, 0 otherwise)
-      Grid.Cells[COL_FUZZY + 1, RowIndex] := IfThen(Entry.IsFuzzy, '1', '0');
+      Grid.Cells[CELL_FUZZY, RowIndex] := IfThen(Entry.IsFuzzy, '1', '0');
 
       Inc(RowIndex);
     end;
@@ -1773,19 +1805,19 @@ begin
     Entry := PoFile.Entries[EntryIndex];
 
     // Update translation from column COL_TRANSLATION
-    if Trim(Grid.Cells[COL_TEXT + 1, Row]) = string.Empty then
+    if Trim(Grid.Cells[CELL_TEXT, Row]) = string.Empty then
       Entry.MsgId := UNDEFINED
     else
-      Entry.MsgId := Grid.Cells[COL_TEXT + 1, Row];
+      Entry.MsgId := Grid.Cells[CELL_TEXT, Row];
 
     // Update translation from column COL_TRANSLATION
-    Entry.MsgStrSimple := Grid.Cells[COL_TRANSLATION + 1, Row];
+    Entry.MsgStrSimple := Grid.Cells[CELL_TRANSLATION, Row];
 
     // Update translation from column COL_TRANSLATION
-    Entry.Reference := Grid.Cells[COL_REFERENCE + 1, Row];
+    Entry.Reference := Grid.Cells[CELL_REFERENCE, Row];
 
     // Update fuzzy flag from column COL_FUZZY
-    Entry.IsFuzzy := (Grid.Cells[COL_FUZZY + 1, Row] = '1');
+    Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
   end;
 
   AUndoChanges.Enabled := False;

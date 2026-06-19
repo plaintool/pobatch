@@ -86,11 +86,11 @@ begin
 
     JSONObj.Add('ListPathWidth', Form.ListPath.Width);
     JSONObj.Add('GridHeadersHeight', Form.GridHeaders.Height);
-    JSONObj.Add('GridHeadersColumnNameWidth', Form.GridHeaders.Columns[COL_HEADERS_NAME].Width);
-    JSONObj.Add('GridHeadersColumnValueWidth', Form.GridHeaders.Columns[COL_HEADERS_VALUE].Width);
-    JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[COL_TEXT].Width);
-    JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[COL_TRANSLATION].Width);
-    JSONObj.Add('GridColumnReferenceWidth', Form.Grid.Columns[COL_REFERENCE].Width);
+    JSONObj.Add('GridHeadersColumnNameWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width);
+    JSONObj.Add('GridHeadersColumnValueWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width);
+    JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[COLUMN_TEXT].Width);
+    JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[COLUMN_TRANSLATION].Width);
+    JSONObj.Add('GridColumnReferenceWidth', Form.Grid.Columns[COLUMN_REFERENCE].Width);
 
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
@@ -158,19 +158,19 @@ begin
         Form.GridHeaders.Height := JSONObj.FindPath('GridHeadersHeight').AsInteger;
 
       if JSONObj.FindPath('GridHeadersColumnNameWidth') <> nil then
-        Form.GridHeaders.Columns[COL_HEADERS_NAME].Width := JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger;
+        Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width := JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger;
 
       if JSONObj.FindPath('GridHeadersColumnValueWidth') <> nil then
-        Form.GridHeaders.Columns[COL_HEADERS_VALUE].Width := JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger;
+        Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width := JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger;
 
       if JSONObj.FindPath('GridColumnSourceTextWidth') <> nil then
-        Form.Grid.Columns[COL_TEXT].Width := JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_TEXT].Width := JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger;
 
       if JSONObj.FindPath('GridColumnTranslationWidth') <> nil then
-        Form.Grid.Columns[COL_TRANSLATION].Width := JSONObj.FindPath('GridColumnTranslationWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_TRANSLATION].Width := JSONObj.FindPath('GridColumnTranslationWidth').AsInteger;
 
       if JSONObj.FindPath('GridColumnReferenceWidth') <> nil then
-        Form.Grid.Columns[COL_REFERENCE].Width := JSONObj.FindPath('GridColumnReferenceWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_REFERENCE].Width := JSONObj.FindPath('GridColumnReferenceWidth').AsInteger;
 
       if JSONObj.FindPath('MenuHeadersChecked') <> nil then
       begin

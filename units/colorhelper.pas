@@ -20,7 +20,7 @@ type
   TColorHelper = type helper for TColor
   public
     function BlendColor(AColor: TColor; Intensity: integer): TColor;
-    function GetContrastFontColor(AFontColor: TColor; MidLevel: integer = 128): TColor;
+    function InvertColor(ABackColor: TColor; MidLevel: integer = 128; AOnlyDarkBackground: boolean = False): TColor;
   end;
 
 implementation
@@ -61,7 +61,7 @@ begin
     Round(B1 * (1 - Alpha) + B2 * Alpha));
 end;
 
-function TColorHelper.GetContrastFontColor(AFontColor: TColor; MidLevel: integer = 128): TColor;
+function TColorHelper.InvertColor(ABackColor: TColor; MidLevel: integer = 128; AOnlyDarkBackground: boolean = False): TColor;
 var
   Rb, Gb, Bb: byte;
   Rf, Gf, Bf: byte;
@@ -72,27 +72,38 @@ begin
   if MidLevel > 255 then MidLevel := 255;
 
   // Resolve system colors to actual RGB
+  ABackColor := ColorToRGB(ABackColor);
   Self := ColorToRGB(Self);
-  AFontColor := ColorToRGB(AFontColor);
 
-  Rb := GetRValue(Self);
-  Gb := GetGValue(Self);
-  Bb := GetBValue(Self);
+  Rb := GetRValue(ABackColor);
+  Gb := GetGValue(ABackColor);
+  Bb := GetBValue(ABackColor);
 
-  Rf := GetRValue(AFontColor);
-  Gf := GetGValue(AFontColor);
-  Bf := GetBValue(AFontColor);
+  Rf := GetRValue(Self);
+  Gf := GetGValue(Self);
+  Bf := GetBValue(Self);
 
   // Perceived luminance using ITU-R BT.709 coefficients
   BrightnessBack := 0.299 * Rb + 0.587 * Gb + 0.114 * Bb;
   BrightnessFont := 0.299 * Rf + 0.587 * Gf + 0.114 * Bf;
 
-  // If both colors are on the same side of the brightness threshold,
-  // invert the font color to ensure contrast; otherwise keep it.
+  // Check if both colors are on the same side of the brightness threshold
   if (BrightnessBack < MidLevel) = (BrightnessFont < MidLevel) then
-    Result := RGBToColor(255 - Rf, 255 - Gf, 255 - Bf)
+  begin
+    if AOnlyDarkBackground then
+    begin
+      // Invert only if the background is dark (and thus the font is dark too)
+      if BrightnessBack < MidLevel then
+        Result := RGBToColor(255 - Rf, 255 - Gf, 255 - Bf)
+      else
+        Result := Self; // On a light background, leave the font unchanged
+    end
+    else
+      // Default behavior: always invert when both are on the same side
+      Result := RGBToColor(255 - Rf, 255 - Gf, 255 - Bf);
+  end
   else
-    Result := AFontColor;
+    Result := Self; // Already contrasting, keep the original font color
 end;
 
 end.

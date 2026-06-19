@@ -19,7 +19,8 @@ uses
   Clipbrd,
   LazUTF8,
   LCLIntf,
-  LCLType;
+  LCLType,
+  colorhelper;
 
 type
   TStringGridHelper = class helper for TStringGrid
@@ -30,12 +31,11 @@ type
 
     // Draw text in the grid with highlighting of the found substrings
     procedure DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
-      const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False; ABiDiRightToLeft: boolean = False);
+      const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False;
+      ABiDiRightToLeft: boolean = False; const AHintText: string = ''; AHintColor: TColor = clGray);
   end;
 
 implementation
-
-uses colorhelper;
 
 { TStringGridHelper }
 
@@ -284,7 +284,8 @@ begin
 end;
 
 procedure TStringGridHelper.DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
-  const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False; ABiDiRightToLeft: boolean = False);
+  const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False;
+  ABiDiRightToLeft: boolean = False; const AHintText: string = ''; AHintColor: TColor = clGray);
 type
   TTextRange = record
     StartPos: integer;
@@ -301,14 +302,15 @@ type
 var
   TextRanges: TList;
   LineWords: array of TLineWord = ();
-  LineStartIndex: integer; // Index of first word in current line
-  LineWidth: integer;      // Current line width
+  LineStartIndex: integer;
+  LineWidth: integer;
   Flags: cardinal;
   CurrentY: integer;
   LineHeight: integer;
   SavedBrushStyle: TBrushStyle;
   SavedBrushColor: TColor;
   SavedTextColor: TColor;
+  SavedHintColor: TColor;
   Range: PTextRange;
   Fragment: string;
   CurrentWord: string;
@@ -316,18 +318,26 @@ var
   WordWidth: integer;
   TotalGroupWidth: integer;
   I, J: integer;
-  IsLineBreak: boolean;    // True if the current word is an explicit line break
+  IsLineBreak: boolean;
 
-// Build text ranges for highlighting matches
+  // NEW: dedicated variables for the last line's extent
+  LastLineStartX: integer;   // left edge of the last drawn line
+  LastLineEndX: integer;     // right edge of the last drawn line
+  HintRect: TRect;
+  LineStartX, LineEndX: integer;  // still used inside DrawLine for each line
+
+  // Build text ranges for highlighting matches
   procedure BuildTextRanges;
   var
     LowerText, LowerFilter: string;
     CurrentPos, MatchPos: integer;
     Range: PTextRange;
   begin
-    if (AFilterText = '') or (AText = '') then
+    if (AFilterText = '') and (AText = '') then
+      Exit;
+
+    if (AFilterText = '') then
     begin
-      // No filter text - create single normal range
       New(Range);
       Range^.StartPos := 1;
       Range^.EndPos := Length(AText);
@@ -335,6 +345,9 @@ var
       TextRanges.Add(Range);
       Exit;
     end;
+
+    if (AText = '') then
+      Exit;
 
     LowerText := UTF8LowerCase(AText);
     LowerFilter := UTF8LowerCase(AFilterText);
@@ -346,7 +359,6 @@ var
 
       if MatchPos = 0 then
       begin
-        // No more matches - add remaining text as normal range
         if CurrentPos <= Length(AText) then
         begin
           New(Range);
@@ -359,7 +371,6 @@ var
       end
       else
       begin
-        // Add text before match as normal range
         if MatchPos > CurrentPos then
         begin
           New(Range);
@@ -369,7 +380,6 @@ var
           TextRanges.Add(Range);
         end;
 
-        // Add matching text as highlight range
         New(Range);
         Range^.StartPos := MatchPos;
         Range^.EndPos := MatchPos + Length(AFilterText) - 1;
@@ -389,37 +399,32 @@ var
     TotalLineWidth: integer;
     FontColor: TColor;
   begin
-    // Remove last space
     LineWords[LineEnd].word := TrimRight(LineWords[LineEnd].word);
     LineWords[LineEnd].Width := ACanvas.TextWidth(LineWords[LineEnd].word);
     LineWords[LineStart].word := TrimLeft(LineWords[LineStart].word);
     LineWords[LineStart].Width := ACanvas.TextWidth(LineWords[LineStart].word);
 
-    // Calculate total width of this line
     TotalLineWidth := 0;
     for J := LineStart to LineEnd do
       TotalLineWidth := TotalLineWidth + LineWords[J].Width;
 
-    // Set starting X based on text direction
     if ABiDiRightToLeft then
-      X := ARect.Right - TotalLineWidth // Align line to right
+      X := ARect.Right - TotalLineWidth
     else
-      X := ARect.Left; // Align line to left
+      X := ARect.Left;
 
-    // Ensure we don't draw outside the bounds
     if X < ARect.Left then X := ARect.Left;
     if X + TotalLineWidth > ARect.Right then
     begin
-      // Adjust if line is too long (shouldn't happen with proper word wrapping)
       TotalLineWidth := ARect.Right - X;
       if ABiDiRightToLeft then
         X := ARect.Right - TotalLineWidth;
     end;
 
-    // Draw all words in the line
+    LineStartX := X;
+
     for J := LineStart to LineEnd do
     begin
-      // Check if we're still within bounds
       if (X + LineWords[J].Width > ARect.Right) then
         Break;
 
@@ -427,7 +432,7 @@ var
       DrawRect := Rect(X, Y, X + LineWords[J].Width, Y + LineHeight);
       if LineWords[J].IsMatch then
       begin
-        ACanvas.Font.Color := aColorHighlight.GetContrastFontColor(aColorHighlight, FontColor);
+        ACanvas.Font.Color := FontColor.InvertColor(aColorHighlight);
         ACanvas.Brush.Style := bsSolid;
         ACanvas.Brush.Color := aColorHighlight;
         ACanvas.FillRect(DrawRect);
@@ -448,31 +453,55 @@ var
       ACanvas.Font.Color := FontColor;
     end;
 
-    // Draw red \n at the end if line ended with explicit line break and feature enabled
     if AIsLineBreakEnd and AShowLineBreaks then
     begin
-      ACanvas.Font.Color := ACanvas.Brush.Color.GetContrastFontColor(AColorLineBreak);
+      ACanvas.Font.Color := AColorLineBreak.InvertColor(ACanvas.Brush.Color);
       ACanvas.TextOut(X, Y, '\n');
+      LineEndX := X + ACanvas.TextWidth('\n');
       ACanvas.Font.Color := SavedTextColor;
+    end
+    else
+      LineEndX := X;
+
+    // If this is the very last line, remember its extent for the hint
+    if LineEnd = High(LineWords) then
+    begin
+      LastLineStartX := LineStartX;
+      LastLineEndX := LineEndX;
     end;
   end;
 
 begin
   TextRanges := TList.Create;
   try
-    // Save canvas state
     SavedBrushStyle := ACanvas.Brush.Style;
     SavedBrushColor := ACanvas.Brush.Color;
     SavedTextColor := ACanvas.Font.Color;
+    SavedHintColor := AHintColor.InvertColor(SavedBrushColor);
 
     try
       BuildTextRanges;
-      if TextRanges.Count = 0 then Exit;
+
+      if TextRanges.Count = 0 then
+      begin
+        if AHintText <> '' then
+        begin
+          HintRect := ARect;
+          ACanvas.Font.Color := SavedHintColor;
+          ACanvas.Brush.Style := bsClear;
+          Flags := DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX;
+          if ABiDiRightToLeft then
+            Flags := Flags or DT_LEFT
+          else
+            Flags := Flags or DT_RIGHT;
+          DrawText(ACanvas.Handle, PChar(AHintText), Length(AHintText), HintRect, Flags);
+        end;
+        Exit;
+      end;
+
       LineHeight := ACanvas.TextHeight('Wg');
 
-      // First, extract all words from all text ranges
       SetLength(LineWords, 0);
-
       for I := 0 to TextRanges.Count - 1 do
       begin
         Range := PTextRange(TextRanges[I]);
@@ -481,29 +510,20 @@ begin
         WordStart := 1;
         while WordStart <= Length(Fragment) do
         begin
-          // Find word boundaries (include spaces and line breaks as separate "words")
           WordEnd := WordStart;
 
           if Fragment[WordStart] = ' ' then
           begin
-            // This is a space - treat it as a separate word
             while (WordEnd < Length(Fragment)) and (Fragment[WordEnd + 1] = ' ') do
               Inc(WordEnd);
           end
           else if (Fragment[WordStart] = #10) or (Fragment[WordStart] = #13) then
           begin
-            // This is a line break - handle different line break types
             if (Fragment[WordStart] = #13) and (WordEnd < Length(Fragment)) and (Fragment[WordEnd + 1] = #10) then
-            begin
-              // Windows line break (CR+LF) - treat as single word
               Inc(WordEnd);
-            end;
-            // For Unix line breaks (LF only) or Mac classic (CR only), we don't need to do anything else
-            // as WordEnd is already at the current position
           end
           else
           begin
-            // This is a non-space word - continue until space or line break
             while (WordEnd < Length(Fragment)) and (Fragment[WordEnd + 1] <> ' ') and (Fragment[WordEnd + 1] <> #10) and
               (Fragment[WordEnd + 1] <> #13) do
               Inc(WordEnd);
@@ -511,23 +531,11 @@ begin
 
           CurrentWord := Copy(Fragment, WordStart, WordEnd - WordStart + 1);
 
-          // For line breaks, use a special representation or calculate width differently
           if (Fragment[WordStart] = #10) or (Fragment[WordStart] = #13) then
-          begin
-            // Line breaks have zero width for calculation purposes
-            // but we need to handle them specially during drawing
-            WordWidth := 0;
-
-            // Optionally, you could replace line break with a visible character for debugging
-            // CurrentWord := '¶'; // Uncomment for debugging
-            // WordWidth := ACanvas.TextWidth('¶'); // Uncomment for debugging
-          end
+            WordWidth := 0
           else
-          begin
             WordWidth := ACanvas.TextWidth(CurrentWord);
-          end;
 
-          // Add word to array
           SetLength(LineWords, Length(LineWords) + 1);
           LineWords[High(LineWords)].word := CurrentWord;
           LineWords[High(LineWords)].Width := WordWidth;
@@ -537,9 +545,23 @@ begin
         end;
       end;
 
-      if Length(LineWords) = 0 then Exit;
+      if Length(LineWords) = 0 then
+      begin
+        if AHintText <> '' then
+        begin
+          HintRect := ARect;
+          ACanvas.Font.Color := SavedHintColor;
+          ACanvas.Brush.Style := bsClear;
+          Flags := DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX;
+          if ABiDiRightToLeft then
+            Flags := Flags or DT_LEFT
+          else
+            Flags := Flags or DT_RIGHT;
+          DrawText(ACanvas.Handle, PChar(AHintText), Length(AHintText), HintRect, Flags);
+        end;
+        Exit;
+      end;
 
-      // Now break into lines and draw
       LineStartIndex := 0;
       LineWidth := 0;
       CurrentY := ARect.Top;
@@ -547,25 +569,18 @@ begin
       for I := 0 to High(LineWords) do
       begin
         WordWidth := LineWords[I].Width;
-
-        // Calculate total width from current position to next break (space or line break)
         TotalGroupWidth := WordWidth;
 
-        // Look ahead to find the next break and calculate total width
         for J := I + 1 to High(LineWords) do
         begin
-          // Stop at next break (space or line break)
           if (LineWords[J].word = ' ') or (LineWords[J].word = #10) or (LineWords[J].word = #13) or
             (LineWords[J].word = #13#10) then
             Break;
-
           TotalGroupWidth := TotalGroupWidth + LineWords[J].Width;
         end;
 
-        // Determine if current word is a line break
         IsLineBreak := (LineWords[I].word = #10) or (LineWords[I].word = #13) or (LineWords[I].word = #13#10);
 
-        // Check if the entire group fits or if it's a line break
         if ((LineWidth > 0) and (LineWidth + TotalGroupWidth > ARect.Width)) or IsLineBreak then
         begin
           DrawLine(LineStartIndex, I - 1, CurrentY, IsLineBreak);
@@ -576,24 +591,54 @@ begin
           LineWidth := WordWidth;
         end
         else
-        begin
           LineWidth := LineWidth + WordWidth;
-        end;
       end;
 
-      // Draw the last line
+      // Draw the last line (sets LastLineStartX / LastLineEndX)
       if LineStartIndex <= High(LineWords) then
         DrawLine(LineStartIndex, High(LineWords), CurrentY);
 
+      // Draw hint beside the **last** line only
+      if AHintText <> '' then
+      begin
+        if ABiDiRightToLeft then
+        begin
+          // Free space is from the left cell edge to the start of the last line
+          if LastLineStartX > ARect.Left then
+            HintRect := Rect(ARect.Left, CurrentY, LastLineStartX, CurrentY + LineHeight)
+          else
+            HintRect := Rect(ARect.Left, CurrentY, ARect.Left, CurrentY + LineHeight);
+        end
+        else
+        begin
+          // Free space is from the end of the last line to the right cell edge
+          if LastLineEndX < ARect.Right then
+            HintRect := Rect(LastLineEndX, CurrentY, ARect.Right, CurrentY + LineHeight)
+          else
+            HintRect := Rect(ARect.Right, CurrentY, ARect.Right, CurrentY + LineHeight);
+        end;
+
+        if (HintRect.Right > HintRect.Left) and (HintRect.Bottom > HintRect.Top) then
+        begin
+          ACanvas.Font.Color := SavedHintColor;
+          ACanvas.Brush.Style := bsClear;
+          Flags := DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX;
+          if ABiDiRightToLeft then
+            Flags := Flags or DT_LEFT
+          else
+            Flags := Flags or DT_RIGHT;
+
+          DrawText(ACanvas.Handle, PChar(AHintText), Length(AHintText), HintRect, Flags);
+        end;
+      end;
+
     finally
-      // Restore canvas state
       ACanvas.Brush.Style := SavedBrushStyle;
       ACanvas.Brush.Color := SavedBrushColor;
       ACanvas.Font.Color := SavedTextColor;
     end;
 
   finally
-    // Clean up text ranges
     for I := 0 to TextRanges.Count - 1 do
       Dispose(PTextRange(TextRanges[I]));
     TextRanges.Free;
