@@ -245,8 +245,10 @@ const
   clLineDark = TColor($484848);
   clMidGray = TColor($A0A0A0);
   clMidGrayDark = TColor($404040);
-  clMidBlue = TColor($D87040);
-  clMidBlueDark = TColor($4A1A14);
+  clMidBlue = TColor($C85020);
+  clMidBlueDark = TColor($582018);
+  clSoftBlue = TColor($F0E6D8);  // very light pastel blue (towards white)
+  clSoftBlueDark = TColor($2B1A10);
 
 implementation
 
@@ -908,15 +910,14 @@ begin
   Grid.DrawHighlightedText(
     Grid.Canvas,
     Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
-    ThemeColor(clInfo, clInfoDark),
-    clMaroon,
+    GridDrawColors(ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clBlack, ThemeColor(clMidBlue, clMidBlueDark)),
+    ThemeColor(clSoftBlue, clSoftBlueDark)),
     CellText,
     Filter.Text,
-    True,
-    True,
-    False,
     MsgCtxt,
-    ThemeColor(clMidBlue, clMidBlueDark)
+    True,
+    True,
+    False
     );
 end;
 

@@ -23,6 +23,17 @@ uses
   colorhelper;
 
 type
+  { TGridDrawColors }
+
+  TGridDrawColors = record
+    Highlight: TColor;
+    LineBreak: TColor;
+    Hint: TColor;
+    HintBack: TColor;
+  end;
+
+  { TStringGridHelper }
+
   TStringGridHelper = class helper for TStringGrid
   public
     // Paste TSV text from clipboard into the grid.
@@ -30,10 +41,13 @@ type
     procedure PasteFromClipboard;
 
     // Draw text in the grid with highlighting of the found substrings
-    procedure DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
-      const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False;
-      ABiDiRightToLeft: boolean = False; const AHintText: string = ''; AHintColor: TColor = clGray);
+    procedure DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; Colors: TGridDrawColors; const AText, AFilterText: string;
+      AHintText: string = string.Empty; AWordWrap: boolean = False; AShowLineBreaks: boolean = False;
+      ABiDiRightToLeft: boolean = False);
   end;
+
+
+function GridDrawColors(AHighlight, ALineBreak, AHint: TColor; AHintBack: TColor = clNone): TGridDrawColors;
 
 implementation
 
@@ -283,9 +297,9 @@ begin
   end;
 end;
 
-procedure TStringGridHelper.DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; aColorHighlight, aColorLineBreak: TColor;
-  const AText, AFilterText: string; AWordWrap: boolean = False; AShowLineBreaks: boolean = False;
-  ABiDiRightToLeft: boolean = False; const AHintText: string = ''; AHintColor: TColor = clGray);
+procedure TStringGridHelper.DrawHighlightedText(ACanvas: TCanvas; ARect: TRect; Colors: TGridDrawColors;
+  const AText, AFilterText: string; AHintText: string = string.Empty; AWordWrap: boolean = False;
+  AShowLineBreaks: boolean = False; ABiDiRightToLeft: boolean = False);
 type
   TTextRange = record
     StartPos: integer;
@@ -326,7 +340,7 @@ var
   HintRect: TRect;
   LineStartX, LineEndX: integer;  // still used inside DrawLine for each line
 
-  // Build text ranges for highlighting matches
+// Build text ranges for highlighting matches
   procedure BuildTextRanges;
   var
     LowerText, LowerFilter: string;
@@ -432,9 +446,9 @@ var
       DrawRect := Rect(X, Y, X + LineWords[J].Width, Y + LineHeight);
       if LineWords[J].IsMatch then
       begin
-        ACanvas.Font.Color := FontColor.InvertColor(aColorHighlight);
+        ACanvas.Font.Color := FontColor.InvertColor(Colors.Highlight);
         ACanvas.Brush.Style := bsSolid;
-        ACanvas.Brush.Color := aColorHighlight;
+        ACanvas.Brush.Color := Colors.Highlight;
         ACanvas.FillRect(DrawRect);
       end
       else
@@ -455,7 +469,7 @@ var
 
     if AIsLineBreakEnd and AShowLineBreaks then
     begin
-      ACanvas.Font.Color := AColorLineBreak.InvertColor(ACanvas.Brush.Color);
+      ACanvas.Font.Color := Colors.LineBreak.InvertColor(ACanvas.Brush.Color);
       ACanvas.TextOut(X, Y, '\n');
       LineEndX := X + ACanvas.TextWidth('\n');
       ACanvas.Font.Color := SavedTextColor;
@@ -477,7 +491,10 @@ begin
     SavedBrushStyle := ACanvas.Brush.Style;
     SavedBrushColor := ACanvas.Brush.Color;
     SavedTextColor := ACanvas.Font.Color;
-    SavedHintColor := AHintColor.InvertColor(SavedBrushColor);
+    if Colors.HintBack = clNone then
+      SavedHintColor := Colors.Hint.InvertColor(SavedBrushColor)
+    else
+      SavedHintColor := Colors.Hint;
 
     try
       BuildTextRanges;
@@ -488,7 +505,13 @@ begin
         begin
           HintRect := ARect;
           ACanvas.Font.Color := SavedHintColor;
-          ACanvas.Brush.Style := bsClear;
+          if Colors.HintBack = clNone then
+            ACanvas.Brush.Style := bsClear
+          else
+          begin
+            ACanvas.Brush.Style := bsSolid;
+            ACanvas.Brush.Color := Colors.HintBack;
+          end;
           Flags := DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX;
           if ABiDiRightToLeft then
             Flags := Flags or DT_LEFT
@@ -551,7 +574,13 @@ begin
         begin
           HintRect := ARect;
           ACanvas.Font.Color := SavedHintColor;
-          ACanvas.Brush.Style := bsClear;
+          if Colors.HintBack = clNone then
+            ACanvas.Brush.Style := bsClear
+          else
+          begin
+            ACanvas.Brush.Style := bsSolid;
+            ACanvas.Brush.Color := Colors.HintBack;
+          end;
           Flags := DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX;
           if ABiDiRightToLeft then
             Flags := Flags or DT_LEFT
@@ -621,7 +650,13 @@ begin
         if (HintRect.Right > HintRect.Left) and (HintRect.Bottom > HintRect.Top) then
         begin
           ACanvas.Font.Color := SavedHintColor;
-          ACanvas.Brush.Style := bsClear;
+          if Colors.HintBack = clNone then
+            ACanvas.Brush.Style := bsClear
+          else
+          begin
+            ACanvas.Brush.Style := bsSolid;
+            ACanvas.Brush.Color := Colors.HintBack;
+          end;
           Flags := DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX;
           if ABiDiRightToLeft then
             Flags := Flags or DT_LEFT
@@ -643,6 +678,16 @@ begin
       Dispose(PTextRange(TextRanges[I]));
     TextRanges.Free;
   end;
+end;
+
+{ TGridDrawColors }
+
+function GridDrawColors(AHighlight, ALineBreak, AHint: TColor; AHintBack: TColor = clNone): TGridDrawColors;
+begin
+  Result.Highlight := AHighlight;
+  Result.LineBreak := ALineBreak;
+  Result.Hint := AHint;
+  Result.HintBack := AHintBack;
 end;
 
 end.
