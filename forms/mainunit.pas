@@ -128,6 +128,7 @@ type
     procedure ACutExecute(Sender: TObject);
     procedure APasteExecute(Sender: TObject);
     procedure ADeleteExecute(Sender: TObject);
+    procedure ADeleteUpdate(Sender: TObject);
     procedure ASelectAllExecute(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
     procedure ACopySourceTextExecute(Sender: TObject);
@@ -538,6 +539,12 @@ end;
 procedure TformPoBatch.ADeleteExecute(Sender: TObject);
 begin
   DeleteGridsSelection;
+end;
+
+procedure TformPoBatch.ADeleteUpdate(Sender: TObject);
+begin
+  if Assigned(Memo) then
+    ADelete.Enabled := not Memo.Focused;
 end;
 
 procedure TformPoBatch.ASelectAllExecute(Sender: TObject);

@@ -408,6 +408,7 @@ object formPoBatch: TformPoBatch
       Caption = 'Delete'
       ShortCut = 46
       OnExecute = ADeleteExecute
+      OnUpdate = ADeleteUpdate
     end
     object ASelectAll: TAction
       Category = 'Edit'
