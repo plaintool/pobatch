@@ -1356,6 +1356,7 @@ var
   Idx: integer;
 begin
   ListPath.ItemIndex := -1;
+  FLastPathIndex := -1;
   if (Path = '') or (FFileName = '') then Exit;
   if ExtractFilePath(FFileName) <> IncludeTrailingPathDelimiter(Path) then Exit;
 

@@ -16,6 +16,7 @@ uses
   Forms,
   Classes,
   SysUtils,
+  Grids,
   fpjson,
   Graphics,
   mainunit;
@@ -91,6 +92,9 @@ begin
     JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[COLUMN_TEXT].Width);
     JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[COLUMN_TRANSLATION].Width);
     JSONObj.Add('GridColumnReferenceWidth', Form.Grid.Columns[COLUMN_REFERENCE].Width);
+    JSONObj.Add('GridSortColumn', Form.SortColumn);
+    JSONObj.Add('SortColumn', Form.SortColumn);
+    JSONObj.Add('SortOrder', Ord(Form.SortOrder));
 
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
@@ -171,6 +175,14 @@ begin
 
       if JSONObj.FindPath('GridColumnReferenceWidth') <> nil then
         Form.Grid.Columns[COLUMN_REFERENCE].Width := JSONObj.FindPath('GridColumnReferenceWidth').AsInteger;
+
+      if JSONObj.FindPath('SortColumn') <> nil then
+        Form.SortColumn := JSONObj.FindPath('SortColumn').AsInteger;
+
+      if JSONObj.FindPath('SortOrder') <> nil then
+      begin
+        Form.SortOrder := TSortOrder(JSONObj.FindPath('SortOrder').AsInteger);
+      end;
 
       if JSONObj.FindPath('MenuHeadersChecked') <> nil then
       begin
