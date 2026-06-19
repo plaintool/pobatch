@@ -41,6 +41,8 @@ type
   TformPoBatch = class(TForm)
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    ApplicationProp: TApplicationProperties;
+    ASelectAll: TAction;
     ACut: TAction;
     ACopy: TAction;
     APaste: TAction;
@@ -69,6 +71,7 @@ type
     MenuCopy: TMenuItem;
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
+    MenuSelectAll: TMenuItem;
     MenuPaste: TMenuItem;
     MenuDelete: TMenuItem;
     MenuPathClose: TMenuItem;
@@ -89,25 +92,21 @@ type
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
+    Separator6: TMenuItem;
     SplitterHeaders: TSplitter;
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
     Grid: TStringGrid;
     { Form Events }
-    procedure AClearIdenticalExecute(Sender: TObject);
-    procedure ACopyExecute(Sender: TObject);
-    procedure ACopySourceTextExecute(Sender: TObject);
-    procedure ACutExecute(Sender: TObject);
-    procedure APasteExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
-    procedure GridExit(Sender: TObject);
-    procedure GridHeadersExit(Sender: TObject);
-    procedure GridTopLeftChanged(Sender: TObject);
+    { Application Events }
+    procedure ApplicationPropActivate(Sender: TObject);
+    procedure ApplicationPropDeactivate(Sender: TObject);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -125,12 +124,19 @@ type
     procedure MenuAboutClick(Sender: TObject);
     { Action Events }
     procedure AUndoChangesExecute(Sender: TObject);
-    procedure AEditTranslationOnlyExecute(Sender: TObject);
+    procedure ACopyExecute(Sender: TObject);
+    procedure ACutExecute(Sender: TObject);
+    procedure APasteExecute(Sender: TObject);
     procedure ADeleteExecute(Sender: TObject);
+    procedure ASelectAllExecute(Sender: TObject);
+    procedure AClearIdenticalExecute(Sender: TObject);
+    procedure ACopySourceTextExecute(Sender: TObject);
+    procedure AEditTranslationOnlyExecute(Sender: TObject);
     { Grid Headers Events }
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+    procedure GridHeadersExit(Sender: TObject);
     { Grid Events }
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -142,6 +148,8 @@ type
     procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
+    procedure GridExit(Sender: TObject);
+    procedure GridTopLeftChanged(Sender: TObject);
     { Inline Editor Events}
     procedure PanelMemoEnter(Sender: TObject);
     procedure PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
@@ -199,6 +207,7 @@ type
     function CopyGridsSelection: boolean;
     function PasteGridsSelection: boolean;
     function DeleteGridsSelection: boolean;
+    function SelectGridsAll: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     procedure FillGrids;
     procedure SaveGrids;
@@ -354,6 +363,18 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
+{ Application Events }
+
+procedure TformPoBatch.ApplicationPropActivate(Sender: TObject);
+begin
+  Invalidate;
+end;
+
+procedure TformPoBatch.ApplicationPropDeactivate(Sender: TObject);
+begin
+  Invalidate;
+end;
+
 { Menu Events }
 
 procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
@@ -499,28 +520,6 @@ begin
   Changed := False;
 end;
 
-procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
-begin
-  GridHeaders.EditorMode := False;
-  GridHeaders.Columns[COLUMN_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
-  if AEditTranslationOnly.Checked then
-    GridHeaders.Options := GridHeaders.Options - [goAutoAddRows]
-  else
-    GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
-
-  Grid.EditorMode := False;
-  Grid.Columns[COLUMN_VALID].ReadOnly := True;
-  Grid.Columns[COLUMN_TEXT].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COLUMN_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COLUMN_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COLUMN_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COLUMN_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
-  if AEditTranslationOnly.Checked then
-    Grid.Options := Grid.Options - [goAutoAddRows]
-  else
-    Grid.Options := Grid.Options + [goAutoAddRows];
-end;
-
 procedure TformPoBatch.ACutExecute(Sender: TObject);
 begin
   CutGridsSelection;
@@ -541,6 +540,11 @@ begin
   DeleteGridsSelection;
 end;
 
+procedure TformPoBatch.ASelectAllExecute(Sender: TObject);
+begin
+  SelectGridsAll;
+end;
+
 procedure TformPoBatch.AClearIdenticalExecute(Sender: TObject);
 begin
 
@@ -549,6 +553,28 @@ end;
 procedure TformPoBatch.ACopySourceTextExecute(Sender: TObject);
 begin
 
+end;
+
+procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
+begin
+  GridHeaders.EditorMode := False;
+  GridHeaders.Columns[COLUMN_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
+  if AEditTranslationOnly.Checked then
+    GridHeaders.Options := GridHeaders.Options - [goAutoAddRows]
+  else
+    GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
+
+  Grid.EditorMode := False;
+  Grid.Columns[COLUMN_VALID].ReadOnly := True;
+  Grid.Columns[COLUMN_TEXT].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
+  if AEditTranslationOnly.Checked then
+    Grid.Options := Grid.Options - [goAutoAddRows]
+  else
+    Grid.Options := Grid.Options + [goAutoAddRows];
 end;
 
 { Grid Headers Events }
@@ -1618,6 +1644,16 @@ begin
       Result := True;
     end;
   end;
+end;
+
+function TformPoBatch.SelectGridsAll: boolean;
+begin
+  if ActiveControl = Grid then
+    Grid.Selection := TGridRect.Create(CELL_VALID, 0, CELL_REFERENCE, Grid.RowCount)
+  else
+  if ActiveControl = GridHeaders then
+    GridHeaders.Selection := TGridRect.Create(CELL_VALID, 0, CELL_REFERENCE, GridHeaders.RowCount);
+  Result := True;
 end;
 
 function TformPoBatch.EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;

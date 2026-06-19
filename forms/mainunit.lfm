@@ -232,8 +232,8 @@ object formPoBatch: TformPoBatch
     Panels = <>
   end
   object MainMenu: TMainMenu
-    Left = 192
-    Top = 192
+    Left = 232
+    Top = 224
     object MenuFile: TMenuItem
       Caption = 'File'
       object MenuFileNew: TMenuItem
@@ -303,6 +303,12 @@ object formPoBatch: TformPoBatch
       object MenuDelete: TMenuItem
         Action = ADelete
       end
+      object Separator6: TMenuItem
+        Caption = '-'
+      end
+      object MenuSelectAll: TMenuItem
+        Action = ASelectAll
+      end
       object Separator5: TMenuItem
         Caption = '-'
       end
@@ -357,23 +363,23 @@ object formPoBatch: TformPoBatch
   object dialogOpen: TOpenDialog
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofFileMustExist, ofEnableSizing, ofViewDetail]
-    Left = 272
-    Top = 192
+    Left = 312
+    Top = 224
   end
   object dialogSave: TSaveDialog
     DefaultExt = '.po'
     Filter = 'Po File (*.po)|*.po'
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
-    Left = 352
-    Top = 192
+    Left = 392
+    Top = 224
   end
   object dialogPath: TSelectDirectoryDialog
-    Left = 272
-    Top = 264
+    Left = 312
+    Top = 296
   end
   object ActionList: TActionList
-    Left = 192
-    Top = 264
+    Left = 232
+    Top = 296
     object AUndoChanges: TAction
       Category = 'Edit'
       Caption = 'Undo Changes'
@@ -403,6 +409,12 @@ object formPoBatch: TformPoBatch
       ShortCut = 46
       OnExecute = ADeleteExecute
     end
+    object ASelectAll: TAction
+      Category = 'Edit'
+      Caption = 'Select All'
+      ShortCut = 16449
+      OnExecute = ASelectAllExecute
+    end
     object ACopySourceText: TAction
       Category = 'Edit'
       Caption = 'Copy Source Text'
@@ -422,5 +434,11 @@ object formPoBatch: TformPoBatch
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
     end
+  end
+  object ApplicationProp: TApplicationProperties
+    OnActivate = ApplicationPropActivate
+    OnDeactivate = ApplicationPropDeactivate
+    Left = 232
+    Top = 160
   end
 end
