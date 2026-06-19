@@ -23,7 +23,7 @@ uses
   formdonate
   {$IFDEF WINDOWS}
   ,uDarkStyle
-  ,uWin32WidgetSetDark, GridHelper
+  ,uWin32WidgetSetDark
   {$ENDIF}
   ;
 
@@ -31,8 +31,8 @@ uses
 
 begin
   RequireDerivedFormResource := True;
-  Application.Title:='PoBatch';
-  Application.Scaled:=True;
+  Application.Title := 'PoBatch';
+  Application.Scaled := True;
   {$PUSH}
   {$WARN 5044 OFF}
   Application.MainFormOnTaskbar := True;

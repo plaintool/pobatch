@@ -235,7 +235,7 @@ const
 
 implementation
 
-uses formabout, formdonate, systemtool, formattool, settings, gridhelper;
+uses formabout, formdonate, systemtool, formattool, settings, StringGridHelper, ColorHelper;
 
   {$R *.lfm}
 
@@ -850,7 +850,7 @@ begin
     CustomColor := ThemeColor(clInfo, clInfoDark);
 
   if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
-    Grid.Canvas.Brush.Color := BlendColors(Grid.Canvas.Brush.Color, CustomColor, 50);
+    Grid.Canvas.Brush.Color := Grid.Canvas.Brush.Color.BlendColor(CustomColor, 50);
 end;
 
 procedure TformPoBatch.GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
@@ -877,7 +877,7 @@ begin
 
   InflateRect(aRect, -2, -2);
 
-  DrawHighlightedText(
+  Grid.DrawHighlightedText(
     Grid.Canvas,
     aRect,
     ThemeColor(clInfo, clInfoDark),

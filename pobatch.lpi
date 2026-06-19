@@ -141,9 +141,14 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="units\gridhelper.pas"/>
+        <Filename Value="units\stringgridhelper.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="GridHelper"/>
+        <UnitName Value="StringGridHelper"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\colorhelper.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ColorHelper"/>
       </Unit>
     </Units>
   </ProjectOptions>
