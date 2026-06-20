@@ -52,6 +52,12 @@ type
     );
   TPOFlags = set of TPOFlag;
 
+  TPOFileStatus = (
+    psCorrect,          // All translations present, no fuzzy
+    psFuzzy,            // At least one entry has the 'fuzzy' flag
+    psEmptyTranslation  // No fuzzy, but at least one entry has an empty translation
+  );
+
   TPOComment = class
   public
     CommentType: TPOCommentType;
@@ -251,6 +257,8 @@ type
     property HeaderValue[const AKey: string]: string read GetHeaderValue write SetHeaderValue;
     property Translations: TStrings read GetTranslations write SetTranslations;
     property TrailingEmptyLines: integer read FTrailingEmptyLines write FTrailingEmptyLines;
+
+    class function GetFileStatus(const AFileName: string): TPoFileStatus; static;
   end;
 
 implementation
@@ -1834,6 +1842,54 @@ begin
 
   if j <> AList.Count then
     raise Exception.CreateFmt('Provided %d translations but there are %d translatable entries', [AList.Count, j]);
+end;
+
+class function TPOFile.GetFileStatus(const AFileName: string): TPoFileStatus;
+var
+  Po: TPOFile;
+  i, j: integer;
+  Entry: TPOEntry;
+  HasEmpty: Boolean;
+begin
+  Po := TPOFile.Create;
+  try
+    Po.LoadFromFile(AFileName);
+    HasEmpty := False;
+    // Skip entry 0 (header with empty msgid)
+    for i := 1 to Po.Entries.Count - 1 do
+    begin
+      Entry := Po.Entries[i];
+      // Ignore obsolete entries
+      if Entry.Obsolete then
+        Continue;
+      // Fuzzy is the highest priority problem
+      if Entry.IsFuzzy then
+        Exit(psFuzzy);
+      // Check for empty translation if not already found
+      if not HasEmpty then
+      begin
+        if Entry.IsPlural then
+        begin
+          // Plural: all forms must be non‑empty, otherwise it's empty
+          HasEmpty := True;
+          for j := 0 to Entry.MsgStrCount - 1 do
+            if Entry.MsgStr[j] <> '' then
+            begin
+              HasEmpty := False;
+              Break;
+            end;
+        end
+        else
+          HasEmpty := (Entry.MsgStrSimple = '');
+      end;
+    end;
+    if HasEmpty then
+      Result := psEmptyTranslation
+    else
+      Result := psCorrect;
+  finally
+    Po.Free;
+  end;
 end;
 
 end.

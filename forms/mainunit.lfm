@@ -77,9 +77,11 @@ object formPoBatch: TformPoBatch
     BorderSpacing.Bottom = 5
     BorderStyle = bsNone
     ItemHeight = 0
+    Style = lbOwnerDrawFixed
     TabOrder = 2
     Visible = False
     OnClick = ListPathClick
+    OnDrawItem = ListPathDrawItem
   end
   object SplitterPath: TSplitter
     Left = 149

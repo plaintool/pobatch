@@ -32,7 +32,7 @@ uses
   Clipbrd,
   LCLType,
   LCLIntf,
-  powrap;
+  powrap, Types;
 
 type
 
@@ -173,6 +173,7 @@ type
     procedure EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer = 0;
       OffsetTop: integer = 3; OffsetRight: integer = -1; OffsetBottom: integer = 0);
     procedure ListPathClick(Sender: TObject);
+    procedure ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
   private
@@ -186,6 +187,7 @@ type
     FUpdatingGrid: boolean;
     FLastPathIndex: integer;
     FPoFiles: TStringList;
+    FFileStatuses: array of TPoFileStatus;
     FCellValue: string;
 
     FChanged: boolean;
@@ -266,10 +268,14 @@ const
   clLineDark = TColor($484848);
   clMidGray = TColor($A0A0A0);
   clMidGrayDark = TColor($404040);
-  clMidBlue = TColor($C85020);
-  clMidBlueDark = TColor($582018);
-  clSoftBlue = TColor($F0E6D8);  // very light pastel blue (towards white)
+  clFontBlue = TColor($C85020);
+  clFontBlueDark = TColor($00DD8F84);
+  clSoftBlue = TColor($F0E6D8);
   clSoftBlueDark = TColor($2B1A10);
+  clSoftYellow = TColor($E9FEFE);
+  clSoftYellowDark = TColor($045757);
+  clSoftGreen = TColor($DDFBDF);
+  clSoftGreenDark = TColor($07410C);
 
 implementation
 
@@ -292,6 +298,7 @@ begin
   FFileName := string.Empty;
   FPath := string.Empty;
   FPoFiles := TStringList.Create;
+  SetLength(FFileStatuses, 0);
   FCommandLineFile := string.Empty;
   FSortColumn := -1;
   FSortOrder := soAscending;
@@ -319,6 +326,7 @@ begin
   SaveFormSettings(Self);
 
   FreeAndNil(PoFile);
+  SetLength(FFileStatuses, 0);
   FreeAndNil(FPoFiles);
 end;
 
@@ -1057,7 +1065,7 @@ begin
   Grid.DrawHighlightedText(
     Grid.Canvas,
     Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
-    GridDrawColors(ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clBlack, ThemeColor(clMidBlue, clMidBlueDark)),
+    GridDrawColors(ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clWindowText, ThemeColor(clFontBlue, clFontBlueDark)),
     ThemeColor(clSoftBlue, clSoftBlueDark)),
     CellText,
     Filter.Text,
@@ -1180,6 +1188,47 @@ begin
     // Loading failed – revert to the previous selection
     ListPath.ItemIndex := SavedIndex;
     FLastPathIndex := SavedIndex;
+  end;
+end;
+
+procedure TformPoBatch.ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
+var
+  Status: TPoFileStatus;
+  BgColor: TColor;
+begin
+  if (Index < 0) or (Index >= Length(FFileStatuses)) then Exit;
+
+  with (Control as TListBox).Canvas do
+  begin
+    // Determine background color based on file status
+    Status := FFileStatuses[Index];
+    case Status of
+      psCorrect: BgColor := ThemeColor(clSoftGreen, clSoftGreenDark);   // light green
+      psFuzzy: BgColor := ThemeColor(clSoftYellow, clSoftYellowDark);   // light yellow
+      psEmptyTranslation: BgColor := clWindow;  // default (white)
+    end;
+
+    // If the item is selected, use system highlight color
+    if odSelected in State then
+      BgColor := clHighlight;
+
+    // Fill background
+    Brush.Style := bsSolid;
+    Brush.Color := BgColor;
+    FillRect(ARect);
+
+    // Set text color: white for selected, black otherwise
+    if odSelected in State then
+      Font.Color := clHighlightText
+    else
+      Font.Color := clWindowText;
+
+    // Draw the text with a small offset
+    TextOut(ARect.Left + 4, ARect.Top + 2, (Control as TListBox).Items[Index]);
+
+    // Draw focus rectangle if the control is focused and item is selected
+    if odFocused in State then
+      DrawFocusRect(ARect);
   end;
 end;
 
@@ -1408,6 +1457,7 @@ var
   TempFiles: TStringList;
   TempNames: TStringList;
   FullPath: string;
+  i: integer;
 begin
   Result := False;
   if not DirectoryExists(AFileName) then Exit;
@@ -1435,6 +1485,11 @@ begin
     ListPath.Items.Assign(TempNames);
     ListPath.Hint := AFileName;
     FLastPathIndex := -1;   // no file is selected in the new folder
+
+    // We analyze each file and save the status
+    SetLength(FFileStatuses, FPoFiles.Count);
+    for i := 0 to FPoFiles.Count - 1 do
+      FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
 
     UpdateCaption;
     SyncPath;
