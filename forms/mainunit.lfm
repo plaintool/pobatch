@@ -207,6 +207,7 @@ object formPoBatch: TformPoBatch
       MouseWheelOption = mwGrid
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
+      PopupMenu = PopupGrid
       RowCount = 1
       TabOrder = 0
       TitleStyle = tsNative
@@ -214,6 +215,7 @@ object formPoBatch: TformPoBatch
       OnCompareCells = GridCompareCells
       OnDrawCell = GridDrawCell
       OnExit = GridExit
+      OnGetCellHint = GridGetCellHint
       OnHeaderClick = GridHeaderClick
       OnHeaderSized = GridHeaderSized
       OnKeyDown = GridKeyDown
@@ -233,7 +235,7 @@ object formPoBatch: TformPoBatch
   end
   object MainMenu: TMainMenu
     Left = 232
-    Top = 224
+    Top = 296
     object MenuFile: TMenuItem
       Caption = 'File'
       object MenuFileNew: TMenuItem
@@ -379,7 +381,7 @@ object formPoBatch: TformPoBatch
   end
   object ActionList: TActionList
     Left = 232
-    Top = 296
+    Top = 224
     object AUndoChanges: TAction
       Category = 'Edit'
       Caption = 'Undo Changes'
@@ -441,5 +443,36 @@ object formPoBatch: TformPoBatch
     OnDeactivate = ApplicationPropDeactivate
     Left = 232
     Top = 160
+  end
+  object PopupGrid: TPopupMenu
+    Left = 232
+    Top = 368
+    object MenuPopupCopySourceText: TMenuItem
+      Action = ACopySourceText
+    end
+    object MenuPopupClearIdentical: TMenuItem
+      Action = AClearIdentical
+    end
+    object Separator7: TMenuItem
+      Caption = '-'
+    end
+    object MenuPopupCut: TMenuItem
+      Action = ACut
+    end
+    object MenuPopupCopy: TMenuItem
+      Action = ACopy
+    end
+    object MenuPopupPaste: TMenuItem
+      Action = APaste
+    end
+    object MenuPopupDelete: TMenuItem
+      Action = ADelete
+    end
+    object Separator8: TMenuItem
+      Caption = '-'
+    end
+    object MenuPopupSelectAll: TMenuItem
+      Action = ASelectAll
+    end
   end
 end

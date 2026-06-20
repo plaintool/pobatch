@@ -71,6 +71,13 @@ type
     MenuCopy: TMenuItem;
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
+    MenuPopupCut: TMenuItem;
+    MenuPopupCopy: TMenuItem;
+    MenuPopupPaste: TMenuItem;
+    MenuPopupDelete: TMenuItem;
+    MenuPopupSelectAll: TMenuItem;
+    MenuPopupCopySourceText: TMenuItem;
+    MenuPopupClearIdentical: TMenuItem;
     MenuSelectAll: TMenuItem;
     MenuPaste: TMenuItem;
     MenuDelete: TMenuItem;
@@ -85,6 +92,7 @@ type
     PanelClient: TPanel;
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
+    PopupGrid: TPopupMenu;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -93,6 +101,8 @@ type
     Separator4: TMenuItem;
     Separator5: TMenuItem;
     Separator6: TMenuItem;
+    Separator7: TMenuItem;
+    Separator8: TMenuItem;
     SplitterHeaders: TSplitter;
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
@@ -146,6 +156,7 @@ type
     procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
     procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
+    procedure GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
     procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
@@ -376,6 +387,7 @@ begin
   Invalidate;
 end;
 
+
 { Menu Events }
 
 procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
@@ -517,6 +529,12 @@ end;
 
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
 begin
+  if not Changed then
+    Exit;
+
+  if MessageDlg('Do you want to discard all unsaved changes?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
+
   FillGrids;
   Changed := False;
 end;
@@ -543,8 +561,7 @@ end;
 
 procedure TformPoBatch.ADeleteUpdate(Sender: TObject);
 begin
-  if Assigned(Memo) then
-    ADelete.Enabled := not Memo.Focused;
+  ADelete.Enabled := ((Assigned(Memo)) and not Memo.Focused) and not Filter.Focused;
 end;
 
 procedure TformPoBatch.ASelectAllExecute(Sender: TObject);
@@ -553,13 +570,105 @@ begin
 end;
 
 procedure TformPoBatch.AClearIdenticalExecute(Sender: TObject);
+var
+  Row: integer;
+  ReplacedCount: integer;
+  StartRow, EndRow: integer;
 begin
+  if MessageDlg('Clear identical translations in the selected row(s)?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
 
+  ReplacedCount := 0;
+
+  if Grid.Selection.Top = Grid.Selection.Bottom then
+  begin
+    StartRow := Grid.Row;
+    EndRow := Grid.Row;
+  end
+  else
+  begin
+    StartRow := Grid.Selection.Top;
+    EndRow := Grid.Selection.Bottom;
+  end;
+
+  for Row := StartRow to EndRow do
+  begin
+    if Grid.Cells[CELL_TEXT, Row] = Grid.Cells[CELL_TRANSLATION, Row] then
+    begin
+      Grid.Cells[CELL_TRANSLATION, Row] := string.Empty;
+      Grid.Cells[CELL_VALID, Row] := '0';
+      Inc(ReplacedCount);
+    end;
+  end;
+
+  if ReplacedCount > 0 then
+  begin
+    Changed := True;
+
+    // Re-apply active column sort if any
+    if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
+      Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+
+    Grid.Invalidate;
+  end;
+
+  MessageDlg(
+    Format('%d translations were cleared.', [ReplacedCount]),
+    mtInformation,
+    [mbOK],
+    0
+    );
+
+  Grid.Invalidate;
 end;
 
 procedure TformPoBatch.ACopySourceTextExecute(Sender: TObject);
+var
+  Row: integer;
+  CopiedCount: integer;
+  StartRow, EndRow: integer;
 begin
+  if MessageDlg('Copy source text to translations in the selected row(s)?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
 
+  CopiedCount := 0;
+
+  if Grid.Selection.Top = Grid.Selection.Bottom then
+  begin
+    StartRow := Grid.Row;
+    EndRow := Grid.Row;
+  end
+  else
+  begin
+    StartRow := Grid.Selection.Top;
+    EndRow := Grid.Selection.Bottom;
+  end;
+
+  for Row := StartRow to EndRow do
+  begin
+    Grid.Cells[CELL_TRANSLATION, Row] := Grid.Cells[CELL_TEXT, Row];
+    Grid.Cells[CELL_VALID, Row] := '0';
+    Inc(CopiedCount);
+  end;
+
+  if CopiedCount > 0 then
+  begin
+    Changed := True;
+
+    // Re-apply active column sort if any
+    if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
+      Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+
+    Grid.Invalidate;
+  end;
+  MessageDlg(
+    Format('%d translations were copied.', [CopiedCount]),
+    mtInformation,
+    [mbOK],
+    0
+    );
+
+  Grid.Invalidate;
 end;
 
 procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
@@ -842,6 +951,11 @@ end;
 procedure TformPoBatch.GridExit(Sender: TObject);
 begin
   (Sender as TStringGrid).Invalidate;
+end;
+
+procedure TformPoBatch.GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
+begin
+  HintText := Grid.Cells[ACol, ARow];
 end;
 
 procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
