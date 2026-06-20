@@ -1730,7 +1730,10 @@ begin
     Result := True;
   end;
   if Result then
+  begin
     Changed := True;
+    UpdateRowHeights;
+  end;
 end;
 
 function TformPoBatch.DeleteGridsSelection: boolean;

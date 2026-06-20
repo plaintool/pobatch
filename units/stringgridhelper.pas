@@ -232,7 +232,7 @@ var
         end
         else
         begin
-          if FindSet([#9, #10, #13, '"']) then
+          if FindSet([#9, #10, #13]) then
           begin
             SetLength(curWord, Length(curWord) + (leadPtr - wordPtr));
             Move(wordPtr^, curWord[Length(curWord) - (leadPtr - wordPtr) + 1], leadPtr - wordPtr);
