@@ -52,8 +52,12 @@ type
     ActionList: TActionList;
     Filter: TEdit;
     GridHeaders: TStringGrid;
+    ImagesSwitch: TImageList;
+    ImgCheck: TImage;
+    lblCheck: TLabel;
     ListPath: TListBox;
     MainMenu: TMainMenu;
+    Memo1: TMemo;
     MenuFile: TMenuItem;
     MenuFileOpen: TMenuItem;
     MenuFileSave: TMenuItem;
@@ -71,6 +75,7 @@ type
     MenuCopy: TMenuItem;
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
+    MenuInfoPages: TMenuItem;
     MenuPopupCut: TMenuItem;
     MenuPopupCopy: TMenuItem;
     MenuPopupPaste: TMenuItem;
@@ -89,6 +94,8 @@ type
     MenuUndoChanges: TMenuItem;
     MenuView: TMenuItem;
     MenuPathOpen: TMenuItem;
+    Pages: TPageControl;
+    PanelCheck: TPanel;
     PanelClient: TPanel;
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
@@ -103,10 +110,15 @@ type
     Separator6: TMenuItem;
     Separator7: TMenuItem;
     Separator8: TMenuItem;
+    Separator9: TMenuItem;
     SplitterHeaders: TSplitter;
+    SplitterPages: TSplitter;
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
     Grid: TStringGrid;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    PageInfo: TTabSheet;
     { Form Events }
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -117,12 +129,14 @@ type
     { Application Events }
     procedure ApplicationPropActivate(Sender: TObject);
     procedure ApplicationPropDeactivate(Sender: TObject);
+    procedure ImgCheckClick(Sender: TObject);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
     procedure MenuFileOpenClick(Sender: TObject);
     procedure MenuFileSaveClick(Sender: TObject);
     procedure MenuFileSaveAsClick(Sender: TObject);
+    procedure MenuInfoPagesClick(Sender: TObject);
     procedure MenuPathOpenClick(Sender: TObject);
     procedure MenuPathCloseClick(Sender: TObject);
     procedure MenuFileExitClick(Sender: TObject);
@@ -396,6 +410,13 @@ begin
   Invalidate;
 end;
 
+procedure TformPoBatch.ImgCheckClick(Sender: TObject);
+begin
+  if ImgCheck.ImageIndex = 0 then ImgCheck.ImageIndex := 1
+  else
+    ImgCheck.ImageIndex := 0;
+end;
+
 
 { Menu Events }
 
@@ -506,6 +527,14 @@ procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
 begin
   GridHeaders.Visible := MenuHeaders.Checked;
   SplitterHeaders.Visible := MenuHeaders.Checked;
+  Application.QueueAsyncCall(@FixSplitters, 0);
+end;
+
+procedure TformPoBatch.MenuInfoPagesClick(Sender: TObject);
+begin
+  Pages.Visible := MenuInfoPages.Checked;
+  SplitterPages.Visible := MenuInfoPages.Checked;
+  Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
 procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
@@ -1765,6 +1794,9 @@ begin
 
   GridHeaders.Top := 0;
   SplitterHeaders.Top := GridHeaders.Top + GridHeaders.Height;
+
+  Pages.Top := Height;
+  SplitterPages.Top := Pages.Top - 1;
 end;
 
 function TformPoBatch.CutGridsSelection: boolean;
