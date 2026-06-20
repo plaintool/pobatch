@@ -215,6 +215,7 @@ type
     { Methods }
     procedure UpdateRowHeights;
     procedure UpdateCaption;
+    procedure UpdateFileStatus(const AFileName: string);
     procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure FixSplitters(Data: PtrInt);
     function CutGridsSelection: boolean;
@@ -442,7 +443,10 @@ begin
   begin
     // Save to current file
     if SaveFile(FFileName) then
+    begin
       Changed := False;
+      UpdateFileStatus(FFileName);
+    end;
   end;
 end;
 
@@ -1065,8 +1069,8 @@ begin
   Grid.DrawHighlightedText(
     Grid.Canvas,
     Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
-    GridDrawColors(ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clWindowText, ThemeColor(clFontBlue, clFontBlueDark)),
-    ThemeColor(clSoftBlue, clSoftBlueDark)),
+    GridDrawColors(ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clWindowText,
+    ThemeColor(clFontBlue, clFontBlueDark)), ThemeColor(clSoftBlue, clSoftBlueDark)),
     CellText,
     Filter.Text,
     MsgCtxt,
@@ -1727,6 +1731,21 @@ begin
     Application.Title := Application.Title + '*';
 
   Application.QueueAsyncCall(@FixSplitters, 0);
+end;
+
+procedure TformPoBatch.UpdateFileStatus(const AFileName: string);
+var
+  Idx: integer;
+begin
+  // Only if a folder is open and we have a valid file
+  if (FPath = '') or (AFileName = '') then Exit;
+  if ExtractFilePath(AFileName) <> IncludeTrailingPathDelimiter(FPath) then Exit;
+
+  Idx := FPoFiles.IndexOf(AFileName);
+  if (Idx < 0) or (Idx >= Length(FFileStatuses)) then Exit;
+
+  FFileStatuses[Idx] := TPOFile.GetFileStatus(AFileName);
+  ListPath.Invalidate;   // repaint the list
 end;
 
 procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
