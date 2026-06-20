@@ -1,0 +1,1 @@
+C:\Windows\System32\tar -cvf pobatch.tar --exclude=pobatch.tar --exclude=samples --exclude=installer --exclude=lib --exclude=.git *

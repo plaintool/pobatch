@@ -800,7 +800,10 @@ end;
 procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
+  begin
     GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+    GridHeaders.Canvas.Font.Color := clWindowText;
+  end;
 end;
 
 procedure TformPoBatch.GridHeadersExit(Sender: TObject);
@@ -1059,7 +1062,10 @@ begin
   end;
 
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
+  begin
     Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+    GridHeaders.Canvas.Font.Color := clWindowText;
+  end;
 
   if Grid.Cells[CELL_FUZZY, aRow] = '1' then
     CustomColor := ThemeColor(clInfo, clInfoDark);
@@ -1499,10 +1505,10 @@ begin
   TempNames := TStringList.Create;
   try
     // Scan the directory into temporary lists
-    if FindFirst(AFileName + '\*.po', faAnyFile, SR) = 0 then
+    if FindFirst(IncludeTrailingPathDelimiter(AFileName) + '*.po', faAnyFile, SR) = 0 then
     begin
       repeat
-        FullPath := AFileName + '\' + SR.Name;
+        FullPath := IncludeTrailingPathDelimiter(AFileName) + SR.Name;
         TempFiles.Add(FullPath);
         TempNames.Add(SR.Name);
       until FindNext(SR) <> 0;
@@ -1693,29 +1699,57 @@ procedure TformPoBatch.UpdateRowHeights;
 var
   Row, Col: integer;
   R: TRect;
-  H, MaxH: integer;
+  H, MaxH, ColTextWidth: integer;
+  SavedFont: TFont;
 begin
-  for Row := Grid.FixedRows to Grid.RowCount - 1 do
-  begin
-    MaxH := Grid.DefaultRowHeight;
+  // Ensure the grid widget is alive and has a valid canvas handle
+  Grid.HandleNeeded;
 
-    for Col := 0 to Grid.ColCount - 1 do
+  // Save current canvas font and assign the grid's actual font
+  SavedFont := TFont.Create;
+  try
+    SavedFont.Assign(Grid.Canvas.Font);
+    Grid.Canvas.Font.Assign(Grid.Font);
+
+    for Row := Grid.FixedRows to Grid.RowCount - 1 do
     begin
-      R := Rect(0, 0, Grid.ColWidths[Col] - 4, 0);
+      MaxH := Grid.DefaultRowHeight;
 
-      DrawText(Grid.Canvas.Handle,
-        PChar(Grid.Cells[Col, Row]),
-        Length(Grid.Cells[Col, Row]),
-        R,
-        DT_WORDBREAK or DT_CALCRECT);
+      for Col := 0 to Grid.ColCount - 1 do
+      begin
+        // Calculate usable text width inside the cell
+        // Subtract grid line widths and small padding (adjust as needed)
+        ColTextWidth := Grid.ColWidths[Col] - 2 * Grid.GridLineWidth - 4;
 
-      H := R.Bottom - R.Top + 8;
+        // Skip columns with no usable width – prevents absurd heights
+        if ColTextWidth < 10 then
+          Continue;
 
-      if H > MaxH then
-        MaxH := H;
+        R := Rect(0, 0, ColTextWidth, 0);
+
+        // If you have per-cell fonts, apply them here:
+        // (e.g. fire Grid.OnPrepareCanvas if assigned)
+
+        DrawText(Grid.Canvas.Handle,
+          PChar(Grid.Cells[Col, Row]),
+          Length(Grid.Cells[Col, Row]),
+          R,
+          DT_WORDBREAK or DT_CALCRECT);
+
+        // Add vertical padding
+        H := R.Bottom - R.Top + 8;
+
+        if H > MaxH then
+          MaxH := H;
+      end;
+
+      Grid.RowHeights[Row] := MaxH;
     end;
 
-    Grid.RowHeights[Row] := MaxH;
+  finally
+    // Restore original canvas font
+    Grid.Canvas.Font.Assign(SavedFont);
+    SavedFont.Free;
   end;
 end;
 
