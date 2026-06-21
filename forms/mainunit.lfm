@@ -300,6 +300,9 @@ object formPoBatch: TformPoBatch
         ParentBackground = False
         TabOrder = 1
         TabStop = True
+        OnEnter = PanelSwitchEnter
+        OnExit = PanelSwitchExit
+        OnPaint = PanelSwitchPaint
         object LabelSwitch: TLabel
           Left = 0
           Height = 35

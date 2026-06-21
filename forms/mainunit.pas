@@ -193,6 +193,9 @@ type
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
     procedure ImageSwitchClick(Sender: TObject);
+    procedure PanelSwitchEnter(Sender: TObject);
+    procedure PanelSwitchExit(Sender: TObject);
+    procedure PanelSwitchPaint(Sender: TObject);
   private
     Memo: TMemo;
     PanelMemo: TPanel;
@@ -205,6 +208,7 @@ type
     FUpdatingGrid: boolean;
     FLastPathIndex: integer;
     FLastRow: integer;
+    FPanelFocused: boolean;
     FPoFiles: TStringList;
     FFileStatuses: array of TPoFileStatus;
     FCellValue: string;
@@ -1310,6 +1314,24 @@ begin
   SwitchCheck;
 end;
 
+procedure TformPoBatch.PanelSwitchEnter(Sender: TObject);
+begin
+  FPanelFocused := True;
+  PanelSwitch.Invalidate;
+end;
+
+procedure TformPoBatch.PanelSwitchExit(Sender: TObject);
+begin
+  FPanelFocused := False;
+  PanelSwitch.Invalidate;
+end;
+
+procedure TformPoBatch.PanelSwitchPaint(Sender: TObject);
+begin
+  if FPanelFocused then
+    PanelSwitch.Canvas.DrawFocusRect(PanelSwitch.ClientRect);
+end;
+
 { Properties Methods }
 
 procedure TformPoBatch.SetChanges(Value: boolean);
@@ -1845,7 +1867,7 @@ end;
 
 procedure TformPoBatch.UpdateCheck;
 begin
-  if (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, Grid.Row] = '0') or (Grid.Cells[CELL_FUZZY, Grid.Row] = '1')) then
+  if (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, FLastRow] = '0') or (Grid.Cells[CELL_FUZZY, FLastRow] = '1')) then
     ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, FLastRow]);
 end;
 
@@ -2041,6 +2063,8 @@ var
   Headers: TStrings;
   p: integer;
   Key, Value: string;
+  SavedEntryIndex: integer;    // permanent entry index before refill
+  TargetRow: integer;          // row to select after refill
 begin
   if not Assigned(FPoFile) then
   begin
@@ -2084,6 +2108,11 @@ begin
   // Fill main translation grid
   Grid.BeginUpdate;
   try
+    // Remember permanent index of the currently selected entry
+    SavedEntryIndex := -1;
+    if (Grid.Row >= Grid.FixedRows) and (Grid.Row < Grid.RowCount) then
+      SavedEntryIndex := StrToIntDef(Grid.Cells[0, Grid.Row], -1);
+
     // Reset rows, keep only fixed header row
     RowIndex := Grid.FixedRows;
     Grid.RowCount := RowIndex;
@@ -2111,7 +2140,7 @@ begin
       // Column 3: translation (msgstr)
       Grid.Cells[CELL_TRANSLATION, RowIndex] := Entry.MsgStrSimple;
 
-      // Column 4: referenct (#:)
+      // Column 4: reference (#:)
       Grid.Cells[CELL_REFERENCE, RowIndex] := Entry.Reference;
 
       // Column 5: context (msgctxt)
@@ -2144,6 +2173,27 @@ begin
       Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
 
     UpdateRowHeights;
+
+    // Restore selection to the previously saved entry index, if possible
+    TargetRow := Grid.FixedRows;  // fallback to first data row
+    if (SavedEntryIndex >= 0) and (Grid.RowCount > Grid.FixedRows) then
+    begin
+      for i := Grid.FixedRows to Grid.RowCount - 1 do
+        if StrToIntDef(Grid.Cells[0, i], -1) = SavedEntryIndex then
+        begin
+          TargetRow := i;
+          Break;
+        end;
+      // If not found, stay on the first data row
+    end;
+
+    // Set the row only if data rows exist
+    if Grid.RowCount > Grid.FixedRows then
+    begin
+      if TargetRow >= Grid.RowCount then
+        TargetRow := Grid.RowCount - 1;
+      Grid.Row := TargetRow;
+    end;
   finally
     Grid.EndUpdate;
     FUpdatingGrid := False;
