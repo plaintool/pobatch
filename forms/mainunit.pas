@@ -832,22 +832,25 @@ begin
     Changed := True;
   end
   else
-  if (ssCtrl in Shift) and (Key = VK_X) then
+  if (Assigned(GridHeaders.InplaceEditor)) and not GridHeaders.InplaceEditor.Focused then
   begin
-    CutGridsSelection;
-    Key := 0;
-  end
-  else
-  if (ssCtrl in Shift) and (Key = VK_C) then
-  begin
-    CopyGridsSelection;
-    Key := 0;
-  end
-  else
-  if (ssCtrl in Shift) and (Key = VK_V) then
-  begin
-    PasteGridsSelection;
-    Key := 0;
+    if (ssCtrl in Shift) and (Key = VK_X) then
+    begin
+      CutGridsSelection;
+      Key := 0;
+    end
+    else
+    if (ssCtrl in Shift) and (Key = VK_C) then
+    begin
+      CopyGridsSelection;
+      Key := 0;
+    end
+    else
+    if (ssCtrl in Shift) and (Key = VK_V) then
+    begin
+      PasteGridsSelection;
+      Key := 0;
+    end;
   end;
 end;
 
@@ -2016,7 +2019,8 @@ end;
 
 function TformPoBatch.CanActionEnable: boolean;
 begin
-  Result := ((Assigned(Memo)) and not Memo.Focused) and not Filter.Focused and not MemoSource.Focused and not MemoTranslation.Focused;
+  Result := ((Assigned(Memo)) and not Memo.Focused) and ((Assigned(GridHeaders.InplaceEditor)) and not
+    GridHeaders.InplaceEditor.Focused) and not Filter.Focused and not MemoSource.Focused and not MemoTranslation.Focused;
 end;
 
 function TformPoBatch.RowEntry(aRow: integer = -1): TPOEntry;
