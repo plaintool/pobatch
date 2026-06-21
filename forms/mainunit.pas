@@ -267,6 +267,7 @@ type
     procedure UpdateRowHeights(aRow: integer = -1);
     procedure UpdateCaption;
     procedure UpdateFileStatus(const AFileName: string);
+    procedure UpdateSwitch(aRow: integer = -1);
     procedure UpdateTranslatePanel(aRow: integer = -1);
     procedure UpdateValid(aRow: integer = -1);
     procedure SwitchCheck;
@@ -1044,7 +1045,7 @@ begin
     Exit;
   end;
 
-  // Ctrl+click on any column resets sorting to original order
+  // Ctrl + Click on any column resets sorting to original order
   if GetKeyState(VK_CONTROL) and $8000 <> 0 then
   begin
     FSortColumn := -1;
@@ -1065,6 +1066,8 @@ begin
     FSortColumn := Index;
     FSortOrder := soAscending;
   end;
+
+  FLastRow := -1;
 
   if (Grid.RowCount > Grid.FixedRows) and (FSortColumn >= 0) then
     Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
@@ -1507,6 +1510,8 @@ end;
 
 procedure TformPoBatch.MemoSourceChange(Sender: TObject);
 begin
+  if Grid.RowCount <= Grid.FixedRows then Exit;
+
   if MemoSource.Text <> Grid.Cells[CELL_TEXT, Grid.Row] then
   begin
     Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
@@ -1518,6 +1523,8 @@ end;
 
 procedure TformPoBatch.MemoPluralChange(Sender: TObject);
 begin
+  if Grid.RowCount <= Grid.FixedRows then Exit;
+
   if MemoPlural.Text <> Grid.Cells[CELL_PLURAL, Grid.Row] then
   begin
     Grid.Cells[CELL_PLURAL, Grid.Row] := MemoPlural.Text;
@@ -1529,6 +1536,8 @@ end;
 
 procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
 begin
+  if Grid.RowCount <= Grid.FixedRows then Exit;
+
   if MemoTranslation.Text <> Grid.Cells[CELL_TRANSLATION, Grid.Row] then
   begin
     Grid.Cells[CELL_TRANSLATION, Grid.Row] := MemoTranslation.Text;
@@ -2086,7 +2095,7 @@ begin
   ListPath.Invalidate;   // repaint the list
 end;
 
-procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
+procedure TformPoBatch.UpdateSwitch(aRow: integer = -1);
 begin
   if aRow = -1 then aRow := Grid.Row;
 
@@ -2101,6 +2110,14 @@ begin
     ImageSwitch.ImageIndex := 0;
     PanelCheck.Color := clWindow;
   end;
+end;
+
+procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
+begin
+  if aRow = -1 then aRow := Grid.Row;
+
+  // Update Switch state
+  UpdateSwitch(aRow);
 
   // Update Translations
   MemoSource.OnChange := nil;
@@ -2142,10 +2159,14 @@ begin
 end;
 
 procedure TformPoBatch.UpdateValid(aRow: integer = -1);
+var
+  Entry: TPOEntry;
 begin
   SaveRow(aRow);
   if aRow = -1 then aRow := Grid.Row;
-  Grid.Cells[CELL_VALID, aRow] := IfThen(RowEntry(aRow).IsValid, '1', '0');
+  Entry := RowEntry(aRow);
+  if Assigned(Entry) then
+    Grid.Cells[CELL_VALID, aRow] := IfThen(Entry.IsValid, '1', '0');
 end;
 
 procedure TformPoBatch.SwitchCheck;
@@ -2159,6 +2180,7 @@ begin
 
     Grid.Cells[CELL_FUZZY, Grid.Row] := ImageSwitch.ImageIndex.ToString;
     UpdateValid;
+    UpdateSwitch;
 
     Changed := True;
     Grid.Invalidate;
@@ -2733,6 +2755,7 @@ var
   Comments: TStringList;
 begin
   if not Assigned(FPoFile) then Exit;
+  if Grid.RowCount <= Grid.FixedRows then Exit;
 
   if aRow = -1 then
     Row := Grid.Row
