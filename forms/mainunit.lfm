@@ -132,10 +132,12 @@ object formPoBatch: TformPoBatch
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
-      TabOrder = 1
+      TabOrder = 0
       TitleStyle = tsNative
       Visible = False
+      OnColRowInserted = GridHeadersColRowInserted
       OnExit = GridHeadersExit
+      OnGetCellHint = GridHeadersGetCellHint
       OnKeyDown = GridHeadersKeyDown
       OnPrepareCanvas = GridHeadersPrepareCanvas
       OnValidateEntry = GridHeadersValidateEntry
@@ -173,7 +175,7 @@ object formPoBatch: TformPoBatch
           Layout = tlTop
           ReadOnly = True
           Title.Caption = 'Source Text'
-          Width = 320
+          Width = 280
         end      
         item
           Layout = tlTop
@@ -193,7 +195,7 @@ object formPoBatch: TformPoBatch
         end      
         item
           ReadOnly = True
-          Title.Caption = 'Old Text'
+          Title.Caption = 'Plural'
           Visible = False
         end      
         item
@@ -210,7 +212,7 @@ object formPoBatch: TformPoBatch
       Options2 = [goCopyWithoutTrailingLinebreak]
       PopupMenu = PopupGrid
       RowCount = 1
-      TabOrder = 0
+      TabOrder = 1
       TitleStyle = tsNative
       OnColRowInserted = GridColRowInserted
       OnCompareCells = GridCompareCells
@@ -287,15 +289,37 @@ object formPoBatch: TformPoBatch
             object MemoSource: TMemo
               Left = 5
               Height = 76
+              Hint = 'Source Text'
               Top = 5
-              Width = 556
+              Width = 269
               Align = alClient
+              BorderSpacing.Left = 5
+              BorderSpacing.Top = 5
+              BorderStyle = bsNone
+              TabOrder = 0
+              OnChange = MemoSourceChange
+            end
+            object ShapePlural: TShape
+              Left = 274
+              Height = 81
+              Top = 0
+              Width = 1
+              Align = alRight
+              Pen.Color = clActiveBorder
+            end
+            object MemoPlural: TMemo
+              Left = 280
+              Height = 76
+              Hint = 'Plural form'
+              Top = 5
+              Width = 281
+              Align = alRight
               BorderSpacing.Left = 5
               BorderSpacing.Top = 5
               BorderSpacing.Right = 5
               BorderStyle = bsNone
-              TabOrder = 0
-              OnChange = MemoSourceChange
+              TabOrder = 1
+              OnChange = MemoPluralChange
             end
           end
           object SplitterTranslate: TSplitter
@@ -327,24 +351,96 @@ object formPoBatch: TformPoBatch
             object MemoTranslation: TMemo
               Left = 5
               Height = 76
+              Hint = 'Translation'
               Top = 0
-              Width = 556
+              Width = 269
               Align = alClient
               BorderSpacing.Left = 5
-              BorderSpacing.Right = 5
               BorderSpacing.Bottom = 5
               BorderStyle = bsNone
               TabOrder = 0
               OnChange = MemoTranslationChange
             end
+            object GridPlural: TStringGrid
+              Left = 274
+              Height = 81
+              Top = 0
+              Width = 292
+              Align = alRight
+              BorderStyle = bsNone
+              ColCount = 2
+              ColumnClickSorts = True
+              Columns = <              
+                item
+                  Layout = tlTop
+                  Title.Caption = 'Plural Forms'
+                  Width = 640
+                end>
+              DefaultColWidth = 48
+              FadeUnfocusedSelection = True
+              FocusColor = clBlue
+              MouseWheelOption = mwGrid
+              Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
+              Options2 = [goCopyWithoutTrailingLinebreak]
+              RowCount = 1
+              TabOrder = 1
+              TitleStyle = tsNative
+              OnColRowInserted = GridPluralColRowInserted
+              OnValidateEntry = GridPluralValidateEntry
+            end
           end
         end
       end
-      object PagePlural: TTabSheet
-        Caption = 'Plural'
-      end
       object PageComments: TTabSheet
         Caption = 'Comments'
+        ClientHeight = 172
+        ClientWidth = 566
+        object GridComments: TStringGrid
+          Left = 0
+          Height = 172
+          Top = 0
+          Width = 566
+          Align = alClient
+          BorderStyle = bsNone
+          ColCount = 3
+          ColumnClickSorts = True
+          Columns = <          
+            item
+              ButtonStyle = cbsPickList
+              DropDownRows = 6
+              Layout = tlTop
+              PickList.Strings = (
+                '#'
+                '#.'
+                '#:'
+                '#,'
+                '#|'
+                '#~'
+              )
+              Title.Caption = 'Type'
+              Width = 100
+            end          
+            item
+              Layout = tlTop
+              Title.Caption = 'Value'
+              Width = 770
+            end>
+          DefaultColWidth = 48
+          FadeUnfocusedSelection = True
+          FocusColor = clBlue
+          MouseWheelOption = mwGrid
+          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
+          Options2 = [goCopyWithoutTrailingLinebreak]
+          RowCount = 1
+          TabOrder = 0
+          TitleStyle = tsNative
+          OnColRowInserted = GridCommentsColRowInserted
+          OnExit = GridCommentsExit
+          OnGetCellHint = GridCommentsGetCellHint
+          OnKeyDown = GridCommentsKeyDown
+          OnPrepareCanvas = GridCommentsPrepareCanvas
+          OnValidateEntry = GridCommentsValidateEntry
+        end
       end
     end
     object PanelCheck: TPanel

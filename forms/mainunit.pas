@@ -52,6 +52,8 @@ type
     ActionList: TActionList;
     Filter: TEdit;
     GridHeaders: TStringGrid;
+    GridComments: TStringGrid;
+    GridPlural: TStringGrid;
     ImagesSwitch: TImageList;
     ImageSwitch: TImage;
     LabelSwitch: TLabel;
@@ -59,6 +61,7 @@ type
     MainMenu: TMainMenu;
     MemoSource: TMemo;
     MemoCheck: TMemo;
+    MemoPlural: TMemo;
     MemoTranslation: TMemo;
     MenuFile: TMenuItem;
     MenuFileOpen: TMenuItem;
@@ -117,6 +120,7 @@ type
     Separator7: TMenuItem;
     Separator8: TMenuItem;
     Separator9: TMenuItem;
+    ShapePlural: TShape;
     SplitterTranslate: TSplitter;
     SplitterHeaders: TSplitter;
     SplitterPages: TSplitter;
@@ -125,7 +129,6 @@ type
     Grid: TStringGrid;
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
-    PagePlural: TTabSheet;
     { Form Events }
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -171,8 +174,20 @@ type
     { Grid Headers Events }
     procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridHeadersColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridHeadersExit(Sender: TObject);
+    procedure GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
+    { Grid Plural Events }
+    procedure GridPluralValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridPluralColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+    { Grid Comments Events }
+    procedure GridCommentsKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure GridCommentsValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+    procedure GridCommentsColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+    procedure GridCommentsPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+    procedure GridCommentsExit(Sender: TObject);
+    procedure GridCommentsGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
     { Grid Events }
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -209,6 +224,7 @@ type
     procedure PanelSwitchPaint(Sender: TObject);
     procedure SplitterTranslateMoved(Sender: TObject);
     procedure MemoSourceChange(Sender: TObject);
+    procedure MemoPluralChange(Sender: TObject);
     procedure MemoTranslationChange(Sender: TObject);
   private
     Memo: TMemo;
@@ -252,7 +268,7 @@ type
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
     { Methods }
-    procedure UpdateRowHeights;
+    procedure UpdateRowHeights(aRow: integer = -1);
     procedure UpdateCaption;
     procedure UpdateFileStatus(const AFileName: string);
     procedure UpdateTranslatePanel(aRow: integer = -1);
@@ -268,9 +284,14 @@ type
     function DeleteGridsSelection: boolean;
     function SelectGridsAll: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
+    function GetEntiryIndex(aRow: integer = -1): integer;
     procedure FillGrids;
     procedure SaveRow(aRow: integer = -1);   // Save grid row data to model; -1 = current row
     procedure SaveGrids;
+    procedure FillGridPlural(aRow: integer = -1);
+    procedure SaveGridPlural(aRow: integer = -1);
+    procedure FillGridComments(aRow: integer = -1);
+    procedure SaveGridComments(aRow: integer = -1);
   public
     property Changed: boolean read FChanged write SetChanges;
     property Path: string read FPath write FPath;
@@ -294,14 +315,14 @@ const
   COLUMN_TRANSLATION = 2;
   COLUMN_REFERENCE = 3;
   COLUMN_CONTEXT = 4;
-  COLUMN_PREVIOUS = 5;
+  COLUMN_PLURAL = 5;
   COLUMN_FUZZY = 6;
   CELL_VALID = 1;
   CELL_TEXT = 2;
   CELL_TRANSLATION = 3;
   CELL_REFERENCE = 4;
   CELL_CONTEXT = 5;
-  CELL_PREVIOUS = 6;
+  CELL_PLURAL = 6;
   CELL_FUZZY = 7;
 
   UNDEFINED = 'undefined';
@@ -409,6 +430,8 @@ begin
   end;
 
   PanelTranslation.Height := Round((PanelSource.Height + PanelTranslation.Height) * FSplitRatio);
+
+  if Grid.CanFocus then Grid.SetFocus;
 
   if AutoCheckUpdates then
   begin
@@ -617,6 +640,7 @@ begin
 
   FPoFile.Assign(FPoFileBackup);
   FillGrids;
+  UpdateTranslatePanel;
   Changed := False;
 end;
 
@@ -774,24 +798,34 @@ procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
 begin
   GridHeaders.EditorMode := False;
   GridHeaders.Columns[COLUMN_HEADERS_NAME].ReadOnly := AEditTranslationOnly.Checked;
-  if AEditTranslationOnly.Checked then
-    GridHeaders.Options := GridHeaders.Options - [goAutoAddRows]
-  else
-    GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
 
   Grid.EditorMode := False;
   Grid.Columns[COLUMN_VALID].ReadOnly := True;
   Grid.Columns[COLUMN_TEXT].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COLUMN_REFERENCE].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COLUMN_CONTEXT].ReadOnly := AEditTranslationOnly.Checked;
-  Grid.Columns[COLUMN_PREVIOUS].ReadOnly := AEditTranslationOnly.Checked;
+  Grid.Columns[COLUMN_PLURAL].ReadOnly := AEditTranslationOnly.Checked;
   Grid.Columns[COLUMN_FUZZY].ReadOnly := AEditTranslationOnly.Checked;
-  if AEditTranslationOnly.Checked then
-    Grid.Options := Grid.Options - [goAutoAddRows]
-  else
-    Grid.Options := Grid.Options + [goAutoAddRows];
 
   MemoSource.ReadOnly := AEditTranslationOnly.Checked;
+  MemoPlural.ReadOnly := AEditTranslationOnly.Checked;
+
+  if AEditTranslationOnly.Checked then
+  begin
+    GridHeaders.Options := GridHeaders.Options - [goAutoAddRows];
+    Grid.Options := Grid.Options - [goAutoAddRows];
+    GridPlural.Options := GridPlural.Options - [goAutoAddRows];
+    GridComments.Options := GridComments.Options - [goAutoAddRows];
+    GridComments.Options := GridComments.Options - [goEditing];
+  end
+  else
+  begin
+    GridHeaders.Options := GridHeaders.Options + [goAutoAddRows];
+    Grid.Options := Grid.Options + [goAutoAddRows];
+    GridPlural.Options := GridPlural.Options + [goAutoAddRows];
+    GridComments.Options := GridComments.Options + [goAutoAddRows];
+    GridComments.Options := GridComments.Options + [goEditing];
+  end;
 end;
 
 { Grid Headers Events }
@@ -860,6 +894,12 @@ begin
     Changed := True;
 end;
 
+procedure TformPoBatch.GridHeadersColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+begin
+  if not IsColumn then
+    Changed := True;
+end;
+
 procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
@@ -872,6 +912,78 @@ end;
 procedure TformPoBatch.GridHeadersExit(Sender: TObject);
 begin
   (Sender as TStringGrid).Invalidate;
+end;
+
+procedure TformPoBatch.GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
+begin
+  HintText := GridHeaders.Cells[ACol, ARow];
+end;
+
+{ Grid Plural Events }
+
+procedure TformPoBatch.GridPluralValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+begin
+  if OldValue <> NewValue then
+  begin
+    Changed := True;
+    GridPlural.Cells[aCol, aRow] := NewValue;
+    SaveGridPlural;
+    UpdateValid;
+    UpdateRowHeights(Grid.Row);
+  end;
+end;
+
+procedure TformPoBatch.GridPluralColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+begin
+  if not IsColumn then
+    Changed := True;
+end;
+
+{ Grid Comments Events }
+
+procedure TformPoBatch.GridCommentsKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+
+end;
+
+procedure TformPoBatch.GridCommentsValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+begin
+  if OldValue <> NewValue then
+  begin
+    Changed := True;
+    GridComments.Cells[aCol, aRow] := NewValue;
+    SaveGridComments;
+    UpdateValid;
+    UpdateRowHeights(Grid.Row);
+  end;
+end;
+
+procedure TformPoBatch.GridCommentsColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+begin
+  if not IsColumn then
+    Changed := True;
+end;
+
+procedure TformPoBatch.GridCommentsPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+begin
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridComments.Focused)) then
+  begin
+    GridComments.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+    GridComments.Canvas.Font.Color := clWindowText;
+  end;
+end;
+
+procedure TformPoBatch.GridCommentsExit(Sender: TObject);
+begin
+  (Sender as TStringGrid).Invalidate;
+end;
+
+procedure TformPoBatch.GridCommentsGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
+begin
+  if ACol = 1 then
+    HintText := TPoFile.GetCommentTypeName(GridComments.Cells[ACol, ARow])
+  else
+    HintText := GridComments.Cells[ACol, ARow];
 end;
 
 { Grid Events }
@@ -1235,7 +1347,7 @@ procedure TformPoBatch.MemoChange(Sender: TObject);
 begin
   Grid.Cells[Grid.Col, Grid.Row] := TMemo(Sender).Text;
   Changed := True;
-  UpdateRowHeights;
+  UpdateRowHeights(Grid.Row);
   EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
 end;
 
@@ -1335,6 +1447,8 @@ begin
       psCorrect: BgColor := ThemeColor(clSoftGreen, clSoftGreenDark);   // light green
       psFuzzy: BgColor := ThemeColor(clSoftYellow, clSoftYellowDark);   // light yellow
       psEmptyTranslation: BgColor := clWindow;  // default (white)
+      else
+        ;
     end;
 
     // If the item is selected, use system highlight color
@@ -1381,6 +1495,8 @@ end;
 procedure TformPoBatch.PanelPageTranslationResize(Sender: TObject);
 begin
   PanelTranslation.Height := Round((PanelSource.Height + PanelTranslation.Height) * FSplitRatio);
+  MemoPlural.Width := PanelSource.Width div 2;
+  GridPlural.Width := PanelTranslation.Width div 2;
 end;
 
 procedure TformPoBatch.PanelSwitchEnter(Sender: TObject);
@@ -1413,7 +1529,18 @@ begin
     Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
     Changed := True;
     UpdateValid;
-    UpdateRowHeights;
+    UpdateRowHeights(Grid.Row);
+  end;
+end;
+
+procedure TformPoBatch.MemoPluralChange(Sender: TObject);
+begin
+  if MemoPlural.Text <> Grid.Cells[CELL_PLURAL, Grid.Row] then
+  begin
+    Grid.Cells[CELL_PLURAL, Grid.Row] := MemoPlural.Text;
+    Changed := True;
+    UpdateValid;
+    UpdateRowHeights(Grid.Row);
   end;
 end;
 
@@ -1424,7 +1551,7 @@ begin
     Grid.Cells[CELL_TRANSLATION, Grid.Row] := MemoTranslation.Text;
     Changed := True;
     UpdateValid;
-    UpdateRowHeights;
+    UpdateRowHeights(Grid.Row);
   end;
 end;
 
@@ -1611,6 +1738,7 @@ begin
     Changed := False;
     FPoFileBackup.Assign(FPoFile);
     FillGrids;
+    UpdateTranslatePanel;
     SyncPath;
   except
     Result := False;
@@ -1838,6 +1966,7 @@ begin
       FPoFileBackup.Assign(FPoFile);
 
       UpdateCaption;
+      UpdateTranslatePanel;
 
       Result := True;
     except
@@ -1855,40 +1984,46 @@ end;
 
 { Methods }
 
-procedure TformPoBatch.UpdateRowHeights;
+procedure TformPoBatch.UpdateRowHeights(aRow: integer = -1);
 var
   Row, Col: integer;
   R: TRect;
   H, MaxH, ColTextWidth: integer;
   SavedFont: TFont;
+  StartRow, EndRow: integer;
 begin
   // Ensure the grid widget is alive and has a valid canvas handle
   Grid.HandleNeeded;
 
-  // Save current canvas font and assign the grid's actual font
   SavedFont := TFont.Create;
   try
     SavedFont.Assign(Grid.Canvas.Font);
     Grid.Canvas.Font.Assign(Grid.Font);
 
-    for Row := Grid.FixedRows to Grid.RowCount - 1 do
+    // Determine which rows to process
+    if (aRow >= Grid.FixedRows) and (aRow < Grid.RowCount) then
+    begin
+      StartRow := aRow;
+      EndRow := aRow;
+    end
+    else
+    begin
+      StartRow := Grid.FixedRows;
+      EndRow := Grid.RowCount - 1;
+    end;
+
+    for Row := StartRow to EndRow do
     begin
       MaxH := Grid.DefaultRowHeight;
 
       for Col := 0 to Grid.ColCount - 1 do
       begin
         // Calculate usable text width inside the cell
-        // Subtract grid line widths and small padding (adjust as needed)
         ColTextWidth := Grid.ColWidths[Col] - 2 * Grid.GridLineWidth - 4;
-
-        // Skip columns with no usable width – prevents absurd heights
         if ColTextWidth < 10 then
           Continue;
 
         R := Rect(0, 0, ColTextWidth, 0);
-
-        // If you have per-cell fonts, apply them here:
-        // (e.g. fire Grid.OnPrepareCanvas if assigned)
 
         DrawText(Grid.Canvas.Handle,
           PChar(Grid.Cells[Col, Row]),
@@ -1896,9 +2031,7 @@ begin
           R,
           DT_WORDBREAK or DT_CALCRECT);
 
-        // Add vertical padding
-        H := R.Bottom - R.Top + 8;
-
+        H := R.Bottom - R.Top + 8;   // vertical padding
         if H > MaxH then
           MaxH := H;
       end;
@@ -1907,7 +2040,6 @@ begin
     end;
 
   finally
-    // Restore original canvas font
     Grid.Canvas.Font.Assign(SavedFont);
     SavedFont.Free;
   end;
@@ -1980,6 +2112,11 @@ begin
   begin
     ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, aRow]);
     PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, clInfoBk, clWindow);
+  end
+  else
+  begin
+    ImageSwitch.ImageIndex := 0;
+    PanelCheck.Color := clWindow;
   end;
 
   // Update Translations
@@ -1989,12 +2126,36 @@ begin
   finally
     MemoSource.OnChange := @MemoSourceChange;
   end;
-  MemoTranslation.OnChange := nil;
+  MemoPlural.OnChange := nil;
   try
-    MemoTranslation.Text := Grid.Cells[CELL_TRANSLATION, aRow];
+    MemoPlural.Text := Grid.Cells[CELL_PLURAL, aRow];
+    MemoPlural.Visible := MemoPlural.Text <> string.Empty;
+    ShapePlural.Visible := MemoPlural.Text <> string.Empty;
   finally
-    MemoTranslation.OnChange := @MemoTranslationChange;
+    MemoPlural.OnChange := @MemoPluralChange;
   end;
+  if MemoPlural.Visible then
+  begin
+    FillGridPlural(aRow);
+    GridPlural.Visible := True;
+    MemoTranslation.Visible := False;
+    GridPlural.Align := alClient;
+  end
+  else
+  begin
+    MemoTranslation.Align := alClient;
+    GridPlural.Visible := False;
+    MemoTranslation.Visible := True;
+
+    MemoTranslation.OnChange := nil;
+    try
+      MemoTranslation.Text := Grid.Cells[CELL_TRANSLATION, aRow];
+    finally
+      MemoTranslation.OnChange := @MemoTranslationChange;
+    end;
+  end;
+
+  FillGridComments(aRow);
 end;
 
 procedure TformPoBatch.UpdateValid(aRow: integer = -1);
@@ -2006,7 +2167,7 @@ end;
 
 procedure TformPoBatch.SwitchCheck;
 begin
-  if Grid.Row > -1 then
+  if Grid.Row >= Grid.FixedRows then
   begin
     if ImageSwitch.ImageIndex = 0 then
       ImageSwitch.ImageIndex := 1
@@ -2024,7 +2185,8 @@ end;
 function TformPoBatch.CanActionEnable: boolean;
 begin
   Result := ((Assigned(Memo)) and not Memo.Focused) and ((Assigned(GridHeaders.InplaceEditor)) and not
-    GridHeaders.InplaceEditor.Focused) and not Filter.Focused and not MemoSource.Focused and not MemoTranslation.Focused;
+    GridHeaders.InplaceEditor.Focused) and ((Assigned(GridPlural.InplaceEditor)) and not GridPlural.InplaceEditor.Focused) and
+    not Filter.Focused and not MemoSource.Focused and not MemoPlural.Focused and not MemoTranslation.Focused;
 end;
 
 function TformPoBatch.RowEntry(aRow: integer = -1): TPOEntry;
@@ -2070,6 +2232,8 @@ begin
 
   Pages.Top := Height;
   SplitterPages.Top := Pages.Top - 1;
+
+  ShapePlural.Left := 0;
 end;
 
 function TformPoBatch.CutGridsSelection: boolean;
@@ -2199,13 +2363,28 @@ begin
   end;
 end;
 
+function TformPoBatch.GetEntiryIndex(aRow: integer = -1): integer;
+var
+  Row: integer;
+begin
+  // Determine row to save
+  if aRow = -1 then
+    Row := Grid.Row
+  else
+    Row := aRow;
+
+  // Validate that the row is a data row
+  if (Row < Grid.FixedRows) or (Row >= Grid.RowCount) then Exit(-1);
+
+  // Column 0 holds the permanent entry index
+  Result := StrToIntDef(Grid.Cells[0, Row], -1);
+  if (Result < 1) or (Result >= FPoFile.Entries.Count) then Exit(-1);
+end;
+
 procedure TformPoBatch.FillGrids;
 var
   i, RowIndex: integer;
   Entry: TPOEntry;
-  PrevStrings: TStrings;
-  PreviousText: string;
-  j: integer;
   Headers: TStrings;
   p: integer;
   Key, Value: string;
@@ -2222,6 +2401,7 @@ begin
   // Fill the headers grid
   FUpdatingGrid := True;
   GridHeaders.BeginUpdate;
+  GridHeaders.OnColRowInserted := nil;
   try
     Headers := FPoFile.Headers;
     try
@@ -2248,6 +2428,7 @@ begin
       Headers.Free;
     end;
   finally
+    GridHeaders.OnColRowInserted := @GridHeadersColRowInserted;
     GridHeaders.EndUpdate;
   end;
 
@@ -2292,21 +2473,8 @@ begin
       // Column 5: context (msgctxt)
       Grid.Cells[CELL_CONTEXT, RowIndex] := Entry.MsgCtxt;
 
-      // Column 6: previous untranslated text from #| comments
-      PrevStrings := Entry.GetCommentsOfType(poctPrevious);
-      try
-        if PrevStrings.Count > 0 then
-        begin
-          PreviousText := PrevStrings[0];
-          for j := 1 to PrevStrings.Count - 1 do
-            PreviousText := PreviousText + sLineBreak + PrevStrings[j];
-        end
-        else
-          PreviousText := '';
-      finally
-        PrevStrings.Free;
-      end;
-      Grid.Cells[CELL_PREVIOUS, RowIndex] := PreviousText;
+      // Column 6: plural (msgidplural)
+      Grid.Cells[CELL_PLURAL, RowIndex] := Entry.MsgIdPlural;
 
       // Column 7: fuzzy flag (1 if fuzzy, 0 otherwise)
       Grid.Cells[CELL_FUZZY, RowIndex] := IfThen(Entry.IsFuzzy, '1', '0');
@@ -2354,18 +2522,13 @@ var
 begin
   if not Assigned(FPoFile) then Exit;
 
-  // Determine row to save
   if aRow = -1 then
     Row := Grid.Row
   else
     Row := aRow;
 
-  // Validate that the row is a data row
-  if (Row < Grid.FixedRows) or (Row >= Grid.RowCount) then Exit;
-
-  // Column 0 holds the permanent entry index
-  EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
-  if (EntryIndex < 1) or (EntryIndex >= FPoFile.Entries.Count) then Exit;
+  EntryIndex := GetEntiryIndex(aRow);
+  if EntryIndex < 0 then Exit;
 
   Entry := FPoFile.Entries[EntryIndex];
 
@@ -2381,8 +2544,11 @@ begin
   // Update reference
   Entry.Reference := Grid.Cells[CELL_REFERENCE, Row];
 
-  // Update context (was previously incorrectly stored into Reference)
+  // Update context
   Entry.MsgCtxt := Grid.Cells[CELL_CONTEXT, Row];
+
+  // Update plural
+  Entry.MsgIdPlural := Grid.Cells[CELL_PLURAL, Row];
 
   // Update fuzzy flag
   Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
@@ -2413,6 +2579,155 @@ begin
   // Save all data rows using the common SaveRow method
   for i := Grid.FixedRows to Grid.RowCount - 1 do
     SaveRow(i);
+end;
+
+procedure TformPoBatch.FillGridPlural(aRow: integer = -1);
+var
+  EntryIndex: integer;
+  i: integer;
+begin
+  if not Assigned(FPoFile) then
+  begin
+    GridPlural.RowCount := GridPlural.FixedRows;
+    Exit;
+  end;
+
+  EntryIndex := GetEntiryIndex(aRow);
+  if EntryIndex < 0 then Exit;
+
+  // Fill the headers grid
+  FUpdatingGrid := True;
+  GridPlural.BeginUpdate;
+  GridPlural.OnColRowInserted := nil;
+  try
+    GridPlural.RowCount := GridPlural.FixedRows;
+    GridPlural.RowCount := GridPlural.FixedRows + Max(FPoFile.Entries[EntryIndex].MsgStrCount, FPoFile.PluralFormsCount);
+    for i := 0 to FPoFile.Entries[EntryIndex].MsgStrCount - 1 do
+      GridPlural.Cells[1, GridPlural.FixedRows + i] := FPoFile.Entries[EntryIndex].MsgStr[i];
+  finally
+    GridPlural.OnColRowInserted := @GridPluralColRowInserted;
+    GridPlural.EndUpdate;
+  end;
+end;
+
+procedure TformPoBatch.SaveGridPlural(aRow: integer = -1);
+var
+  EntryIndex, Row, i, Count: integer;
+  Entry: TPOEntry;
+  NewList: TStringList;
+begin
+  if not Assigned(FPoFile) then
+    Exit;
+
+  if aRow = -1 then
+    Row := Grid.Row
+  else
+    Row := aRow;
+
+  EntryIndex := GetEntiryIndex(Row);
+  if EntryIndex < 0 then
+    Exit;
+
+  Entry := FPoFile.Entries[EntryIndex];
+  Count := GridPlural.RowCount - GridPlural.FixedRows;
+
+  // Build a temporary list from grid cells
+  NewList := TStringList.Create;
+  try
+    for i := 0 to Count - 1 do
+      NewList.Add(GridPlural.Cells[1, GridPlural.FixedRows + i]);
+
+    // Replace all msgstr forms in one go via the TStrings property
+    Entry.MsgStrList := NewList;
+
+    if (NewList.Count > 0) and (Row >= Grid.FixedRows) then
+      Grid.Cells[CELL_TRANSLATION, Row] := NewList[0];
+  finally
+    NewList.Free;
+  end;
+end;
+
+procedure TformPoBatch.FillGridComments(aRow: integer);
+var
+  EntryIndex: integer;
+  Comments: TStrings;
+  Key, Value: string;
+  i, p: integer;
+begin
+  if not Assigned(FPoFile) then
+  begin
+    GridComments.RowCount := GridComments.FixedRows;
+    Exit;
+  end;
+
+  EntryIndex := GetEntiryIndex(aRow);
+  if EntryIndex < 0 then Exit;
+
+  // Fill the headers grid
+  FUpdatingGrid := True;
+  GridComments.BeginUpdate;
+  GridComments.OnColRowInserted := nil;
+  try
+    Comments := FPoFile.Entries[EntryIndex].CommentsStr;
+    try
+      GridComments.RowCount := GridComments.FixedRows + Comments.Count;
+      for i := 0 to Comments.Count - 1 do
+      begin
+        // Parse "Key=Value" line
+        p := Pos('=', Comments[i]);
+        if p > 0 then
+        begin
+          Key := Copy(Comments[i], 1, p - 1);
+          Value := Copy(Comments[i], p + 1, MaxInt);
+        end
+        else
+        begin
+          Key := Comments[i];
+          Value := '';
+        end;
+        // Column 0 is fixed, store key and value in columns 1 and 2
+        GridComments.Cells[1, GridComments.FixedRows + i] := Key;
+        GridComments.Cells[2, GridComments.FixedRows + i] := Value;
+      end;
+    finally
+      Comments.Free;
+    end;
+  finally
+    GridComments.OnColRowInserted := @GridCommentsColRowInserted;
+    GridComments.EndUpdate;
+  end;
+end;
+
+procedure TformPoBatch.SaveGridComments(aRow: integer = -1);
+var
+  EntryIndex, i, Row: integer;
+  Comments: TStringList;
+begin
+  if not Assigned(FPoFile) then Exit;
+
+  if aRow = -1 then
+    Row := Grid.Row
+  else
+    Row := aRow;
+
+  EntryIndex := GetEntiryIndex(Row);
+  if EntryIndex < 0 then
+    Exit;
+
+  // Save headers from GridHeaders
+  Comments := TStringList.Create;
+  try
+    for i := GridComments.FixedRows to GridComments.RowCount - 1 do
+    begin
+      // Skip completely empty rows
+      if (Trim(GridComments.Cells[1, i]) = '') or (Trim(GridComments.Cells[2, i]) = '') then
+        Continue;
+      Comments.Add(GridComments.Cells[1, i] + '=' + GridComments.Cells[2, i]);
+    end;
+    FPoFile.Entries[EntryIndex].CommentsStr := Comments;
+  finally
+    Comments.Free;
+  end;
 end;
 
 end.

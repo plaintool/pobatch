@@ -145,6 +145,11 @@ type
     function GetMsgStrSimple: string;
     procedure SetMsgStrSimple(const AValue: string);
     function GetIsPlural: boolean;
+
+    function GetMsgStrList: TStrings;
+    procedure SetMsgStrList(AValue: TStrings);
+    function GetCommentsStr: TStrings;
+    procedure SetCommentsStr(AValue: TStrings);
   public
     constructor Create;
     destructor Destroy; override;
@@ -169,6 +174,11 @@ type
     property MsgStrSimple: string read GetMsgStrSimple write SetMsgStrSimple;
     property MsgStr[Index: integer]: string read GetMsgStr write SetMsgStr;
     property MsgStrCount: integer read GetMsgStrCount;
+
+    // Direct TStrings access to all msgstr translations (index 0 = singular/ordinary)
+    property MsgStrList: TStrings read GetMsgStrList write SetMsgStrList;
+    // Key=Value list of comments: Key is 'translator','extracted','reference','previous','flag'
+    property CommentsStr: TStrings read GetCommentsStr write SetCommentsStr;
 
     property MsgCtxt: string read FMsgCtxt write FMsgCtxt;
     property MsgId: string read FMsgId write FMsgId;
@@ -235,6 +245,8 @@ type
     procedure SetHeaderValue(const AKey, AValue: string);
     function GetTranslations: TStrings;
     procedure SetTranslations(AList: TStrings);
+    function GetPluralFormsCount: integer;
+    function GetPluralFormsExpression: string;
     procedure AddFieldToStrings(Lines: TStrings; const Prefix, FieldKeyword: string; const Value: string);
   public
     constructor Create;
@@ -263,7 +275,12 @@ type
     property Translations: TStrings read GetTranslations write SetTranslations;
     property TrailingEmptyLines: integer read FTrailingEmptyLines write FTrailingEmptyLines;
 
+    // Plural forms information from the 'Plural-Forms' header
+    property PluralFormsCount: integer read GetPluralFormsCount;
+    property PluralFormsExpression: string read GetPluralFormsExpression;
+
     class function GetFileStatus(const AFileName: string): TPoFileStatus; static;
+    class function GetCommentTypeName(const APrefix: string): string; static;
   end;
 
 implementation
@@ -527,9 +544,10 @@ function TPOEntry.HasFlag(const AFlag: string): boolean;
 var
   i: integer;
 begin
-  for i := 0 to FComments.Count - 1 do
-    if (TPOComment(FComments[i]).CommentType = poctFlag) and (SameText(Trim(TPOComment(FComments[i]).Text), AFlag)) then
-      Exit(True);
+  if Assigned(FComments) then
+    for i := 0 to FComments.Count - 1 do
+      if (TPOComment(FComments[i]).CommentType = poctFlag) and (SameText(Trim(TPOComment(FComments[i]).Text), AFlag)) then
+        Exit(True);
   Result := False;
 end;
 
@@ -995,6 +1013,93 @@ end;
 function TPOEntry.GetIsPlural: boolean;
 begin
   Result := FMsgIdPlural <> '';
+end;
+
+function TPOEntry.GetMsgStrList: TStrings;
+begin
+  // Return a copy of the internal msgstr list
+  Result := TStringList.Create;
+  Result.Assign(FMsgStr);
+end;
+
+procedure TPOEntry.SetMsgStrList(AValue: TStrings);
+begin
+  // Replace all msgstr entries with the provided strings
+  FMsgStr.Assign(AValue);
+end;
+
+function TPOEntry.GetCommentsStr: TStrings;
+var
+  i: integer;
+  c: TPOComment;
+  sl, flagList: TStringList;
+begin
+  sl := TStringList.Create;
+  flagList := TStringList.Create;
+  try
+    for i := 0 to FComments.Count - 1 do
+    begin
+      c := TPOComment(FComments[i]);
+      case c.CommentType of
+        poctTranslator: sl.Add('#=' + c.Text);
+        poctExtracted: sl.Add('#.=' + c.Text);
+        poctReference: sl.Add('#:=' + c.Text);
+        poctPrevious: sl.Add('#|=' + c.Text);
+        poctFlag: flagList.Add(c.Text);
+      end;
+    end;
+    // All flags merged into one "#,=" line with comma‑separated values
+    if flagList.Count > 0 then
+      sl.Add('#,=' + flagList.CommaText);
+    Result := sl;
+  finally
+    flagList.Free;
+  end;
+end;
+
+procedure TPOEntry.SetCommentsStr(AValue: TStrings);
+var
+  i, p: integer;
+  s, typ, txt: string;
+  flagParts: TStringList;
+begin
+  // Replace all existing comments with the supplied list
+  FComments.Clear;
+
+  for i := 0 to AValue.Count - 1 do
+  begin
+    s := AValue[i];
+    if s = '' then
+      Continue;
+    p := Pos('=', s);
+    if p = 0 then
+      Continue;
+    typ := Copy(s, 1, p - 1);
+    txt := Copy(s, p + 1, MaxInt);
+
+    if typ = '#' then
+      AddComment(poctTranslator, txt)
+    else if typ = '#.' then
+      AddComment(poctExtracted, txt)
+    else if typ = '#:' then
+      AddComment(poctReference, txt)
+    else if typ = '#|' then
+      AddComment(poctPrevious, txt)
+    else if typ = '#,' then
+    begin
+      // Split the comma‑separated flags and add each as a separate poctFlag
+      flagParts := TStringList.Create;
+      try
+        flagParts.CommaText := txt;
+        for p := 0 to flagParts.Count - 1 do
+          if Trim(flagParts[p]) <> '' then
+            AddComment(poctFlag, Trim(flagParts[p]));
+      finally
+        flagParts.Free;
+      end;
+    end;
+    // unknown prefixes are silently ignored
+  end;
 end;
 
 // ToString implementation
@@ -1900,6 +2005,47 @@ begin
     raise Exception.CreateFmt('Provided %d translations but there are %d translatable entries', [AList.Count, j]);
 end;
 
+function TPOFile.GetPluralFormsCount: integer;
+var
+  Value: string;
+  p: integer;
+  NumStr: string;
+begin
+  Result := 0;   // default: no plural forms
+  Value := Self.HeaderValue['Plural-Forms'];
+  if Value = '' then
+    Exit;
+  // Locate 'nplurals=' substring
+  p := Pos('nplurals=', Value);
+  if p = 0 then
+    Exit;
+  Inc(p, Length('nplurals='));
+  // Read consecutive digits
+  NumStr := '';
+  while (p <= Length(Value)) and (Value[p] in ['0'..'9']) do
+  begin
+    NumStr := NumStr + Value[p];
+    Inc(p);
+  end;
+  Result := StrToIntDef(NumStr, 0);
+end;
+
+function TPOFile.GetPluralFormsExpression: string;
+var
+  Value: string;
+  p: integer;
+begin
+  Result := '';
+  Value := Self.HeaderValue['Plural-Forms'];
+  if Value = '' then
+    Exit;
+  p := Pos('plural=', Value);
+  if p = 0 then
+    Exit;
+  Inc(p, Length('plural='));
+  Result := Copy(Value, p, MaxInt);
+end;
+
 class function TPOFile.GetFileStatus(const AFileName: string): TPoFileStatus;
 var
   Po: TPOFile;
@@ -1946,6 +2092,26 @@ begin
   finally
     Po.Free;
   end;
+end;
+
+class function TPOFile.GetCommentTypeName(const APrefix: string): string;
+const
+  Prefixes: array[0..5] of string = ('# ', '#.', '#:', '#,', '#|', '#~');
+  Names: array[0..5] of string = (
+    'Translator comment',
+    'Extracted comment',
+    'Source code reference',
+    'Flag comment',
+    'Previous msgid',
+    'Obsolete message'
+    );
+var
+  i: integer;
+begin
+  Result := 'None';
+  for i := 0 to High(Prefixes) do
+    if Prefixes[i] = APrefix then
+      Exit(Names[i]);
 end;
 
 end.
