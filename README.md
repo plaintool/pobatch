@@ -11,6 +11,12 @@ PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source 
 [![Platform: Windows Linux](https://img.shields.io/badge/Platform-Windows_Linux-yellow)](#)
 [![Latest Release](https://img.shields.io/github/v/release/plaintool/pobatch?label=Release)](https://github.com/plaintool/pobatch/releases/latest)
 
+> [!WARNING]
+> **This project is still under active development.**
+>
+> While it is already functional and useful, some features may continue to evolve and occasional issues may still occur.
+> As a general best practice, it is recommended to keep backup copies of your translation files.
+
 ![sample1](samples/sample1.png)
 
 ## Installation
@@ -60,7 +66,14 @@ sudo dnf install -y gtk2
 
 ## Donate 💖
 
-If you like this application, you can read how to support it [here](https://plaintool.github.io/notetask/donate.htm).
+If you like PoBatch and want to support its development, you can send a donation:
+
+You can support PoBatch development through one of the following options:
+
+💳&nbsp;[Donate with Bank Card or PayPal](https://app.lava.top/en/astverskoy?tabId=about&currency=EUR)  
+&nbsp;₿&nbsp;&nbsp; [Donate with Cryptocurrency](https://nowpayments.io/donation/astverskoy)
+
+Every contribution helps improve PoBatch and keep the project active. Thank you for your support! 🙏
 
 ## Licensing
 
