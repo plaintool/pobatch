@@ -240,8 +240,9 @@ type
     procedure UpdateCaption;
     procedure UpdateFileStatus(const AFileName: string);
     procedure UpdateCheck;
+    procedure UpdateValid(aRow: integer = -1);
     procedure SwitchCheck;
-    function CurrentEntry: TPOEntry;
+    function RowEntry(aRow: integer = -1): TPOEntry;
     procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure FixSplitters(Data: PtrInt);
     function CutGridsSelection: boolean;
@@ -251,6 +252,7 @@ type
     function SelectGridsAll: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     procedure FillGrids;
+    procedure SaveRow(aRow: integer = -1);   // Save grid row data to model; -1 = current row
     procedure SaveGrids;
   public
     property Changed: boolean read FChanged write SetChanges;
@@ -664,10 +666,9 @@ begin
     Changed := True;
 
     // Re-apply active column sort if any
-    if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
-      Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
-
-    Grid.Invalidate;
+    //if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
+    //  Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+    //Grid.Invalidate;
   end;
 
   MessageDlg(
@@ -705,7 +706,7 @@ begin
   for Row := StartRow to EndRow do
   begin
     Grid.Cells[CELL_TRANSLATION, Row] := Grid.Cells[CELL_TEXT, Row];
-    Grid.Cells[CELL_VALID, Row] := '0';
+    UpdateValid(Row);
     Inc(CopiedCount);
   end;
 
@@ -714,10 +715,9 @@ begin
     Changed := True;
 
     // Re-apply active column sort if any
-    if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
-      Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
-
-    Grid.Invalidate;
+    //if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
+    //  Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+    //Grid.Invalidate;
   end;
   MessageDlg(
     Format('%d translations were copied.', [CopiedCount]),
@@ -848,7 +848,7 @@ begin
       SelIndexes[i - Grid.Selection.Top] := StrToIntDef(Grid.Cells[0, i], -1);
 
     // Save any unsaved changes from the grid back to FPoFile
-    SaveGrids;   // or SaveGrids, depending on your code
+    SaveGrids;
 
     // Delete the entries from FPoFile (handles index ordering internally)
     FPoFile.DeleteEntriesByIndexes(SelIndexes);
@@ -1171,6 +1171,10 @@ end;
 procedure TformPoBatch.MemoExit(Sender: TObject);
 begin
   Grid.EditorMode := False;
+
+  if Grid.Col = CELL_TRANSLATION then
+    UpdateValid;
+
   Grid.Invalidate;
 end;
 
@@ -1186,8 +1190,10 @@ procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShift
 begin
   if Key = VK_ESCAPE then
   begin
+    Memo.OnExit := nil;
     Grid.EditorMode := False;
     Grid.Cells[Grid.Col, Grid.Row] := FCellValue;
+    Memo.OnExit := @MemoExit;
     Key := 0;
   end
   else
@@ -1871,6 +1877,13 @@ begin
     ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, FLastRow]);
 end;
 
+procedure TformPoBatch.UpdateValid(aRow: integer = -1);
+begin
+  SaveRow(aRow);
+  if aRow = -1 then aRow := Grid.Row;
+  Grid.Cells[CELL_VALID, aRow] := IfThen(RowEntry(aRow).IsValid, '1', '0');
+end;
+
 procedure TformPoBatch.SwitchCheck;
 begin
   if Grid.Row > -1 then
@@ -1881,15 +1894,14 @@ begin
       ImageSwitch.ImageIndex := 0;
 
     Grid.Cells[CELL_FUZZY, Grid.Row] := ImageSwitch.ImageIndex.ToString;
-    SaveGrids;
-    Grid.Cells[CELL_VALID, Grid.Row] := IfThen(CurrentEntry.IsValid, '1', '0');
+    UpdateValid;
 
     Changed := True;
     Grid.Invalidate;
   end;
 end;
 
-function TformPoBatch.CurrentEntry: TPOEntry;
+function TformPoBatch.RowEntry(aRow: integer = -1): TPOEntry;
 var
   Row: integer;
   EntryIndex: integer;
@@ -1899,7 +1911,7 @@ begin
   if not Assigned(FPoFile) then
     Exit;
 
-  Row := Grid.Row;
+  Row := ifthen(aRow = -1, Grid.Row, aRow);
   // Ignore header row or invalid selection
   if (Row < Grid.FixedRows) or (Row >= Grid.RowCount) then
     Exit;
@@ -2200,13 +2212,52 @@ begin
   end;
 end;
 
-procedure TformPoBatch.SaveGrids;
+procedure TformPoBatch.SaveRow(aRow: integer);
 var
   Row: integer;
   EntryIndex: integer;
   Entry: TPOEntry;
-  Headers: TStringList;
+begin
+  if not Assigned(FPoFile) then Exit;
+
+  // Determine row to save
+  if aRow = -1 then
+    Row := Grid.Row
+  else
+    Row := aRow;
+
+  // Validate that the row is a data row
+  if (Row < Grid.FixedRows) or (Row >= Grid.RowCount) then Exit;
+
+  // Column 0 holds the permanent entry index
+  EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
+  if (EntryIndex < 1) or (EntryIndex >= FPoFile.Entries.Count) then Exit;
+
+  Entry := FPoFile.Entries[EntryIndex];
+
+  // Update msgid (empty becomes UNDEFINED)
+  if Trim(Grid.Cells[CELL_TEXT, Row]) = '' then
+    Entry.MsgId := UNDEFINED
+  else
+    Entry.MsgId := Grid.Cells[CELL_TEXT, Row];
+
+  // Update translation
+  Entry.MsgStrSimple := Grid.Cells[CELL_TRANSLATION, Row];
+
+  // Update reference
+  Entry.Reference := Grid.Cells[CELL_REFERENCE, Row];
+
+  // Update context (was previously incorrectly stored into Reference)
+  Entry.MsgCtxt := Grid.Cells[CELL_CONTEXT, Row];
+
+  // Update fuzzy flag
+  Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
+end;
+
+procedure TformPoBatch.SaveGrids;
+var
   i: integer;
+  Headers: TStringList;
 begin
   if not Assigned(FPoFile) then Exit;
 
@@ -2225,34 +2276,9 @@ begin
     Headers.Free;
   end;
 
-  // Save entries from main translation grid
-  for Row := Grid.FixedRows to Grid.RowCount - 1 do
-  begin
-    // Column 0 holds the permanent entry index
-    EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
-    if (EntryIndex < 1) or (EntryIndex >= FPoFile.Entries.Count) then
-      Continue;
-
-    Entry := FPoFile.Entries[EntryIndex];
-
-    // Update text from cell CELL_TEXT
-    if Trim(Grid.Cells[CELL_TEXT, Row]) = string.Empty then
-      Entry.MsgId := UNDEFINED
-    else
-      Entry.MsgId := Grid.Cells[CELL_TEXT, Row];
-
-    // Update translation from cell CELL_TRANSLATION
-    Entry.MsgStrSimple := Grid.Cells[CELL_TRANSLATION, Row];
-
-    // Update reference from cell CELL_REFERENCE
-    Entry.Reference := Grid.Cells[CELL_REFERENCE, Row];
-
-    // Update context from cell CELL_CONTEXT
-    Entry.Reference := Grid.Cells[CELL_CONTEXT, Row];
-
-    // Update fuzzy flag from cell CELL_FUZZY
-    Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
-  end;
+  // Save all data rows using the common SaveRow method
+  for i := Grid.FixedRows to Grid.RowCount - 1 do
+    SaveRow(i);
 end;
 
 end.
