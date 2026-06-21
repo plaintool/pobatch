@@ -56,7 +56,7 @@ type
     psCorrect,          // All translations present, no fuzzy
     psFuzzy,            // At least one entry has the 'fuzzy' flag
     psEmptyTranslation  // No fuzzy, but at least one entry has an empty translation
-  );
+    );
 
   TPOComment = class
   public
@@ -150,6 +150,8 @@ type
     destructor Destroy; override;
     procedure Clear;
 
+    procedure Assign(Source: TPOEntry);
+
     function GetCommentsAsStrings: TStrings;
     procedure LoadCommentsFromStrings(const Lines: TStrings);
 
@@ -238,6 +240,9 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    procedure Assign(Source: TPOFile);
+    constructor CreateCopy(ASource: TPOFile);
+
     procedure LoadFromStream(AStream: TStream);
     procedure LoadFromFile(const AFilename: string);
     procedure SaveToStream(AStream: TStream);
@@ -311,7 +316,7 @@ begin
   end;
 end;
 
-function CompareIndexStringsDesc(List: TStringList; Index1, Index2: Integer): Integer;
+function CompareIndexStringsDesc(List: TStringList; Index1, Index2: integer): integer;
 begin
   // Sort as numbers in descending order
   Result := StrToIntDef(List[Index2], 0) - StrToIntDef(List[Index1], 0);
@@ -389,6 +394,29 @@ begin
   FMsgIdPlural := '';
   FMsgStr.Clear;
   FObsolete := False;
+end;
+
+procedure TPOEntry.Assign(Source: TPOEntry);
+var
+  i: integer;
+  c: TPOComment;
+begin
+  // Copy simple fields
+  FMsgCtxt := Source.FMsgCtxt;
+  FMsgId := Source.FMsgId;
+  FMsgIdPlural := Source.FMsgIdPlural;
+  FObsolete := Source.FObsolete;
+
+  // Deep copy comment objects
+  FComments.Clear;
+  for i := 0 to Source.FComments.Count - 1 do
+  begin
+    c := TPOComment(Source.FComments[i]);
+    FComments.Add(TPOComment.Create(c.CommentType, c.Text));
+  end;
+
+  // StringList can copy itself
+  FMsgStr.Assign(Source.FMsgStr);
 end;
 
 function TPOEntry.GetCommentsAsStrings: TStrings;
@@ -1166,6 +1194,34 @@ begin
   inherited;
 end;
 
+procedure TPOFile.Assign(Source: TPOFile);
+var
+  i: integer;
+  NewEntry: TPOEntry;
+begin
+  // Clear current content
+  Clear;
+
+  // Copy simple properties
+  FEncoding := Source.Encoding;               // TEncoding references are safe (singletons)
+  FLineEndingStyle := Source.LineEndingStyle;
+  FTrailingEmptyLines := Source.TrailingEmptyLines;
+
+  // Deep copy all entries
+  for i := 0 to Source.Entries.Count - 1 do
+  begin
+    NewEntry := TPOEntry.Create;
+    NewEntry.Assign(Source.Entries[i]);       // use the entry's own deep copy
+    FEntries.Add(NewEntry);
+  end;
+end;
+
+constructor TPOFile.CreateCopy(ASource: TPOFile);
+begin
+  Create;
+  Assign(ASource);
+end;
+
 procedure TPOFile.Clear;
 begin
   FEntries.Clear;
@@ -1654,9 +1710,9 @@ begin
   Result := nil;
 end;
 
-procedure TPOFile.DeleteEntriesByIndexes(const AIndexes: array of Integer);
+procedure TPOFile.DeleteEntriesByIndexes(const AIndexes: array of integer);
 var
-  i, Idx: Integer;
+  i, Idx: integer;
   sl: TStringList;
 begin
   if Length(AIndexes) = 0 then Exit;
@@ -1849,7 +1905,7 @@ var
   Po: TPOFile;
   i, j: integer;
   Entry: TPOEntry;
-  HasEmpty: Boolean;
+  HasEmpty: boolean;
 begin
   Po := TPOFile.Create;
   try

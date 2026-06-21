@@ -53,8 +53,8 @@ type
     Filter: TEdit;
     GridHeaders: TStringGrid;
     ImagesSwitch: TImageList;
-    ImgCheck: TImage;
-    lblCheck: TLabel;
+    ImageSwitch: TImage;
+    LabelSwitch: TLabel;
     ListPath: TListBox;
     MainMenu: TMainMenu;
     MemoCheck: TMemo;
@@ -95,8 +95,8 @@ type
     MenuView: TMenuItem;
     MenuPathOpen: TMenuItem;
     Pages: TPageControl;
-    PanelInfo: TPanel;
     PanelCheck: TPanel;
+    PanelSwitch: TPanel;
     PanelClient: TPanel;
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
@@ -125,12 +125,12 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormResize(Sender: TObject);
     { Application Events }
     procedure ApplicationPropActivate(Sender: TObject);
     procedure ApplicationPropDeactivate(Sender: TObject);
-    procedure ImgCheckClick(Sender: TObject);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -172,6 +172,7 @@ type
     procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
     procedure GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
+    procedure GridSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
     procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
@@ -191,16 +192,19 @@ type
     procedure ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
+    procedure ImageSwitchClick(Sender: TObject);
   private
     Memo: TMemo;
     PanelMemo: TPanel;
 
-    PoFile: TPoFile;
+    FPoFile: TPoFile;
+    FPoFileBackup: TPoFile;
     FFileName: string;
     FInitialized: boolean;
     FCommandLineFile: string;
     FUpdatingGrid: boolean;
     FLastPathIndex: integer;
+    FLastRow: integer;
     FPoFiles: TStringList;
     FFileStatuses: array of TPoFileStatus;
     FCellValue: string;
@@ -231,6 +235,8 @@ type
     procedure UpdateRowHeights;
     procedure UpdateCaption;
     procedure UpdateFileStatus(const AFileName: string);
+    procedure UpdateCheck;
+    procedure SwitchCheck;
     procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure FixSplitters(Data: PtrInt);
     function CutGridsSelection: boolean;
@@ -319,6 +325,7 @@ begin
   FSortColumn := -1;
   FSortOrder := soAscending;
   FLastPathIndex := -1;
+  FLastRow := -1;
 
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
@@ -326,8 +333,9 @@ begin
 
   LoadFormSettings(Self);
 
-  // Create PoFile object
-  PoFile := TPoFile.Create;
+  // Create FPoFile object
+  FPoFile := TPoFile.Create;
+  FPoFileBackup := TPoFile.Create;
   NewFile;
 
   // Load the menu state
@@ -341,7 +349,8 @@ procedure TformPoBatch.FormDestroy(Sender: TObject);
 begin
   SaveFormSettings(Self);
 
-  FreeAndNil(PoFile);
+  FreeAndNil(FPoFile);
+  FreeAndNil(FPoFileBackup);
   SetLength(FFileStatuses, 0);
   FreeAndNil(FPoFiles);
 end;
@@ -385,6 +394,15 @@ begin
   CanClose := IsCanClose;
 end;
 
+procedure TformPoBatch.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if ActiveControl = PanelSwitch then
+  begin
+    if Key = VK_SPACE then
+      SwitchCheck;
+  end;
+end;
+
 procedure TformPoBatch.FormDropFiles(Sender: TObject; const FileNames: array of string);
 begin
   if Length(FileNames) = 0 then
@@ -410,14 +428,6 @@ procedure TformPoBatch.ApplicationPropDeactivate(Sender: TObject);
 begin
   Invalidate;
 end;
-
-procedure TformPoBatch.ImgCheckClick(Sender: TObject);
-begin
-  if ImgCheck.ImageIndex = 0 then ImgCheck.ImageIndex := 1
-  else
-    ImgCheck.ImageIndex := 0;
-end;
-
 
 { Menu Events }
 
@@ -577,6 +587,7 @@ begin
   if MessageDlg('Do you want to discard all unsaved changes?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
 
+  FPoFile.Assign(FPoFileBackup);
   FillGrids;
   Changed := False;
 end;
@@ -831,14 +842,14 @@ begin
     for i := Grid.Selection.Top to Grid.Selection.Bottom do
       SelIndexes[i - Grid.Selection.Top] := StrToIntDef(Grid.Cells[0, i], -1);
 
-    // Save any unsaved changes from the grid back to PoFile
+    // Save any unsaved changes from the grid back to FPoFile
     SaveGrids;   // or SaveGrids, depending on your code
 
-    // Delete the entries from PoFile (handles index ordering internally)
-    PoFile.DeleteEntriesByIndexes(SelIndexes);
+    // Delete the entries from FPoFile (handles index ordering internally)
+    FPoFile.DeleteEntriesByIndexes(SelIndexes);
 
     Changed := True;
-    FillGrids;   // rebuild the grid from updated PoFile (preserves filter & sort)
+    FillGrids;   // rebuild the grid from updated FPoFile (preserves filter & sort)
     Key := 0;
   end
   else
@@ -974,7 +985,7 @@ begin
   NewEntry.MsgId := '';
   NewEntry.MsgStrSimple := '';
   NewEntry.IsFuzzy := False;
-  NewIndex := PoFile.Entries.Add(NewEntry);   // returns the new index
+  NewIndex := FPoFile.Entries.Add(NewEntry);   // returns the new index
 
   // Put the permanent index into column 0 of the newly inserted row
   Grid.Cells[0, tIndex] := IntToStr(NewIndex);
@@ -1001,6 +1012,15 @@ end;
 procedure TformPoBatch.GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
 begin
   HintText := Grid.Cells[ACol, ARow];
+end;
+
+procedure TformPoBatch.GridSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
+begin
+  if aRow <> FLastRow then
+  begin
+    FLastRow := aRow;
+    UpdateCheck;
+  end;
 end;
 
 procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
@@ -1284,6 +1304,11 @@ begin
   filterChange(Self);
 end;
 
+procedure TformPoBatch.ImageSwitchClick(Sender: TObject);
+begin
+  SwitchCheck;
+end;
+
 { Properties Methods }
 
 procedure TformPoBatch.SetChanges(Value: boolean);
@@ -1372,7 +1397,7 @@ var
   FileExt: string;
   j: integer;
 begin
-  ValidExtensions := ['.po'];
+  ValidExtensions := ['.po', '.pot'];
 
   // Skip the first parameter (executable path)
   for i := 1 to ParamCount do
@@ -1432,7 +1457,7 @@ begin
   end;
 
   // Check if file is valid (optional - you can remove this if you want to accept any file)
-  ValidExtensions := ['.po'];
+  ValidExtensions := ['.po', '.pot'];
   FileExt := LowerCase(ExtractFileExt(AFileName));
 
   for i := 0 to High(ValidExtensions) do
@@ -1456,10 +1481,11 @@ function TformPoBatch.NewFile(AFileName: string = string.Empty): boolean;
 begin
   Result := True;
   try
-    PoFile.Reset;
-    PoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+    FPoFile.Reset;
+    FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
     FFileName := AFileName;
     Changed := False;
+    FPoFileBackup.Assign(FPoFile);
     FillGrids;
     SyncPath;
   except
@@ -1487,6 +1513,8 @@ begin
     Changed := False;
     FillGrids;
     SyncPath;
+    Grid.Row := 1;
+    UpdateCheck;
     Result := True;
   end;
 end;
@@ -1613,13 +1641,14 @@ begin
         Input.LoadFromFile(AFileName);
       end;
 
-      // Load into PoFile
+      // Load into FPoFile
       Stream := TStringStream.Create(Input.Text, TEncoding.UTF8);
       try
-        PoFile.LoadFromStream(Stream);
+        FPoFile.LoadFromStream(Stream);
       finally
         Stream.Free;
       end;
+      FPoFileBackup.Assign(FPoFile);
 
       UpdateCaption;
 
@@ -1652,17 +1681,17 @@ begin
   end;
 
   SaveGrids;
-  PoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+  FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
   FillGrids;
 
   Output := TStringList.Create;
   try
     try
-      // Save PoFile content into a string first
+      // Save FPoFile content into a string first
       begin
         Stream := TStringStream.Create(string.Empty, TEncoding.UTF8);
         try
-          PoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
+          FPoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
           Output.Text := Stream.DataString;     // get resulting string
         finally
           Stream.Free;
@@ -1677,6 +1706,7 @@ begin
 
       // Save file with UTF-8 encoding (without BOM)
       Output.SaveToFile(AFileName, TEncoding.UTF8);
+      FPoFileBackup.Assign(FPoFile);
 
       UpdateCaption;
 
@@ -1810,6 +1840,28 @@ begin
 
   FFileStatuses[Idx] := TPOFile.GetFileStatus(AFileName);
   ListPath.Invalidate;   // repaint the list
+end;
+
+procedure TformPoBatch.UpdateCheck;
+begin
+  if (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, Grid.Row] = '0') or (Grid.Cells[CELL_FUZZY, Grid.Row] = '1')) then
+    ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, FLastRow]);
+end;
+
+procedure TformPoBatch.SwitchCheck;
+begin
+  if Grid.Row > -1 then
+  begin
+    if ImageSwitch.ImageIndex = 0 then
+      ImageSwitch.ImageIndex := 1
+    else
+      ImageSwitch.ImageIndex := 0;
+
+    Grid.Cells[CELL_FUZZY, Grid.Row] := ImageSwitch.ImageIndex.ToString;
+
+    Changed := True;
+    Grid.Invalidate;
+  end;
 end;
 
 procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
@@ -1964,7 +2016,7 @@ var
   p: integer;
   Key, Value: string;
 begin
-  if not Assigned(PoFile) then
+  if not Assigned(FPoFile) then
   begin
     Grid.RowCount := Grid.FixedRows;
     GridHeaders.RowCount := GridHeaders.FixedRows;
@@ -1975,7 +2027,7 @@ begin
   FUpdatingGrid := True;
   GridHeaders.BeginUpdate;
   try
-    Headers := PoFile.Headers;
+    Headers := FPoFile.Headers;
     try
       GridHeaders.RowCount := GridHeaders.FixedRows + Headers.Count;
       for i := 0 to Headers.Count - 1 do
@@ -2010,9 +2062,9 @@ begin
     RowIndex := Grid.FixedRows;
     Grid.RowCount := RowIndex;
 
-    for i := 0 to PoFile.Entries.Count - 1 do
+    for i := 0 to FPoFile.Entries.Count - 1 do
     begin
-      Entry := PoFile.Entries[i];
+      Entry := FPoFile.Entries[i];
       if Entry.MsgId = '' then Continue;  // skip header entry
 
       // Apply filter if one is set
@@ -2080,7 +2132,7 @@ var
   Headers: TStringList;
   i: integer;
 begin
-  if not Assigned(PoFile) then Exit;
+  if not Assigned(FPoFile) then Exit;
 
   // Save headers from GridHeaders
   Headers := TStringList.Create;
@@ -2092,7 +2144,7 @@ begin
         Continue;
       Headers.Add(GridHeaders.Cells[1, i] + '=' + GridHeaders.Cells[2, i]);
     end;
-    PoFile.Headers := Headers;
+    FPoFile.Headers := Headers;
   finally
     Headers.Free;
   end;
@@ -2102,10 +2154,10 @@ begin
   begin
     // Column 0 holds the permanent entry index
     EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
-    if (EntryIndex < 1) or (EntryIndex >= PoFile.Entries.Count) then
+    if (EntryIndex < 1) or (EntryIndex >= FPoFile.Entries.Count) then
       Continue;
 
-    Entry := PoFile.Entries[EntryIndex];
+    Entry := FPoFile.Entries[EntryIndex];
 
     // Update text from cell CELL_TEXT
     if Trim(Grid.Cells[CELL_TEXT, Row]) = string.Empty then
@@ -2125,8 +2177,6 @@ begin
     // Update fuzzy flag from cell CELL_FUZZY
     Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
   end;
-
-  AUndoChanges.Enabled := False;
 end;
 
 end.

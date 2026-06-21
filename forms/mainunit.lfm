@@ -15,6 +15,7 @@ object formPoBatch: TformPoBatch
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDropFiles = FormDropFiles
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
   object PanelFilter: TPanel
@@ -222,6 +223,7 @@ object formPoBatch: TformPoBatch
       OnMouseWheel = GridMouseWheel
       OnPrepareCanvas = GridPrepareCanvas
       OnSelectEditor = GridSelectEditor
+      OnSelectCell = GridSelectCell
       OnTopLeftChanged = GridTopLeftChanged
       OnValidateEntry = GridValidateEntry
     end
@@ -261,7 +263,7 @@ object formPoBatch: TformPoBatch
         Caption = 'Comments'
       end
     end
-    object PanelInfo: TPanel
+    object PanelCheck: TPanel
       Left = 1
       Height = 35
       Top = 286
@@ -286,7 +288,7 @@ object formPoBatch: TformPoBatch
         ReadOnly = True
         TabOrder = 0
       end
-      object PanelCheck: TPanel
+      object PanelSwitch: TPanel
         Left = 390
         Height = 35
         Top = 0
@@ -298,7 +300,7 @@ object formPoBatch: TformPoBatch
         ParentBackground = False
         TabOrder = 1
         TabStop = True
-        object lblCheck: TLabel
+        object LabelSwitch: TLabel
           Left = 0
           Height = 35
           Top = 0
@@ -311,7 +313,7 @@ object formPoBatch: TformPoBatch
           Layout = tlCenter
           ParentFont = False
         end
-        object ImgCheck: TImage
+        object ImageSwitch: TImage
           Left = 120
           Height = 35
           Top = 0
@@ -321,7 +323,7 @@ object formPoBatch: TformPoBatch
           AutoSize = True
           Center = True
           Images = ImagesSwitch
-          OnClick = ImgCheckClick
+          OnClick = ImageSwitchClick
         end
       end
     end
