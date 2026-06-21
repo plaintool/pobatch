@@ -237,6 +237,7 @@ type
     procedure UpdateFileStatus(const AFileName: string);
     procedure UpdateCheck;
     procedure SwitchCheck;
+    function CurrentEntry: TPOEntry;
     procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure FixSplitters(Data: PtrInt);
     function CutGridsSelection: boolean;
@@ -1858,10 +1859,35 @@ begin
       ImageSwitch.ImageIndex := 0;
 
     Grid.Cells[CELL_FUZZY, Grid.Row] := ImageSwitch.ImageIndex.ToString;
+    SaveGrids;
+    Grid.Cells[CELL_VALID, Grid.Row] := IfThen(CurrentEntry.IsValid, '1', '0');
 
     Changed := True;
     Grid.Invalidate;
   end;
+end;
+
+function TformPoBatch.CurrentEntry: TPOEntry;
+var
+  Row: integer;
+  EntryIndex: integer;
+begin
+  Result := nil;
+  // Safety check: model must exist
+  if not Assigned(FPoFile) then
+    Exit;
+
+  Row := Grid.Row;
+  // Ignore header row or invalid selection
+  if (Row < Grid.FixedRows) or (Row >= Grid.RowCount) then
+    Exit;
+
+  // Column 0 stores the permanent index in PoFile.Entries
+  EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
+  if (EntryIndex < 0) or (EntryIndex >= FPoFile.Entries.Count) then
+    Exit;
+
+  Result := FPoFile.Entries[EntryIndex];
 end;
 
 procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
