@@ -256,7 +256,7 @@ type
     procedure HandleCommandLineParameters;
     function ValidateFileForOpen(const AFileName: string): boolean;
     function NewFile(AFileName: string = string.Empty): boolean;
-    function OpenFile(const AFileName: string): boolean;
+    function OpenFile(const AFileName: string; CheckCanClose: boolean = True): boolean;
     function OpenPath(const AFileName: string): boolean;
     procedure ClosePath;
     procedure UpdatePath;
@@ -513,7 +513,7 @@ begin
   if not IsCanClose then Exit;
 
   if dialogOpen.Execute then
-    OpenFile(dialogOpen.FileName);
+    OpenFile(dialogOpen.FileName, False);
 end;
 
 procedure TformPoBatch.MenuFileSaveClick(Sender: TObject);
@@ -1738,7 +1738,7 @@ begin
   end;
 end;
 
-function TformPoBatch.OpenFile(const AFileName: string): boolean;
+function TformPoBatch.OpenFile(const AFileName: string; CheckCanClose: boolean = True): boolean;
 begin
   Result := False;
 
@@ -1747,7 +1747,7 @@ begin
     Exit;
 
   // Check if we need to save current changes
-  if not IsCanClose then
+  if CheckCanClose and not IsCanClose then
     Exit;
 
   // Try to load the file
@@ -2058,7 +2058,7 @@ begin
     // Check whether the opened file resides inside the currently open folder
     FileInPath := (FPath <> '') and (ExtractFilePath(FFileName) = IncludeTrailingPathDelimiter(FPath));
 
-    if not FileInPath then
+    if (FPath <> '') and not FileInPath then
       // File belongs to the open folder: display folder and file name only
       BaseTitle := FPath + ', ' + FFileName
     else
@@ -2099,16 +2099,23 @@ procedure TformPoBatch.UpdateSwitch(aRow: integer = -1);
 begin
   if aRow = -1 then aRow := Grid.Row;
 
+  PanelCheck.Visible := Grid.RowCount > Grid.FixedRows;
+
   // Update switch
-  if (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, aRow] = '0') or (Grid.Cells[CELL_FUZZY, aRow] = '1')) then
+  if (PanelCheck.Visible) and (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, aRow] = '0') or (Grid.Cells[CELL_FUZZY, aRow] = '1')) then
   begin
     ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, aRow]);
     PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, clInfoBk, clWindow);
+    if ImageSwitch.ImageIndex = 0 then
+      LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark)
+    else
+      LabelSwitch.Font.Color := clWindowText;
   end
   else
   begin
     ImageSwitch.ImageIndex := 0;
     PanelCheck.Color := clWindow;
+    LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark);
   end;
 end;
 
