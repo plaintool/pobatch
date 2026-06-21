@@ -131,7 +131,7 @@ object formPoBatch: TformPoBatch
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
-      TabOrder = 2
+      TabOrder = 1
       TitleStyle = tsNative
       Visible = False
       OnExit = GridHeadersExit
@@ -154,7 +154,7 @@ object formPoBatch: TformPoBatch
     end
     object Grid: TStringGrid
       Left = 1
-      Height = 230
+      Height = 195
       Top = 91
       Width = 574
       Align = alClient
@@ -243,74 +243,86 @@ object formPoBatch: TformPoBatch
       Height = 100
       Top = 331
       Width = 574
-      ActivePage = PageInfo
+      ActivePage = PageTranslate
       Align = alBottom
       Constraints.MinHeight = 60
       TabHeight = 20
       TabIndex = 0
-      TabOrder = 3
+      TabOrder = 5
       TabPosition = tpBottom
       Visible = False
-      object PageInfo: TTabSheet
-        Caption = 'Information'
-        ClientHeight = 72
-        ClientWidth = 566
-        object PanelCheck: TPanel
-          Left = 382
-          Height = 72
-          Top = 0
-          Width = 184
-          Align = alRight
-          BevelOuter = bvNone
-          ClientHeight = 72
-          ClientWidth = 184
-          Color = clWindow
-          ParentBackground = False
-          ParentColor = False
-          TabOrder = 0
-          object lblCheck: TLabel
-            Left = 0
-            Height = 72
-            Top = 0
-            Width = 120
-            Align = alLeft
-            Alignment = taCenter
-            AutoSize = False
-            Caption = 'Need Validation'
-            Font.Height = -16
-            Layout = tlCenter
-            ParentFont = False
-          end
-          object ImgCheck: TImage
-            Left = 120
-            Height = 72
-            Top = 0
-            Width = 64
-            Align = alClient
-            Anchors = [akTop, akLeft, akBottom]
-            AutoSize = True
-            Center = True
-            Images = ImagesSwitch
-            OnClick = ImgCheckClick
-          end
-        end
-        object Memo1: TMemo
-          Left = 0
-          Height = 72
-          Top = 0
-          Width = 382
-          Align = alClient
-          BorderStyle = bsNone
-          Color = clWindow
-          ReadOnly = True
-          TabOrder = 1
-        end
+      object PageTranslate: TTabSheet
+        Caption = 'Translate'
       end
-      object TabSheet1: TTabSheet
-        Caption = 'Text'
+      object PagePlural: TTabSheet
+        Caption = 'Plural'
       end
-      object TabSheet2: TTabSheet
+      object PageComments: TTabSheet
         Caption = 'Comments'
+      end
+    end
+    object PanelInfo: TPanel
+      Left = 1
+      Height = 35
+      Top = 286
+      Width = 574
+      Align = alBottom
+      BevelOuter = bvNone
+      ClientHeight = 35
+      ClientWidth = 574
+      Color = clWindow
+      Constraints.MinHeight = 35
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 3
+      object MemoCheck: TMemo
+        Left = 0
+        Height = 35
+        Top = 0
+        Width = 390
+        Align = alClient
+        BorderStyle = bsNone
+        ParentColor = True
+        ReadOnly = True
+        TabOrder = 0
+      end
+      object PanelCheck: TPanel
+        Left = 390
+        Height = 35
+        Top = 0
+        Width = 184
+        Align = alRight
+        BevelOuter = bvNone
+        ClientHeight = 35
+        ClientWidth = 184
+        ParentBackground = False
+        TabOrder = 1
+        TabStop = True
+        object lblCheck: TLabel
+          Left = 0
+          Height = 35
+          Top = 0
+          Width = 120
+          Align = alLeft
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Need Validation'
+          Font.Height = -16
+          Layout = tlCenter
+          ParentFont = False
+        end
+        object ImgCheck: TImage
+          Left = 120
+          Height = 35
+          Top = 0
+          Width = 64
+          Align = alClient
+          Anchors = [akTop, akLeft, akBottom]
+          AutoSize = True
+          Center = True
+          Images = ImagesSwitch
+          OnClick = ImgCheckClick
+        end
       end
     end
   end
@@ -423,10 +435,10 @@ object formPoBatch: TformPoBatch
         Caption = 'Headers'
         OnClick = MenuHeadersClick
       end
-      object MenuInfoPages: TMenuItem
+      object MeniTranslatePanel: TMenuItem
         AutoCheck = True
-        Caption = 'Information Pages'
-        OnClick = MenuInfoPagesClick
+        Caption = 'Translate Panel'
+        OnClick = MeniTranslatePanelClick
       end
       object Separator9: TMenuItem
         Caption = '-'

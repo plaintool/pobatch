@@ -57,7 +57,7 @@ type
     lblCheck: TLabel;
     ListPath: TListBox;
     MainMenu: TMainMenu;
-    Memo1: TMemo;
+    MemoCheck: TMemo;
     MenuFile: TMenuItem;
     MenuFileOpen: TMenuItem;
     MenuFileSave: TMenuItem;
@@ -75,7 +75,7 @@ type
     MenuCopy: TMenuItem;
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
-    MenuInfoPages: TMenuItem;
+    MeniTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
     MenuPopupCopy: TMenuItem;
     MenuPopupPaste: TMenuItem;
@@ -95,6 +95,7 @@ type
     MenuView: TMenuItem;
     MenuPathOpen: TMenuItem;
     Pages: TPageControl;
+    PanelInfo: TPanel;
     PanelCheck: TPanel;
     PanelClient: TPanel;
     PanelFilter: TPanel;
@@ -116,9 +117,9 @@ type
     SplitterPath: TSplitter;
     StatusBar: TStatusBar;
     Grid: TStringGrid;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    PageInfo: TTabSheet;
+    PageTranslate: TTabSheet;
+    PageComments: TTabSheet;
+    PagePlural: TTabSheet;
     { Form Events }
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -136,7 +137,7 @@ type
     procedure MenuFileOpenClick(Sender: TObject);
     procedure MenuFileSaveClick(Sender: TObject);
     procedure MenuFileSaveAsClick(Sender: TObject);
-    procedure MenuInfoPagesClick(Sender: TObject);
+    procedure MeniTranslatePanelClick(Sender: TObject);
     procedure MenuPathOpenClick(Sender: TObject);
     procedure MenuPathCloseClick(Sender: TObject);
     procedure MenuFileExitClick(Sender: TObject);
@@ -530,10 +531,10 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-procedure TformPoBatch.MenuInfoPagesClick(Sender: TObject);
+procedure TformPoBatch.MeniTranslatePanelClick(Sender: TObject);
 begin
-  Pages.Visible := MenuInfoPages.Checked;
-  SplitterPages.Visible := MenuInfoPages.Checked;
+  Pages.Visible := MeniTranslatePanel.Checked;
+  SplitterPages.Visible := MeniTranslatePanel.Checked;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
@@ -2106,19 +2107,22 @@ begin
 
     Entry := PoFile.Entries[EntryIndex];
 
-    // Update translation from column COL_TRANSLATION
+    // Update text from cell CELL_TEXT
     if Trim(Grid.Cells[CELL_TEXT, Row]) = string.Empty then
       Entry.MsgId := UNDEFINED
     else
       Entry.MsgId := Grid.Cells[CELL_TEXT, Row];
 
-    // Update translation from column COL_TRANSLATION
+    // Update translation from cell CELL_TRANSLATION
     Entry.MsgStrSimple := Grid.Cells[CELL_TRANSLATION, Row];
 
-    // Update translation from column COL_TRANSLATION
+    // Update reference from cell CELL_REFERENCE
     Entry.Reference := Grid.Cells[CELL_REFERENCE, Row];
 
-    // Update fuzzy flag from column COL_FUZZY
+    // Update context from cell CELL_CONTEXT
+    Entry.Reference := Grid.Cells[CELL_CONTEXT, Row];
+
+    // Update fuzzy flag from cell CELL_FUZZY
     Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
   end;
 
