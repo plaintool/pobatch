@@ -1062,7 +1062,11 @@ end;
 
 procedure TformPoBatch.GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
 begin
-  HintText := Grid.Cells[ACol, ARow];
+  if ACol = CELL_TEXT then
+    HintText := Grid.Cells[ACol, ARow] + ifthen(Grid.Cells[CELL_CONTEXT, ARow].IsEmpty, string.Empty, sLineBreak) +
+      Grid.Cells[CELL_CONTEXT, ARow]
+  else
+    HintText := Grid.Cells[ACol, ARow];
 end;
 
 procedure TformPoBatch.GridSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
