@@ -1,10 +1,10 @@
 object formPoBatch: TformPoBatch
   Left = 318
-  Height = 480
+  Height = 520
   Top = 250
   Width = 740
   Caption = 'formPoBatch'
-  ClientHeight = 480
+  ClientHeight = 520
   ClientWidth = 740
   Color = clWindow
   KeyPreview = True
@@ -69,7 +69,7 @@ object formPoBatch: TformPoBatch
   end
   object ListPath: TListBox
     Left = 5
-    Height = 432
+    Height = 472
     Top = 25
     Width = 144
     Align = alLeft
@@ -85,7 +85,7 @@ object formPoBatch: TformPoBatch
   end
   object SplitterPath: TSplitter
     Left = 149
-    Height = 437
+    Height = 477
     Top = 20
     Width = 10
     AutoSnap = False
@@ -95,13 +95,13 @@ object formPoBatch: TformPoBatch
   end
   object PanelClient: TPanel
     Left = 159
-    Height = 432
+    Height = 472
     Top = 25
     Width = 576
     Align = alClient
     BorderSpacing.Top = 5
     BorderSpacing.Right = 5
-    ClientHeight = 432
+    ClientHeight = 472
     ClientWidth = 576
     ParentBackground = False
     TabOrder = 0
@@ -155,7 +155,7 @@ object formPoBatch: TformPoBatch
     end
     object Grid: TStringGrid
       Left = 1
-      Height = 195
+      Height = 135
       Top = 91
       Width = 574
       Align = alClient
@@ -231,7 +231,7 @@ object formPoBatch: TformPoBatch
       Cursor = crVSplit
       Left = 1
       Height = 10
-      Top = 321
+      Top = 261
       Width = 574
       Align = alBottom
       AutoSnap = False
@@ -242,12 +242,12 @@ object formPoBatch: TformPoBatch
     end
     object Pages: TPageControl
       Left = 1
-      Height = 100
-      Top = 331
+      Height = 200
+      Top = 271
       Width = 574
       ActivePage = PageTranslate
       Align = alBottom
-      Constraints.MinHeight = 60
+      Constraints.MinHeight = 100
       TabHeight = 20
       TabIndex = 0
       TabOrder = 5
@@ -255,6 +255,90 @@ object formPoBatch: TformPoBatch
       Visible = False
       object PageTranslate: TTabSheet
         Caption = 'Translate'
+        ClientHeight = 172
+        ClientWidth = 566
+        object PanelPageTranslation: TPanel
+          Left = 0
+          Height = 172
+          Top = 0
+          Width = 566
+          Align = alClient
+          BevelOuter = bvNone
+          ClientHeight = 172
+          ClientWidth = 566
+          Color = clBtnFace
+          ParentBackground = False
+          ParentColor = False
+          TabOrder = 0
+          OnResize = PanelPageTranslationResize
+          object PanelSource: TPanel
+            Left = 0
+            Height = 81
+            Top = 0
+            Width = 566
+            Align = alClient
+            BevelOuter = bvNone
+            ClientHeight = 81
+            ClientWidth = 566
+            Color = clWindow
+            ParentBackground = False
+            ParentColor = False
+            TabOrder = 1
+            object MemoSource: TMemo
+              Left = 5
+              Height = 76
+              Top = 5
+              Width = 556
+              Align = alClient
+              BorderSpacing.Left = 5
+              BorderSpacing.Top = 5
+              BorderSpacing.Right = 5
+              BorderStyle = bsNone
+              TabOrder = 0
+              OnChange = MemoSourceChange
+            end
+          end
+          object SplitterTranslate: TSplitter
+            Cursor = crVSplit
+            Left = 0
+            Height = 10
+            Top = 81
+            Width = 566
+            Align = alBottom
+            AutoSnap = False
+            Color = clHighlight
+            ParentColor = False
+            ResizeAnchor = akBottom
+            OnMoved = SplitterTranslateMoved
+          end
+          object PanelTranslation: TPanel
+            Left = 0
+            Height = 81
+            Top = 91
+            Width = 566
+            Align = alBottom
+            BevelOuter = bvNone
+            ClientHeight = 81
+            ClientWidth = 566
+            Color = clWindow
+            ParentBackground = False
+            ParentColor = False
+            TabOrder = 2
+            object MemoTranslation: TMemo
+              Left = 5
+              Height = 76
+              Top = 0
+              Width = 556
+              Align = alClient
+              BorderSpacing.Left = 5
+              BorderSpacing.Right = 5
+              BorderSpacing.Bottom = 5
+              BorderStyle = bsNone
+              TabOrder = 0
+              OnChange = MemoTranslationChange
+            end
+          end
+        end
       end
       object PagePlural: TTabSheet
         Caption = 'Plural'
@@ -266,13 +350,13 @@ object formPoBatch: TformPoBatch
     object PanelCheck: TPanel
       Left = 1
       Height = 35
-      Top = 286
+      Top = 226
       Width = 574
       Align = alBottom
       BevelOuter = bvNone
       ClientHeight = 35
       ClientWidth = 574
-      Color = clWindow
+      Color = clInfoBk
       Constraints.MinHeight = 35
       ParentBackground = False
       ParentColor = False
@@ -281,7 +365,7 @@ object formPoBatch: TformPoBatch
         Left = 0
         Height = 35
         Top = 0
-        Width = 390
+        Width = 374
         Align = alClient
         BorderStyle = bsNone
         ParentColor = True
@@ -289,14 +373,14 @@ object formPoBatch: TformPoBatch
         TabOrder = 0
       end
       object PanelSwitch: TPanel
-        Left = 390
+        Left = 374
         Height = 35
         Top = 0
-        Width = 184
+        Width = 200
         Align = alRight
         BevelOuter = bvNone
         ClientHeight = 35
-        ClientWidth = 184
+        ClientWidth = 200
         ParentBackground = False
         TabOrder = 1
         TabStop = True
@@ -307,8 +391,8 @@ object formPoBatch: TformPoBatch
           Left = 0
           Height = 35
           Top = 0
-          Width = 120
-          Align = alLeft
+          Width = 128
+          Align = alClient
           Alignment = taCenter
           AutoSize = False
           Caption = 'Need Validation'
@@ -317,11 +401,11 @@ object formPoBatch: TformPoBatch
           ParentFont = False
         end
         object ImageSwitch: TImage
-          Left = 120
+          Left = 128
           Height = 35
           Top = 0
-          Width = 64
-          Align = alClient
+          Width = 72
+          Align = alRight
           Anchors = [akTop, akLeft, akBottom]
           AutoSize = True
           Center = True
@@ -334,7 +418,7 @@ object formPoBatch: TformPoBatch
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 457
+    Top = 497
     Width = 740
     Panels = <>
   end
@@ -440,10 +524,10 @@ object formPoBatch: TformPoBatch
         Caption = 'Headers'
         OnClick = MenuHeadersClick
       end
-      object MeniTranslatePanel: TMenuItem
+      object MenuTranslatePanel: TMenuItem
         AutoCheck = True
-        Caption = 'Translate Panel'
-        OnClick = MeniTranslatePanelClick
+        Caption = 'Translations Panel'
+        OnClick = MenuTranslatePanelClick
       end
       object Separator9: TMenuItem
         Caption = '-'
@@ -505,18 +589,21 @@ object formPoBatch: TformPoBatch
       Caption = 'Cut'
       ShortCut = 16472
       OnExecute = ACutExecute
+      OnUpdate = ACutUpdate
     end
     object ACopy: TAction
       Category = 'Edit'
       Caption = 'Copy'
       ShortCut = 16451
       OnExecute = ACopyExecute
+      OnUpdate = ACopyUpdate
     end
     object APaste: TAction
       Category = 'Edit'
       Caption = 'Paste'
       ShortCut = 16470
       OnExecute = APasteExecute
+      OnUpdate = APasteUpdate
     end
     object ADelete: TAction
       Category = 'Edit'
@@ -530,6 +617,7 @@ object formPoBatch: TformPoBatch
       Caption = 'Select All'
       ShortCut = 16449
       OnExecute = ASelectAllExecute
+      OnUpdate = ASelectAllUpdate
     end
     object ACopySourceText: TAction
       Category = 'Edit'

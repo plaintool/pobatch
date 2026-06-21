@@ -57,7 +57,9 @@ type
     LabelSwitch: TLabel;
     ListPath: TListBox;
     MainMenu: TMainMenu;
+    MemoSource: TMemo;
     MemoCheck: TMemo;
+    MemoTranslation: TMemo;
     MenuFile: TMenuItem;
     MenuFileOpen: TMenuItem;
     MenuFileSave: TMenuItem;
@@ -75,7 +77,7 @@ type
     MenuCopy: TMenuItem;
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
-    MeniTranslatePanel: TMenuItem;
+    MenuTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
     MenuPopupCopy: TMenuItem;
     MenuPopupPaste: TMenuItem;
@@ -95,6 +97,9 @@ type
     MenuView: TMenuItem;
     MenuPathOpen: TMenuItem;
     Pages: TPageControl;
+    PanelTranslation: TPanel;
+    PanelSource: TPanel;
+    PanelPageTranslation: TPanel;
     PanelCheck: TPanel;
     PanelSwitch: TPanel;
     PanelClient: TPanel;
@@ -112,6 +117,7 @@ type
     Separator7: TMenuItem;
     Separator8: TMenuItem;
     Separator9: TMenuItem;
+    SplitterTranslate: TSplitter;
     SplitterHeaders: TSplitter;
     SplitterPages: TSplitter;
     SplitterPath: TSplitter;
@@ -137,7 +143,7 @@ type
     procedure MenuFileOpenClick(Sender: TObject);
     procedure MenuFileSaveClick(Sender: TObject);
     procedure MenuFileSaveAsClick(Sender: TObject);
-    procedure MeniTranslatePanelClick(Sender: TObject);
+    procedure MenuTranslatePanelClick(Sender: TObject);
     procedure MenuPathOpenClick(Sender: TObject);
     procedure MenuPathCloseClick(Sender: TObject);
     procedure MenuFileExitClick(Sender: TObject);
@@ -153,8 +159,12 @@ type
     procedure ACutExecute(Sender: TObject);
     procedure APasteExecute(Sender: TObject);
     procedure ADeleteExecute(Sender: TObject);
-    procedure ADeleteUpdate(Sender: TObject);
     procedure ASelectAllExecute(Sender: TObject);
+    procedure ACutUpdate(Sender: TObject);
+    procedure ACopyUpdate(Sender: TObject);
+    procedure APasteUpdate(Sender: TObject);
+    procedure ADeleteUpdate(Sender: TObject);
+    procedure ASelectAllUpdate(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
@@ -193,9 +203,13 @@ type
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
     procedure ImageSwitchClick(Sender: TObject);
+    procedure PanelPageTranslationResize(Sender: TObject);
     procedure PanelSwitchEnter(Sender: TObject);
     procedure PanelSwitchExit(Sender: TObject);
     procedure PanelSwitchPaint(Sender: TObject);
+    procedure SplitterTranslateMoved(Sender: TObject);
+    procedure MemoSourceChange(Sender: TObject);
+    procedure MemoTranslationChange(Sender: TObject);
   private
     Memo: TMemo;
     PanelMemo: TPanel;
@@ -218,9 +232,11 @@ type
     FAutoCheckUpdates: boolean;
     FSortOrder: TSortOrder;
     FSortColumn: integer;
+    FSplitRatio: double;
 
     { Properties Methods }
     procedure SetChanges(Value: boolean);
+    procedure SetSplitRatio(Value: double);
 
     { Methods File Operations }
     function IsCanClose: boolean;
@@ -239,9 +255,10 @@ type
     procedure UpdateRowHeights;
     procedure UpdateCaption;
     procedure UpdateFileStatus(const AFileName: string);
-    procedure UpdateCheck;
+    procedure UpdateTranslatePanel(aRow: integer = -1);
     procedure UpdateValid(aRow: integer = -1);
     procedure SwitchCheck;
+    function CanActionEnable: boolean;
     function RowEntry(aRow: integer = -1): TPOEntry;
     procedure DelayedSetMemoFocus(Data: PtrInt);
     procedure FixSplitters(Data: PtrInt);
@@ -260,6 +277,7 @@ type
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
     property SortOrder: TSortOrder read FSortOrder write FSortOrder;
     property SortColumn: integer read FSortColumn write FSortColumn;
+    property SplitRatio: double read FSplitRatio write SetSplitRatio;
   end;
 
 var
@@ -333,6 +351,7 @@ begin
   FSortOrder := soAscending;
   FLastPathIndex := -1;
   FLastRow := -1;
+  FSplitRatio := 0.5;
 
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
@@ -388,6 +407,8 @@ begin
     else
       NewFile;
   end;
+
+  PanelTranslation.Height := Round((PanelSource.Height + PanelTranslation.Height) * FSplitRatio);
 
   if AutoCheckUpdates then
   begin
@@ -548,10 +569,10 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-procedure TformPoBatch.MeniTranslatePanelClick(Sender: TObject);
+procedure TformPoBatch.MenuTranslatePanelClick(Sender: TObject);
 begin
-  Pages.Visible := MeniTranslatePanel.Checked;
-  SplitterPages.Visible := MeniTranslatePanel.Checked;
+  Pages.Visible := MenuTranslatePanel.Checked;
+  SplitterPages.Visible := MenuTranslatePanel.Checked;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
@@ -619,14 +640,34 @@ begin
   DeleteGridsSelection;
 end;
 
-procedure TformPoBatch.ADeleteUpdate(Sender: TObject);
-begin
-  ADelete.Enabled := ((Assigned(Memo)) and not Memo.Focused) and not Filter.Focused;
-end;
-
 procedure TformPoBatch.ASelectAllExecute(Sender: TObject);
 begin
   SelectGridsAll;
+end;
+
+procedure TformPoBatch.ACutUpdate(Sender: TObject);
+begin
+  ACut.Enabled := CanActionEnable;
+end;
+
+procedure TformPoBatch.ACopyUpdate(Sender: TObject);
+begin
+  ACopy.Enabled := CanActionEnable;
+end;
+
+procedure TformPoBatch.APasteUpdate(Sender: TObject);
+begin
+  APaste.Enabled := CanActionEnable;
+end;
+
+procedure TformPoBatch.ADeleteUpdate(Sender: TObject);
+begin
+  ADelete.Enabled := CanActionEnable;
+end;
+
+procedure TformPoBatch.ASelectAllUpdate(Sender: TObject);
+begin
+  ASelectAll.Enabled := CanActionEnable;
 end;
 
 procedure TformPoBatch.AClearIdenticalExecute(Sender: TObject);
@@ -749,6 +790,8 @@ begin
     Grid.Options := Grid.Options - [goAutoAddRows]
   else
     Grid.Options := Grid.Options + [goAutoAddRows];
+
+  MemoSource.ReadOnly := AEditTranslationOnly.Checked;
 end;
 
 { Grid Headers Events }
@@ -1024,7 +1067,7 @@ begin
   if aRow <> FLastRow then
   begin
     FLastRow := aRow;
-    UpdateCheck;
+    UpdateTranslatePanel(aRow);
   end;
 end;
 
@@ -1172,8 +1215,11 @@ procedure TformPoBatch.MemoExit(Sender: TObject);
 begin
   Grid.EditorMode := False;
 
-  if Grid.Col = CELL_TRANSLATION then
+  if (Grid.Col = CELL_TRANSLATION) or ((Grid.Col = CELL_TEXT) and (not MenuEditTranslationOnly.Checked)) then
+  begin
+    UpdateTranslatePanel;
     UpdateValid;
+  end;
 
   Grid.Invalidate;
 end;
@@ -1252,7 +1298,12 @@ begin
     FFileName := FullPath;
     Changed := False;
     FillGrids;
-    // FLastPathIndex already points to Idx – no change needed
+    if Grid.RowCount > 1 then
+    begin
+      Grid.Row := 1;
+      FLastRow := 1;
+      UpdateTranslatePanel;
+    end;
   end
   else
   begin
@@ -1320,6 +1371,11 @@ begin
   SwitchCheck;
 end;
 
+procedure TformPoBatch.PanelPageTranslationResize(Sender: TObject);
+begin
+  PanelTranslation.Height := Round((PanelSource.Height + PanelTranslation.Height) * FSplitRatio);
+end;
+
 procedure TformPoBatch.PanelSwitchEnter(Sender: TObject);
 begin
   FPanelFocused := True;
@@ -1338,6 +1394,33 @@ begin
     PanelSwitch.Canvas.DrawFocusRect(PanelSwitch.ClientRect);
 end;
 
+procedure TformPoBatch.SplitterTranslateMoved(Sender: TObject);
+begin
+  FSplitRatio := PanelTranslation.Height / (PanelSource.Height + PanelTranslation.Height);
+end;
+
+procedure TformPoBatch.MemoSourceChange(Sender: TObject);
+begin
+  if MemoSource.Text <> Grid.Cells[CELL_TEXT, Grid.Row] then
+  begin
+    Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
+    Changed := True;
+    UpdateValid;
+    UpdateRowHeights;
+  end;
+end;
+
+procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
+begin
+  if MemoTranslation.Text <> Grid.Cells[CELL_TRANSLATION, Grid.Row] then
+  begin
+    Grid.Cells[CELL_TRANSLATION, Grid.Row] := MemoTranslation.Text;
+    Changed := True;
+    UpdateValid;
+    UpdateRowHeights;
+  end;
+end;
+
 { Properties Methods }
 
 procedure TformPoBatch.SetChanges(Value: boolean);
@@ -1345,6 +1428,11 @@ begin
   FChanged := Value;
   AUndoChanges.Enabled := FChanged;
   UpdateCaption;
+end;
+
+procedure TformPoBatch.SetSplitRatio(Value: double);
+begin
+  FSplitRatio := Value;
 end;
 
 { Methods File Operations }
@@ -1542,8 +1630,14 @@ begin
     Changed := False;
     FillGrids;
     SyncPath;
-    Grid.Row := 1;
-    UpdateCheck;
+
+    if Grid.RowCount > 1 then
+    begin
+      Grid.Row := 1;
+      FLastRow := 1;
+      UpdateTranslatePanel;
+    end;
+
     Result := True;
   end;
 end;
@@ -1680,7 +1774,6 @@ begin
       FPoFileBackup.Assign(FPoFile);
 
       UpdateCaption;
-
       Result := True;
     except
       on E: Exception do
@@ -1871,10 +1964,30 @@ begin
   ListPath.Invalidate;   // repaint the list
 end;
 
-procedure TformPoBatch.UpdateCheck;
+procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
 begin
-  if (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, FLastRow] = '0') or (Grid.Cells[CELL_FUZZY, FLastRow] = '1')) then
-    ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, FLastRow]);
+  if aRow = -1 then aRow := Grid.Row;
+
+  // Update switch
+  if (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, aRow] = '0') or (Grid.Cells[CELL_FUZZY, aRow] = '1')) then
+  begin
+    ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, aRow]);
+    PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, clInfoBk, clWindow);
+  end;
+
+  // Update Translations
+  MemoSource.OnChange := nil;
+  try
+    MemoSource.Text := Grid.Cells[CELL_TEXT, aRow];
+  finally
+    MemoSource.OnChange := @MemoSourceChange;
+  end;
+  MemoTranslation.OnChange := nil;
+  try
+    MemoTranslation.Text := Grid.Cells[CELL_TRANSLATION, aRow];
+  finally
+    MemoTranslation.OnChange := @MemoTranslationChange;
+  end;
 end;
 
 procedure TformPoBatch.UpdateValid(aRow: integer = -1);
@@ -1899,6 +2012,11 @@ begin
     Changed := True;
     Grid.Invalidate;
   end;
+end;
+
+function TformPoBatch.CanActionEnable: boolean;
+begin
+  Result := ((Assigned(Memo)) and not Memo.Focused) and not Filter.Focused and not MemoSource.Focused and not MemoTranslation.Focused;
 end;
 
 function TformPoBatch.RowEntry(aRow: integer = -1): TPOEntry;
@@ -1970,6 +2088,8 @@ begin
 end;
 
 function TformPoBatch.PasteGridsSelection: boolean;
+var
+  i: integer;
 begin
   Result := False;
   if ActiveControl = Grid then
@@ -1985,6 +2105,12 @@ begin
   if Result then
   begin
     Changed := True;
+    if (Grid.Col = CELL_TRANSLATION) or ((Grid.Col = CELL_TEXT) and (not MenuEditTranslationOnly.Checked)) then
+    begin
+      UpdateTranslatePanel;
+      for i := Grid.FixedRows to Grid.RowCount - 1 do
+        UpdateValid(i);
+    end;
     UpdateRowHeights;
   end;
 end;

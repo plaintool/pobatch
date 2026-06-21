@@ -86,6 +86,9 @@ begin
     JSONObj.Add('WindowState', Ord(Form.WindowState));
 
     JSONObj.Add('ListPathWidth', Form.ListPath.Width);
+    JSONObj.Add('PagesHeight', Form.Pages.Height);
+    JSONObj.Add('SplitRatio', Form.SplitRatio);
+
     JSONObj.Add('GridHeadersHeight', Form.GridHeaders.Height);
     JSONObj.Add('GridHeadersColumnNameWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width);
     JSONObj.Add('GridHeadersColumnValueWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width);
@@ -97,6 +100,7 @@ begin
     JSONObj.Add('SortOrder', Ord(Form.SortOrder));
 
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
+    JSONObj.Add('MenuTranslatePanelChecked', Form.MenuTranslatePanel.Checked);
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
     JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
 
@@ -158,6 +162,14 @@ begin
       if JSONObj.FindPath('ListPathWidth') <> nil then
         Form.ListPath.Width := JSONObj.FindPath('ListPathWidth').AsInteger;
 
+      if JSONObj.FindPath('PagesHeight') <> nil then
+        Form.Pages.Height := JSONObj.FindPath('PagesHeight').AsInteger;
+
+      if JSONObj.FindPath('SplitRatio') <> nil then
+        Form.SplitRatio := JSONObj.FindPath('SplitRatio').AsFloat
+      else
+        Form.SplitRatio := 0.5;
+
       if JSONObj.FindPath('GridHeadersHeight') <> nil then
         Form.GridHeaders.Height := JSONObj.FindPath('GridHeadersHeight').AsInteger;
 
@@ -190,7 +202,12 @@ begin
         if Form.MenuHeaders.Checked and Assigned(Form.MenuHeaders.OnClick) then
           Form.MenuHeaders.OnClick(Form.MenuHeaders);
       end;
-
+      if JSONObj.FindPath('MenuTranslatePanelChecked') <> nil then
+      begin
+        Form.MenuTranslatePanel.Checked := JSONObj.FindPath('MenuTranslatePanelChecked').AsBoolean;
+        if Form.MenuTranslatePanel.Checked and Assigned(Form.MenuTranslatePanel.OnClick) then
+          Form.MenuTranslatePanel.OnClick(Form.MenuTranslatePanel);
+      end;
       if JSONObj.FindPath('MenuColumnReferenceChecked') <> nil then
       begin
         Form.MenuColumnReference.Checked := JSONObj.FindPath('MenuColumnReferenceChecked').AsBoolean;
