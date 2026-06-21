@@ -135,11 +135,11 @@ object formPoBatch: TformPoBatch
       TabOrder = 0
       TitleStyle = tsNative
       Visible = False
-      OnColRowInserted = GridHeadersColRowInserted
-      OnExit = GridHeadersExit
+      OnColRowInserted = GridUniversalColRowInserted
+      OnExit = GridUniversalExit
       OnGetCellHint = GridHeadersGetCellHint
-      OnKeyDown = GridHeadersKeyDown
-      OnPrepareCanvas = GridHeadersPrepareCanvas
+      OnKeyDown = GridsUniversalKeyDown
+      OnPrepareCanvas = GridUniversalPrepareCanvas
       OnValidateEntry = GridHeadersValidateEntry
     end
     object SplitterHeaders: TSplitter
@@ -385,7 +385,10 @@ object formPoBatch: TformPoBatch
               RowCount = 1
               TabOrder = 1
               TitleStyle = tsNative
-              OnColRowInserted = GridPluralColRowInserted
+              OnColRowInserted = GridUniversalColRowInserted
+              OnExit = GridUniversalExit
+              OnKeyDown = GridsUniversalKeyDown
+              OnPrepareCanvas = GridUniversalPrepareCanvas
               OnValidateEntry = GridPluralValidateEntry
             end
           end
@@ -434,11 +437,11 @@ object formPoBatch: TformPoBatch
           RowCount = 1
           TabOrder = 0
           TitleStyle = tsNative
-          OnColRowInserted = GridCommentsColRowInserted
-          OnExit = GridCommentsExit
+          OnColRowInserted = GridUniversalColRowInserted
+          OnExit = GridUniversalExit
           OnGetCellHint = GridCommentsGetCellHint
-          OnKeyDown = GridCommentsKeyDown
-          OnPrepareCanvas = GridCommentsPrepareCanvas
+          OnKeyDown = GridsUniversalKeyDown
+          OnPrepareCanvas = GridUniversalPrepareCanvas
           OnValidateEntry = GridCommentsValidateEntry
         end
       end

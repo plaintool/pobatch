@@ -171,22 +171,18 @@ type
     procedure AClearIdenticalExecute(Sender: TObject);
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
+    { Grids Universal }
+    procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+    procedure GridUniversalExit(Sender: TObject);
+    procedure GridUniversalPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     { Grid Headers Events }
-    procedure GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-    procedure GridHeadersColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
-    procedure GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
-    procedure GridHeadersExit(Sender: TObject);
     procedure GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
     { Grid Plural Events }
     procedure GridPluralValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-    procedure GridPluralColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     { Grid Comments Events }
-    procedure GridCommentsKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridCommentsValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-    procedure GridCommentsColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
-    procedure GridCommentsPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
-    procedure GridCommentsExit(Sender: TObject);
     procedure GridCommentsGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
     { Grid Events }
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -309,6 +305,8 @@ const
   COLUMN_HEADERS_VALUE = 1;
   CELL_HEADERS_NAME = 1;
   CELL_HEADERS_VALUE = 2;
+  CELL_COMMENTS_TYPE = 1;
+  CELL_COMMENTS_VALUE = 2;
 
   COLUMN_VALID = 0;
   COLUMN_TEXT = 1;
@@ -377,6 +375,8 @@ begin
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
   GridHeaders.GridLineColor := ThemeColor(clLine, clLineDark);
+  GridPlural.GridLineColor := ThemeColor(clLine, clLineDark);
+  GridComments.GridLineColor := ThemeColor(clLine, clLineDark);
 
   LoadFormSettings(Self);
 
@@ -810,6 +810,9 @@ begin
   MemoSource.ReadOnly := AEditTranslationOnly.Checked;
   MemoPlural.ReadOnly := AEditTranslationOnly.Checked;
 
+  GridPlural.EditorMode := False;
+  GridComments.EditorMode := False;
+
   if AEditTranslationOnly.Checked then
   begin
     GridHeaders.Options := GridHeaders.Options - [goAutoAddRows];
@@ -828,26 +831,30 @@ begin
   end;
 end;
 
-{ Grid Headers Events }
+{ Grids Universal }
 
-procedure TformPoBatch.GridHeadersKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+procedure TformPoBatch.GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
   SelRow: integer;
+  GridAny: TStringGrid;
 begin
+  GridAny := (Sender as TStringGrid);
+  if not Assigned(GridAny) then exit;
+
   if not AEditTranslationOnly.Checked and (ssCtrl in Shift) and (Key = VK_DELETE) then
   begin
     Key := 0; // swallow the key to prevent default handling
 
-    SelRow := GridHeaders.Row;
-    // Do not delete fixed header rows
-    if SelRow < GridHeaders.FixedRows then Exit;
+    SelRow := GridAny.Row;
+    // Do not delete fixed rows
+    if SelRow < GridAny.FixedRows then Exit;
 
     // Ask for confirmation before deleting
-    if MessageDlg('Delete header?', 'Are you sure you want to delete the selected header?', mtConfirmation, mbYesNo, 0) <> mrYes then
+    if MessageDlg('Delete row', 'Are you sure you want to delete the selected row?', mtConfirmation, mbYesNo, 0) <> mrYes then
       Exit;
 
-    // Remove the selected row from the grid
-    GridHeaders.DeleteRow(SelRow);
+    // Remove the selected row from the GridAny
+    GridAny.DeleteRow(SelRow);
 
     Changed := True;
   end
@@ -861,12 +868,12 @@ begin
   else
   if not AEditTranslationOnly.Checked and (Key = VK_INSERT) then
   begin
-    GridHeaders.InsertColRow(False, GridHeaders.Row + 1);
-    GridHeaders.Row := GridHeaders.ROw + 1;
+    GridAny.InsertColRow(False, GridAny.Row + 1);
+    GridAny.Row := GridAny.ROw + 1;
     Changed := True;
   end
   else
-  if (Assigned(GridHeaders.InplaceEditor)) and not GridHeaders.InplaceEditor.Focused then
+  if (Assigned(GridAny.InplaceEditor)) and not GridAny.InplaceEditor.Focused then
   begin
     if (ssCtrl in Shift) and (Key = VK_X) then
     begin
@@ -888,30 +895,37 @@ begin
   end;
 end;
 
-procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-begin
-  if OldValue <> NewValue then
-    Changed := True;
-end;
-
-procedure TformPoBatch.GridHeadersColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
+procedure TformPoBatch.GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
 begin
   if not IsColumn then
     Changed := True;
 end;
 
-procedure TformPoBatch.GridHeadersPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+procedure TformPoBatch.GridUniversalExit(Sender: TObject);
 begin
-  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridHeaders.Focused)) then
+  (Sender as TStringGrid).Invalidate;
+end;
+
+procedure TformPoBatch.GridUniversalPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
+var
+  GridAny: TStringGrid;
+begin
+  GridAny := (Sender as TStringGrid);
+  if not Assigned(GridAny) then exit;
+
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridAny.Focused)) then
   begin
-    GridHeaders.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
-    GridHeaders.Canvas.Font.Color := clWindowText;
+    GridAny.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+    GridAny.Canvas.Font.Color := clWindowText;
   end;
 end;
 
-procedure TformPoBatch.GridHeadersExit(Sender: TObject);
+{ Grid Headers Events }
+
+procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
-  (Sender as TStringGrid).Invalidate;
+  if OldValue <> NewValue then
+    Changed := True;
 end;
 
 procedure TformPoBatch.GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
@@ -933,18 +947,7 @@ begin
   end;
 end;
 
-procedure TformPoBatch.GridPluralColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
-begin
-  if not IsColumn then
-    Changed := True;
-end;
-
 { Grid Comments Events }
-
-procedure TformPoBatch.GridCommentsKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-begin
-
-end;
 
 procedure TformPoBatch.GridCommentsValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
@@ -956,26 +959,6 @@ begin
     UpdateValid;
     UpdateRowHeights(Grid.Row);
   end;
-end;
-
-procedure TformPoBatch.GridCommentsColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
-begin
-  if not IsColumn then
-    Changed := True;
-end;
-
-procedure TformPoBatch.GridCommentsPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
-begin
-  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridComments.Focused)) then
-  begin
-    GridComments.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
-    GridComments.Canvas.Font.Color := clWindowText;
-  end;
-end;
-
-procedure TformPoBatch.GridCommentsExit(Sender: TObject);
-begin
-  (Sender as TStringGrid).Invalidate;
 end;
 
 procedure TformPoBatch.GridCommentsGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
@@ -1252,14 +1235,14 @@ begin
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
   begin
     Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
-    GridHeaders.Canvas.Font.Color := clWindowText;
+    Grid.Canvas.Font.Color := clWindowText;
   end;
 
   if Grid.Cells[CELL_FUZZY, aRow] = '1' then
     CustomColor := ThemeColor(clInfo, clInfoDark);
 
   if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
-    Grid.Canvas.Brush.Color := Grid.Canvas.Brush.Color.BlendColor(CustomColor, 50);
+    Grid.Canvas.Brush.Color := Grid.Canvas.Brush.Color.BlendColor(CustomColor, 20);
 end;
 
 procedure TformPoBatch.GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
@@ -2186,7 +2169,8 @@ function TformPoBatch.CanActionEnable: boolean;
 begin
   Result := ((Assigned(Memo)) and not Memo.Focused) and ((Assigned(GridHeaders.InplaceEditor)) and not
     GridHeaders.InplaceEditor.Focused) and ((Assigned(GridPlural.InplaceEditor)) and not GridPlural.InplaceEditor.Focused) and
-    not Filter.Focused and not MemoSource.Focused and not MemoPlural.Focused and not MemoTranslation.Focused;
+    ((Assigned(GridComments.InplaceEditor)) and not GridComments.InplaceEditor.Focused) and not Filter.Focused and
+    not MemoSource.Focused and not MemoPlural.Focused and not MemoTranslation.Focused;
 end;
 
 function TformPoBatch.RowEntry(aRow: integer = -1): TPOEntry;
@@ -2207,7 +2191,10 @@ begin
   // Column 0 stores the permanent index in PoFile.Entries
   EntryIndex := StrToIntDef(Grid.Cells[0, Row], -1);
   if (EntryIndex < 0) or (EntryIndex >= FPoFile.Entries.Count) then
-    Exit;
+  begin
+    EntryIndex := FPoFile.Entries.Add(TPOEntry.Create);
+    Grid.Cells[0, Row] := EntryIndex.ToString;
+  end;
 
   Result := FPoFile.Entries[EntryIndex];
 end;
@@ -2251,6 +2238,10 @@ begin
       Grid.CopyToClipboard(True)
     else if ActiveControl = GridHeaders then
       GridHeaders.CopyToClipboard(True)
+    else if ActiveControl = GridPlural then
+      GridPlural.CopyToClipboard(True)
+    else if ActiveControl = GridComments then
+      GridComments.CopyToClipboard(True)
     else
       Exit;
   except
@@ -2273,7 +2264,18 @@ begin
   begin
     GridHeaders.PasteFromClipboard;
     Result := True;
+  end
+  else if ActiveControl = GridPlural then
+  begin
+    GridPlural.PasteFromClipboard;
+    Result := True;
+  end
+  else if ActiveControl = GridComments then
+  begin
+    GridComments.PasteFromClipboard;
+    Result := True;
   end;
+
   if Result then
   begin
     Changed := True;
@@ -2319,6 +2321,30 @@ begin
       Changed := True;
       Result := True;
     end;
+  end
+  else
+  if ActiveControl = GridPlural then
+  begin
+    if (GridPlural.Selection.Height > 0) then
+      GridPlural.Clean(GridPlural.Selection, [gzNormal])
+    else
+      GridPlural.Clean(GridPlural.Col, GridPlural.Row, GridPlural.Col, GridPlural.Row, [gzNormal]);
+
+    SaveGridPlural;
+    Changed := True;
+    Result := True;
+  end
+  else
+  if (ActiveControl = GridComments) and (not AEditTranslationOnly.Checked) then
+  begin
+    if (GridComments.Selection.Height > 0) then
+      GridComments.Clean(GridComments.Selection, [gzNormal])
+    else
+      GridComments.Clean(GridComments.Col, GridComments.Row, GridComments.Col, GridComments.Row, [gzNormal]);
+
+    SaveGridComments;
+    Changed := True;
+    Result := True;
   end;
 end;
 
@@ -2328,7 +2354,13 @@ begin
     Grid.Selection := TGridRect.Create(CELL_VALID, 0, CELL_REFERENCE, Grid.RowCount)
   else
   if ActiveControl = GridHeaders then
-    GridHeaders.Selection := TGridRect.Create(CELL_VALID, 0, CELL_REFERENCE, GridHeaders.RowCount);
+    GridHeaders.Selection := TGridRect.Create(CELL_HEADERS_NAME, 0, CELL_HEADERS_VALUE, GridHeaders.RowCount)
+  else
+  if ActiveControl = GridPlural then
+    GridPlural.Selection := TGridRect.Create(1, 0, 1, GridPlural.RowCount)
+  else
+  if ActiveControl = GridComments then
+    GridComments.Selection := TGridRect.Create(CELL_COMMENTS_TYPE, 0, CELL_COMMENTS_VALUE, GridPlural.RowCount);
   Result := True;
 end;
 
@@ -2428,7 +2460,7 @@ begin
       Headers.Free;
     end;
   finally
-    GridHeaders.OnColRowInserted := @GridHeadersColRowInserted;
+    GridHeaders.OnColRowInserted := @GridUniversalColRowInserted;
     GridHeaders.EndUpdate;
   end;
 
@@ -2579,6 +2611,10 @@ begin
   // Save all data rows using the common SaveRow method
   for i := Grid.FixedRows to Grid.RowCount - 1 do
     SaveRow(i);
+
+  if GridPlural.Visible then
+    SaveGridPlural;
+  SaveGridComments;
 end;
 
 procedure TformPoBatch.FillGridPlural(aRow: integer = -1);
@@ -2586,11 +2622,8 @@ var
   EntryIndex: integer;
   i: integer;
 begin
-  if not Assigned(FPoFile) then
-  begin
-    GridPlural.RowCount := GridPlural.FixedRows;
-    Exit;
-  end;
+  GridPlural.RowCount := GridPlural.FixedRows;
+  if not Assigned(FPoFile) then Exit;
 
   EntryIndex := GetEntiryIndex(aRow);
   if EntryIndex < 0 then Exit;
@@ -2600,12 +2633,11 @@ begin
   GridPlural.BeginUpdate;
   GridPlural.OnColRowInserted := nil;
   try
-    GridPlural.RowCount := GridPlural.FixedRows;
     GridPlural.RowCount := GridPlural.FixedRows + Max(FPoFile.Entries[EntryIndex].MsgStrCount, FPoFile.PluralFormsCount);
     for i := 0 to FPoFile.Entries[EntryIndex].MsgStrCount - 1 do
       GridPlural.Cells[1, GridPlural.FixedRows + i] := FPoFile.Entries[EntryIndex].MsgStr[i];
   finally
-    GridPlural.OnColRowInserted := @GridPluralColRowInserted;
+    GridPlural.OnColRowInserted := @GridUniversalColRowInserted;
     GridPlural.EndUpdate;
   end;
 end;
@@ -2654,11 +2686,8 @@ var
   Key, Value: string;
   i, p: integer;
 begin
-  if not Assigned(FPoFile) then
-  begin
-    GridComments.RowCount := GridComments.FixedRows;
-    Exit;
-  end;
+  GridComments.RowCount := GridComments.FixedRows;
+  if not Assigned(FPoFile) then Exit;
 
   EntryIndex := GetEntiryIndex(aRow);
   if EntryIndex < 0 then Exit;
@@ -2693,7 +2722,7 @@ begin
       Comments.Free;
     end;
   finally
-    GridComments.OnColRowInserted := @GridCommentsColRowInserted;
+    GridComments.OnColRowInserted := @GridUniversalColRowInserted;
     GridComments.EndUpdate;
   end;
 end;
