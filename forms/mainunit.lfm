@@ -497,7 +497,7 @@ object formPoBatch: TformPoBatch
           Align = alClient
           Alignment = taCenter
           AutoSize = False
-          Caption = 'Need Validation'
+          Caption = 'Needs Validation'
           Font.Height = -16
           Layout = tlCenter
           ParentFont = False

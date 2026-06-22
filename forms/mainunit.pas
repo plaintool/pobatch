@@ -1260,10 +1260,15 @@ begin
   end;
 
   if Grid.Cells[CELL_FUZZY, aRow] = '1' then
-    CustomColor := ThemeColor(clInfo, clInfoDark);
+    CustomColor := ThemeColor(clSoftYellow, clSoftYellowDark);
 
   if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
-    Grid.Canvas.Brush.Color := Grid.Canvas.Brush.Color.BlendColor(CustomColor, 20);
+  begin
+    if (gdSelected in aState) then
+      Grid.Canvas.Brush.Color := Grid.Canvas.Brush.Color.BlendColor(CustomColor, 40)
+    else
+      Grid.Canvas.Brush.Color := CustomColor;
+  end;
 end;
 
 procedure TformPoBatch.GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
@@ -2144,7 +2149,7 @@ begin
   if (PanelCheck.Visible) and (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, aRow] = '0') or (Grid.Cells[CELL_FUZZY, aRow] = '1')) then
   begin
     ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, aRow]);
-    PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, clInfoBk, clWindow);
+    PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
     if ImageSwitch.ImageIndex = 0 then
       LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark)
     else
