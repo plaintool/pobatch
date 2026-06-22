@@ -30,6 +30,9 @@ uses
   {$R *.res}
 
 begin
+  {$IFDEF DEBUG}
+  GlobalSkipIfNoLeaks := True;
+  {$ENDIF}
   RequireDerivedFormResource := True;
   Application.Title := 'PoBatch';
   Application.Scaled := True;
