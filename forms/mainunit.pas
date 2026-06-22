@@ -355,6 +355,8 @@ uses formabout, formdonate, systemtool, formattool, settings, StringGridHelper, 
   { Form Events }
 
 procedure TformPoBatch.FormCreate(Sender: TObject);
+var
+  HeaderList: TStringList;
 begin
   // Enable file dropping
   AllowDropFiles := True;
@@ -379,6 +381,15 @@ begin
   GridPlural.GridLineColor := ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := ThemeColor(clLine, clLineDark);
 
+  // Headers pick list
+  HeaderList := TPOFile.GetHeaderNames;
+  try
+    GridHeaders.Columns[COLUMN_HEADERS_NAME].PickList.Assign(HeaderList);
+  finally
+    HeaderList.Free;
+  end;
+
+  // LoadSettings
   LoadFormSettings(Self);
 
   // Create FPoFile object

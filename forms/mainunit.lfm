@@ -116,6 +116,8 @@ object formPoBatch: TformPoBatch
       ColumnClickSorts = True
       Columns = <      
         item
+          ButtonStyle = cbsPickList
+          DropDownRows = 15
           Layout = tlTop
           Title.Caption = 'Name'
           Width = 320

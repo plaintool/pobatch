@@ -58,6 +58,21 @@ type
     psEmptyTranslation  // No fuzzy, but at least one entry has an empty translation
     );
 
+  TPOHeader = (
+    hProjectIdVersion,
+    hReportMsgidBugsTo,
+    hPOTCreationDate,
+    hPORevisionDate,
+    hLastTranslator,
+    hLanguageTeam,
+    hLanguage,
+    hMIMEVersion,
+    hContentType,
+    hContentTransferEncoding,
+    hPluralForms,
+    hXGenerator
+    );
+
   TPOComment = class
   public
     CommentType: TPOCommentType;
@@ -281,6 +296,7 @@ type
 
     class function GetFileStatus(const AFileName: string): TPoFileStatus; static;
     class function GetCommentTypeName(const APrefix: string): string; static;
+    class function GetHeaderNames: TStringList;
   end;
 
 implementation
@@ -359,6 +375,21 @@ const
     'gcc-internal-format',
     'qt-plural-format',
     'c++-format'
+    );
+
+  POHeaderNames: array[TPOHeader] of string = (
+    'Project-Id-Version',
+    'Report-Msgid-Bugs-To',
+    'POT-Creation-Date',
+    'PO-Revision-Date',
+    'Last-Translator',
+    'Language-Team',
+    'Language',
+    'MIME-Version',
+    'Content-Type',
+    'Content-Transfer-Encoding',
+    'Plural-Forms',
+    'X-Generator'
     );
 
   { TPOComment }
@@ -1335,27 +1366,27 @@ end;
 procedure TPOFile.Reset;
 var
   HeaderEntry: TPOEntry;
-  DefaultHeaders: TStrings;
+  DefaultHeaders: TStringList;
+  h: TPOHeader;
+  DefaultValues: array[TPOHeader] of string;
 begin
   FEntries.Clear;
 
   HeaderEntry := TPOEntry.Create;
   HeaderEntry.MsgId := '';
 
+  for h := Low(TPOHeader) to High(TPOHeader) do
+    DefaultValues[h] := '';
+
+  DefaultValues[hMIMEVersion] := '1.0';
+  DefaultValues[hContentType] := 'text/plain; charset=UTF-8';
+  DefaultValues[hContentTransferEncoding] := '8bit';
+
   DefaultHeaders := TStringList.Create;
   try
-    DefaultHeaders.Add('Project-Id-Version: ');
-    DefaultHeaders.Add('Report-Msgid-Bugs-To: ');
-    DefaultHeaders.Add('POT-Creation-Date: ');
-    DefaultHeaders.Add('PO-Revision-Date: ');
-    DefaultHeaders.Add('Last-Translator: ');
-    DefaultHeaders.Add('Language-Team: ');
-    DefaultHeaders.Add('Language: ');
-    DefaultHeaders.Add('MIME-Version: 1.0');
-    DefaultHeaders.Add('Content-Type: text/plain; charset=UTF-8');
-    DefaultHeaders.Add('Content-Transfer-Encoding: 8bit');
-    DefaultHeaders.Add('Plural-Forms: ');
-    DefaultHeaders.Add('X-Generator: powrap');
+    for h := Low(TPOHeader) to High(TPOHeader) do
+      DefaultHeaders.Add(POHeaderNames[h] + ': ' + DefaultValues[h]);
+
     HeaderEntry.MsgStrSimple := DefaultHeaders.Text;
   finally
     DefaultHeaders.Free;
@@ -2112,6 +2143,20 @@ begin
   for i := 0 to High(Prefixes) do
     if Prefixes[i] = APrefix then
       Exit(Names[i]);
+end;
+
+class function TPOFile.GetHeaderNames: TStringList;
+var
+  h: TPOHeader;
+begin
+  Result := TStringList.Create;
+  try
+    for h := Low(TPOHeader) to High(TPOHeader) do
+      Result.Add(POHeaderNames[h]);
+  except
+    Result.Free;
+    raise;
+  end;
 end;
 
 end.
