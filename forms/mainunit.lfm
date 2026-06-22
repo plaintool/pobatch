@@ -254,7 +254,7 @@ object formPoBatch: TformPoBatch
       Constraints.MinHeight = 100
       TabHeight = 20
       TabIndex = 0
-      TabOrder = 3
+      TabOrder = 2
       TabPosition = tpBottom
       Visible = False
       object PageTranslate: TTabSheet
@@ -385,6 +385,7 @@ object formPoBatch: TformPoBatch
               Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
               Options2 = [goCopyWithoutTrailingLinebreak]
               RowCount = 1
+              ScrollBars = ssAutoVertical
               TabOrder = 1
               TitleStyle = tsNative
               OnColRowInserted = GridUniversalColRowInserted

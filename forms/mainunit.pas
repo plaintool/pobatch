@@ -257,7 +257,8 @@ type
     function ValidateFileForOpen(const AFileName: string): boolean;
     function NewFile(AFileName: string = string.Empty): boolean;
     function OpenFile(const AFileName: string; CheckCanClose: boolean = True): boolean;
-    function OpenPath(const AFileName: string): boolean;
+    function OpenPath(const AFileName: string; WaitCursor: boolean = False): boolean;
+    procedure LoadPath(Data: PtrInt);
     procedure ClosePath;
     procedure UpdatePath;
     procedure SyncPath;
@@ -422,14 +423,22 @@ begin
   begin
     FInitialized := True;
 
-    // Open Path
-    if (Path <> string.Empty) then
+    // Paint Form
+    if (not Application.Terminated) then
     begin
-      if OpenPath(Path) then
-        UpdatePath
-      else
-        Path := string.Empty;
+      OnShow := nil;
+      Visible := True;
+      OnShow := @FormShow;
+      {$IFDEF UNIX}
+      Application.ProcessMessages;
+      WindowState := FWindowStateLoaded;
+      {$ELSE}
+      Application.ProcessMessages;
+      {$ENDIF}
     end;
+
+    // Load Path
+    Application.QueueAsyncCall(@LoadPath, 0);
 
     // Open file from command line if specified, otherwise start with a new document
     if FCommandLineFile <> string.Empty then
@@ -1778,7 +1787,7 @@ begin
   end;
 end;
 
-function TformPoBatch.OpenPath(const AFileName: string): boolean;
+function TformPoBatch.OpenPath(const AFileName: string; WaitCursor: boolean = False): boolean;
 var
   SR: TSearchRec;
   TempFiles: TStringList;
@@ -1815,8 +1824,18 @@ begin
 
     // We analyze each file and save the status
     SetLength(FFileStatuses, FPoFiles.Count);
-    for i := 0 to FPoFiles.Count - 1 do
-      FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
+    try
+      for i := 0 to FPoFiles.Count - 1 do
+      begin
+        if WaitCursor then
+          Screen.Cursor := crAppStart;
+        Application.ProcessMessages;
+        FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
+      end;
+    finally
+      if WaitCursor then
+        Screen.Cursor := crDefault;
+    end;
 
     UpdateCaption;
     SyncPath;
@@ -1825,6 +1844,17 @@ begin
   finally
     TempFiles.Free;
     TempNames.Free;
+  end;
+end;
+
+procedure TformPoBatch.LoadPath(Data: PtrInt);
+begin
+  if (Path <> string.Empty) then
+  begin
+    if OpenPath(Path, True) then
+      UpdatePath
+    else
+      Path := string.Empty;
   end;
 end;
 
@@ -2172,6 +2202,7 @@ begin
   end;
 
   FillGridComments(aRow);
+  Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
 procedure TformPoBatch.UpdateValid(aRow: integer = -1);
