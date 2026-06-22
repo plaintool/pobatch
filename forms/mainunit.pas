@@ -443,8 +443,6 @@ begin
 
   PanelTranslation.Height := Round((PanelSource.Height + PanelTranslation.Height) * FSplitRatio);
 
-  if Grid.CanFocus then Grid.SetFocus;
-
   if AutoCheckUpdates then
   begin
     Th := TCheckUpdateThread.Create(False);
