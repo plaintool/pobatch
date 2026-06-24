@@ -92,6 +92,10 @@ begin
     JSONObj.Add('GridHeadersHeight', Form.GridHeaders.Height);
     JSONObj.Add('GridHeadersColumnNameWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width);
     JSONObj.Add('GridHeadersColumnValueWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width);
+    JSONObj.Add('GridPluralColumnPluralWidth', Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width);
+    JSONObj.Add('GridCommentsColumnTypeWidth', Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width);
+    JSONObj.Add('GridCommentsColumnValueWidth', Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width);
+
     JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[COLUMN_TEXT].Width);
     JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[COLUMN_TRANSLATION].Width);
     JSONObj.Add('GridColumnReferenceWidth', Form.Grid.Columns[COLUMN_REFERENCE].Width);
@@ -178,6 +182,15 @@ begin
 
       if JSONObj.FindPath('GridHeadersColumnValueWidth') <> nil then
         Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width := JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger;
+
+      if JSONObj.FindPath('GridPluralColumnPluralWidth') <> nil then
+        Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width := JSONObj.FindPath('GridPluralColumnPluralWidth').AsInteger;
+
+      if JSONObj.FindPath('GridCommentsColumnTypeWidth') <> nil then
+        Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width := JSONObj.FindPath('GridCommentsColumnTypeWidth').AsInteger;
+
+      if JSONObj.FindPath('GridCommentsColumnValueWidth') <> nil then
+        Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width := JSONObj.FindPath('GridCommentsColumnValueWidth').AsInteger;
 
       if JSONObj.FindPath('GridColumnSourceTextWidth') <> nil then
         Form.Grid.Columns[COLUMN_TEXT].Width := JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger;

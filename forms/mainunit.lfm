@@ -376,7 +376,7 @@ object formPoBatch: TformPoBatch
                 item
                   Layout = tlTop
                   Title.Caption = 'Plural Forms'
-                  Width = 640
+                  Width = 635
                 end>
               DefaultColWidth = 48
               FadeUnfocusedSelection = True
@@ -429,7 +429,7 @@ object formPoBatch: TformPoBatch
             item
               Layout = tlTop
               Title.Caption = 'Value'
-              Width = 770
+              Width = 535
             end>
           DefaultColWidth = 48
           FadeUnfocusedSelection = True
