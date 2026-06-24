@@ -32,7 +32,8 @@ uses
   Clipbrd,
   LCLType,
   LCLIntf,
-  powrap, Types;
+  OneShotTimer,
+  powrap;
 
 type
 
@@ -238,6 +239,7 @@ type
     FPoFiles: TStringList;
     FFileStatuses: array of TPoFileStatus;
     FCellValue: string;
+    FSelectPathTimer: TTimer;
 
     FChanged: boolean;
     FPath: string;
@@ -262,6 +264,7 @@ type
     procedure ClosePath;
     procedure UpdatePath;
     procedure SyncPath;
+    procedure SelectPath;
     function LoadFromFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
     { Methods }
@@ -1399,51 +1402,11 @@ begin
 end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
-var
-  Idx: integer;
-  FullPath: string;
-  SavedIndex: integer;
 begin
-  Idx := ListPath.ItemIndex;
-  if Idx < 0 then Exit;   // no file selected
-
-  // Remember the previous valid selection
-  SavedIndex := FLastPathIndex;
-
-  // Tentatively accept the new index (will be confirmed or reverted)
-  FLastPathIndex := Idx;
-
-  if Idx >= FPoFiles.Count then Exit;   // safety check
-  FullPath := FPoFiles[Idx];
-
-  // Ask to save current changes – if user cancels, revert the selection
-  if not IsCanClose then
-  begin
-    ListPath.ItemIndex := SavedIndex;
-    FLastPathIndex := SavedIndex;
-    Exit;
-  end;
-
-  // Attempt to load the file
-  if LoadFromFile(FullPath) then
-  begin
-    FFileName := FullPath;
-    Changed := False;
-    FillGrids;
-    if Grid.RowCount > 1 then
-    begin
-      Grid.Row := 1;
-      FLastRow := 1;
-      UpdateTranslatePanel;
-    end;
-  end
-  else
-  begin
-    // Loading failed – revert to the previous selection
-    ListPath.ItemIndex := SavedIndex;
-    FLastPathIndex := SavedIndex;
-  end;
+  ClearTimeout(FselectPathTimer);
+  SetTimeoutSafe(FSelectPathTimer, 50, @SelectPath);
 end;
+
 
 procedure TformPoBatch.ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
 var
@@ -1900,6 +1863,53 @@ begin
   FLastPathIndex := Idx;
 end;
 
+procedure TformPoBatch.SelectPath;
+var
+  Idx: integer;
+  FullPath: string;
+  SavedIndex: integer;
+begin
+  Idx := ListPath.ItemIndex;
+  if Idx < 0 then Exit;   // no file selected
+
+  // Remember the previous valid selection
+  SavedIndex := FLastPathIndex;
+
+  // Tentatively accept the new index (will be confirmed or reverted)
+  FLastPathIndex := Idx;
+
+  if Idx >= FPoFiles.Count then Exit;   // safety check
+  FullPath := FPoFiles[Idx];
+
+  // Ask to save current changes – if user cancels, revert the selection
+  if not IsCanClose then
+  begin
+    ListPath.ItemIndex := SavedIndex;
+    FLastPathIndex := SavedIndex;
+    Exit;
+  end;
+
+  // Attempt to load the file
+  if LoadFromFile(FullPath) then
+  begin
+    FFileName := FullPath;
+    Changed := False;
+    FillGrids;
+    if Grid.RowCount > 1 then
+    begin
+      Grid.Row := 1;
+      FLastRow := 1;
+      UpdateTranslatePanel;
+    end;
+  end
+  else
+  begin
+    // Loading failed – revert to the previous selection
+    ListPath.ItemIndex := SavedIndex;
+    FLastPathIndex := SavedIndex;
+  end;
+end;
+
 function TformPoBatch.LoadFromFile(AFileName: string): boolean;
 var
   Input: TStringList;
@@ -2235,6 +2245,7 @@ begin
     Grid.Cells[CELL_FUZZY, Grid.Row] := ImageSwitch.ImageIndex.ToString;
     UpdateValid;
     UpdateSwitch;
+    UpdateTranslatePanel;
 
     Changed := True;
     Grid.Invalidate;

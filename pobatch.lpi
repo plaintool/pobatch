@@ -150,6 +150,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ColorHelper"/>
       </Unit>
+      <Unit>
+        <Filename Value="common\oneshottimer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="OneShotTimer"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
