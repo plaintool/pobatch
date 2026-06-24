@@ -58,6 +58,8 @@ type
     psEmptyTranslation  // No fuzzy, but at least one entry has an empty translation
     );
 
+  TPoFileStatusArray = array of TPoFileStatus;
+
   TPOHeader = (
     hProjectIdVersion,
     hReportMsgidBugsTo,

@@ -645,6 +645,14 @@ object formPoBatch: TformPoBatch
     end
     object menuHelp: TMenuItem
       Caption = 'Help'
+      object MenuHelpGNUgettext: TMenuItem
+        Caption = 'GNU gettext'
+        Hint = 'https://www.gnu.org/software/gettext/manual'
+        OnClick = MenuHelpGNUgettextClick
+      end
+      object Separator10: TMenuItem
+        Caption = '-'
+      end
       object MenuBuyMeACoffee: TMenuItem
         Caption = 'Buy Me a Coffee...'
         OnClick = MenuBuyMeACoffeeClick
@@ -665,14 +673,14 @@ object formPoBatch: TformPoBatch
     end
   end
   object dialogOpen: TOpenDialog
-    Filter = 'Po File (*.po)|*.po'
+    Filter = 'Po File (*.po)|*.po|Po Template (*.pot)|*.pot'
     Options = [ofOverwritePrompt, ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 312
     Top = 224
   end
   object dialogSave: TSaveDialog
     DefaultExt = '.po'
-    Filter = 'Po File (*.po)|*.po'
+    Filter = 'Po File (*.po)|*.po|Po Template (*.pot)|*.pot'
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
     Left = 392
     Top = 224

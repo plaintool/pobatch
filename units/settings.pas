@@ -27,7 +27,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses systemtool;
+uses systemtool, powrap;
 
 function GetSettingsDirectory(fileName: string = ''): string;
   {$IFDEF Windows}
@@ -63,6 +63,8 @@ procedure SaveFormSettings(Form: TformPoBatch);
 var
   JSONObj: TJSONObject;
   FileName: string;
+  PoFilesArray, StatusArray: TJSONArray;
+  i: integer;
 begin
   FileName := GetSettingsDirectory('form_settings.json'); // Get settings file name
   ForceDirectories(GetSettingsDirectory); // Ensure the directory exists
@@ -112,6 +114,18 @@ begin
 
     JSONObj.Add('Path', Form.Path);
 
+    // Save PO files list
+    PoFilesArray := TJSONArray.Create;
+    for i := 0 to Form.PoFiles.Count - 1 do
+      PoFilesArray.Add(Form.PoFiles[i]);
+    JSONObj.Add('PoFiles', PoFilesArray);
+
+    // Save PO file statuses
+    StatusArray := TJSONArray.Create;
+    for i := 0 to High(Form.FileStatuses) do
+      StatusArray.Add(Ord(Form.FileStatuses[i]));
+    JSONObj.Add('PoFileStatuses', StatusArray);
+
     // Write to file
     with TStringList.Create do
     try
@@ -129,9 +143,12 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 var
   JSONData: TJSONData;
   JSONObj: TJSONObject;
+  PoFilesArray, StatusArray: TJSONArray;
+  TempStatusArray: TPoFileStatusArray = ();
   FileName: string;
   FileStream: TFileStream;
   FileContent: string;
+  i: integer;
 begin
   Result := False;
   FileContent := string.Empty;
@@ -237,6 +254,28 @@ begin
 
       if JSONObj.FindPath('Path') <> nil then
         Form.Path := JSONObj.FindPath('Path').AsString;
+
+      // Load PO files list
+      if JSONObj.FindPath('PoFiles') <> nil then
+      begin
+        PoFilesArray := JSONObj.FindPath('PoFiles') as TJSONArray;
+        Form.PoFiles.Clear;                         // use property
+        for i := 0 to PoFilesArray.Count - 1 do
+          Form.PoFiles.Add(PoFilesArray.Items[i].AsString);
+      end;
+
+      // Load PO file statuses
+      if JSONObj.FindPath('PoFileStatuses') <> nil then
+      begin
+        StatusArray := JSONObj.FindPath('PoFileStatuses') as TJSONArray;
+        SetLength(TempStatusArray, StatusArray.Count);
+        for i := 0 to StatusArray.Count - 1 do
+          TempStatusArray[i] := TPOFileStatus(StatusArray.Items[i].AsInteger);
+        // Ensure statuses count matches files count
+        if Length(TempStatusArray) <> Form.PoFiles.Count then
+          SetLength(TempStatusArray, Form.PoFiles.Count);
+        Form.FileStatuses := TempStatusArray;       // assign via property
+      end;
 
       if JSONObj.FindPath('AutoCheckUpdates') <> nil then
         Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;

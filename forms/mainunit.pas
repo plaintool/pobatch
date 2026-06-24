@@ -83,6 +83,7 @@ type
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
     MenuEditPluralForm: TMenuItem;
+    MenuHelpGNUgettext: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
     MenuTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
@@ -113,6 +114,7 @@ type
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
     PopupGrid: TPopupMenu;
+    Separator10: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -159,6 +161,7 @@ type
     procedure MenuBuyMeACoffeeClick(Sender: TObject);
     procedure MenuCheckForUpdatesClick(Sender: TObject);
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
+    procedure MenuHelpGNUgettextClick(Sender: TObject);
     procedure MenuAboutClick(Sender: TObject);
     { Action Events }
     procedure AUndoChangesExecute(Sender: TObject);
@@ -237,11 +240,12 @@ type
     FInitialized: boolean;
     FCommandLineFile: string;
     FUpdatingGrid: boolean;
+    FPathIndex: integer;
     FLastPathIndex: integer;
     FLastRow: integer;
     FPanelFocused: boolean;
     FPoFiles: TStringList;
-    FFileStatuses: array of TPoFileStatus;
+    FFileStatuses: TPoFileStatusArray;
     FCellValue: string;
     FSelectPathTimer: TTimer;
 
@@ -263,7 +267,8 @@ type
     function ValidateFileForOpen(const AFileName: string): boolean;
     function NewFile(AFileName: string = string.Empty): boolean;
     function OpenFile(const AFileName: string; CheckCanClose: boolean = True): boolean;
-    function OpenPath(const AFileName: string): boolean;
+    function OpenPath(const APath: string; Force: boolean = False): boolean;
+    procedure AnalizePath(AIndex: integer = -1);
     procedure LoadPath(Data: PtrInt);
     procedure ClosePath;
     procedure UpdatePath;
@@ -304,6 +309,8 @@ type
     property SortOrder: TSortOrder read FSortOrder write FSortOrder;
     property SortColumn: integer read FSortColumn write FSortColumn;
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
+    property PoFiles: TStringList read FPoFiles write FPoFiles;
+    property FileStatuses: TPoFileStatusArray read FFileStatuses write FFileStatuses;
   end;
 
 var
@@ -435,7 +442,7 @@ begin
     FInitialized := True;
 
     // Paint Form
-    if (not Application.Terminated) then
+    if not Application.Terminated then
     begin
       OnShow := nil;
       Visible := True;
@@ -446,7 +453,9 @@ begin
       {$ELSE}
       Application.ProcessMessages;
       {$ENDIF}
-    end;
+    end
+    else
+      Exit;
 
     // Load Path
     Application.QueueAsyncCall(@LoadPath, 0);
@@ -586,7 +595,7 @@ begin
       FFileName := TempFileName;
       Changed := False;
       if ExtractFilePath(TempFileName) = IncludeTrailingPathDelimiter(FPath) then
-        OpenPath(FPath);
+        OpenPath(FPath, True);
     end;
   end;
 end;
@@ -595,7 +604,7 @@ procedure TformPoBatch.MenuPathOpenClick(Sender: TObject);
 begin
   if dialogPath.Execute then
   begin
-    if not OpenPath(dialogPath.FileName) then
+    if not OpenPath(dialogPath.FileName, True) then
     begin
       ShowMessage('No .po files found in the selected directory!');
       Exit;
@@ -651,6 +660,11 @@ end;
 procedure TformPoBatch.MenuAutoCheckUpdatesClick(Sender: TObject);
 begin
   FAutoCheckUpdates := MenuAutoCheckUpdates.Checked;
+end;
+
+procedure TformPoBatch.MenuHelpGNUgettextClick(Sender: TObject);
+begin
+  OpenUrl((Sender as TMenuItem).Hint);
 end;
 
 procedure TformPoBatch.MenuAboutClick(Sender: TObject);
@@ -1434,7 +1448,6 @@ begin
   SetTimeoutSafe(FSelectPathTimer, 50, @SelectPath);
 end;
 
-
 procedure TformPoBatch.ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
 var
   Status: TPoFileStatus;
@@ -1786,61 +1799,70 @@ begin
   end;
 end;
 
-function TformPoBatch.OpenPath(const AFileName: string): boolean;
+function TformPoBatch.OpenPath(const APath: string; Force: boolean = False): boolean;
 var
-  SR: TSearchRec;
   TempFiles: TStringList;
-  TempNames: TStringList;
-  FullPath: string;
   i: integer;
 begin
   Result := False;
-  if not DirectoryExists(AFileName) then Exit;
+  if not DirectoryExists(APath) then Exit;
 
-  TempFiles := TStringList.Create;
-  TempNames := TStringList.Create;
-  try
-    // Scan the directory into temporary lists
-    if FindFirst(IncludeTrailingPathDelimiter(AFileName) + '*.po', faAnyFile, SR) = 0 then
-    begin
-      repeat
-        FullPath := IncludeTrailingPathDelimiter(AFileName) + SR.Name;
-        TempFiles.Add(FullPath);
-        TempNames.Add(SR.Name);
-      until FindNext(SR) <> 0;
-      FindClose(SR);
-    end;
-
-    // If no files found, leave the current state unchanged
-    if TempFiles.Count = 0 then
-      Exit;
-
-    // Success: replace the old list with the new one
-    FPoFiles.Assign(TempFiles);
-    ListPath.Items.Assign(TempNames);
-    ListPath.Hint := AFileName;
-    FLastPathIndex := -1;   // no file is selected in the new folder
-
-    // We analyze each file and save the status
-    SetLength(FFileStatuses, FPoFiles.Count);
+  if (PoFiles.Count = 0) or Force then
+  begin
+    TempFiles := TStringList.Create;
     try
+      // Scan for both .po and .pot files
+      FindFilesByMasks(APath, ['*.po', '*.pot'], TempFiles);
+
+      // If no files found, leave the current state unchanged
+      if TempFiles.Count = 0 then
+        Exit;
+
+      // Success: replace the old list with the new one
+      FPoFiles.Assign(TempFiles);
+      AnalizePath;
+    finally
+      TempFiles.Free;
+    end;
+  end;
+
+  ListPath.Items.Clear;
+  for i := 0 to FPoFiles.Count - 1 do
+    ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
+  ListPath.Hint := APath;
+  FLastPathIndex := -1;   // no file is selected in the new folder
+
+  UpdateCaption;
+  SyncPath;
+
+  Result := True;
+end;
+
+procedure TformPoBatch.AnalizePath(AIndex: integer = -1);
+var
+  i: integer;
+begin
+  try
+    Screen.Cursor := crAppStart;
+    // We analyze each file and save the status
+    if AIndex < 0 then
+    begin
+      SetLength(FFileStatuses, FPoFiles.Count);
       for i := 0 to FPoFiles.Count - 1 do
       begin
         Screen.Cursor := crAppStart;
         Application.ProcessMessages;
         FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
       end;
-    finally
-      Screen.Cursor := crDefault;
+    end
+    else
+    begin
+      Application.ProcessMessages;
+      FFileStatuses[AIndex] := TPOFile.GetFileStatus(FPoFiles[AIndex]);
     end;
-
-    UpdateCaption;
-    SyncPath;
-
-    Result := True;
   finally
-    TempFiles.Free;
-    TempNames.Free;
+    Screen.Cursor := crDefault;
+    ListPath.Invalidate;
   end;
 end;
 
@@ -1886,7 +1908,8 @@ begin
   Idx := FPoFiles.IndexOf(FFileName);
   if Idx < 0 then Exit;
 
-  ListPath.ItemIndex := Idx;
+  if ListPath.Items.Count > Idx then
+    ListPath.ItemIndex := Idx;
   FLastPathIndex := Idx;
 end;
 
@@ -1894,13 +1917,12 @@ procedure TformPoBatch.SelectPath;
 var
   Idx: integer;
   FullPath: string;
-  SavedIndex: integer;
 begin
   Idx := ListPath.ItemIndex;
   if Idx < 0 then Exit;   // no file selected
 
   // Remember the previous valid selection
-  SavedIndex := FLastPathIndex;
+  FPathIndex := FLastPathIndex;
 
   // Tentatively accept the new index (will be confirmed or reverted)
   FLastPathIndex := Idx;
@@ -1911,8 +1933,8 @@ begin
   // Ask to save current changes – if user cancels, revert the selection
   if not IsCanClose then
   begin
-    ListPath.ItemIndex := SavedIndex;
-    FLastPathIndex := SavedIndex;
+    ListPath.ItemIndex := FPathIndex;
+    FLastPathIndex := FPathIndex;
     Exit;
   end;
 
@@ -1932,8 +1954,8 @@ begin
   else
   begin
     // Loading failed – revert to the previous selection
-    ListPath.ItemIndex := SavedIndex;
-    FLastPathIndex := SavedIndex;
+    ListPath.ItemIndex := FPathIndex;
+    FLastPathIndex := FPathIndex;
   end;
 end;
 
@@ -2040,6 +2062,7 @@ begin
       Output.SaveToFile(AFileName, TEncoding.UTF8);
       FPoFileBackup.Assign(FPoFile);
 
+      AnalizePath(FPathIndex);
       UpdateCaption;
       UpdateTranslatePanel;
 

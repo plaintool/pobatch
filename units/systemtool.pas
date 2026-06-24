@@ -76,6 +76,8 @@ function SetCursorTo(Control: TControl; const ResName: string; CursorIndex: inte
 
 function SetFileTypeIcon(const Ext: string; IconIndex: integer): boolean;
 
+procedure FindFilesByMasks(const Directory: string; const Masks: array of string; TempFiles: TStringList);
+
 function IsSystemKey(Key: word): boolean;
 
 function GetAppVersion: string;
@@ -546,6 +548,27 @@ begin
     end;
   end;
   {$ENDIF}
+end;
+
+procedure FindFilesByMasks(const Directory: string; const Masks: array of string; TempFiles: TStringList);
+var
+  SR: TSearchRec;
+  Mask: string;
+  FullPath: string;
+begin
+  for Mask in Masks do
+  begin
+    FullPath := IncludeTrailingPathDelimiter(Directory) + Mask;
+    if FindFirst(FullPath, faAnyFile, SR) = 0 then
+    begin
+      repeat
+        TempFiles.Add(IncludeTrailingPathDelimiter(Directory) + SR.Name);
+      until FindNext(SR) <> 0;
+      // Pass the raw search handle to FindClose, because the available
+      // declaration expects a QWord, not a TSearchRec.
+      FindClose(SR.FindHandle);
+    end;
+  end;
 end;
 
 function IsSystemKey(Key: word): boolean;
