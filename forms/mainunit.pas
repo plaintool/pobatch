@@ -257,7 +257,7 @@ type
     function ValidateFileForOpen(const AFileName: string): boolean;
     function NewFile(AFileName: string = string.Empty): boolean;
     function OpenFile(const AFileName: string; CheckCanClose: boolean = True): boolean;
-    function OpenPath(const AFileName: string; WaitCursor: boolean = False): boolean;
+    function OpenPath(const AFileName: string): boolean;
     procedure LoadPath(Data: PtrInt);
     procedure ClosePath;
     procedure UpdatePath;
@@ -1796,7 +1796,7 @@ begin
   end;
 end;
 
-function TformPoBatch.OpenPath(const AFileName: string; WaitCursor: boolean = False): boolean;
+function TformPoBatch.OpenPath(const AFileName: string): boolean;
 var
   SR: TSearchRec;
   TempFiles: TStringList;
@@ -1836,14 +1836,12 @@ begin
     try
       for i := 0 to FPoFiles.Count - 1 do
       begin
-        if WaitCursor then
-          Screen.Cursor := crAppStart;
+        Screen.Cursor := crAppStart;
         Application.ProcessMessages;
         FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
       end;
     finally
-      if WaitCursor then
-        Screen.Cursor := crDefault;
+      Screen.Cursor := crDefault;
     end;
 
     UpdateCaption;
@@ -1860,7 +1858,7 @@ procedure TformPoBatch.LoadPath(Data: PtrInt);
 begin
   if (Path <> string.Empty) then
   begin
-    if OpenPath(Path, True) then
+    if OpenPath(Path) then
       UpdatePath
     else
       Path := string.Empty;
