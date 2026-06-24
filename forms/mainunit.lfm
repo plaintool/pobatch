@@ -611,6 +611,9 @@ object formPoBatch: TformPoBatch
       object MenuClearIdentical: TMenuItem
         Action = AClearIdentical
       end
+      object MenuEditPluralForm: TMenuItem
+        Action = AEditPluralForm
+      end
       object Separator3: TMenuItem
         Caption = '-'
       end
@@ -733,6 +736,12 @@ object formPoBatch: TformPoBatch
       ShortCut = 32836
       OnExecute = AClearIdenticalExecute
     end
+    object AEditPluralForm: TAction
+      Category = 'Edit'
+      Caption = 'Edit Plural Form'
+      ShortCut = 32848
+      OnExecute = AEditPluralFormExecute
+    end
     object AEditTranslationOnly: TAction
       Category = 'Edit'
       AutoCheck = True
@@ -755,6 +764,9 @@ object formPoBatch: TformPoBatch
     end
     object MenuPopupClearIdentical: TMenuItem
       Action = AClearIdentical
+    end
+    object MenuPopupEditPluralForm: TMenuItem
+      Action = AEditPluralForm
     end
     object Separator7: TMenuItem
       Caption = '-'

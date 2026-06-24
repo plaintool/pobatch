@@ -42,6 +42,7 @@ type
   TformPoBatch = class(TForm)
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    AEditPluralForm: TAction;
     ApplicationProp: TApplicationProperties;
     ASelectAll: TAction;
     ACut: TAction;
@@ -81,6 +82,8 @@ type
     MenuCopy: TMenuItem;
     MenuCopySourceText: TMenuItem;
     MenuClearIdentical: TMenuItem;
+    MenuEditPluralForm: TMenuItem;
+    MenuPopupEditPluralForm: TMenuItem;
     MenuTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
     MenuPopupCopy: TMenuItem;
@@ -169,8 +172,9 @@ type
     procedure APasteUpdate(Sender: TObject);
     procedure ADeleteUpdate(Sender: TObject);
     procedure ASelectAllUpdate(Sender: TObject);
-    procedure AClearIdenticalExecute(Sender: TObject);
     procedure ACopySourceTextExecute(Sender: TObject);
+    procedure AClearIdenticalExecute(Sender: TObject);
+    procedure AEditPluralFormExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     { Grids Universal }
     procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -720,58 +724,6 @@ begin
   ASelectAll.Enabled := CanActionEnable;
 end;
 
-procedure TformPoBatch.AClearIdenticalExecute(Sender: TObject);
-var
-  Row: integer;
-  ReplacedCount: integer;
-  StartRow, EndRow: integer;
-begin
-  if MessageDlg('Clear identical translations in the selected row(s)?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
-    Exit;
-
-  ReplacedCount := 0;
-
-  if Grid.Selection.Top = Grid.Selection.Bottom then
-  begin
-    StartRow := Grid.Row;
-    EndRow := Grid.Row;
-  end
-  else
-  begin
-    StartRow := Grid.Selection.Top;
-    EndRow := Grid.Selection.Bottom;
-  end;
-
-  for Row := StartRow to EndRow do
-  begin
-    if Grid.Cells[CELL_TEXT, Row] = Grid.Cells[CELL_TRANSLATION, Row] then
-    begin
-      Grid.Cells[CELL_TRANSLATION, Row] := string.Empty;
-      Grid.Cells[CELL_VALID, Row] := '0';
-      Inc(ReplacedCount);
-    end;
-  end;
-
-  if ReplacedCount > 0 then
-  begin
-    Changed := True;
-
-    // Re-apply active column sort if any
-    //if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
-    //  Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
-    //Grid.Invalidate;
-  end;
-
-  MessageDlg(
-    Format('%d translations were cleared.', [ReplacedCount]),
-    mtInformation,
-    [mbOK],
-    0
-    );
-
-  Grid.Invalidate;
-end;
-
 procedure TformPoBatch.ACopySourceTextExecute(Sender: TObject);
 var
   Row: integer;
@@ -820,6 +772,79 @@ begin
   Grid.Invalidate;
 end;
 
+procedure TformPoBatch.AClearIdenticalExecute(Sender: TObject);
+var
+  Row: integer;
+  ReplacedCount: integer;
+  StartRow, EndRow: integer;
+begin
+  if MessageDlg('Clear translations that are identical to the source text in the selected row(s)?',
+    mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
+
+  ReplacedCount := 0;
+
+  if Grid.Selection.Top = Grid.Selection.Bottom then
+  begin
+    StartRow := Grid.Row;
+    EndRow := Grid.Row;
+  end
+  else
+  begin
+    StartRow := Grid.Selection.Top;
+    EndRow := Grid.Selection.Bottom;
+  end;
+
+  for Row := StartRow to EndRow do
+  begin
+    if Grid.Cells[CELL_TEXT, Row] = Grid.Cells[CELL_TRANSLATION, Row] then
+    begin
+      Grid.Cells[CELL_TRANSLATION, Row] := string.Empty;
+      Grid.Cells[CELL_VALID, Row] := '0';
+      Inc(ReplacedCount);
+    end;
+  end;
+
+  if ReplacedCount > 0 then
+  begin
+    Changed := True;
+
+    // Re-apply active column sort if any
+    //if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
+    //  Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+    //Grid.Invalidate;
+  end;
+
+  MessageDlg(
+    Format('%d translations were cleared.', [ReplacedCount]),
+    mtInformation,
+    [mbOK],
+    0
+    );
+
+  Grid.Invalidate;
+end;
+
+procedure TformPoBatch.AEditPluralFormExecute(Sender: TObject);
+var
+  OldValue, Value: string;
+begin
+  Value := Grid.Cells[CELL_PLURAL, Grid.Row];
+  OldValue := Value;
+
+  InputQueryLite('Plural form', 'Enter plural form', Value);
+  if (Value = string.empty) and ((OldValue = string.Empty) or (MessageDlg('Delete plural form?',
+    'Are you sure you want to delete this plural form?', mtConfirmation, mbYesNo, 0) <> mrYes)) then
+    Exit;
+
+  if (OldValue <> Value) then
+  begin
+    Grid.Cells[CELL_PLURAL, Grid.Row] := Value;
+    UpdateTranslatePanel;
+    Changed := True;
+  end;
+end;
+
 procedure TformPoBatch.AEditTranslationOnlyExecute(Sender: TObject);
 begin
   GridHeaders.EditorMode := False;
@@ -835,6 +860,8 @@ begin
 
   MemoSource.ReadOnly := AEditTranslationOnly.Checked;
   MemoPlural.ReadOnly := AEditTranslationOnly.Checked;
+
+  AEditPluralForm.Enabled := not AEditTranslationOnly.Checked;
 
   GridPlural.EditorMode := False;
   GridComments.EditorMode := False;
