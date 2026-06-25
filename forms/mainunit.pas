@@ -1958,6 +1958,8 @@ begin
   end;
 
   // Attempt to load the file
+  Grid.OnSelectCell:=nil;
+  try
   if LoadFromFile(FullPath) then
   begin
     FFileName := FullPath;
@@ -1975,6 +1977,9 @@ begin
     // Loading failed – revert to the previous selection
     ListPath.ItemIndex := FPathIndex;
     FLastPathIndex := FPathIndex;
+  end;
+  finally
+    Grid.OnSelectCell:=@GridSelectCell;
   end;
 end;
 
