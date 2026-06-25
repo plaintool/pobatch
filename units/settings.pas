@@ -100,14 +100,18 @@ begin
 
     JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[COLUMN_TEXT].Width);
     JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[COLUMN_TRANSLATION].Width);
+    JSONObj.Add('GridColumnContextWidth', Form.Grid.Columns[COLUMN_CONTEXT].Width);
     JSONObj.Add('GridColumnReferenceWidth', Form.Grid.Columns[COLUMN_REFERENCE].Width);
+    JSONObj.Add('GridColumnPluralWidth', Form.Grid.Columns[COLUMN_PLURAL].Width);
     JSONObj.Add('GridSortColumn', Form.SortColumn);
     JSONObj.Add('SortColumn', Form.SortColumn);
     JSONObj.Add('SortOrder', Ord(Form.SortOrder));
 
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
     JSONObj.Add('MenuTranslatePanelChecked', Form.MenuTranslatePanel.Checked);
+    JSONObj.Add('MenuColumnContextChecked', Form.MenuColumnContext.Checked);
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
+    JSONObj.Add('MenuColumnPluralChecked', Form.MenuColumnPlural.Checked);
     JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
 
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
@@ -215,8 +219,14 @@ begin
       if JSONObj.FindPath('GridColumnTranslationWidth') <> nil then
         Form.Grid.Columns[COLUMN_TRANSLATION].Width := JSONObj.FindPath('GridColumnTranslationWidth').AsInteger;
 
+      if JSONObj.FindPath('GridColumnContextWidth') <> nil then
+        Form.Grid.Columns[COLUMN_CONTEXT].Width := JSONObj.FindPath('GridColumnContextWidth').AsInteger;
+
       if JSONObj.FindPath('GridColumnReferenceWidth') <> nil then
         Form.Grid.Columns[COLUMN_REFERENCE].Width := JSONObj.FindPath('GridColumnReferenceWidth').AsInteger;
+
+      if JSONObj.FindPath('GridColumnPluralWidth') <> nil then
+        Form.Grid.Columns[COLUMN_PLURAL].Width := JSONObj.FindPath('GridColumnPluralWidth').AsInteger;
 
       if JSONObj.FindPath('SortColumn') <> nil then
         Form.SortColumn := JSONObj.FindPath('SortColumn').AsInteger;
@@ -238,11 +248,23 @@ begin
         if Form.MenuTranslatePanel.Checked and Assigned(Form.MenuTranslatePanel.OnClick) then
           Form.MenuTranslatePanel.OnClick(Form.MenuTranslatePanel);
       end;
+      if JSONObj.FindPath('MenuColumnContextChecked') <> nil then
+      begin
+        Form.MenuColumnContext.Checked := JSONObj.FindPath('MenuColumnContextChecked').AsBoolean;
+        if Form.MenuColumnContext.Checked and Assigned(Form.MenuColumnContext.OnClick) then
+          Form.MenuColumnContext.OnClick(Form.MenuColumnContext);
+      end;
       if JSONObj.FindPath('MenuColumnReferenceChecked') <> nil then
       begin
         Form.MenuColumnReference.Checked := JSONObj.FindPath('MenuColumnReferenceChecked').AsBoolean;
         if Form.MenuColumnReference.Checked and Assigned(Form.MenuColumnReference.OnClick) then
           Form.MenuColumnReference.OnClick(Form.MenuColumnReference);
+      end;
+      if JSONObj.FindPath('MenuColumnPluralChecked') <> nil then
+      begin
+        Form.MenuColumnPlural.Checked := JSONObj.FindPath('MenuColumnPluralChecked').AsBoolean;
+        if Form.MenuColumnPlural.Checked and Assigned(Form.MenuColumnPlural.OnClick) then
+          Form.MenuColumnPlural.OnClick(Form.MenuColumnPlural);
       end;
 
       if JSONObj.FindPath('ActionEditTranslationOnly') <> nil then

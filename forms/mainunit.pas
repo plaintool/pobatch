@@ -84,6 +84,8 @@ type
     MenuClearIdentical: TMenuItem;
     MenuEditPluralForm: TMenuItem;
     MenuHelpGNUgettext: TMenuItem;
+    MenuColumnContext: TMenuItem;
+    MenuColumnPlural: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
     MenuTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
@@ -157,7 +159,9 @@ type
     procedure MenuPathCloseClick(Sender: TObject);
     procedure MenuFileExitClick(Sender: TObject);
     procedure MenuHeadersClick(Sender: TObject);
+    procedure MenuColumnContextClick(Sender: TObject);
     procedure MenuColumnReferenceClick(Sender: TObject);
+    procedure MenuColumnPluralClick(Sender: TObject);
     procedure MenuBuyMeACoffeeClick(Sender: TObject);
     procedure MenuCheckForUpdatesClick(Sender: TObject);
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
@@ -331,16 +335,16 @@ const
   COLUMN_VALID = 0;
   COLUMN_TEXT = 1;
   COLUMN_TRANSLATION = 2;
-  COLUMN_REFERENCE = 3;
-  COLUMN_CONTEXT = 4;
-  COLUMN_PLURAL = 5;
+  COLUMN_CONTEXT = 3;
+  COLUMN_PLURAL = 4;
+  COLUMN_REFERENCE = 5;
   COLUMN_FUZZY = 6;
   CELL_VALID = 1;
   CELL_TEXT = 2;
   CELL_TRANSLATION = 3;
-  CELL_REFERENCE = 4;
-  CELL_CONTEXT = 5;
-  CELL_PLURAL = 6;
+  CELL_CONTEXT = 4;
+  CELL_PLURAL = 5;
+  CELL_REFERENCE = 6;
   CELL_FUZZY = 7;
 
   UNDEFINED = 'undefined';
@@ -638,11 +642,25 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
+procedure TformPoBatch.MenuColumnContextClick(Sender: TObject);
+begin
+  Grid.Columns[COLUMN_CONTEXT].Visible := MenuColumnContext.Checked;
+  if Grid.Columns[COLUMN_CONTEXT].Visible and (Grid.Columns[COLUMN_CONTEXT].Width = 0) then
+    Grid.Columns[COLUMN_CONTEXT].Width := 240;
+end;
+
 procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
 begin
   Grid.Columns[COLUMN_REFERENCE].Visible := MenuColumnReference.Checked;
   if Grid.Columns[COLUMN_REFERENCE].Visible and (Grid.Columns[COLUMN_REFERENCE].Width = 0) then
     Grid.Columns[COLUMN_REFERENCE].Width := 240;
+end;
+
+procedure TformPoBatch.MenuColumnPluralClick(Sender: TObject);
+begin
+  Grid.Columns[COLUMN_PLURAL].Visible := MenuColumnPlural.Checked;
+  if Grid.Columns[COLUMN_PLURAL].Visible and (Grid.Columns[COLUMN_PLURAL].Width = 0) then
+    Grid.Columns[COLUMN_PLURAL].Width := 240;
 end;
 
 procedure TformPoBatch.MenuBuyMeACoffeeClick(Sender: TObject);
@@ -1391,7 +1409,8 @@ procedure TformPoBatch.MemoExit(Sender: TObject);
 begin
   Grid.EditorMode := False;
 
-  if (Grid.Col = CELL_TRANSLATION) or ((Grid.Col = CELL_TEXT) and (not MenuEditTranslationOnly.Checked)) then
+  if (Grid.Col = CELL_TRANSLATION) or ((not MenuEditTranslationOnly.Checked) and
+    (Grid.Col in [CELL_TEXT, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE])) then
   begin
     UpdateTranslatePanel;
     UpdateValid;

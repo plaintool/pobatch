@@ -186,18 +186,20 @@ object formPoBatch: TformPoBatch
         end      
         item
           ReadOnly = True
-          Title.Caption = 'Reference'
+          Title.Caption = 'Context'
           Width = 0
           Visible = False
         end      
         item
           ReadOnly = True
-          Title.Caption = 'Context'
+          Title.Caption = 'Plural'
+          Width = 0
           Visible = False
         end      
         item
           ReadOnly = True
-          Title.Caption = 'Plural'
+          Title.Caption = 'Reference'
+          Width = 0
           Visible = False
         end      
         item
@@ -637,10 +639,20 @@ object formPoBatch: TformPoBatch
       object Separator9: TMenuItem
         Caption = '-'
       end
+      object MenuColumnContext: TMenuItem
+        AutoCheck = True
+        Caption = 'Column Context'
+        OnClick = MenuColumnContextClick
+      end
       object MenuColumnReference: TMenuItem
         AutoCheck = True
         Caption = 'Column Reference'
         OnClick = MenuColumnReferenceClick
+      end
+      object MenuColumnPlural: TMenuItem
+        AutoCheck = True
+        Caption = 'Column Plural'
+        OnClick = MenuColumnPluralClick
       end
     end
     object menuHelp: TMenuItem
