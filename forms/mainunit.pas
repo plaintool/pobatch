@@ -1262,7 +1262,7 @@ end;
 
 procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
 begin
-  if (aCol in [COLUMN_TEXT, COLUMN_TRANSLATION, COLUMN_REFERENCE]) then
+  if (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE]) then
   begin
     PanelMemo := TPanel.Create(Self);
     PanelMemo.Parent := Grid;
@@ -1958,28 +1958,28 @@ begin
   end;
 
   // Attempt to load the file
-  Grid.OnSelectCell:=nil;
+  Grid.OnSelectCell := nil;
   try
-  if LoadFromFile(FullPath) then
-  begin
-    FFileName := FullPath;
-    Changed := False;
-    FillGrids;
-    if Grid.RowCount > 1 then
+    if LoadFromFile(FullPath) then
     begin
-      Grid.Row := 1;
-      FLastRow := 1;
-      UpdateTranslatePanel;
+      FFileName := FullPath;
+      Changed := False;
+      FillGrids;
+      if Grid.RowCount > 1 then
+      begin
+        Grid.Row := 1;
+        FLastRow := 1;
+        UpdateTranslatePanel;
+      end;
+    end
+    else
+    begin
+      // Loading failed – revert to the previous selection
+      ListPath.ItemIndex := FPathIndex;
+      FLastPathIndex := FPathIndex;
     end;
-  end
-  else
-  begin
-    // Loading failed – revert to the previous selection
-    ListPath.ItemIndex := FPathIndex;
-    FLastPathIndex := FPathIndex;
-  end;
   finally
-    Grid.OnSelectCell:=@GridSelectCell;
+    Grid.OnSelectCell := @GridSelectCell;
   end;
 end;
 
@@ -2328,10 +2328,17 @@ end;
 
 function TformPoBatch.CanActionEnable: boolean;
 begin
-  Result := ((Assigned(Memo)) and not Memo.Focused) and ((Assigned(GridHeaders.InplaceEditor)) and not
-    GridHeaders.InplaceEditor.Focused) and ((Assigned(GridPlural.InplaceEditor)) and not GridPlural.InplaceEditor.Focused) and
-    ((Assigned(GridComments.InplaceEditor)) and not GridComments.InplaceEditor.Focused) and not Filter.Focused and
-    not MemoSource.Focused and not MemoPlural.Focused and not MemoTranslation.Focused;
+  //jcf:format=off
+  Result :=
+    not (Assigned(Memo) and Memo.Focused) and
+    not (Assigned(MemoSource) and MemoSource.Focused) and
+    not (Assigned(MemoPlural) and MemoPlural.Focused) and
+    not (Assigned(MemoTranslation) and MemoTranslation.Focused) and
+    not (Assigned(Filter) and Filter.Focused) and
+    not (Assigned(GridHeaders.InplaceEditor) and GridHeaders.InplaceEditor.Focused) and
+    not (Assigned(GridPlural.InplaceEditor) and GridPlural.InplaceEditor.Focused) and
+    not (Assigned(GridComments.InplaceEditor) and GridComments.InplaceEditor.Focused);
+  //jcf:format=on
 end;
 
 function TformPoBatch.RowEntry(aRow: integer = -1): TPOEntry;

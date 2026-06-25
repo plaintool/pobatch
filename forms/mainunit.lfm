@@ -644,15 +644,15 @@ object formPoBatch: TformPoBatch
         Caption = 'Column Context'
         OnClick = MenuColumnContextClick
       end
-      object MenuColumnReference: TMenuItem
-        AutoCheck = True
-        Caption = 'Column Reference'
-        OnClick = MenuColumnReferenceClick
-      end
       object MenuColumnPlural: TMenuItem
         AutoCheck = True
         Caption = 'Column Plural'
         OnClick = MenuColumnPluralClick
+      end
+      object MenuColumnReference: TMenuItem
+        AutoCheck = True
+        Caption = 'Column Reference'
+        OnClick = MenuColumnReferenceClick
       end
     end
     object menuHelp: TMenuItem
