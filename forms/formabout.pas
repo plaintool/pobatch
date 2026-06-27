@@ -15,7 +15,7 @@ uses
   Forms,
   StdCtrls,
   ExtCtrls,
-  LCLIntf;
+  LCLIntf, Classes;
 
 type
 
@@ -24,10 +24,12 @@ type
   TformAboutPoBatch = class(TForm)
     buttonOk: TButton;
     imageLogo: TImage;
+    Label1: TLabel;
     labelBy: TLabel;
     labelName: TLabel;
     labelLic: TLabel;
     LabelLicUrl: TLabel;
+    LabelUrlGithub: TLabel;
     Memo1: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure LabelLicUrlClick(Sender: TObject);
@@ -53,7 +55,7 @@ end;
 
 procedure TformAboutPoBatch.LabelLicUrlClick(Sender: TObject);
 begin
-  OpenUrl(labelLicUrl.Hint);
+  OpenUrl((Sender as TLabel).Hint);
 end;
 
 end.

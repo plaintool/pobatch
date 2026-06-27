@@ -631,9 +631,9 @@ object formAboutPoBatch: TformAboutPoBatch
     Left = 140
     Height = 15
     Top = 72
-    Width = 273
+    Width = 208
     Alignment = taCenter
-    Caption = 'by Alexander Tverskoy is licensed under MIT License'
+    Caption = 'by Alexander Tverskoy is licensed under'
     WordWrap = True
   end
   object labelName: TLabel
@@ -648,7 +648,7 @@ object formAboutPoBatch: TformAboutPoBatch
   object labelLic: TLabel
     Left = 140
     Height = 15
-    Top = 96
+    Top = 112
     Width = 215
     Caption = 'For questions or feedback, contact me at'
     WordWrap = True
@@ -658,7 +658,7 @@ object formAboutPoBatch: TformAboutPoBatch
     Left = 140
     Height = 15
     Hint = 'mailto:astverskoy@gmail.com'
-    Top = 116
+    Top = 132
     Width = 123
     Caption = 'astverskoy@gmail.com'
     Font.Color = clBlue
@@ -679,5 +679,28 @@ object formAboutPoBatch: TformAboutPoBatch
     )
     ScrollBars = ssVertical
     TabOrder = 1
+  end
+  object Label1: TLabel
+    Left = 140
+    Height = 15
+    Top = 92
+    Width = 219
+    Caption = 'the GNU General Public License, Version 3'
+  end
+  object LabelUrlGithub: TLabel
+    Cursor = crHandPoint
+    Left = 292
+    Height = 15
+    Hint = 'https://github.com/plaintool/pobatch'
+    Top = 132
+    Width = 137
+    Caption = 'github: plaintool/pobatch'
+    Font.Color = clBlue
+    Font.Style = [fsUnderline]
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    WordWrap = True
+    OnClick = LabelLicUrlClick
   end
 end

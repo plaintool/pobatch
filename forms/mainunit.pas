@@ -267,7 +267,7 @@ type
     procedure SetSplitRatio(Value: double);
 
     // Methods File Operations
-    function IsCanClose: boolean;
+    function IsCanClose(Fast: boolean = False): boolean;
     function PromptSaveChanges: TModalResult;
     procedure HandleCommandLineParameters;
     function ValidateFileForOpen(const AFileName: string): boolean;
@@ -281,7 +281,7 @@ type
     procedure SyncPath;
     procedure SelectPath;
     function LoadFile(AFileName: string): boolean;
-    function SaveFile(AFileName: string): boolean;
+    function SaveFile(AFileName: string; Fast: boolean = False): boolean;
     // Methods
     procedure UpdateRowHeights(aRow: integer = -1);
     procedure UpdateCaption;
@@ -302,9 +302,11 @@ type
     function SelectGridsAll: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     function GetEntiryIndex(aRow: integer = -1): integer;
-    procedure FillGrids;
+    procedure FillGrid;
     procedure SaveRow(aRow: integer = -1);   // Save grid row data to model; -1 = current row
-    procedure SaveGrids;
+    procedure SaveGrid;
+    procedure FillGridHeaders;
+    procedure SaveGridHeaders;
     procedure FillGridPlural(aRow: integer = -1);
     procedure SaveGridPlural(aRow: integer = -1);
     procedure FillGridComments(aRow: integer = -1);
@@ -714,7 +716,8 @@ begin
     Exit;
 
   FPoFile.Assign(FPoFileBackup);
-  FillGrids;
+  FillGrid;
+  FillGridHeaders;
   UpdateTranslatePanel;
   Changed := False;
 end;
@@ -1097,13 +1100,13 @@ begin
       SelIndexes[i - Grid.Selection.Top] := StrToIntDef(Grid.Cells[0, i], -1);
 
     // Save any unsaved changes from the grid back to FPoFile
-    SaveGrids;
+    SaveGrid;
 
     // Delete the entries from FPoFile (handles index ordering internally)
     FPoFile.DeleteEntriesByIndexes(SelIndexes);
 
     Changed := True;
-    FillGrids;   // rebuild the grid from updated FPoFile (preserves filter & sort)
+    FillGrid;   // rebuild the grid from updated FPoFile (preserves filter & sort)
     Key := 0;
   end
   else
@@ -1148,7 +1151,7 @@ begin
   if Index = 0 then
   begin
     FSortColumn := -1;
-    FillGrids;
+    FillGrid;
     Exit;
   end;
 
@@ -1156,7 +1159,7 @@ begin
   if GetKeyState(VK_CONTROL) and $8000 <> 0 then
   begin
     FSortColumn := -1;
-    FillGrids;
+    FillGrid;
     Exit;
   end;
 
@@ -1539,8 +1542,8 @@ end;
 
 procedure TformPoBatch.FilterChange(Sender: TObject);
 begin
-  SaveGrids;
-  FillGrids;
+  SaveGrid;
+  FillGrid;
 end;
 
 procedure TformPoBatch.btnFilterClearClick(Sender: TObject);
@@ -1643,7 +1646,7 @@ end;
 
 {%Region -fold Methods File Operations}
 
-function TformPoBatch.IsCanClose: boolean;
+function TformPoBatch.IsCanClose(Fast: boolean = False): boolean;
 var
   mr: TModalResult;
 begin
@@ -1663,7 +1666,7 @@ begin
           dialogSave.FileName := string.Empty;
           if dialogSave.Execute then
           begin
-            if not SaveFile(dialogSave.FileName) then
+            if not SaveFile(dialogSave.FileName, Fast) then
               Result := False  // Save was cancelled or failed
             else
             begin
@@ -1677,7 +1680,7 @@ begin
         else
         begin
           // Save to current file
-          if not SaveFile(FFileName) then
+          if not SaveFile(FFileName, Fast) then
             Result := False  // Save failed
           else
             Changed := False;
@@ -1809,7 +1812,8 @@ begin
     FFileName := AFileName;
     Changed := False;
     FPoFileBackup.Assign(FPoFile);
-    FillGrids;
+    FillGrid;
+    FillGridHeaders;
     UpdateTranslatePanel;
     SyncPath;
   except
@@ -1835,7 +1839,8 @@ begin
   begin
     FFileName := AFileName;
     Changed := False;
-    FillGrids;
+    FillGrid;
+    FillGridHeaders;
     SyncPath;
 
     if Grid.RowCount > 1 then
@@ -1986,22 +1991,23 @@ begin
   if Idx >= FPoFiles.Count then Exit;   // safety check
   FullPath := FPoFiles[Idx];
 
-  // Ask to save current changes – if user cancels, revert the selection
-  if not IsCanClose then
-  begin
-    ListPath.ItemIndex := FPathIndex;
-    FLastPathIndex := FPathIndex;
-    Exit;
-  end;
-
   // Attempt to load the file
   Grid.OnSelectCell := nil;
   try
+    // Ask to save current changes – if user cancels, revert the selection
+    if not IsCanClose(True) then
+    begin
+      ListPath.ItemIndex := FPathIndex;
+      FLastPathIndex := FPathIndex;
+      Exit;
+    end;
+
     if LoadFile(FullPath) then
     begin
       FFileName := FullPath;
       Changed := False;
-      FillGrids;
+      FillGrid;
+      FillGridHeaders;
       if Grid.RowCount > 1 then
       begin
         Grid.Row := 1;
@@ -2009,7 +2015,6 @@ begin
         FPathIndex := ListPath.ItemIndex;
         AnalizePath(FPathIndex);
         UpdateTranslatePanel;
-        if Grid.CanFocus then Grid.SetFocus;
       end;
     end
     else
@@ -2084,7 +2089,7 @@ begin
   end;
 end;
 
-function TformPoBatch.SaveFile(AFileName: string): boolean;
+function TformPoBatch.SaveFile(AFileName: string; Fast: boolean = False): boolean;
 var
   Output: TStringList;
   Stream: TStringStream;
@@ -2098,9 +2103,10 @@ begin
     Exit;
   end;
 
-  SaveGrids;
+  SaveGrid;
+  SaveGridHeaders;
   FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
-  FillGrids;
+  if not Fast then FillGridHeaders;
 
   Output := TStringList.Create;
   try
@@ -2109,7 +2115,7 @@ begin
       begin
         Stream := TStringStream.Create(string.Empty, TEncoding.UTF8);
         try
-          FPoFile.SaveToStream(Stream);          // serialize all entries to UTF-8 stream
+          FPoFile.SaveToStream(Stream);         // serialize all entries to UTF-8 stream
           Output.Text := Stream.DataString;     // get resulting string
         finally
           Stream.Free;
@@ -2127,8 +2133,11 @@ begin
       FPoFileBackup.Assign(FPoFile);
 
       AnalizePath(FPathIndex);
-      UpdateInterface;
-      UpdateTranslatePanel;
+      if not Fast then
+      begin
+        UpdateInterface;
+        UpdateTranslatePanel;
+      end;
 
       Result := True;
     except
@@ -2628,55 +2637,17 @@ begin
   if (Result < 1) or (Result >= FPoFile.Entries.Count) then Exit(-1);
 end;
 
-procedure TformPoBatch.FillGrids;
+procedure TformPoBatch.FillGrid;
 var
   i, RowIndex: integer;
   Entry: TPOEntry;
-  Headers: TStrings;
-  p: integer;
-  Key, Value: string;
   SavedEntryIndex: integer;    // permanent entry index before refill
   TargetRow: integer;          // row to select after refill
 begin
   if not Assigned(FPoFile) then
   begin
     Grid.RowCount := Grid.FixedRows;
-    GridHeaders.RowCount := GridHeaders.FixedRows;
     Exit;
-  end;
-
-  // Fill the headers grid
-  FUpdatingGrid := True;
-  GridHeaders.BeginUpdate;
-  GridHeaders.OnColRowInserted := nil;
-  try
-    Headers := FPoFile.Headers;
-    try
-      GridHeaders.RowCount := GridHeaders.FixedRows + Headers.Count;
-      for i := 0 to Headers.Count - 1 do
-      begin
-        // Parse "Key=Value" line
-        p := Pos('=', Headers[i]);
-        if p > 0 then
-        begin
-          Key := Copy(Headers[i], 1, p - 1);
-          Value := Copy(Headers[i], p + 1, MaxInt);
-        end
-        else
-        begin
-          Key := Headers[i];
-          Value := '';
-        end;
-        // Column 0 is fixed, store key and value in columns 1 and 2
-        GridHeaders.Cells[1, GridHeaders.FixedRows + i] := Key;
-        GridHeaders.Cells[2, GridHeaders.FixedRows + i] := Value;
-      end;
-    finally
-      Headers.Free;
-    end;
-  finally
-    GridHeaders.OnColRowInserted := @GridUniversalColRowInserted;
-    GridHeaders.EndUpdate;
   end;
 
   // Fill main translation grid
@@ -2801,10 +2772,72 @@ begin
   Entry.IsFuzzy := (Grid.Cells[CELL_FUZZY, Row] = '1');
 end;
 
-procedure TformPoBatch.SaveGrids;
+procedure TformPoBatch.SaveGrid;
 var
   i: integer;
+begin
+  if not Assigned(FPoFile) then Exit;
+
+  // Save all data rows using the common SaveRow method
+  for i := Grid.FixedRows to Grid.RowCount - 1 do
+    SaveRow(i);
+
+  if GridPlural.Visible then
+    SaveGridPlural;
+  SaveGridComments;
+end;
+
+procedure TformPoBatch.FillGridHeaders;
+var
+  Headers: TStrings;
+  Key, Value: string;
+  i, p: integer;
+begin
+  if not Assigned(FPoFile) then
+  begin
+    GridHeaders.RowCount := GridHeaders.FixedRows;
+    Exit;
+  end;
+
+  // Fill the headers grid
+  FUpdatingGrid := True;
+  GridHeaders.BeginUpdate;
+  GridHeaders.OnColRowInserted := nil;
+  try
+    Headers := FPoFile.Headers;
+    try
+      GridHeaders.RowCount := GridHeaders.FixedRows + Headers.Count;
+      for i := 0 to Headers.Count - 1 do
+      begin
+        // Parse "Key=Value" line
+        p := Pos('=', Headers[i]);
+        if p > 0 then
+        begin
+          Key := Copy(Headers[i], 1, p - 1);
+          Value := Copy(Headers[i], p + 1, MaxInt);
+        end
+        else
+        begin
+          Key := Headers[i];
+          Value := '';
+        end;
+        // Column 0 is fixed, store key and value in columns 1 and 2
+        GridHeaders.Cells[1, GridHeaders.FixedRows + i] := Key;
+        GridHeaders.Cells[2, GridHeaders.FixedRows + i] := Value;
+      end;
+    finally
+      Headers.Free;
+    end;
+  finally
+    GridHeaders.OnColRowInserted := @GridUniversalColRowInserted;
+    GridHeaders.EndUpdate;
+  end;
+end;
+
+procedure TformPoBatch.SaveGridHeaders;
+var
   Headers: TStringList;
+  i: integer;
 begin
   if not Assigned(FPoFile) then Exit;
 
@@ -2822,14 +2855,6 @@ begin
   finally
     Headers.Free;
   end;
-
-  // Save all data rows using the common SaveRow method
-  for i := Grid.FixedRows to Grid.RowCount - 1 do
-    SaveRow(i);
-
-  if GridPlural.Visible then
-    SaveGridPlural;
-  SaveGridComments;
 end;
 
 procedure TformPoBatch.FillGridPlural(aRow: integer = -1);
