@@ -40,6 +40,7 @@ type
   { TformPoBatch }
 
   TformPoBatch = class(TForm)
+    {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
     AEditPluralForm: TAction;
@@ -234,6 +235,7 @@ type
     procedure MemoSourceChange(Sender: TObject);
     procedure MemoPluralChange(Sender: TObject);
     procedure MemoTranslationChange(Sender: TObject);
+    {%EndRegion}
   private
     Memo: TMemo;
     PanelMemo: TPanel;
@@ -260,11 +262,11 @@ type
     FSortColumn: integer;
     FSplitRatio: double;
 
-    { Properties Methods }
+    // Properties Methods
     procedure SetChanges(Value: boolean);
     procedure SetSplitRatio(Value: double);
 
-    { Methods File Operations }
+    // Methods File Operations
     function IsCanClose: boolean;
     function PromptSaveChanges: TModalResult;
     procedure HandleCommandLineParameters;
@@ -272,17 +274,18 @@ type
     function NewFile(AFileName: string = string.Empty): boolean;
     function OpenFile(const AFileName: string; CheckCanClose: boolean = True): boolean;
     function OpenPath(const APath: string; Force: boolean = False): boolean;
-    procedure AnalizePath(AIndex: integer = -1);
+    procedure AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
     procedure LoadPath(Data: PtrInt);
     procedure ClosePath;
     procedure UpdatePath;
     procedure SyncPath;
     procedure SelectPath;
-    function LoadFromFile(AFileName: string): boolean;
+    function LoadFile(AFileName: string): boolean;
     function SaveFile(AFileName: string): boolean;
-    { Methods }
+    // Methods
     procedure UpdateRowHeights(aRow: integer = -1);
     procedure UpdateCaption;
+    procedure UpdateInterface;
     procedure UpdateFileStatus(const AFileName: string);
     procedure UpdateSwitch(aRow: integer = -1);
     procedure UpdateTranslatePanel(aRow: integer = -1);
@@ -319,6 +322,8 @@ type
 
 var
   formPoBatch: TformPoBatch;
+
+  {%Region -fold Const}
 
 const
   COLUMN_HEADERS_NAME = 0;
@@ -367,6 +372,8 @@ const
   clSoftGreen = TColor($DDFBDF);
   clSoftGreenDark = TColor($07410C);
 
+  {%EndRegion}
+
 implementation
 
 uses formabout, formdonate, systemtool, formattool, settings, StringGridHelper, ColorHelper;
@@ -375,7 +382,7 @@ uses formabout, formdonate, systemtool, formattool, settings, StringGridHelper, 
 
   { TformPoBatch }
 
-  { Form Events }
+  {%Region -fold Form Events}
 
 procedure TformPoBatch.FormCreate(Sender: TObject);
 var
@@ -511,7 +518,9 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-{ Application Events }
+{%EndRegion}
+
+{%Region -fold Application Events}
 
 procedure TformPoBatch.ApplicationPropActivate(Sender: TObject);
 begin
@@ -523,7 +532,9 @@ begin
   Invalidate;
 end;
 
-{ Menu Events }
+{%EndRegion}
+
+{%Region -fold Menu Events}
 
 procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
 begin
@@ -690,7 +701,9 @@ begin
   formAboutPoBatch.ShowModal;
 end;
 
-{ Action Events }
+{%EndRegion}
+
+{%Region -fold Action Events}
 
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
 begin
@@ -916,7 +929,9 @@ begin
   end;
 end;
 
-{ Grids Universal }
+{%EndRegion}
+
+{%Region -fold Grids Universal Events}
 
 procedure TformPoBatch.GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
@@ -1005,7 +1020,9 @@ begin
   end;
 end;
 
-{ Grid Headers Events }
+{%EndRegion}
+
+{%Region -fold Grid Headers Events}
 
 procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
@@ -1018,7 +1035,9 @@ begin
   HintText := GridHeaders.Cells[ACol, ARow];
 end;
 
-{ Grid Plural Events }
+{%EndRegion}
+
+{%Region -fold Grid Plural Events}
 
 procedure TformPoBatch.GridPluralValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
@@ -1032,7 +1051,9 @@ begin
   end;
 end;
 
-{ Grid Comments Events }
+{%EndRegion}
+
+{%Region -fold Grid Comments Events}
 
 procedure TformPoBatch.GridCommentsValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
@@ -1054,7 +1075,9 @@ begin
     HintText := GridComments.Cells[ACol, ARow];
 end;
 
-{ Grid Events }
+{%EndRegion}
+
+{%Region -fold Grid Events}
 
 procedure TformPoBatch.GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 var
@@ -1224,7 +1247,7 @@ begin
   Grid.Cells[0, tIndex] := IntToStr(NewIndex);
 
   FChanged := True;
-  UpdateCaption;
+  UpdateInterface;
 end;
 
 procedure TformPoBatch.GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
@@ -1378,7 +1401,9 @@ begin
     );
 end;
 
-{ Inline Editor Events}
+{%EndRegion}
+
+{%Region -fold Inline Editor Events}
 
 procedure TformPoBatch.PanelMemoEnter(Sender: TObject);
 begin
@@ -1445,7 +1470,9 @@ begin
   end;
 end;
 
-{ Other Events }
+{%EndRegion}
+
+{%Region -fold Other Events}
 
 procedure TformPoBatch.EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer;
   OffsetTop: integer; OffsetRight: integer; OffsetBottom: integer);
@@ -1596,13 +1623,15 @@ begin
   end;
 end;
 
-{ Properties Methods }
+{%EndRegion}
+
+{%Region -fold Properties Methods}
 
 procedure TformPoBatch.SetChanges(Value: boolean);
 begin
   FChanged := Value;
   AUndoChanges.Enabled := FChanged;
-  UpdateCaption;
+  UpdateInterface;
 end;
 
 procedure TformPoBatch.SetSplitRatio(Value: double);
@@ -1610,7 +1639,9 @@ begin
   FSplitRatio := Value;
 end;
 
-{ Methods File Operations }
+{%EndRegion}
+
+{%Region -fold Methods File Operations}
 
 function TformPoBatch.IsCanClose: boolean;
 var
@@ -1800,7 +1831,7 @@ begin
     Exit;
 
   // Try to load the file
-  if LoadFromFile(AFileName) then
+  if LoadFile(AFileName) then
   begin
     FFileName := AFileName;
     Changed := False;
@@ -1851,46 +1882,52 @@ begin
   ListPath.Hint := APath;
   FLastPathIndex := -1;   // no file is selected in the new folder
 
-  UpdateCaption;
+  UpdateInterface;
   SyncPath;
 
   Result := True;
 end;
 
-procedure TformPoBatch.AnalizePath(AIndex: integer = -1);
+procedure TformPoBatch.AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
 var
   i: integer;
 begin
   try
-    Screen.Cursor := crAppStart;
     // We analyze each file and save the status
     if AIndex < 0 then
     begin
       SetLength(FFileStatuses, FPoFiles.Count);
       for i := 0 to FPoFiles.Count - 1 do
       begin
-        Screen.Cursor := crAppStart;
-        Application.ProcessMessages;
         FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
+        if ADraw then ListPath.Invalidate;
+        Application.ProcessMessages;
       end;
     end
     else
     begin
-      Application.ProcessMessages;
       FFileStatuses[AIndex] := TPOFile.GetFileStatus(FPoFiles[AIndex]);
+      if ADraw then ListPath.Repaint;
+      Application.ProcessMessages;
     end;
   finally
-    Screen.Cursor := crDefault;
     ListPath.Invalidate;
   end;
 end;
 
 procedure TformPoBatch.LoadPath(Data: PtrInt);
+var
+  NeedAnalize: boolean;
 begin
   if (Path <> string.Empty) then
   begin
+    NeedAnalize := PoFiles.Count > 0;
     if OpenPath(Path) then
-      UpdatePath
+    begin
+      UpdatePath;
+      if NeedAnalize then
+        AnalizePath(-1, True);
+    end
     else
       Path := string.Empty;
   end;
@@ -1900,7 +1937,7 @@ procedure TformPoBatch.ClosePath;
 begin
   FPath := string.Empty;
   UpdatePath;
-  UpdateCaption;
+  UpdateInterface;
 end;
 
 procedure TformPoBatch.UpdatePath;
@@ -1960,7 +1997,7 @@ begin
   // Attempt to load the file
   Grid.OnSelectCell := nil;
   try
-    if LoadFromFile(FullPath) then
+    if LoadFile(FullPath) then
     begin
       FFileName := FullPath;
       Changed := False;
@@ -1969,7 +2006,10 @@ begin
       begin
         Grid.Row := 1;
         FLastRow := 1;
+        FPathIndex := ListPath.ItemIndex;
+        AnalizePath(FPathIndex);
         UpdateTranslatePanel;
+        if Grid.CanFocus then Grid.SetFocus;
       end;
     end
     else
@@ -1983,7 +2023,7 @@ begin
   end;
 end;
 
-function TformPoBatch.LoadFromFile(AFileName: string): boolean;
+function TformPoBatch.LoadFile(AFileName: string): boolean;
 var
   Input: TStringList;
   Stream: TStringStream;
@@ -2029,7 +2069,7 @@ begin
       end;
       FPoFileBackup.Assign(FPoFile);
 
-      UpdateCaption;
+      UpdateInterface;
       Result := True;
     except
       on E: Exception do
@@ -2087,7 +2127,7 @@ begin
       FPoFileBackup.Assign(FPoFile);
 
       AnalizePath(FPathIndex);
-      UpdateCaption;
+      UpdateInterface;
       UpdateTranslatePanel;
 
       Result := True;
@@ -2104,7 +2144,9 @@ begin
   end;
 end;
 
-{ Methods }
+{%EndRegion}
+
+{%Region -fold Methods}
 
 procedure TformPoBatch.UpdateRowHeights(aRow: integer = -1);
 var
@@ -2206,7 +2248,12 @@ begin
   Application.Title := BaseTitle;
   if Changed then
     Application.Title := Application.Title + '*';
+end;
 
+procedure TformPoBatch.UpdateInterface;
+begin
+  UpdateCaption;
+  ListPath.ItemHeight := ListPath.Canvas.TextHeight('Hg') + 4;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
@@ -2927,5 +2974,7 @@ begin
     Comments.Free;
   end;
 end;
+
+{%EndRegion}
 
 end.
