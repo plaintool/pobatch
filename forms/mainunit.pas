@@ -43,6 +43,7 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    ADeleteFile: TAction;
     AEditPluralForm: TAction;
     ApplicationProp: TApplicationProperties;
     ASelectAll: TAction;
@@ -87,6 +88,7 @@ type
     MenuHelpGNUgettext: TMenuItem;
     MenuColumnContext: TMenuItem;
     MenuColumnPlural: TMenuItem;
+    MenuDeleteFile: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
     MenuTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
@@ -117,6 +119,7 @@ type
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
     PopupGrid: TPopupMenu;
+    PopupPath: TPopupMenu;
     Separator10: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
@@ -139,6 +142,7 @@ type
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
     { Form Events }
+    procedure ADeleteFileExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -223,6 +227,7 @@ type
     procedure EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer = 0;
       OffsetTop: integer = 3; OffsetRight: integer = -1; OffsetBottom: integer = 0);
     procedure ListPathClick(Sender: TObject);
+    procedure ListPathMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
@@ -406,6 +411,7 @@ begin
   FLastPathIndex := -1;
   FLastRow := -1;
   FSplitRatio := 0.5;
+  FPathIndex := -1;
 
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
@@ -612,7 +618,13 @@ begin
       FFileName := TempFileName;
       Changed := False;
       if ExtractFilePath(TempFileName) = IncludeTrailingPathDelimiter(FPath) then
-        OpenPath(FPath, True);
+      begin
+        if OpenPath(FPath, True) then
+        begin
+          UpdatePath;
+          AnalizePath(-1, True);
+        end;
+      end;
     end;
   end;
 end;
@@ -627,7 +639,9 @@ begin
       Exit;
     end;
     FPath := dialogPath.FileName;
+    SetLength(FFileStatuses, 0);
     UpdatePath;
+    AnalizePath(-1, True);
   end;
 end;
 
@@ -930,6 +944,26 @@ begin
     GridComments.Options := GridComments.Options + [goAutoAddRows];
     GridComments.Options := GridComments.Options + [goEditing];
   end;
+end;
+
+procedure TformPoBatch.ADeleteFileExecute(Sender: TObject);
+begin
+  if FPathIndex >= 0 then
+  begin
+    if MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <> mrYes then
+      Exit;
+
+    DeleteFile(PoFiles[FPathIndex]);
+
+    NewFile;
+    if OpenPath(FPath, True) then
+    begin
+      UpdatePath;
+      AnalizePath(-1, True);
+    end;
+  end
+  else
+    ShowMessage('Select file to delete!');
 end;
 
 {%EndRegion}
@@ -1497,6 +1531,23 @@ begin
   SetTimeoutSafe(FSelectPathTimer, 50, @SelectPath);
 end;
 
+procedure TformPoBatch.ListPathMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  idx: integer;
+begin
+  if Button = mbRight then
+  begin
+    // Get item under mouse
+    idx := ListPath.ItemAtPos(Point(X, Y), True);
+
+    if idx <> -1 then
+    begin
+      ListPath.ItemIndex := idx; // select item
+      SelectPath;
+    end;
+  end;
+end;
+
 procedure TformPoBatch.ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
 var
   Status: TPoFileStatus;
@@ -1875,7 +1926,7 @@ begin
 
       // Success: replace the old list with the new one
       FPoFiles.Assign(TempFiles);
-      AnalizePath;
+      FPathIndex := -1;
     finally
       TempFiles.Free;
     end;
@@ -1884,7 +1935,6 @@ begin
   ListPath.Items.Clear;
   for i := 0 to FPoFiles.Count - 1 do
     ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
-  ListPath.Hint := APath;
   FLastPathIndex := -1;   // no file is selected in the new folder
 
   UpdateInterface;
@@ -1921,17 +1971,13 @@ begin
 end;
 
 procedure TformPoBatch.LoadPath(Data: PtrInt);
-var
-  NeedAnalize: boolean;
 begin
   if (Path <> string.Empty) then
   begin
-    NeedAnalize := PoFiles.Count > 0;
     if OpenPath(Path) then
     begin
       UpdatePath;
-      if NeedAnalize then
-        AnalizePath(-1, True);
+      AnalizePath(-1, True);
     end
     else
       Path := string.Empty;
@@ -2008,13 +2054,13 @@ begin
       Changed := False;
       FillGrid;
       FillGridHeaders;
+      UpdateTranslatePanel;
       if Grid.RowCount > 1 then
       begin
         Grid.Row := 1;
         FLastRow := 1;
         FPathIndex := ListPath.ItemIndex;
         AnalizePath(FPathIndex);
-        UpdateTranslatePanel;
       end;
     end
     else
@@ -2365,8 +2411,8 @@ end;
 
 procedure TformPoBatch.SwitchCheck;
 var
-  StartRow, EndRow, Row: Integer;
-  NewIndex: Integer;
+  StartRow, EndRow, Row: integer;
+  NewIndex: integer;
 begin
   // toggle switch image and remember new state
   if ImageSwitch.ImageIndex = 0 then

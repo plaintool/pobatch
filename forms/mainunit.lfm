@@ -77,11 +77,13 @@ object formPoBatch: TformPoBatch
     BorderSpacing.Top = 5
     BorderStyle = bsNone
     ItemHeight = 0
+    PopupMenu = PopupPath
     Style = lbOwnerDrawFixed
     TabOrder = 2
     Visible = False
     OnClick = ListPathClick
     OnDrawItem = ListPathDrawItem
+    OnMouseDown = ListPathMouseDown
   end
   object SplitterPath: TSplitter
     Left = 149
@@ -769,6 +771,11 @@ object formPoBatch: TformPoBatch
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
     end
+    object ADeleteFile: TAction
+      Category = 'Edit'
+      Caption = 'Delete File'
+      OnExecute = ADeleteFileExecute
+    end
   end
   object ApplicationProp: TApplicationProperties
     OnActivate = ApplicationPropActivate
@@ -1054,5 +1061,12 @@ object formPoBatch: TformPoBatch
       3BD0C7CE8C777770FDB70CDF677718A51FDD6E7CF2D65F0D9AF9D0C4C153FF23
       76FF0E383852D4
     }
+  end
+  object PopupPath: TPopupMenu
+    Left = 472
+    Top = 160
+    object MenuDeleteFile: TMenuItem
+      Action = ADeleteFile
+    end
   end
 end

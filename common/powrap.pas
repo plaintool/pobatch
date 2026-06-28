@@ -53,9 +53,9 @@ type
   TPOFlags = set of TPOFlag;
 
   TPOFileStatus = (
-    psCorrect,          // All translations present, no fuzzy
-    psFuzzy,            // At least one entry has the 'fuzzy' flag
-    psEmptyTranslation  // No fuzzy, but at least one entry has an empty translation
+    psEmptyTranslation,  // No fuzzy, but at least one entry has an empty translation
+    psCorrect,           // All translations present, no fuzzy
+    psFuzzy              // At least one entry has the 'fuzzy' flag
     );
 
   TPoFileStatusArray = array of TPoFileStatus;
