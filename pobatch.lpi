@@ -145,7 +145,6 @@
       <Unit>
         <Filename Value="units\stringgridhelper.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="StringGridHelper"/>
       </Unit>
       <Unit>
         <Filename Value="units\colorhelper.pas"/>

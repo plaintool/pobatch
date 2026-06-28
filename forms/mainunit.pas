@@ -2364,22 +2364,43 @@ begin
 end;
 
 procedure TformPoBatch.SwitchCheck;
+var
+  StartRow, EndRow, Row: Integer;
+  NewIndex: Integer;
 begin
-  if Grid.Row >= Grid.FixedRows then
+  // toggle switch image and remember new state
+  if ImageSwitch.ImageIndex = 0 then
+    NewIndex := 1
+  else
+    NewIndex := 0;
+  ImageSwitch.ImageIndex := NewIndex;
+
+  // apply to all selected rows
+  if Grid.Selection.Top = Grid.Selection.Bottom then
   begin
-    if ImageSwitch.ImageIndex = 0 then
-      ImageSwitch.ImageIndex := 1
-    else
-      ImageSwitch.ImageIndex := 0;
-
-    Grid.Cells[CELL_FUZZY, Grid.Row] := ImageSwitch.ImageIndex.ToString;
-    UpdateValid;
-    UpdateSwitch;
-    UpdateTranslatePanel;
-
-    Changed := True;
-    Grid.Invalidate;
+    StartRow := Grid.Row;
+    EndRow := Grid.Row;
+  end
+  else
+  begin
+    StartRow := Grid.Selection.Top;
+    EndRow := Grid.Selection.Bottom;
   end;
+
+  for Row := StartRow to EndRow do
+  begin
+    if Row >= Grid.FixedRows then
+    begin
+      Grid.Cells[CELL_FUZZY, Row] := NewIndex.ToString;
+      UpdateValid(Row);
+    end;
+  end;
+
+  UpdateSwitch;
+  UpdateTranslatePanel;
+
+  Changed := True;
+  Grid.Invalidate;
 end;
 
 function TformPoBatch.CanActionEnable: boolean;

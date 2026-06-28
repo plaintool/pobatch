@@ -5,7 +5,7 @@
 //  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
 //-----------------------------------------------------------------------------------
 
-unit StringGridHelper;
+unit stringgridhelper;
 
 {$mode objfpc}{$H+}
 
