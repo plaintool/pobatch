@@ -2049,9 +2049,14 @@ procedure TformPoBatch.SelectPath;
 var
   Idx: integer;
   FullPath: string;
+  SavedRow, SavedTopRow: integer;   // Remember grid position and scroll
 begin
   Idx := ListPath.ItemIndex;
   if Idx < 0 then Exit;   // no file selected
+
+  // Save current row and scroll before any changes
+  SavedRow := Grid.Row;
+  SavedTopRow := Grid.TopRow;
 
   // Remember the previous valid selection
   FPathIndex := FLastPathIndex;
@@ -2082,8 +2087,14 @@ begin
       UpdateTranslatePanel;
       if Grid.RowCount > 1 then
       begin
-        Grid.Row := 1;
-        FLastRow := 1;
+        // Try to restore saved row, default to 1 if out of range
+        if SavedRow < Grid.RowCount then
+          Grid.Row := SavedRow
+        else
+          Grid.Row := 1;
+        // Restore vertical scroll position
+        Grid.TopRow := SavedTopRow;
+        FLastRow := Grid.Row;
         FPathIndex := ListPath.ItemIndex;
         AnalizePath(FPathIndex);
       end;

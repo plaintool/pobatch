@@ -636,13 +636,13 @@ object formPoBatch: TformPoBatch
       Caption = 'Format'
       object MenuWordWrapGrid: TMenuItem
         AutoCheck = True
-        Caption = 'WordWrap Grid'
+        Caption = 'Word Wrap - Grid'
         Checked = True
         OnClick = MenuWordWrapGridClick
       end
       object MenuWordWrapTranslatePanel: TMenuItem
         AutoCheck = True
-        Caption = 'WordWrap Translate Panel'
+        Caption = 'Word Wrap - Translate Panel'
         OnClick = MenuWordWrapTranslatePanelClick
       end
     end
