@@ -89,6 +89,9 @@ type
     MenuColumnContext: TMenuItem;
     MenuColumnPlural: TMenuItem;
     MenuDeleteFile: TMenuItem;
+    MenuFormat: TMenuItem;
+    MenuWordWrapTranslatePanel: TMenuItem;
+    MenuWordWrapGrid: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
     MenuTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
@@ -216,6 +219,8 @@ type
     procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     procedure GridExit(Sender: TObject);
     procedure GridTopLeftChanged(Sender: TObject);
+    procedure MenuWordWrapGridClick(Sender: TObject);
+    procedure MenuWordWrapTranslatePanelClick(Sender: TObject);
     { Inline Editor Events}
     procedure PanelMemoEnter(Sender: TObject);
     procedure PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
@@ -266,6 +271,7 @@ type
     FSortOrder: TSortOrder;
     FSortColumn: integer;
     FSplitRatio: double;
+    FWordWrap: boolean;
 
     // Properties Methods
     procedure SetChanges(Value: boolean);
@@ -325,6 +331,7 @@ type
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
     property PoFiles: TStringList read FPoFiles write FPoFiles;
     property FileStatuses: TPoFileStatusArray read FFileStatuses write FFileStatuses;
+    property WordWrap: boolean read FWordWrap write FWordWrap;
   end;
 
 var
@@ -412,6 +419,7 @@ begin
   FLastRow := -1;
   FSplitRatio := 0.5;
   FPathIndex := -1;
+  FWordWrap := True;
 
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
@@ -653,6 +661,19 @@ end;
 procedure TformPoBatch.MenuFileExitClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TformPoBatch.MenuWordWrapGridClick(Sender: TObject);
+begin
+  FWordWrap := MenuWordWrapGrid.Checked;
+  UpdateRowHeights;
+end;
+
+procedure TformPoBatch.MenuWordWrapTranslatePanelClick(Sender: TObject);
+begin
+  MemoSource.WordWrap := MenuWordWrapTranslatePanel.Checked;
+  MemoPlural.WordWrap := MenuWordWrapTranslatePanel.Checked;
+  MemoTranslation.WordWrap := MenuWordWrapTranslatePanel.Checked;
 end;
 
 procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
@@ -1346,7 +1367,11 @@ begin
     Memo.ScrollBars := ssNone;
     Memo.TabStop := False;
     Memo.WantTabs := True;
-    Memo.WordWrap := True;
+    Memo.WordWrap := FWordWrap;
+    if FWordWrap then
+      Memo.ScrollBars := ssAutoVertical
+    else
+      Memo.ScrollBars := ssAutoBoth;
     Memo.WantReturns := True;
     Memo.BiDiMode := bdLeftToRight;
     EditControlSetBounds(PanelMemo, aCol, aRow);
@@ -1368,7 +1393,7 @@ var
   CustomColor: TColor = clWindow;
 begin
   TS := Grid.Canvas.TextStyle;
-  TS.Wordbreak := True;
+  TS.Wordbreak := FWordWrap;
   TS.SingleLine := False;
   Grid.Canvas.TextStyle := TS;
 
@@ -1432,7 +1457,7 @@ begin
     CellText,
     Filter.Text,
     MsgCtxt,
-    True,
+    FWordWrap,
     True,
     False
     );
@@ -2141,7 +2166,6 @@ var
   Stream: TStringStream;
 begin
   Result := False;
-
   // Validate filename
   if Trim(AFileName) = string.Empty then
   begin
@@ -2154,6 +2178,7 @@ begin
   FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
   if not Fast then FillGridHeaders;
 
+  Screen.Cursor := crHourGlass;
   Output := TStringList.Create;
   try
     try
@@ -2195,6 +2220,7 @@ begin
       end;
     end;
   finally
+    Screen.Cursor := crDefault;
     Output.Free;
   end;
 end;
@@ -2210,6 +2236,7 @@ var
   H, MaxH, ColTextWidth: integer;
   SavedFont: TFont;
   StartRow, EndRow: integer;
+  Flags: cardinal;
 begin
   // Ensure the grid widget is alive and has a valid canvas handle
   Grid.HandleNeeded;
@@ -2244,11 +2271,16 @@ begin
 
         R := Rect(0, 0, ColTextWidth, 0);
 
+        if FWordWrap then
+          Flags := DT_WORDBREAK or DT_CALCRECT
+        else
+          Flags := DT_CALCRECT;
+
         DrawText(Grid.Canvas.Handle,
           PChar(Grid.Cells[Col, Row]),
           Length(Grid.Cells[Col, Row]),
           R,
-          DT_WORDBREAK or DT_CALCRECT);
+          Flags);
 
         H := R.Bottom - R.Top + 8;   // vertical padding
         if H > MaxH then

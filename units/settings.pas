@@ -107,6 +107,9 @@ begin
     JSONObj.Add('SortColumn', Form.SortColumn);
     JSONObj.Add('SortOrder', Ord(Form.SortOrder));
 
+    JSONObj.Add('MenuWordWrapGridChecked', Form.MenuWordWrapGrid.Checked);
+    JSONObj.Add('MenuWordWrapTranslatePanelChecked', Form.MenuWordWrapTranslatePanel.Checked);
+
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
     JSONObj.Add('MenuTranslatePanelChecked', Form.MenuTranslatePanel.Checked);
     JSONObj.Add('MenuColumnContextChecked', Form.MenuColumnContext.Checked);
@@ -234,6 +237,19 @@ begin
       if JSONObj.FindPath('SortOrder') <> nil then
       begin
         Form.SortOrder := TSortOrder(JSONObj.FindPath('SortOrder').AsInteger);
+      end;
+
+      if JSONObj.FindPath('MenuWordWrapGridChecked') <> nil then
+      begin
+        Form.MenuWordWrapGrid.Checked := JSONObj.FindPath('MenuWordWrapGridChecked').AsBoolean;
+        if not Form.MenuWordWrapGrid.Checked and Assigned(Form.MenuWordWrapGrid.OnClick) then
+          Form.MenuWordWrapGrid.OnClick(Form.MenuWordWrapGrid);
+      end;
+      if JSONObj.FindPath('MenuWordWrapTranslatePanelChecked') <> nil then
+      begin
+        Form.MenuWordWrapTranslatePanel.Checked := JSONObj.FindPath('MenuWordWrapTranslatePanelChecked').AsBoolean;
+        if Form.MenuWordWrapTranslatePanel.Checked and Assigned(Form.MenuWordWrapTranslatePanel.OnClick) then
+          Form.MenuWordWrapTranslatePanel.OnClick(Form.MenuWordWrapTranslatePanel);
       end;
 
       if JSONObj.FindPath('MenuHeadersChecked') <> nil then

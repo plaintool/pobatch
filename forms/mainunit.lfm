@@ -302,7 +302,9 @@ object formPoBatch: TformPoBatch
               BorderSpacing.Left = 5
               BorderSpacing.Top = 5
               BorderStyle = bsNone
+              ScrollBars = ssAutoBoth
               TabOrder = 0
+              WordWrap = False
               OnChange = MemoSourceChange
             end
             object ShapePlural: TShape
@@ -324,7 +326,9 @@ object formPoBatch: TformPoBatch
               BorderSpacing.Top = 5
               BorderSpacing.Right = 5
               BorderStyle = bsNone
+              ScrollBars = ssAutoBoth
               TabOrder = 1
+              WordWrap = False
               OnChange = MemoPluralChange
             end
           end
@@ -364,7 +368,9 @@ object formPoBatch: TformPoBatch
               BorderSpacing.Left = 5
               BorderSpacing.Bottom = 5
               BorderStyle = bsNone
+              ScrollBars = ssAutoBoth
               TabOrder = 0
+              WordWrap = False
               OnChange = MemoTranslationChange
             end
             object GridPlural: TStringGrid
@@ -626,16 +632,32 @@ object formPoBatch: TformPoBatch
         AutoCheck = True
       end
     end
+    object MenuFormat: TMenuItem
+      Caption = 'Format'
+      object MenuWordWrapGrid: TMenuItem
+        AutoCheck = True
+        Caption = 'WordWrap Grid'
+        Checked = True
+        OnClick = MenuWordWrapGridClick
+      end
+      object MenuWordWrapTranslatePanel: TMenuItem
+        AutoCheck = True
+        Caption = 'WordWrap Translate Panel'
+        OnClick = MenuWordWrapTranslatePanelClick
+      end
+    end
     object MenuView: TMenuItem
       Caption = 'View'
       object MenuHeaders: TMenuItem
         AutoCheck = True
         Caption = 'Headers'
+        ShortCut = 32817
         OnClick = MenuHeadersClick
       end
       object MenuTranslatePanel: TMenuItem
         AutoCheck = True
-        Caption = 'Translations Panel'
+        Caption = 'Translate Panel'
+        ShortCut = 32818
         OnClick = MenuTranslatePanelClick
       end
       object Separator9: TMenuItem
@@ -644,16 +666,19 @@ object formPoBatch: TformPoBatch
       object MenuColumnContext: TMenuItem
         AutoCheck = True
         Caption = 'Column Context'
+        ShortCut = 32819
         OnClick = MenuColumnContextClick
       end
       object MenuColumnPlural: TMenuItem
         AutoCheck = True
         Caption = 'Column Plural'
+        ShortCut = 32820
         OnClick = MenuColumnPluralClick
       end
       object MenuColumnReference: TMenuItem
         AutoCheck = True
         Caption = 'Column Reference'
+        ShortCut = 32821
         OnClick = MenuColumnReferenceClick
       end
     end

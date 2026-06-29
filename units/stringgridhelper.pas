@@ -51,7 +51,7 @@ function GridDrawColors(AHighlight, ALineBreak, AHint: TColor; AHintBack: TColor
 
 implementation
 
-{ TStringGridHelper }
+{%Region -fold TStringGridHelper}
 
 procedure TStringGridHelper.PasteFromClipboard;
 var
@@ -334,7 +334,7 @@ var
   I, J: integer;
   IsLineBreak: boolean;
 
-  // NEW: dedicated variables for the last line's extent
+  // Dedicated variables for the last line's extent (used by the hint)
   LastLineStartX: integer;   // left edge of the last drawn line
   LastLineEndX: integer;     // right edge of the last drawn line
   HintRect: TRect;
@@ -405,7 +405,7 @@ var
     end;
   end;
 
-  // Draw a complete line
+  // Draw a complete line (used for both word‑wrap and explicit‑break lines)
   procedure DrawLine(LineStart, LineEnd: integer; Y: integer; AIsLineBreakEnd: boolean = False);
   var
     J, X: integer;
@@ -461,7 +461,6 @@ var
         Flags := Flags or longword(DT_LEFT);
       if AWordWrap then
         Flags := Flags or DT_WORDBREAK;
-
       DrawText(ACanvas.handle, PChar(LineWords[J].word), Length(LineWords[J].word), DrawRect, Flags);
       X := X + LineWords[J].Width;
       ACanvas.Font.Color := FontColor;
@@ -524,6 +523,7 @@ begin
 
       LineHeight := ACanvas.TextHeight('Wg');
 
+      // Build the word list with their widths and match status
       SetLength(LineWords, 0);
       for I := 0 to TextRanges.Count - 1 do
       begin
@@ -610,7 +610,8 @@ begin
 
         IsLineBreak := (LineWords[I].word = #10) or (LineWords[I].word = #13) or (LineWords[I].word = #13#10);
 
-        if ((LineWidth > 0) and (LineWidth + TotalGroupWidth > ARect.Width)) or IsLineBreak then
+        // Width-based break only when AWordWrap is True
+        if ((AWordWrap and (LineWidth > 0) and (LineWidth + TotalGroupWidth > ARect.Width)) or IsLineBreak) then
         begin
           DrawLine(LineStartIndex, I - 1, CurrentY, IsLineBreak);
           CurrentY := CurrentY + LineHeight;
@@ -662,7 +663,6 @@ begin
             Flags := Flags or DT_LEFT
           else
             Flags := Flags or DT_RIGHT;
-
           DrawText(ACanvas.Handle, PChar(AHintText), Length(AHintText), HintRect, Flags);
         end;
       end;
@@ -680,7 +680,9 @@ begin
   end;
 end;
 
-{ TGridDrawColors }
+{%EndRegion}
+
+{%Region -fold TGridDrawColors}
 
 function GridDrawColors(AHighlight, ALineBreak, AHint: TColor; AHintBack: TColor = clNone): TGridDrawColors;
 begin
@@ -689,5 +691,7 @@ begin
   Result.Hint := AHint;
   Result.HintBack := AHintBack;
 end;
+
+{%EndRegion}
 
 end.
