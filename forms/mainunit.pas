@@ -265,6 +265,7 @@ type
     FFileStatuses: TPoFileStatusArray;
     FCellValue: string;
     FSelectPathTimer: TTimer;
+    FPathMouseSelecting: boolean;
 
     FChanged: boolean;
     FPath: string;
@@ -422,7 +423,9 @@ begin
   FLastRow := -1;
   FSplitRatio := 0.5;
   FPathIndex := -1;
+  FLastPathIndex := -1;
   FWordWrap := True;
+  FPathMouseSelecting := False;
 
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
@@ -1563,6 +1566,8 @@ end;
 
 procedure TformPoBatch.ListPathClick(Sender: TObject);
 begin
+  if ListPath.ItemIndex = FLastPathIndex then Exit;
+
   ClearTimeout(FselectPathTimer);
   SetTimeoutSafe(FSelectPathTimer, 50, @SelectPath);
 end;
@@ -1571,12 +1576,14 @@ procedure TformPoBatch.ListPathMouseDown(Sender: TObject; Button: TMouseButton; 
 var
   idx: integer;
 begin
-  if Button = mbRight then
+  // Get item under mouse
+  idx := ListPath.ItemAtPos(Point(X, Y), True);
+  if idx <> -1 then
   begin
-    // Get item under mouse
-    idx := ListPath.ItemAtPos(Point(X, Y), True);
+    if idx <> FLastPathIndex then
+      FPathMouseSelecting := True;
 
-    if idx <> -1 then
+    if Button = mbRight then
     begin
       ListPath.ItemIndex := idx; // select item
       SelectPath;
@@ -2117,6 +2124,13 @@ begin
       FLastPathIndex := FPathIndex;
     end;
   finally
+    if FPathMouseSelecting then
+    begin
+      FPathMouseSelecting := False;
+      if Grid.CanFocus then Grid.SetFocus;
+      Grid.Invalidate;
+    end;
+
     Grid.OnSelectCell := @GridSelectCell;
   end;
 end;
