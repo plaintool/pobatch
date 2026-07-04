@@ -376,6 +376,8 @@ const
   clInfoDark = TColor($009696);
   clLine = TColor($E8E8E8);
   clLineDark = TColor($484848);
+  clLightGray = TColor($FAFAFA);
+  clLightGrayDark = TColor($181818);
   clMidGray = TColor($A0A0A0);
   clMidGrayDark = TColor($404040);
   clFontBlue = TColor($C85020);
@@ -424,6 +426,7 @@ begin
 
   // Initialize components
   Grid.GridLineColor := ThemeColor(clLine, clLineDark);
+  Grid.AlternateColor := ThemeColor(clLightGray, clLightGrayDark);
   GridHeaders.GridLineColor := ThemeColor(clLine, clLineDark);
   GridPlural.GridLineColor := ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := ThemeColor(clLine, clLineDark);
@@ -818,6 +821,7 @@ begin
     Exit;
 
   CopiedCount := 0;
+  Grid.EditorMode := False;
 
   if Grid.Selection.Top = Grid.Selection.Bottom then
   begin
@@ -867,6 +871,7 @@ begin
     Exit;
 
   ReplacedCount := 0;
+  Grid.EditorMode := False;
 
   if Grid.Selection.Top = Grid.Selection.Bottom then
   begin
@@ -915,6 +920,7 @@ var
 begin
   Value := Grid.Cells[CELL_PLURAL, Grid.Row];
   OldValue := Value;
+  Grid.EditorMode := False;
 
   InputQueryLite('Plural form', 'Enter plural form', Value);
   if (Value = string.empty) and ((OldValue = string.Empty) or (MessageDlg('Delete plural form?',
@@ -2420,19 +2426,27 @@ begin
   if (PanelCheck.Visible) and (Grid.Row > -1) then
   begin
     if HasFuzzy then
-      ImageSwitch.ImageIndex := 1
+    begin
+      ImageSwitch.Tag := 1;
+      ImageSwitch.ImageIndex := ThemeValue(1, 3);
+    end
     else
-      ImageSwitch.ImageIndex := 0;
+    begin
+      ImageSwitch.Tag := 0;
+      ImageSwitch.ImageIndex := ThemeValue(0, 2);
+    end;
 
-    PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
-    if ImageSwitch.ImageIndex = 0 then
+    PanelCheck.Color := ifthen(ImageSwitch.Tag = 1, ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
+    MemoCheck.Color := PanelCheck.Color;
+    if ImageSwitch.Tag = 0 then
       LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark)
     else
       LabelSwitch.Font.Color := clWindowText;
   end
   else
   begin
-    ImageSwitch.ImageIndex := 0;
+    ImageSwitch.Tag := 0;
+    ImageSwitch.ImageIndex := ThemeValue(0, 2);
     PanelCheck.Color := clWindow;
     LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark);
   end;
@@ -2499,14 +2513,18 @@ end;
 procedure TformPoBatch.SwitchCheck;
 var
   StartRow, EndRow, Row: integer;
-  NewIndex: integer;
 begin
   // toggle switch image and remember new state
-  if ImageSwitch.ImageIndex = 0 then
-    NewIndex := 1
+  if ImageSwitch.Tag = 0 then
+  begin
+    ImageSwitch.Tag := 1;
+    ImageSwitch.ImageIndex := ThemeValue(1, 3);
+  end
   else
-    NewIndex := 0;
-  ImageSwitch.ImageIndex := NewIndex;
+  begin
+    ImageSwitch.Tag := 0;
+    ImageSwitch.ImageIndex := ThemeValue(0, 2);
+  end;
 
   // apply to all selected rows
   if Grid.Selection.Top = Grid.Selection.Bottom then
@@ -2524,7 +2542,7 @@ begin
   begin
     if Row >= Grid.FixedRows then
     begin
-      Grid.Cells[CELL_FUZZY, Row] := NewIndex.ToString;
+      Grid.Cells[CELL_FUZZY, Row] := ImageSwitch.Tag.ToString;
       UpdateValid(Row);
     end;
   end;
