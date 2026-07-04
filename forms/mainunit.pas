@@ -215,6 +215,7 @@ type
     procedure GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
     procedure GridSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
     procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+    procedure GridSelection(Sender: TObject; aCol, aRow: integer);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     procedure GridExit(Sender: TObject);
@@ -1387,6 +1388,11 @@ begin
   end;
 end;
 
+procedure TformPoBatch.GridSelection(Sender: TObject; aCol, aRow: integer);
+begin
+  UpdateTranslatePanel(aRow);
+end;
+
 procedure TformPoBatch.GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
 var
   TS: TTextStyle;
@@ -1589,7 +1595,7 @@ begin
       psFuzzy: BgColor := ThemeColor(clSoftYellow, clSoftYellowDark);   // light yellow
       psEmptyTranslation: BgColor := clWindow;  // default (white)
       else
-        ;
+        BgColor := clWindow;
     end;
 
     // If the item is selected, use system highlight color
@@ -2084,7 +2090,6 @@ begin
       Changed := False;
       FillGrid;
       FillGridHeaders;
-      UpdateTranslatePanel;
       if Grid.RowCount > 1 then
       begin
         // Try to restore saved row, default to 1 if out of range
@@ -2098,6 +2103,7 @@ begin
         FPathIndex := ListPath.ItemIndex;
         AnalizePath(FPathIndex);
       end;
+      UpdateTranslatePanel;
     end
     else
     begin
@@ -2371,15 +2377,54 @@ begin
 end;
 
 procedure TformPoBatch.UpdateSwitch(aRow: integer = -1);
+var
+  StartRow, EndRow, Row: integer;
+  HasFuzzy: boolean;
 begin
   if aRow = -1 then aRow := Grid.Row;
 
   PanelCheck.Visible := Grid.RowCount > Grid.FixedRows;
 
-  // Update switch
-  if (PanelCheck.Visible) and (Grid.Row > -1) and ((Grid.Cells[CELL_FUZZY, aRow] = '0') or (Grid.Cells[CELL_FUZZY, aRow] = '1')) then
+  // Determine the range of rows to inspect
+  if Grid.Selection.Top <> Grid.Selection.Bottom then
   begin
-    ImageSwitch.ImageIndex := StrToInt(Grid.Cells[CELL_FUZZY, aRow]);
+    StartRow := Grid.Selection.Top;
+    EndRow := Grid.Selection.Bottom;
+  end
+  else
+  begin
+    StartRow := aRow;
+    EndRow := aRow;
+  end;
+
+  // Safety clamp: selection may exceed actual row count
+  if EndRow >= Grid.RowCount then
+    EndRow := Grid.RowCount - 1;
+  if StartRow < Grid.FixedRows then
+    StartRow := Grid.FixedRows;
+
+  // Check if any selected row has the fuzzy flag set to '1'
+  HasFuzzy := False;
+  for Row := StartRow to EndRow do
+  begin
+    if (Row >= Grid.FixedRows) and ((Grid.Cells[CELL_FUZZY, Row] = '0') or (Grid.Cells[CELL_FUZZY, Row] = '1')) then
+    begin
+      if Grid.Cells[CELL_FUZZY, Row] = '1' then
+      begin
+        HasFuzzy := True;
+        Break;
+      end;
+    end;
+  end;
+
+  // Update the switch image and styling based on the presence of any fuzzy row
+  if (PanelCheck.Visible) and (Grid.Row > -1) then
+  begin
+    if HasFuzzy then
+      ImageSwitch.ImageIndex := 1
+    else
+      ImageSwitch.ImageIndex := 0;
+
     PanelCheck.Color := ifthen(ImageSwitch.ImageIndex = 1, ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
     if ImageSwitch.ImageIndex = 0 then
       LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark)
