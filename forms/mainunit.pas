@@ -275,7 +275,7 @@ type
     FWordWrap: boolean;
 
     // Properties Methods
-    procedure SetChanges(Value: boolean);
+    procedure SetChanged(Value: boolean);
     procedure SetSplitRatio(Value: double);
 
     // Methods File Operations
@@ -324,7 +324,7 @@ type
     procedure FillGridComments(aRow: integer = -1);
     procedure SaveGridComments(aRow: integer = -1);
   public
-    property Changed: boolean read FChanged write SetChanges;
+    property Changed: boolean read FChanged write SetChanged;
     property Path: string read FPath write FPath;
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
     property SortOrder: TSortOrder read FSortOrder write FSortOrder;
@@ -1305,8 +1305,7 @@ begin
   // Put the permanent index into column 0 of the newly inserted row
   Grid.Cells[0, tIndex] := IntToStr(NewIndex);
 
-  FChanged := True;
-  UpdateInterface;
+  Changed := True;
 end;
 
 procedure TformPoBatch.GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
@@ -1712,7 +1711,7 @@ end;
 
 {%Region -fold Properties Methods}
 
-procedure TformPoBatch.SetChanges(Value: boolean);
+procedure TformPoBatch.SetChanged(Value: boolean);
 begin
   FChanged := Value;
   AUndoChanges.Enabled := FChanged;
@@ -2807,6 +2806,7 @@ begin
 
   // Fill main translation grid
   Grid.BeginUpdate;
+  FUpdatingGrid := True;
   try
     // Remember permanent index of the currently selected entry
     SavedEntryIndex := -1;
@@ -2955,7 +2955,6 @@ begin
   end;
 
   // Fill the headers grid
-  FUpdatingGrid := True;
   GridHeaders.BeginUpdate;
   GridHeaders.OnColRowInserted := nil;
   try
@@ -3024,7 +3023,6 @@ begin
   if EntryIndex < 0 then Exit;
 
   // Fill the headers grid
-  FUpdatingGrid := True;
   GridPlural.BeginUpdate;
   GridPlural.OnColRowInserted := nil;
   try
@@ -3088,7 +3086,6 @@ begin
   if EntryIndex < 0 then Exit;
 
   // Fill the headers grid
-  FUpdatingGrid := True;
   GridComments.BeginUpdate;
   GridComments.OnColRowInserted := nil;
   try
