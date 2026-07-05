@@ -1378,9 +1378,9 @@ begin
     Memo.WantTabs := True;
     Memo.WordWrap := FWordWrap;
     if FWordWrap then
-      Memo.ScrollBars := ssAutoVertical
+      Memo.ScrollBars := ssNone
     else
-      Memo.ScrollBars := ssAutoBoth;
+      Memo.ScrollBars := ssAutoHorizontal;
     Memo.WantReturns := True;
     Memo.BiDiMode := bdLeftToRight;
     EditControlSetBounds(PanelMemo, aCol, aRow);
@@ -1503,6 +1503,13 @@ begin
     Memo.Color := clHighlight;
     Memo.Font.Color := clWhite;
   end;
+
+  if not FWordWrap then
+  begin
+    Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] + GetSystemMetrics(SM_CYHSCROLL);
+    EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
+  end;
+
   Grid.Invalidate;
 end;
 
@@ -1515,6 +1522,12 @@ begin
   begin
     UpdateTranslatePanel;
     UpdateValid;
+  end;
+
+  if not FWordWrap then
+  begin
+    Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] - GetSystemMetrics(SM_CYHSCROLL);
+    EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
   end;
 
   Grid.Invalidate;
@@ -1536,6 +1549,13 @@ begin
     Grid.EditorMode := False;
     Grid.Cells[Grid.Col, Grid.Row] := FCellValue;
     Memo.OnExit := @MemoExit;
+
+    if not FWordWrap then
+    begin
+      Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] - GetSystemMetrics(SM_CYHSCROLL);
+      EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
+    end;
+
     Key := 0;
   end
   else
@@ -1638,6 +1658,7 @@ procedure TformPoBatch.FilterChange(Sender: TObject);
 begin
   SaveGrid;
   FillGrid;
+  UpdateTranslatePanel;
 end;
 
 procedure TformPoBatch.btnFilterClearClick(Sender: TObject);
