@@ -2844,6 +2844,10 @@ begin
   if (Result < 1) or (Result >= FPoFile.Entries.Count) then Exit(-1);
 end;
 
+{%EndRegion}
+
+{%Region -fold Fill / Save Grids}
+
 procedure TformPoBatch.FillGrid;
 var
   i, RowIndex: integer;
@@ -2986,6 +2990,8 @@ var
 begin
   if not Assigned(FPoFile) then Exit;
 
+  Grid.EditorMode := False;
+
   // Save all data rows using the common SaveRow method
   for i := Grid.FixedRows to Grid.RowCount - 1 do
     SaveRow(i);
@@ -3048,6 +3054,8 @@ var
 begin
   if not Assigned(FPoFile) then Exit;
 
+  GridHeaders.EditorMode := False;
+
   // Save headers from GridHeaders
   Headers := TStringList.Create;
   try
@@ -3096,6 +3104,8 @@ var
 begin
   if not Assigned(FPoFile) then
     Exit;
+
+  GridPlural.EditorMode := False;
 
   if aRow = -1 then
     Row := Grid.Row
@@ -3179,6 +3189,8 @@ var
 begin
   if not Assigned(FPoFile) then Exit;
   if Grid.RowCount <= Grid.FixedRows then Exit;
+
+  GridComments.EditorMode := False;
 
   if aRow = -1 then
     Row := Grid.Row
