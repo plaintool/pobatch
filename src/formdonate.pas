@@ -45,7 +45,7 @@ var
 
 implementation
 
-uses systemtool;
+uses darkutils;
 
   {$R *.lfm}
 
@@ -53,9 +53,9 @@ uses systemtool;
 
 procedure TformDonatePoBatch.FormCreate(Sender: TObject);
 begin
-  labelBank.Font.Color := ThemeColor(clBlue, clSkyBlue);
-  //labelCrypto.Font.Color := ThemeColor(clBlue, clSkyBlue);
-  labelCrypto.Font.Color := ThemeColor(clBlue, clSkyBlue);
+  labelBank.Font.Color := TDarkUtils.ThemeColor(clBlue, clSkyBlue);
+  //labelCrypto.Font.Color := TDarkUtils.ThemeColor(clBlue, clSkyBlue);
+  labelCrypto.Font.Color := TDarkUtils.ThemeColor(clBlue, clSkyBlue);
 end;
 
 procedure TformDonatePoBatch.labelBankClick(Sender: TObject);

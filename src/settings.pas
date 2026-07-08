@@ -27,7 +27,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses systemtool, powrap;
+uses powrap;
 
 function GetSettingsDirectory(fileName: string = ''): string;
   {$IFDEF Windows}

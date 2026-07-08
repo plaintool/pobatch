@@ -392,9 +392,13 @@ const
 
   {%EndRegion}
 
+const
+  REPO = 'plaintool/pobatch';
+  APP_NAME = 'pobatch';
+
 implementation
 
-uses formabout, formdonate, systemtool, formattool, settings, StringGridHelper, ColorHelper;
+uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, darkutils, checkupdates, osutils;
 
   {$R *.lfm}
 
@@ -428,11 +432,11 @@ begin
   FPathMouseSelecting := False;
 
   // Initialize components
-  Grid.GridLineColor := ThemeColor(clLine, clLineDark);
-  Grid.AlternateColor := ThemeColor(clLightGray, clLightGrayDark);
-  GridHeaders.GridLineColor := ThemeColor(clLine, clLineDark);
-  GridPlural.GridLineColor := ThemeColor(clLine, clLineDark);
-  GridComments.GridLineColor := ThemeColor(clLine, clLineDark);
+  Grid.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
+  Grid.AlternateColor := TDarkUtils.ThemeColor(clLightGray, clLightGrayDark);
+  GridHeaders.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
+  GridPlural.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
+  GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
 
   // Headers pick list
   HeaderList := TPOFile.GetHeaderNames;
@@ -508,7 +512,7 @@ begin
 
   if AutoCheckUpdates then
   begin
-    Th := TCheckUpdateThread.Create(False);
+    Th := TCheckUpdateThread.Create(REPO, APP_NAME, False);
     Th.FreeOnTerminate := True;
   end;
 end;
@@ -727,7 +731,7 @@ procedure TformPoBatch.MenuCheckForUpdatesClick(Sender: TObject);
 var
   LatestVersion: string;
 begin
-  CheckGithubLatestVersion(LatestVersion, REPO);
+  CheckGithubLatestVersion(LatestVersion, REPO, APP_NAME);
 end;
 
 procedure TformPoBatch.MenuAutoCheckUpdatesClick(Sender: TObject);
@@ -925,7 +929,7 @@ begin
   OldValue := Value;
   Grid.EditorMode := False;
 
-  InputQueryLite('Plural form', 'Enter plural form', Value);
+   InputQueryLite('Plural form', 'Enter plural form', Value);
   if (Value = string.empty) and ((OldValue = string.Empty) or (MessageDlg('Delete plural form?',
     'Are you sure you want to delete this plural form?', mtConfirmation, mbYesNo, 0) <> mrYes)) then
     Exit;
@@ -1083,7 +1087,7 @@ begin
 
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridAny.Focused)) then
   begin
-    GridAny.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+    GridAny.Canvas.Brush.Color := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
     GridAny.Canvas.Font.Color := clWindowText;
   end;
 end;
@@ -1420,12 +1424,12 @@ begin
 
   if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
   begin
-    Grid.Canvas.Brush.Color := ThemeColor(clRowHighlight, clRowHighlightDark);
+    Grid.Canvas.Brush.Color := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
     Grid.Canvas.Font.Color := clWindowText;
   end;
 
   if Grid.Cells[CELL_FUZZY, aRow] = '1' then
-    CustomColor := ThemeColor(clSoftYellow, clSoftYellowDark);
+    CustomColor := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark);
 
   if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
   begin
@@ -1466,8 +1470,8 @@ begin
   Grid.DrawHighlightedText(
     Grid.Canvas,
     Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
-    GridDrawColors(ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clWindowText,
-    ThemeColor(clFontBlue, clFontBlueDark)), ThemeColor(clSoftBlue, clSoftBlueDark)),
+    GridDrawColors(TDarkUtils.ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clWindowText,
+    TDarkUtils.ThemeColor(clFontBlue, clFontBlueDark)), TDarkUtils.ThemeColor(clSoftBlue, clSoftBlueDark)),
     CellText,
     Filter.Text,
     MsgCtxt,
@@ -1623,8 +1627,8 @@ begin
     // Determine background color based on file status
     Status := FFileStatuses[Index];
     case Status of
-      psCorrect: BgColor := ThemeColor(clSoftGreen, clSoftGreenDark);   // light green
-      psFuzzy: BgColor := ThemeColor(clSoftYellow, clSoftYellowDark);   // light yellow
+      psCorrect: BgColor := TDarkUtils.ThemeColor(clSoftGreen, clSoftGreenDark);   // light green
+      psFuzzy: BgColor := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark);   // light yellow
       psEmptyTranslation: BgColor := clWindow;  // default (white)
       else
         BgColor := clWindow;
@@ -1982,7 +1986,7 @@ begin
     TempFiles := TStringList.Create;
     try
       // Scan for both .po and .pot files
-      FindFilesByMasks(APath, ['*.po', '*.pot'], TempFiles);
+      TOS.FindFilesByMasks(APath, ['*.po', '*.pot'], TempFiles);
 
       // If no files found, leave the current state unchanged
       if TempFiles.Count = 0 then
@@ -2183,7 +2187,7 @@ begin
 
   Input := TStringList.Create;
   try
-    Input.TrailingLineBreak := EndsWithLineBreak(AFileName);
+    Input.TrailingLineBreak := TOS.FileEndsWithLineBreak(AFileName);
     try
       // Load file with UTF-8 encoding (try UTF-8 first, fallback to ANSI)
       try
@@ -2463,27 +2467,27 @@ begin
     if HasFuzzy then
     begin
       ImageSwitch.Tag := 1;
-      ImageSwitch.ImageIndex := ThemeValue(1, 3);
+      ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(1, 3);
     end
     else
     begin
       ImageSwitch.Tag := 0;
-      ImageSwitch.ImageIndex := ThemeValue(0, 2);
+      ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
     end;
 
-    PanelCheck.Color := ifthen(ImageSwitch.Tag = 1, ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
+    PanelCheck.Color := ifthen(ImageSwitch.Tag = 1, TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
     MemoCheck.Color := PanelCheck.Color;
     if ImageSwitch.Tag = 0 then
-      LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark)
+      LabelSwitch.Font.Color := TDarkUtils.ThemeColor(clMidGray, clMidGrayDark)
     else
       LabelSwitch.Font.Color := clWindowText;
   end
   else
   begin
     ImageSwitch.Tag := 0;
-    ImageSwitch.ImageIndex := ThemeValue(0, 2);
+    ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
     PanelCheck.Color := clWindow;
-    LabelSwitch.Font.Color := ThemeColor(clMidGray, clMidGrayDark);
+    LabelSwitch.Font.Color := TDarkUtils.ThemeColor(clMidGray, clMidGrayDark);
   end;
 end;
 
@@ -2553,12 +2557,12 @@ begin
   if ImageSwitch.Tag = 0 then
   begin
     ImageSwitch.Tag := 1;
-    ImageSwitch.ImageIndex := ThemeValue(1, 3);
+    ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(1, 3);
   end
   else
   begin
     ImageSwitch.Tag := 0;
-    ImageSwitch.ImageIndex := ThemeValue(0, 2);
+    ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
   end;
 
   // apply to all selected rows
