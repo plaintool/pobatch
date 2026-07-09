@@ -485,12 +485,7 @@ begin
       OnShow := nil;
       Visible := True;
       OnShow := @FormShow;
-      {$IFDEF UNIX}
       Application.ProcessMessages;
-      WindowState := FWindowStateLoaded;
-      {$ELSE}
-      Application.ProcessMessages;
-      {$ENDIF}
     end
     else
       Exit;
