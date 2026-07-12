@@ -62,26 +62,37 @@ IF "%ARCH%"=="32" (
 
 cd /d "%~dp0"
 
-:: Build DarkMode
-call "%~dp0dependency.cmd" DarkMode libs/darkmode https://github.com/plainlib/darkmode.git main "%~dp0libs\darkmode\darkmode.lpk" "" %DO_PULL% %DO_BUILD%
-if errorlevel 1 (
-    if not defined CI pause
-    exit /b %errorlevel%
-)
+:: Jump to the main part to avoid executing the subroutine
+goto :Main
 
-:: Build Toolkit
-call "%~dp0dependency.cmd" Toolkit libs/toolkit https://github.com/plainlib/toolkit.git main "%~dp0libs\toolkit\toolkit.lpk" "" %DO_PULL% %DO_BUILD%
+:: Subroutine to build a single component
+:BuildComponent
+call "%~dp0dependency.cmd" ^
+    "%~1" ^
+    "libs/%~2" ^
+    "https://github.com/plainlib/%~2.git" ^
+    "main" ^
+    "%~dp0libs\%~2\%~2.lpk" ^
+    "" ^
+    %DO_PULL% %DO_BUILD%
+
 if errorlevel 1 (
     if not defined CI pause
     exit /b %errorlevel%
 )
+exit /b 0
+
+:Main
+
+:: Build DarkMode
+call :BuildComponent DarkMode darkmode
 
 :: Build Helpers
-call "%~dp0dependency.cmd" Helpers libs/helpers https://github.com/plainlib/helpers.git main "%~dp0libs\helpers\helpers.lpk" "" %DO_PULL% %DO_BUILD%
-if errorlevel 1 (
-    if not defined CI pause
-    exit /b %errorlevel%
-)
+call :BuildComponent Helpers helpers
 
+:: Build Toolkit
+call :BuildComponent Toolkit toolkit
+
+echo.
 echo Dependencies OK
 exit /b 0
