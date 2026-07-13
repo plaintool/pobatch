@@ -1,0 +1,12 @@
+[submodule "libs/darkmode"]
+	path = libs/darkmode
+	url = https://github.com/plainlib/darkmode.git
+	branch = main
+[submodule "libs/helpers"]
+	path = libs/helpers
+	url = https://github.com/plainlib/helpers.git
+	branch = main
+[submodule "libs/toolkit"]
+	path = libs/toolkit
+	url = https://github.com/plainlib/toolkit.git
+	branch = main
