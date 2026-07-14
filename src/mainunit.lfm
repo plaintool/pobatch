@@ -10,7 +10,7 @@ object formPoBatch: TformPoBatch
   KeyPreview = True
   Menu = MainMenu
   ShowHint = True
-  LCLVersion = '4.6.0.0'
+  LCLVersion = '4.8.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy

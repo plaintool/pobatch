@@ -92,6 +92,14 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="LICENSE"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="THIRD_PARTIES"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
         <Filename Value="src\mainunit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="formPoBatch"/>
@@ -113,19 +121,11 @@
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="LICENSE"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="THIRD_PARTIES"/>
+        <Filename Value="src\settings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="src\powrap.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\settings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

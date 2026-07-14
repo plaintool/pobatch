@@ -16,6 +16,9 @@ uses
   Classes, SysUtils, Contnrs;
 
 type
+
+  {%Region -fold Enums}
+
   TPOCommentType = (
     poctTranslator,   // #  (free comment by translator)
     poctExtracted,    // #. (extracted from source code by xgettext)
@@ -24,7 +27,7 @@ type
     poctFlag          // #, (flags like fuzzy, c-format, etc.)
     );
 
-  TPoLineEndingStyle = (
+  TPOLineEndingStyle = (
     pleLF,    // Unix/Linux line ending   (LF -> \n)
     pleCRLF,  // Windows line ending      (CRLF -> \r\n)
     pleCR     // Classic Mac line ending  (CR -> \r)
@@ -58,7 +61,7 @@ type
     psFuzzy              // At least one entry has the 'fuzzy' flag
     );
 
-  TPoFileStatusArray = array of TPoFileStatus;
+  TPOFileStatusArray = array of TPoFileStatus;
 
   TPOHeader = (
     hProjectIdVersion,
@@ -74,6 +77,15 @@ type
     hPluralForms,
     hXGenerator
     );
+
+  {%EndRegion}
+
+  TParseState = record
+    Field: string;        // 'msgid', 'msgid_plural', 'msgctxt', 'msgstr', 'msgstrN'
+    PluralIndex: integer;
+    MultiBuffer: TStrings;
+    ExpectContinuation: boolean; // true after empty "msgid" or "msgstr"
+  end;
 
   TPOComment = class
   public
@@ -182,9 +194,10 @@ type
     function GetCommentsOfType(AType: TPOCommentType): TStrings;
 
     // Render entry to PO string (without trailing newline)
-    function ToString(ALineEndingStyle: TPoLineEndingStyle): string; overload;
+    function ToString(ALineEndingStyle: TPOLineEndingStyle): string; overload;
     function ToString: string; overload; override;   // uses pleLF by default
 
+    // Check valid po
     function IsValid: boolean;
 
     property Flags: string read GetFlagsString write SetFlagsString;
@@ -194,6 +207,7 @@ type
 
     // Direct TStrings access to all msgstr translations (index 0 = singular/ordinary)
     property MsgStrList: TStrings read GetMsgStrList write SetMsgStrList;
+
     // Key=Value list of comments: Key is 'translator','extracted','reference','previous','flag'
     property CommentsStr: TStrings read GetCommentsStr write SetCommentsStr;
 
@@ -242,18 +256,11 @@ type
     function Add(Entry: TPOEntry): integer;
   end;
 
-  TParseState = record
-    Field: string;        // 'msgid', 'msgid_plural', 'msgctxt', 'msgstr', 'msgstrN'
-    PluralIndex: integer;
-    MultiBuffer: TStrings;
-    ExpectContinuation: boolean; // true after empty "msgid" or "msgstr"
-  end;
-
   TPOFile = class
   private
     FEntries: TPOEntryList;
     FEncoding: TEncoding;
-    FLineEndingStyle: TPoLineEndingStyle;
+    FLineEndingStyle: TPOLineEndingStyle;
     FTrailingEmptyLines: integer;   // Number of empty lines at the end of the file
     procedure ParseLine(const Line: string; var CurrentEntry: TPOEntry; var PendingState: TParseState);
     function GetHeaders: TStrings;
@@ -264,6 +271,7 @@ type
     procedure SetTranslations(AList: TStrings);
     function GetPluralFormsCount: integer;
     function GetPluralFormsExpression: string;
+    // Internal helper: normalise line endings and split into escaped PO quoted lines
     procedure AddFieldToStrings(Lines: TStrings; const Prefix, FieldKeyword: string; const Value: string);
   public
     constructor Create;
@@ -286,7 +294,7 @@ type
 
     property Entries: TPOEntryList read FEntries;
     property Encoding: TEncoding read FEncoding write FEncoding;
-    property LineEndingStyle: TPoLineEndingStyle read FLineEndingStyle write FLineEndingStyle;
+    property LineEndingStyle: TPOLineEndingStyle read FLineEndingStyle write FLineEndingStyle;
     property Headers: TStrings read GetHeaders write SetHeaders;
     property HeaderValue[const AKey: string]: string read GetHeaderValue write SetHeaderValue;
     property Translations: TStrings read GetTranslations write SetTranslations;
@@ -303,7 +311,48 @@ type
 
 implementation
 
-// Plain utility functions
+{%Region -fold Consts}
+
+const
+  // Mapping from TPOFlag to the string used in #, comments
+  POFlagNames: array[TPOFlag] of string = (
+    'fuzzy',
+    'c-format',
+    'no-wrap',
+    'python-format',
+    'java-format',
+    'qt-format',
+    'boost-format',
+    'lisp-format',
+    'scheme-format',
+    'objective-c-format',
+    'ycp-format',
+    'tcl-format',
+    'perl-format',
+    'php-format',
+    'gcc-internal-format',
+    'qt-plural-format',
+    'c++-format'
+    );
+
+  POHeaderNames: array[TPOHeader] of string = (
+    'Project-Id-Version',
+    'Report-Msgid-Bugs-To',
+    'POT-Creation-Date',
+    'PO-Revision-Date',
+    'Last-Translator',
+    'Language-Team',
+    'Language',
+    'MIME-Version',
+    'Content-Type',
+    'Content-Transfer-Encoding',
+    'Plural-Forms',
+    'X-Generator'
+    );
+
+  {%EndRegion}
+
+{%Region -fold Plain utility functions}
 
 function EscapeString(const S: string): string;
 var
@@ -357,44 +406,9 @@ begin
   Result := StrToIntDef(List[Index2], 0) - StrToIntDef(List[Index1], 0);
 end;
 
-const
-  // Mapping from TPOFlag to the string used in #, comments
-  POFlagNames: array[TPOFlag] of string = (
-    'fuzzy',
-    'c-format',
-    'no-wrap',
-    'python-format',
-    'java-format',
-    'qt-format',
-    'boost-format',
-    'lisp-format',
-    'scheme-format',
-    'objective-c-format',
-    'ycp-format',
-    'tcl-format',
-    'perl-format',
-    'php-format',
-    'gcc-internal-format',
-    'qt-plural-format',
-    'c++-format'
-    );
+{%EndRegion}
 
-  POHeaderNames: array[TPOHeader] of string = (
-    'Project-Id-Version',
-    'Report-Msgid-Bugs-To',
-    'POT-Creation-Date',
-    'PO-Revision-Date',
-    'Last-Translator',
-    'Language-Team',
-    'Language',
-    'MIME-Version',
-    'Content-Type',
-    'Content-Transfer-Encoding',
-    'Plural-Forms',
-    'X-Generator'
-    );
-
-  { TPOComment }
+{%Region -fold TPOComment}
 
 constructor TPOComment.Create(AType: TPOCommentType; const AText: string);
 begin
@@ -403,7 +417,9 @@ begin
   Text := AText;
 end;
 
-{ TPOCommentList }
+{%EndRegion}
+
+{%Region -fold TPOCommentList}
 
 function TPOCommentList.GetItem(Index: integer): TPOComment;
 begin
@@ -420,7 +436,9 @@ begin
   Result := inherited Add(Comment);
 end;
 
-{ TPOEntry }
+{%EndRegion}
+
+{%Region -fold TPOEntry}
 
 constructor TPOEntry.Create;
 begin
@@ -571,7 +589,7 @@ begin
   Result := sl;
 end;
 
-// Flag helper methods
+{Flag helper methods}
 
 function TPOEntry.HasFlag(const AFlag: string): boolean;
 var
@@ -599,7 +617,7 @@ begin
       FComments.Delete(i);
 end;
 
-// Flags set (TPOFlags)
+{Flags set TPOFlags}
 
 function TPOEntry.GetFlagsSet: TPOFlags;
 var
@@ -624,7 +642,7 @@ begin
       AddFlag(POFlagNames[f]);
 end;
 
-// Range flag
+{ Range flag}
 
 function TPOEntry.GetRange: string;
 var
@@ -654,7 +672,7 @@ begin
     AddComment(poctFlag, 'range:' + AValue);
 end;
 
-// Boolean flag properties
+{ Boolean flag properties }
 
 function TPOEntry.GetIsFuzzy: boolean;
 begin
@@ -968,7 +986,7 @@ begin
   end;
 end;
 
-// Original string-based Flags property
+{Original string-based Flags property}
 
 function TPOEntry.GetFlagsString: string;
 var
@@ -1081,7 +1099,7 @@ begin
         poctFlag: flagList.Add(c.Text);
       end;
     end;
-    // All flags merged into one "#,=" line with comma‑separated values
+    // All flags merged into one "#,=" line with comma-separated values
     if flagList.Count > 0 then
       sl.Add('#,=' + flagList.CommaText);
     Result := sl;
@@ -1120,7 +1138,7 @@ begin
       AddComment(poctPrevious, txt)
     else if typ = '#,' then
     begin
-      // Split the comma‑separated flags and add each as a separate poctFlag
+      // Split the comma-separated flags and add each as a separate poctFlag
       flagParts := TStringList.Create;
       try
         flagParts.CommaText := txt;
@@ -1135,9 +1153,9 @@ begin
   end;
 end;
 
-// ToString implementation
+{ToString implementation}
 
-function TPOEntry.ToString(ALineEndingStyle: TPoLineEndingStyle): string;
+function TPOEntry.ToString(ALineEndingStyle: TPOLineEndingStyle): string;
 var
   Lines: TStringList;
   Prefix: string;
@@ -1292,12 +1310,16 @@ begin
   Result := ToString(pleLF);
 end;
 
+{Check valid Po}
+
 function TPOEntry.IsValid: boolean;
 begin
   Result := not IsFuzzy and ((MsgStrSimple <> '') or (MsgStrSimple = MsgId));
 end;
 
-{ TPOEntryList }
+{%EndRegion}
+
+{%Region -fold TPOEntryList}
 
 function TPOEntryList.GetItem(Index: integer): TPOEntry;
 begin
@@ -1314,7 +1336,9 @@ begin
   Result := inherited Add(Entry);
 end;
 
-{ TPOFile }
+{%EndRegion}
+
+{%Region -fold TPOFile}
 
 constructor TPOFile.Create;
 begin
@@ -1647,7 +1671,6 @@ begin
   end;
 end;
 
-// Internal helper: normalise line endings and split into escaped PO quoted lines
 procedure TPOFile.AddFieldToStrings(Lines: TStrings; const Prefix, FieldKeyword: string; const Value: string);
 var
   Normalized: string;
@@ -2105,7 +2128,7 @@ begin
       begin
         if Entry.IsPlural then
         begin
-          // Plural: all forms must be non‑empty, otherwise it's empty
+          // Plural: all forms must be non-empty, otherwise it's empty
           HasEmpty := True;
           for j := 0 to Entry.MsgStrCount - 1 do
             if Entry.MsgStr[j] <> '' then
@@ -2160,5 +2183,7 @@ begin
     raise;
   end;
 end;
+
+{%EndRegion}
 
 end.

@@ -262,7 +262,7 @@ type
     FLastRow: integer;
     FPanelFocused: boolean;
     FPoFiles: TStringList;
-    FFileStatuses: TPoFileStatusArray;
+    FFileStatuses: TPOFileStatusArray;
     FCellValue: string;
     FSelectPathTimer: TTimer;
     FPathMouseSelecting: boolean;
@@ -332,7 +332,7 @@ type
     property SortColumn: integer read FSortColumn write FSortColumn;
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
     property PoFiles: TStringList read FPoFiles write FPoFiles;
-    property FileStatuses: TPoFileStatusArray read FFileStatuses write FFileStatuses;
+    property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write FWordWrap;
   end;
 

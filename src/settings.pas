@@ -151,7 +151,7 @@ var
   JSONData: TJSONData;
   JSONObj: TJSONObject;
   PoFilesArray, StatusArray: TJSONArray;
-  TempStatusArray: TPoFileStatusArray = ();
+  TempStatusArray: TPOFileStatusArray = ();
   FileName: string;
   FileStream: TFileStream;
   FileContent: string;
