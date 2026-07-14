@@ -43,7 +43,10 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
-    ADeleteFile: TAction;
+    ASyncWithPot: TAction;
+    APathSyncFilesWithPot: TAction;
+    APathSelectAll: TAction;
+    APathDeleteFile: TAction;
     AEditPluralForm: TAction;
     ApplicationProp: TApplicationProperties;
     ASelectAll: TAction;
@@ -90,6 +93,9 @@ type
     MenuColumnPlural: TMenuItem;
     MenuDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
+    MenuItem1: TMenuItem;
+    MenuSyncWithPot: TMenuItem;
+    MenuSyncFilesWithPot: TMenuItem;
     MenuWordWrapTranslatePanel: TMenuItem;
     MenuWordWrapGrid: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
@@ -124,6 +130,7 @@ type
     PopupGrid: TPopupMenu;
     PopupPath: TPopupMenu;
     Separator10: TMenuItem;
+    Separator11: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -145,7 +152,10 @@ type
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
     { Form Events }
-    procedure ADeleteFileExecute(Sender: TObject);
+    procedure APathDeleteFileExecute(Sender: TObject);
+    procedure APathSelectAllExecute(Sender: TObject);
+    procedure APathSyncFilesWithPotExecute(Sender: TObject);
+    procedure ASyncWithPotExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -156,6 +166,7 @@ type
     { Application Events }
     procedure ApplicationPropActivate(Sender: TObject);
     procedure ApplicationPropDeactivate(Sender: TObject);
+    procedure ListPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -262,6 +273,7 @@ type
     FLastRow: integer;
     FPanelFocused: boolean;
     FPoFiles: TStringList;
+    FPotFile: string;
     FFileStatuses: TPOFileStatusArray;
     FCellValue: string;
     FSelectPathTimer: TTimer;
@@ -332,6 +344,7 @@ type
     property SortColumn: integer read FSortColumn write FSortColumn;
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
     property PoFiles: TStringList read FPoFiles write FPoFiles;
+    property PotFile: string read FPotFile write FPotFile;
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write FWordWrap;
   end;
@@ -419,6 +432,7 @@ begin
   FFileName := string.Empty;
   FPath := string.Empty;
   FPoFiles := TStringList.Create;
+  FPotFile := string.Empty;
   SetLength(FFileStatuses, 0);
   FCommandLineFile := string.Empty;
   FSortColumn := -1;
@@ -587,6 +601,7 @@ procedure TformPoBatch.MenuFileOpenClick(Sender: TObject);
 begin
   if not IsCanClose then Exit;
 
+  dialogOpen.FilterIndex := 1;
   if dialogOpen.Execute then
     OpenFile(dialogOpen.FileName, False);
 end;
@@ -924,7 +939,7 @@ begin
   OldValue := Value;
   Grid.EditorMode := False;
 
-   InputQueryLite('Plural form', 'Enter plural form', Value);
+  InputQueryLite('Plural form', 'Enter plural form', Value);
   if (Value = string.empty) and ((OldValue = string.Empty) or (MessageDlg('Delete plural form?',
     'Are you sure you want to delete this plural form?', mtConfirmation, mbYesNo, 0) <> mrYes)) then
     Exit;
@@ -976,24 +991,216 @@ begin
   end;
 end;
 
-procedure TformPoBatch.ADeleteFileExecute(Sender: TObject);
+procedure TformPoBatch.APathDeleteFileExecute(Sender: TObject);
+var
+  i, Count: integer;
+  selectedIndices: array of integer = ();
+  msg, fileList: string;
 begin
-  if FPathIndex >= 0 then
+  // Collect indices of selected items
+  SetLength(selectedIndices, ListPath.Items.Count);
+  Count := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      selectedIndices[Count] := i;
+      Inc(Count);
+    end;
+  SetLength(selectedIndices, Count);
+
+  if Count = 0 then
   begin
+    ShowMessage('Select file to delete!');
+    Exit;
+  end;
+
+  if Count = 1 then
+  begin
+    // Single file deletion (original behavior)
     if MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <> mrYes then
       Exit;
 
-    DeleteFile(PoFiles[FPathIndex]);
-
-    NewFile;
-    if OpenPath(FPath, True) then
-    begin
-      UpdatePath;
-      AnalizePath(-1, True);
-    end;
+    DeleteFile(PoFiles[selectedIndices[0]]);
   end
   else
-    ShowMessage('Select file to delete!');
+  begin
+    // Multiple files deletion: show names (up to 10) and total count
+    fileList := string.Empty;
+    for i := 0 to Count - 1 do
+    begin
+      if i < 10 then
+        fileList := fileList + PoFiles[selectedIndices[i]] + sLineBreak
+      else if i = 10 then
+        fileList := fileList + '... and ' + IntToStr(Count - 10) + ' more file(s)' + sLineBreak;
+    end;
+    msg := 'Are you sure you want to delete the following ' + IntToStr(Count) + ' file(s)?' + sLineBreak + sLineBreak + fileList;
+
+    if MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+      Exit;
+
+    for i := 0 to Count - 1 do
+      DeleteFile(PoFiles[selectedIndices[i]]);
+  end;
+
+  // Refresh the file list after deletion
+  NewFile;
+  if OpenPath(FPath, True) then
+  begin
+    UpdatePath;
+    AnalizePath(-1, True);
+  end;
+end;
+
+procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);
+begin
+  ListPath.SelectAll;
+end;
+
+procedure TformPoBatch.APathSyncFilesWithPotExecute(Sender: TObject);
+var
+  i, selCount: integer;
+  PoFile: TPOFile;
+  FileName: string;
+  fileList, msg: string;
+begin
+  // Check if the reference POT file is specified
+  if FPotFile = '' then
+  begin
+    ShowMessage('No reference POT file exists in opened path.');
+    Exit;
+  end;
+
+  // Ask to save current file if modified – if user cancels, abort sync
+  if not IsCanClose(True) then
+    Exit;
+
+  // Collect selected files for confirmation message
+  selCount := 0;
+  fileList := '';
+  for i := 0 to ListPath.Items.Count - 1 do
+  begin
+    if ListPath.Selected[i] then
+    begin
+      Inc(selCount);
+      if selCount <= 10 then
+        fileList := fileList + FPoFiles[i] + sLineBreak
+      else if selCount = 11 then
+        fileList := fileList + '... and ' + IntToStr(ListPath.SelCount - 10) + ' more file(s)' + sLineBreak;
+    end;
+  end;
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected for synchronization.');
+    Exit;
+  end;
+
+  // Build confirmation message
+  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'reference POT:' +
+    sLineBreak + '  ' + FPotFile + sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Process each selected file
+  for i := 0 to ListPath.Items.Count - 1 do
+  begin
+    if not ListPath.Selected[i] then Continue;
+
+    if i >= FPoFiles.Count then
+    begin
+      ShowMessageFmt('Internal error: index %d exceeds file list size.', [i]);
+      Continue;
+    end;
+
+    FileName := FPoFiles[i];
+    if not FileExists(FileName) then
+    begin
+      ShowMessageFmt('File not found: %s', [FileName]);
+      Continue;
+    end;
+
+    // Skip the reference POT file itself to avoid self-synchronization
+    if SameFileName(FileName, FPotFile) then
+      Continue;
+
+    PoFile := TPOFile.Create;
+    try
+      PoFile.LoadFromFile(FileName);
+      PoFile.SynchronizeToFile(FPotFile, True);
+      PoFile.SaveToFile(FileName);
+    except
+      on E: Exception do
+      begin
+        ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
+        PoFile.Free;
+        Continue;    // skip reloading this file
+      end;
+    end;
+    PoFile.Free;
+
+    // Refresh list item status
+    AnalizePath(i);
+
+    // If this was the currently opened file, reload it in the editor
+    if FileName = FFileName then
+    begin
+      if LoadFile(FFileName) then
+      begin
+        Changed := False;
+        FillGrid;
+        FillGridHeaders;
+        UpdateTranslatePanel;
+      end;
+    end;
+  end;
+
+  ShowMessage('Synchronization complete.');
+end;
+
+procedure TformPoBatch.ASyncWithPotExecute(Sender: TObject);
+var
+  PotFileName: string;
+  Msg: string;
+begin
+  // Ask to save current changes if modified – abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
+
+  // Let the user choose a POT file
+  dialogOpen.FilterIndex := 2;
+  if not dialogOpen.Execute then
+    Exit;
+
+  PotFileName := dialogOpen.FileName;
+  if not FileExists(PotFileName) then
+  begin
+    ShowMessageFmt('POT file not found: %s', [PotFileName]);
+    Exit;
+  end;
+
+  // Confirm synchronization
+  Msg := 'Synchronize current file' + sLineBreak + '  ' + FFileName + sLineBreak + 'with reference POT' +
+    sLineBreak + '  ' + PotFileName + ' ?';
+  if MessageDlg('Confirm synchronization', Msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Perform synchronization directly on the already loaded FPoFile object
+  try
+    FPoFile.SynchronizeToFile(PotFileName, True);   // keep existing header
+  except
+    on E: Exception do
+    begin
+      ShowMessageFmt('Error synchronizing file: %s', [E.Message]);
+      Exit;
+    end;
+  end;
+
+  Changed := True;
+  FillGrid;
+  FillGridHeaders;
+  UpdateTranslatePanel;
+  if FPathIndex >= 0 then
+    AnalizePath(FPathIndex);
 end;
 
 {%EndRegion}
@@ -1305,8 +1512,8 @@ begin
 
   // Create a new translatable entry and add it to the end of the model
   NewEntry := TPOEntry.Create;
-  NewEntry.MsgId := '';
-  NewEntry.MsgStrSimple := '';
+  NewEntry.MsgId := string.Empty;
+  NewEntry.MsgStrSimple := string.Empty;
   NewEntry.IsFuzzy := False;
   NewIndex := FPoFile.Entries.Add(NewEntry);   // returns the new index
 
@@ -1465,8 +1672,8 @@ begin
   Grid.DrawHighlightedText(
     Grid.Canvas,
     Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
-    GridDrawColors(TDarkUtils.ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState, clWindowText,
-    TDarkUtils.ThemeColor(clFontBlue, clFontBlueDark)), TDarkUtils.ThemeColor(clSoftBlue, clSoftBlueDark)),
+    GridDrawColors(TDarkUtils.ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState,
+    clWindowText, TDarkUtils.ThemeColor(clFontBlue, clFontBlueDark)), TDarkUtils.ThemeColor(clSoftBlue, clSoftBlueDark)),
     CellText,
     Filter.Text,
     MsgCtxt,
@@ -1567,7 +1774,7 @@ end;
 
 {%EndRegion}
 
-{%Region -fold Other Events}
+{%Region -fold Control Events}
 
 procedure TformPoBatch.EditControlSetBounds(Sender: TWinControl; aCol, aRow: integer; OffsetLeft: integer;
   OffsetTop: integer; OffsetRight: integer; OffsetBottom: integer);
@@ -1599,14 +1806,34 @@ begin
   idx := ListPath.ItemAtPos(Point(X, Y), True);
   if idx <> -1 then
   begin
-    if idx <> FLastPathIndex then
-      FPathMouseSelecting := True;
-
     if Button = mbRight then
     begin
-      ListPath.ItemIndex := idx; // select item
+      // Do nothing if right-clicked on already selected item with multi-selection
+      if ListPath.Selected[idx] and (ListPath.SelCount > 1) then
+        Exit;
+      // Clear and set selection to force visual update (fixes initial zero-state highlight)
+      ListPath.ClearSelection;
+      ListPath.Selected[idx] := True;
+      ListPath.ItemIndex := idx; // also set focus rectangle
       SelectPath;
+      if idx <> FLastPathIndex then
+        FPathMouseSelecting := True;
+    end
+    else
+    begin
+      if idx <> FLastPathIndex then
+        FPathMouseSelecting := True;
+      // other mouse buttons (e.g., left) can be processed here
     end;
+  end;
+end;
+
+procedure TformPoBatch.ListPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if (Key = Ord('A')) and (ssCtrl in Shift) then
+  begin
+    ListPath.SelectAll;
+    Key := 0; // suppress default handling (e.g., beep)
   end;
 end;
 
@@ -1995,6 +2222,15 @@ begin
     end;
   end;
 
+  // Find and store the last .pot file (if any)
+  FPotFile := string.Empty;
+  for i := PoFiles.Count - 1 downto 0 do
+    if SameText(ExtractFileExt(PoFiles[i]), '.pot') then
+    begin
+      FPotFile := PoFiles[i];
+      Break;
+    end;
+
   ListPath.Items.Clear;
   for i := 0 to FPoFiles.Count - 1 do
     ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
@@ -2072,7 +2308,7 @@ var
 begin
   ListPath.ItemIndex := -1;
   FLastPathIndex := -1;
-  if (Path = '') or (FFileName = '') then Exit;
+  if (Path = string.Empty) or (FFileName = string.Empty) then Exit;
   if ExtractFilePath(FFileName) <> IncludeTrailingPathDelimiter(Path) then Exit;
 
   Idx := FPoFiles.IndexOf(FFileName);
@@ -2360,10 +2596,10 @@ var
 begin
   AppName := 'PoBatch';
 
-  if FFileName = '' then
+  if FFileName = string.Empty then
   begin
     // No file loaded – show path (if any) with "Untitled"
-    if FPath <> '' then
+    if FPath <> string.Empty then
       BaseTitle := FPath + ' - Untitled'
     else
       BaseTitle := 'Untitled';
@@ -2371,9 +2607,9 @@ begin
   else
   begin
     // Check whether the opened file resides inside the currently open folder
-    FileInPath := (FPath <> '') and (ExtractFilePath(FFileName) = IncludeTrailingPathDelimiter(FPath));
+    FileInPath := (FPath <> string.Empty) and (ExtractFilePath(FFileName) = IncludeTrailingPathDelimiter(FPath));
 
-    if (FPath <> '') and not FileInPath then
+    if (FPath <> string.Empty) and not FileInPath then
       // File belongs to the open folder: display folder and file name only
       BaseTitle := FPath + ', ' + FFileName
     else
@@ -2405,7 +2641,7 @@ var
   Idx: integer;
 begin
   // Only if a folder is open and we have a valid file
-  if (FPath = '') or (AFileName = '') then Exit;
+  if (FPath = string.Empty) or (AFileName = string.Empty) then Exit;
   if ExtractFilePath(AFileName) <> IncludeTrailingPathDelimiter(FPath) then Exit;
 
   Idx := FPoFiles.IndexOf(AFileName);
@@ -2799,7 +3035,7 @@ var
   PrevStrings: TStrings;
   LowerFilter: string;
 begin
-  if AFilter = '' then Exit(True);
+  if AFilter = string.Empty then Exit(True);
   LowerFilter := LowerCase(AFilter);
 
   if (AFilter = '1') or (AFilter = '=1') then Exit(Entry.IsValid)
@@ -2876,10 +3112,10 @@ begin
     for i := 0 to FPoFile.Entries.Count - 1 do
     begin
       Entry := FPoFile.Entries[i];
-      if Entry.MsgId = '' then Continue;  // skip header entry
+      if Entry.MsgId = string.Empty then Continue;  // skip header entry
 
       // Apply filter if one is set
-      if (Filter.Text <> '') and not EntryMatchesFilter(Entry, Filter.Text) then
+      if (Filter.Text <> string.Empty) and not EntryMatchesFilter(Entry, Filter.Text) then
         Continue;
 
       Grid.RowCount := Grid.RowCount + 1;
@@ -2962,7 +3198,7 @@ begin
   Entry := FPoFile.Entries[EntryIndex];
 
   // Update msgid (empty becomes UNDEFINED)
-  if Trim(Grid.Cells[CELL_TEXT, Row]) = '' then
+  if Trim(Grid.Cells[CELL_TEXT, Row]) = string.Empty then
     Entry.MsgId := UNDEFINED
   else
     Entry.MsgId := Grid.Cells[CELL_TEXT, Row];
@@ -3031,7 +3267,7 @@ begin
         else
         begin
           Key := Headers[i];
-          Value := '';
+          Value := string.Empty;
         end;
         // Column 0 is fixed, store key and value in columns 1 and 2
         GridHeaders.Cells[1, GridHeaders.FixedRows + i] := Key;
@@ -3061,7 +3297,7 @@ begin
     for i := GridHeaders.FixedRows to GridHeaders.RowCount - 1 do
     begin
       // Skip completely empty rows
-      if (Trim(GridHeaders.Cells[1, i]) = '') and (Trim(GridHeaders.Cells[2, i]) = '') then
+      if (Trim(GridHeaders.Cells[1, i]) = string.Empty) and (Trim(GridHeaders.Cells[2, i]) = string.Empty) then
         Continue;
       Headers.Add(GridHeaders.Cells[1, i] + '=' + GridHeaders.Cells[2, i]);
     end;
@@ -3166,7 +3402,7 @@ begin
         else
         begin
           Key := Comments[i];
-          Value := '';
+          Value := string.Empty;
         end;
         // Column 0 is fixed, store key and value in columns 1 and 2
         GridComments.Cells[1, GridComments.FixedRows + i] := Key;
@@ -3206,7 +3442,7 @@ begin
     for i := GridComments.FixedRows to GridComments.RowCount - 1 do
     begin
       // Skip completely empty rows
-      if (Trim(GridComments.Cells[1, i]) = '') or (Trim(GridComments.Cells[2, i]) = '') then
+      if (Trim(GridComments.Cells[1, i]) = string.Empty) or (Trim(GridComments.Cells[2, i]) = string.Empty) then
         Continue;
       Comments.Add(GridComments.Cells[1, i] + '=' + GridComments.Cells[2, i]);
     end;

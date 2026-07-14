@@ -306,9 +306,11 @@ type
     property PluralFormsCount: integer read GetPluralFormsCount;
     property PluralFormsExpression: string read GetPluralFormsExpression;
 
+    // Po File Operations
     class function GetFileStatus(const AFileName: string): TPoFileStatus; static;
     class function GetCommentTypeName(const APrefix: string): string; static;
     class function GetHeaderNames: TStringList;
+    procedure SynchronizeToFile(const AFileName: string; AUpdateHeader: boolean = False);
   end;
 
 implementation
@@ -354,7 +356,7 @@ const
 
   {%EndRegion}
 
-{%Region -fold Plain utility functions}
+  {%Region -fold Plain utility functions}
 
 function EscapeString(const S: string): string;
 var
@@ -2184,6 +2186,268 @@ begin
   except
     Result.Free;
     raise;
+  end;
+end;
+
+procedure TPOFile.SynchronizeToFile(const AFileName: string; AUpdateHeader: boolean);
+var
+  Target: TPOFile;
+  NewList: TPOEntryList;
+  TargetEntry, SrcEntry, NewEntry: TPOEntry;
+  i, k: integer;
+  Found, KeysChanged: boolean;
+  SrcHeaderLines, TgtHeaderLines: TStringList;
+  Key, Value: string;
+  EqPos: integer;
+
+  function GetReferenceLines(E: TPOEntry): TStringList;
+  var
+    m: integer;
+  begin
+    Result := TStringList.Create;
+    Result.Duplicates := dupIgnore;
+    Result.Sorted := True;
+    for m := 0 to E.Comments.Count - 1 do
+      if TPOComment(E.Comments[m]).CommentType = poctReference then
+        Result.Add(TPOComment(E.Comments[m]).Text);
+  end;
+
+  function HaveCommonReference(E1, E2: TPOEntry): boolean;
+  var
+    R1, R2: TStringList;
+    s: string;
+  begin
+    Result := False;
+    R1 := GetReferenceLines(E1);
+    R2 := GetReferenceLines(E2);
+    try
+      for s in R1 do
+        if R2.IndexOf(s) >= 0 then
+          Exit(True);
+    finally
+      R1.Free;
+      R2.Free;
+    end;
+  end;
+
+  procedure AddCopyWithTranslations(Source: TPOEntry; const ReplaceMsgStrFrom: TPOEntry; AKeysChanged: boolean);
+  var
+    NewEntry: TPOEntry;
+    n, nn: integer;
+    NewMsgStr: TStringList;
+  begin
+    NewEntry := TPOEntry.Create;
+    NewEntry.Assign(Source);
+    if ReplaceMsgStrFrom <> nil then
+    begin
+      nn := Source.MsgStrCount;
+      if nn = 0 then nn := 1;
+      NewMsgStr := TStringList.Create;
+      try
+        for n := 0 to nn - 1 do
+          if n < ReplaceMsgStrFrom.MsgStrCount then
+            NewMsgStr.Add(ReplaceMsgStrFrom.MsgStr[n])
+          else
+            NewMsgStr.Add('');
+        NewEntry.MsgStrList := NewMsgStr;
+        if (Source.MsgId = '') and (ReplaceMsgStrFrom.MsgId = '') then
+          NewEntry.MsgStrSimple := ReplaceMsgStrFrom.MsgStrSimple;
+      finally
+        NewMsgStr.Free;
+      end;
+
+      if AKeysChanged then
+      begin
+        NewEntry.IsFuzzy := True;
+        NewEntry.DeleteCommentsOfType(poctPrevious);
+        if Source.MsgCtxt <> ReplaceMsgStrFrom.MsgCtxt then
+          NewEntry.AddComment(poctPrevious, 'msgctxt "' + EscapeString(ReplaceMsgStrFrom.MsgCtxt) + '"');
+        if Source.MsgId <> ReplaceMsgStrFrom.MsgId then
+          NewEntry.AddComment(poctPrevious, 'msgid "' + EscapeString(ReplaceMsgStrFrom.MsgId) + '"');
+        if (Source.MsgIdPlural <> '') or (ReplaceMsgStrFrom.MsgIdPlural <> '') then
+          if Source.MsgIdPlural <> ReplaceMsgStrFrom.MsgIdPlural then
+            NewEntry.AddComment(poctPrevious, 'msgid_plural "' + EscapeString(ReplaceMsgStrFrom.MsgIdPlural) + '"');
+      end;
+    end;
+    NewList.Add(NewEntry);
+  end;
+
+  // Parse header text (MsgStrSimple) into TStringList of "Key=Value"
+  function ParseHeaderText(const HeaderText: string): TStringList;
+  var
+    Lines: TStringList;
+    s, k, v: string;
+    p: integer;
+  begin
+    Result := TStringList.Create;
+    Lines := TStringList.Create;
+    try
+      Lines.Text := HeaderText;
+      for s in Lines do
+      begin
+        if s = '' then Continue;
+        p := Pos(': ', s);
+        if p > 0 then
+        begin
+          k := Trim(Copy(s, 1, p - 1));
+          v := Trim(Copy(s, p + 2, MaxInt));
+          Result.Values[k] := v;
+        end
+        else
+          Result.Add(s);   // malformed line, keep as is
+      end;
+    finally
+      Lines.Free;
+    end;
+  end;
+
+  // Convert "Key=Value" list back to header text "Key: Value\n"
+  function FormatHeaderText(const HeaderValues: TStrings): string;
+  var
+    i: integer;
+    s, k, v: string;
+    EqPos: integer;
+  begin
+    Result := '';
+    for i := 0 to HeaderValues.Count - 1 do
+    begin
+      s := HeaderValues[i];
+      EqPos := Pos('=', s);
+      if EqPos > 0 then
+      begin
+        k := Copy(s, 1, EqPos - 1);
+        v := Copy(s, EqPos + 1, MaxInt);
+        Result := Result + k + ': ' + v + sLineBreak;
+      end
+      else
+        Result := Result + s + sLineBreak;
+    end;
+    if Result <> '' then
+      SetLength(Result, Length(Result) - Length(sLineBreak));
+  end;
+
+begin
+  if not FileExists(AFileName) then
+    raise Exception.CreateFmt('Target file not found: %s', [AFileName]);
+
+  Target := TPOFile.Create;
+  try
+    Target.LoadFromFile(AFileName);
+
+    if Target.Entries.Count = 0 then
+      raise Exception.CreateFmt('Target file "%s" contains no entries.', [AFileName]);
+    if Self.Entries.Count = 0 then
+      raise Exception.Create('Current PO file has no entries.');
+
+    NewList := TPOEntryList.Create(True);
+    try
+      // Handle header entry (msgid='')
+      TargetEntry := Target.Entries[0];
+      if TargetEntry.MsgId = '' then
+      begin
+        SrcEntry := FindEntry('');
+        if AUpdateHeader then
+        begin
+          if SrcEntry <> nil then
+          begin
+            SrcHeaderLines := ParseHeaderText(SrcEntry.MsgStrSimple);
+            TgtHeaderLines := ParseHeaderText(TargetEntry.MsgStrSimple);
+            try
+              for k := 0 to TgtHeaderLines.Count - 1 do
+              begin
+                EqPos := Pos('=', TgtHeaderLines[k]);
+                if EqPos > 0 then
+                begin
+                  Key := Copy(TgtHeaderLines[k], 1, EqPos - 1);
+                  Value := Copy(TgtHeaderLines[k], EqPos + 1, MaxInt);
+                  SrcHeaderLines.Values[Key] := Value;
+                end;
+              end;
+              NewEntry := TPOEntry.Create;
+              NewEntry.Assign(SrcEntry);
+              NewEntry.MsgStrSimple := FormatHeaderText(SrcHeaderLines);
+              NewList.Add(NewEntry);
+            finally
+              SrcHeaderLines.Free;
+              TgtHeaderLines.Free;
+            end;
+          end
+          else
+            AddCopyWithTranslations(TargetEntry, nil, False);
+        end
+        else
+        begin
+          if SrcEntry <> nil then
+            AddCopyWithTranslations(SrcEntry, nil, False)
+          else
+            AddCopyWithTranslations(TargetEntry, nil, False);
+        end;
+        k := 1;   // start of translatable entries
+      end
+      else
+        k := 0;
+
+      // Process translatable entries
+      for i := k to Target.Entries.Count - 1 do
+      begin
+        TargetEntry := Target.Entries[i];
+        SrcEntry := nil;
+        KeysChanged := False;
+
+        // 1. Common reference
+        Found := False;
+        for k := 1 to Self.Entries.Count - 1 do
+          if (Self.Entries[k].MsgId <> '') and HaveCommonReference(TargetEntry, Self.Entries[k]) then
+          begin
+            SrcEntry := Self.Entries[k];
+            Found := True;
+            Break;
+          end;
+
+        // 2. Exact (msgctxt+msgid)
+        if not Found then
+          for k := 1 to Self.Entries.Count - 1 do
+            if (Self.Entries[k].MsgId <> '') and
+               (Self.Entries[k].MsgId = TargetEntry.MsgId) and
+               (Self.Entries[k].MsgCtxt = TargetEntry.MsgCtxt) then
+            begin
+              SrcEntry := Self.Entries[k];
+              Found := True;
+              Break;
+            end;
+
+        // 3. Msgid only (changed context)
+        if not Found then
+          for k := 1 to Self.Entries.Count - 1 do
+            if (Self.Entries[k].MsgId <> '') and (Self.Entries[k].MsgId = TargetEntry.MsgId) then
+            begin
+              SrcEntry := Self.Entries[k];
+              Found := True;
+              KeysChanged := True;
+              Break;
+            end;
+
+        if Found and not KeysChanged then
+          if (SrcEntry.MsgCtxt <> TargetEntry.MsgCtxt) or
+             (SrcEntry.MsgId <> TargetEntry.MsgId) or
+             (SrcEntry.MsgIdPlural <> TargetEntry.MsgIdPlural) then
+            KeysChanged := True;
+
+        if Found then
+          AddCopyWithTranslations(TargetEntry, SrcEntry, KeysChanged)
+        else
+          AddCopyWithTranslations(TargetEntry, nil, False);
+      end;
+
+      FEntries.Clear;
+      for i := 0 to NewList.Count - 1 do
+        FEntries.Add(NewList[i]);
+      NewList.OwnsObjects := False;
+    finally
+      NewList.Free;
+    end;
+  finally
+    Target.Free;
   end;
 end;
 

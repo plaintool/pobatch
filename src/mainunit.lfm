@@ -77,12 +77,14 @@ object formPoBatch: TformPoBatch
     BorderSpacing.Top = 5
     BorderStyle = bsNone
     ItemHeight = 0
+    MultiSelect = True
     PopupMenu = PopupPath
     Style = lbOwnerDrawFixed
     TabOrder = 2
     Visible = False
     OnClick = ListPathClick
     OnDrawItem = ListPathDrawItem
+    OnKeyDown = ListPathKeyDown
     OnMouseDown = ListPathMouseDown
   end
   object SplitterPath: TSplitter
@@ -624,6 +626,9 @@ object formPoBatch: TformPoBatch
       object MenuEditPluralForm: TMenuItem
         Action = AEditPluralForm
       end
+      object MenuSyncWithPot: TMenuItem
+        Action = ASyncWithPot
+      end
       object Separator3: TMenuItem
         Caption = '-'
       end
@@ -796,10 +801,25 @@ object formPoBatch: TformPoBatch
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
     end
-    object ADeleteFile: TAction
+    object APathDeleteFile: TAction
+      Category = 'Path'
+      Caption = 'Delete File(s)'
+      OnExecute = APathDeleteFileExecute
+    end
+    object APathSyncFilesWithPot: TAction
+      Category = 'Path'
+      Caption = 'Sync File(s) with Pot'
+      OnExecute = APathSyncFilesWithPotExecute
+    end
+    object APathSelectAll: TAction
+      Category = 'Path'
+      Caption = 'Select All'
+      OnExecute = APathSelectAllExecute
+    end
+    object ASyncWithPot: TAction
       Category = 'Edit'
-      Caption = 'Delete File'
-      OnExecute = ADeleteFileExecute
+      Caption = 'Sync with Pot'
+      OnExecute = ASyncWithPotExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1304,7 +1324,16 @@ object formPoBatch: TformPoBatch
     Left = 472
     Top = 160
     object MenuDeleteFile: TMenuItem
-      Action = ADeleteFile
+      Action = APathDeleteFile
+    end
+    object MenuSyncFilesWithPot: TMenuItem
+      Action = APathSyncFilesWithPot
+    end
+    object Separator11: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem1: TMenuItem
+      Action = APathSelectAll
     end
   end
 end
