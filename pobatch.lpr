@@ -18,14 +18,13 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms,
+  {$IFDEF WINDOWS}
+  uDarkStyle,
+  uWin32WidgetSetDark,
+  {$ENDIF}
   mainunit,
   formabout,
-  formdonate
-  {$IFDEF WINDOWS}
-  ,uDarkStyle
-  ,uWin32WidgetSetDark
-  {$ENDIF}
-  ;
+  formdonate;
 
   {$R *.res}
 
@@ -34,8 +33,8 @@ begin
   GlobalSkipIfNoLeaks := True;
   {$ENDIF}
   RequireDerivedFormResource := True;
-  Application.Title:='PoBatch';
-  Application.Scaled:=True;
+  Application.Title := 'PoBatch';
+  Application.Scaled := True;
   {$PUSH}
   {$WARN 5044 OFF}
   Application.MainFormOnTaskbar := True;

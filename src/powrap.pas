@@ -13,7 +13,9 @@ unit powrap;
 interface
 
 uses
-  Classes, SysUtils, Contnrs;
+  Classes,
+  SysUtils,
+  Contnrs;
 
 type
 
@@ -1780,10 +1782,11 @@ begin
   if FlagStr <> '' then
     Lines.Add(Prefix + '#, ' + FlagStr);
 
-  // 5. Previous (after flags)
-  for i := 0 to Entry.FComments.Count - 1 do
-    if TPOComment(Entry.FComments[i]).CommentType = poctPrevious then
-      Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
+  // 5. Previous (after flags) – only output when entry is fuzzy
+  if Entry.IsFuzzy then
+    for i := 0 to Entry.FComments.Count - 1 do
+      if TPOComment(Entry.FComments[i]).CommentType = poctPrevious then
+        Lines.Add(Prefix + '#| ' + TPOComment(Entry.FComments[i]).Text);
 
   // msgctxt
   if Entry.MsgCtxt <> '' then
