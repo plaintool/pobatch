@@ -120,17 +120,15 @@ echo                        Signing %ARCH_LABEL%
 echo ############################################################
 echo.
 
-:: Copy OpenSSL DLLs (paths differ per architecture)
-::IF "%ARCH%"=="32" (
-::    copy /Y "%~dp0libs\openssl\libcrypto-1_1.dll" "%~dp0"
-::    copy /Y "%~dp0libs\openssl\libssl-1_1.dll" "%~dp0"
-::) ELSE (
-::    copy /y "%~dp0libs\openssl\libcrypto-1_1-x64.dll" "%~dp0" >NUL
-::    copy /Y "%~dp0libs\openssl\libssl-1_1-x64.dll"    "%~dp0" >NUL
-::)
-
 echo Wait 2 seconds to ensure file is free
 ping 127.0.0.1 -n 3 >nul
+
+:: Set architecture-specific file names for signing
+IF "%ARCH%"=="32" (
+    SET "EXE_NAME=%APP_NAME%32.exe"
+) ELSE (
+    SET "EXE_NAME=%APP_NAME%.exe"
+)
 
 ::Certificate settings (optional)
 IF "%SIGNTOOL%"=="" (
@@ -153,46 +151,20 @@ SET "CERTPASS=1234"
 SET "TIMESTAMP_URL=http://timestamp.sectigo.com"
 ::SET "TIMESTAMP_URL=http://ts.ssl.com"
 
-:: Set architecture-specific file names for signing
-IF "%ARCH%"=="32" (
-    SET "EXE_NAME=%APP_NAME%32.exe"
-::    SET "DLL_SSL=libssl-1_1.dll"
-::    SET "DLL_CRYPTO=libcrypto-1_1.dll"
-) ELSE (
-    SET "EXE_NAME=%APP_NAME%.exe"
-::    SET "DLL_SSL=libssl-1_1-x64.dll"
-::    SET "DLL_CRYPTO=libcrypto-1_1-x64.dll"
-)
-
-::Sign the executable and DLLs in the same folder
+::Sign the executable
 if exist "%EXE_NAME%" (
     if not "%CERTFILE%"=="" (
         if exist "%CERTFILE%" (
             if exist "%SIGNTOOL%" (
-                echo Signing executable...
+                echo Signing %EXE_NAME%...
                 "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%EXE_NAME%" < nul
                 IF %ERRORLEVEL% EQU 0 (
-                    echo Signing completed successfully
+                    echo Executable signing completed successfully
                 ) else (
-                    echo Signing failed
+                    echo Executable signing failed
                     if not defined CI pause
+                    exit /b %ERRORLEVEL%
                 )
-                ::echo Signing %DLL_SSL%...
-                ::"%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%DLL_SSL%" < nul
-                ::IF %ERRORLEVEL% EQU 0 (
-                ::    echo Signing completed successfully
-                ::) else (
-                ::    echo Signing failed
-                ::    if not defined CI pause
-                ::)
-                ::echo Signing %DLL_CRYPTO%...
-                ::"%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%DLL_CRYPTO%" < nul
-                ::IF %ERRORLEVEL% EQU 0 (
-                ::    echo Signing completed successfully
-                ::) else (
-                ::    echo Signing failed
-                ::    if not defined CI pause
-                ::::)
             ) else (
                 echo Skipping signing: signtool not found.
             )
@@ -203,5 +175,19 @@ if exist "%EXE_NAME%" (
         echo Skipping signing: CERTFILE not set.
     )
 ) else (
-    echo Skipping signing: missing executable.
+    echo Skipping signing: executable %EXE_NAME% missing.
+    if not defined CI pause
+    exit /b 1
 )
+
+:: Copy and sign binaries using external script
+echo.
+echo Processing binaries...
+call "%~dp0depsbinary.cmd" %ARCH% %APP_NAME%
+if %ERRORLEVEL% neq 0 (
+    echo Binaries processing failed!
+    if not defined CI pause
+    exit /b %ERRORLEVEL%
+)
+
+echo All done.

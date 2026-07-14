@@ -67,9 +67,9 @@
 	</Program_Info>
 	<Program_Descriptions>
 		<English>
-			<Keywords>editor, pad, xml</Keywords>
-			<Char_Desc_45>Free tool for creating and editing PAD XML.</Char_Desc_45>
-			<Char_Desc_80>A simple tool for creating and editing PAD XML files used for software distribution and listings.</Char_Desc_80>
+			<Keywords>editor, po, l10n, i18n</Keywords>
+			<Char_Desc_45>PoBatch is an easy-to-use PO file editor for l10n workflows. </Char_Desc_45>
+			<Char_Desc_80>PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file. </Char_Desc_80>
 			<Char_Desc_250>A simple tool for creating and editing PAD XML files used for software distribution and listings. Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products.</Char_Desc_250>
 			<Char_Desc_450>A lightweight application designed to create, edit, and maintain PAD (Portable Application Description) XML files. PAD files are used to describe software products in a standardized format for software directories, download sites, and application catalogs, helping automate software listing and distribution.</Char_Desc_450>
 			<Char_Desc_2000>A simple tool for creating and editing PAD XML files used for software distribution and listings. Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. A lightweight application designed to create, edit, and maintain PAD (Portable Application Description) XML files. PAD files are used to describe software products in a standardized format for software directories, download sites, and application catalogs, helping automate software listing and distribution.</Char_Desc_2000>
@@ -84,10 +84,10 @@
 			<Application_XML_File_URL>http://raw.githubusercontent.com/plaintool/pobatch/refs/heads/main/installer/pobatch.xml</Application_XML_File_URL>
 		</Application_URLs>
 		<Download_URLs>
-			<Primary_Download_URL>http://github.com/plaintool/pobatch/releases/download/v1.1.0/pobatch-1.1.0-x64-allusers.msi</Primary_Download_URL>
-			<Secondary_Download_URL>http://github.com/plaintool/pobatch/releases/download/v1.1.0/pobatch-1.1.0-x86-allusers.msi</Secondary_Download_URL>
-			<Additional_Download_URL_1>http://github.com/plaintool/pobatch/releases/download/v1.1.0/pobatch-1.1.0-x64.msi</Additional_Download_URL_1>
-			<Additional_Download_URL_2>http://github.com/plaintool/pobatch/releases/download/v1.1.0/pobatch-1.1.0-x86.msi</Additional_Download_URL_2>
+			<Primary_Download_URL>http://github.com/plaintool/pobatch/releases/download/v1.0.0/pobatch-1.0.0-x64-allusers.msi</Primary_Download_URL>
+			<Secondary_Download_URL>http://github.com/plaintool/pobatch/releases/download/v1.0.0/pobatch-1.0.0-x86-allusers.msi</Secondary_Download_URL>
+			<Additional_Download_URL_1>http://github.com/plaintool/pobatch/releases/download/v1.0.0/pobatch-1.0.0-x64.msi</Additional_Download_URL_1>
+			<Additional_Download_URL_2>http://github.com/plaintool/pobatch/releases/download/v1.0.0/pobatch-1.0.0-x86.msi</Additional_Download_URL_2>
 		</Download_URLs>
 	</Web_Info>
 	<Permissions>

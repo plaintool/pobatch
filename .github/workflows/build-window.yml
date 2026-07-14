@@ -28,12 +28,20 @@ jobs:
         run: |
           choco install lazarus -y
           choco install wixtoolset -y
+          choco install innosetup --version=6.7.3 -y
           $fpcDir = "C:\\Lazarus\\fpc\\3.2.2"
           $zipPath = "$env:RUNNER_TEMP\\fpc-i386.exe"
           curl.exe -L "https://sourceforge.net/projects/freepascal/files/Win32/3.2.2/fpc-3.2.2.i386-win32.exe/download" -o $zipPath
           Start-Process -FilePath $zipPath -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/DIR=$fpcDir" -Wait
           $env:Path = "C:\\Lazarus\\fpc\\3.2.2\\bin\\i386-win32;$env:Path"
           "PATH=$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Copy Inno Setup language files
+        shell: pwsh
+        run: |
+          $src = "$env:GITHUB_WORKSPACE\installer\innolanguages\*"
+          $dst = "C:\Program Files (x86)\Inno Setup 6\Languages"
+          Copy-Item -Path $src -Destination $dst -Recurse -Force
 
       - name: Locate 32-bit FPC
         shell: pwsh
@@ -90,10 +98,15 @@ jobs:
           BUILD_PORTABLE: 1
         run: installer\\build.cmd x86 %VERSION%
 
+      - name: Build installer Inno Setup (x86 + x64)
+        shell: cmd
+        run: installer\buildinno.cmd %VERSION%
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-windows-artifacts
           path: |
+            installer/*.exe
             installer/*.msi
             installer/*.zip

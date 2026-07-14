@@ -8,6 +8,7 @@
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<?define ProductVersion = "$(var.Version)" ?>
+	<?define OpenSslDir = "..\" ?>
     <?if $(var.Platform) = x64 ?>
         <?define ProductName = "PoBatch $(var.ProductVersion)" ?>
         <?define Win64Value = "yes" ?>
@@ -15,6 +16,8 @@
 		<?define ExeName = "pobatch.exe" ?>
 		<?define ExeNameUpper = "POBATCH.EXE" ?>
         <?define SystemFolder = "System64Folder" ?>
+		<?define LibCryptoName = "libcrypto-1_1-x64.dll" ?>
+		<?define LibSslName    = "libssl-1_1-x64.dll" ?>
     <?else?>
         <?define ProductName = "PoBatch $(var.ProductVersion) (32-bit)" ?>
         <?define Win64Value = "no" ?>
@@ -22,9 +25,11 @@
 		<?define ExeName = "pobatch32.exe" ?>
 		<?define ExeNameUpper = "POBATCH32.EXE" ?>
         <?define SystemFolder = "SystemFolder" ?>
+		<?define LibCryptoName = "libcrypto-1_1.dll" ?>
+		<?define LibSslName    = "libssl-1_1.dll" ?>
     <?endif?>
     
-    <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Alexander Tverskoy" UpgradeCode="0E008975-7ED6-4C8A-B846-47DC2546EFE7">
+    <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Alexander Tverskoy" UpgradeCode="45C75BC5-3DDC-453B-A7AB-7E2AE0D88699">
         <Package Description="$(var.ProductName)" Comments="PoBatch" Platform="$(var.Platform)" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
         <!-- <Property Id="ALLUSERS" Value="1"/> -->
         <Property Id="MSIFASTINSTALL" Value="1" />
@@ -40,27 +45,26 @@
         <Directory Id="TARGETDIR" Name="SourceDir">
             <!-- <Directory Id="LocalAppDataFolder"> -->
             <Directory Id="$(var.ProgramFilesFolderVar)">
-                <Directory Id="INSTALLDIR" Name="PoBatch">
-                    <Component Id="PoBatchFiles" DiskId="1" Guid="DF4C9C23-8413-447A-AF79-7495E589BE9B" Win64="$(var.Win64Value)">
-                        <!-- Files to be installed -->
-                        <File Id="$(var.ExeNameUpper)" Name="$(var.ExeName)" Source="..\$(var.ExeName)" />
-                        <File Id="LICENSE" Name="LICENSE" Source="..\LICENSE" />
-                        <!-- Registry KeyPath to satisfy ICE38 -->
-                        <RegistryValue Root="HKLM" Key="Software\Alexander Tverskoy\PoBatch" Name="InstallPath" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
-                        <!-- Remove INSTALLDIR on uninstall -->
-                        <RemoveFolder Id="RemoveINSTALLDIR" Directory="INSTALLDIR" On="uninstall" />
-                    </Component>
-                </Directory>
+              <Directory Id="INSTALLDIR" Name="PoBatch">					
+                <Component Id="PoBatchFiles" DiskId="1" Guid="C3D9A1F5-7E2B-4A8C-9F1D-6B0E3C4D7A5F" Win64="$(var.Win64Value)">
+                  <File Id="$(var.ExeNameUpper)" Name="$(var.ExeName)" Source="..\$(var.ExeName)" />
+                  <File Id="LICENSE" Name="LICENSE" Source="..\LICENSE" />
+                  <!--<File Id="LIBCRYPTO" Name="$(var.LibCryptoName)" Source="$(var.OpenSslDir)\$(var.LibCryptoName)" />-->
+                  <!--<File Id="LIBSSL" Name="$(var.LibSslName)" Source="$(var.OpenSslDir)\$(var.LibSslName)" />-->
+                  <RegistryValue Root="HKLM" Key="Software\Alexander Tverskoy\PoBatch" Name="InstallPath" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
+                  <RemoveFolder Id="RemoveINSTALLDIR" Directory="INSTALLDIR" On="uninstall" />
+                </Component>
+              </Directory>
             </Directory>
             <Directory Id="DesktopFolder" />
             <Directory Id="ProgramMenuFolder">
                 <Directory Id="ProgramMenuDir" Name="PoBatch">
-                    <Component Id="PoBatchShortcuts" Guid="BF487BC8-1C10-4BB9-A141-B292A4ADFA37" Permanent="yes">
+                    <Component Id="PoBatchShortcuts" Guid="A7C2F1D3-6B4E-4F8A-9D2C-5B3E1F7A9C4D" Permanent="yes">
                         <RegistryValue Root="HKCU" Key="Software\Alexander Tverskoy\PoBatch" Name="InstallPath" Type="string" Value="[INSTALLDIR]" />
                         <Shortcut Id="desktopShortcut" Directory="DesktopFolder" Name="PoBatch" WorkingDirectory="INSTALLDIR" Target="[INSTALLDIR]$(var.ExeName)" Icon="DesktopIcon.exe" IconIndex="0" />
                         <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="PoBatch" Target="[INSTALLDIR]$(var.ExeName)" Icon="StartMenuIcon.exe" IconIndex="0" />
                     </Component>
-                    <Component Id="StartMenuShortcuts" Guid="3B47D63E-AE77-4DDB-B495-6809CC959310">
+                    <Component Id="StartMenuShortcuts" Guid="F9B1E3A6-2D7C-4F5B-81A9-0C2E6D8B4F12">
                         <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
                         <RegistryValue Root="HKCU" Key="Software\Alexander Tverskoy\PoBatch" Name="Product" Type="string" Value="[ProductName]" />
                         <Shortcut Id="UninstallProduct" Name="Uninstall" Description="Uninstalls the application" Target="[$(var.SystemFolder)]msiexec.exe" Arguments="/x [ProductCode]" />
@@ -68,36 +72,10 @@
                 </Directory>
             </Directory>
         </Directory>
-        <Component Id="PoBatchRegistry" Directory="INSTALLDIR" Guid="4A5B87A9-6F9F-4AD4-A9AB-4D3D9DAB4FC8" Win64="$(var.Win64Value)">
-            <!-- Add .pad extension association -->
-            <RegistryKey Root="HKLM" Key="Software\Classes\.pad" Action="createAndRemoveOnUninstall">
-                <RegistryValue Type="string" Value="pobatch" KeyPath="yes" />
-                <!-- Add "New → TSK File" to context menu -->
-                <RegistryKey Key="ShellNew" Action="createAndRemoveOnUninstall">
-                    <RegistryValue Name="NullFile" Type="string" Value="" />
-                </RegistryKey>
-            </RegistryKey>
-            <!-- Define the pobatch file association -->
-            <RegistryKey Root="HKLM" Key="Software\Classes\pobatch" Action="createAndRemoveOnUninstall">
-                <RegistryKey Key="DefaultIcon">
-                    <RegistryValue Type="string" Value="[INSTALLDIR]$(var.ExeName),1" />
-                </RegistryKey>
-                <RegistryKey Key="shell\open\command">
-                    <RegistryValue Type="string" Value="&quot;[INSTALLDIR]$(var.ExeName)&quot; &quot;%1&quot;" />
-                </RegistryKey>
-            </RegistryKey>
-            <!-- Add application association in the registry -->
-            <RegistryKey Root="HKLM" Key="Software\Classes\Applications\$(var.ExeName)" Action="createAndRemoveOnUninstall">
-                <RegistryKey Key="shell\open\command">
-                    <RegistryValue Type="string" Value="&quot;[INSTALLDIR]$(var.ExeName)&quot; &quot;%1&quot;" />
-                </RegistryKey>
-            </RegistryKey>
-        </Component>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="PoBatchFiles" />
             <ComponentRef Id="PoBatchShortcuts" />
             <ComponentRef Id="StartMenuShortcuts" />
-            <ComponentRef Id="PoBatchRegistry" />
         </Feature>
         <UI>
             <UIRef Id="WixUI_Minimal" />

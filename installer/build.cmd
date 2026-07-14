@@ -26,12 +26,24 @@ IF NOT "%PLATFORM%"=="x64" IF NOT "%PLATFORM%"=="x86" (
     exit /b 1
 )
 
+echo.
+echo ############################################################
+echo                  Build MSI %PLATFORM% peruser              
+echo ############################################################
+echo.
+
 :: --- Build peruser ---
 echo Compiling msisetup_peruser.wxs with candle for %PLATFORM%...
 candle -nologo "%SOURCE_DIR%\msisetup_peruser.wxs" -out "%SOURCE_DIR%\peruser.wixobj" -ext WixUIExtension -dPlatform=%PLATFORM% -dVersion=%VERSION%
 echo Linking peruser.wixobj into pobatch-%VERSION%-%PLATFORM%.msi with light...
 light -nologo -sice:ICE61 -sice:ICE91 "%SOURCE_DIR%\peruser.wixobj" -out "%SOURCE_DIR%\pobatch-%VERSION%-%PLATFORM%.msi" -ext WixUIExtension
 echo File created: pobatch-%VERSION%-%PLATFORM%.msi
+echo.
+
+echo.
+echo ############################################################
+echo                   Build MSI %PLATFORM% permachine          
+echo ############################################################
 echo.
 
 :: --- Build permachine ---
@@ -47,6 +59,12 @@ echo Deleting temporary .wixobj and .wixpdb files...
 del /q "%SOURCE_DIR%\*.wixobj" >nul
 del /q "%SOURCE_DIR%\*.wixpdb" >nul
 echo Cleanup completed.
+echo.
+
+echo.
+echo ############################################################
+echo                       Sign %PLATFORM% installers           
+echo ############################################################
 echo.
 
 :: --- Sign installers ---
@@ -74,14 +92,14 @@ if not "%CERTFILE%"=="" (
     if exist "%CERTFILE%" (
         if exist "%SIGNTOOL%" (
             echo Signing MSI files...
-            "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%SOURCE_DIR%\pobatch-%VERSION%-%PLATFORM%.msi"
+            "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%SOURCE_DIR%\pobatch-%VERSION%-%PLATFORM%.msi" < nul
             IF %ERRORLEVEL% EQU 0 (
                 echo Signing of pobatch-%VERSION%-%PLATFORM%.msi completed successfully
             ) else (
                 echo Signing failed for pobatch-%VERSION%-%PLATFORM%.msi
             )
 
-            "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%SOURCE_DIR%\pobatch-%VERSION%-%PLATFORM%-allusers.msi"
+            "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%SOURCE_DIR%\pobatch-%VERSION%-%PLATFORM%-allusers.msi" < nul
             IF %ERRORLEVEL% EQU 0 (
                 echo Signing of pobatch-%VERSION%-%PLATFORM%-allusers.msi completed successfully
             ) else (
@@ -99,7 +117,8 @@ if not "%CERTFILE%"=="" (
 
 :: --- Portable ---
 if "%BUILD_PORTABLE%"=="1" (
-    powershell -NoProfile -Command "$exe64='%~dp0..\\pobatch.exe'; $exe32='%~dp0..\\pobatch32.exe'; $settings='%~dp0form_settings.json'; if ((Test-Path $exe64) -and (Test-Path $exe32) -and (Test-Path $settings)) { Compress-Archive -Force -Path $exe64,$exe32,$settings -DestinationPath '%~dp0pobatch-%VERSION%-x86-x64-portable.zip' } else { Write-Error 'Portable inputs missing'; exit 1 }"
+    call "%~dp0buildportable.cmd" "%VERSION%"
 )
 
+endlocal
 echo Build and signing completed successfully!
