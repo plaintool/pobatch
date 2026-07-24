@@ -64,6 +64,14 @@ jobs:
                   "prefix": "### ✨ Enhancements",
                   "labels": ["enhancement", "enhancement auto"]
                 },
+                "localization": {
+                  "prefix": "### 🌐 Localization",
+                  "labels": ["localization", "localization auto"]
+                },
+                "documentation": {
+                  "prefix": "### 📝 Documentation",
+                  "labels": ["documentation", "documentation auto"]
+                },
                 "bugfixes": {
                   "prefix": "### 🐛 Fixed Bugs",
                   "labels": ["bug", "bug auto"]
@@ -97,6 +105,7 @@ jobs:
           Several installer options are available:
           | Description | Files |
           |-------------|-------|
+          | **Universal installer (EXE)** — universal installer for **x86 and x64**, supports installation **for the current user or for all users** | [pobatch‑${VERSION}‑any‑x86‑x64.exe](https://github.com/plaintool/pobatch/releases/download/${TAG}/pobatch-${VERSION}-any-x86-x64.exe) |
           | **User installer (MSI)** — installs the application **for the current user** | [pobatch‑${VERSION}‑x64.msi](https://github.com/plaintool/pobatch/releases/download/${TAG}/pobatch-${VERSION}-x64.msi)<br>[pobatch‑${VERSION}‑x86.msi](https://github.com/plaintool/pobatch/releases/download/${TAG}/pobatch-${VERSION}-x86.msi) |
           | **System installer (MSI)** — installs the application **for all users on the system** | [pobatch‑${VERSION}‑x64‑allusers.msi](https://github.com/plaintool/pobatch/releases/download/${TAG}/pobatch-${VERSION}-x64-allusers.msi)<br>[pobatch‑${VERSION}‑x86‑allusers.msi](https://github.com/plaintool/pobatch/releases/download/${TAG}/pobatch-${VERSION}-x86-allusers.msi) |
           | **Portable version** — saves its settings to **form_settings.json** if it is near the executable; otherwise, in the user directory | [pobatch‑${VERSION}‑x86‑x64‑portable.zip](https://github.com/plaintool/pobatch/releases/download/${TAG}/pobatch-${VERSION}-x86-x64-portable.zip) |
@@ -133,7 +142,9 @@ jobs:
           draft: true
           prerelease: false
           files: |
+            dist/**/*.exe
             dist/**/*.msi
             dist/**/*.zip
             dist/**/*.deb
             dist/**/*.rpm
+            dist/**/*.tar.gz
