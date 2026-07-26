@@ -2315,7 +2315,11 @@ begin
   if Idx < 0 then Exit;
 
   if ListPath.Items.Count > Idx then
+  begin
+    ListPath.Selected[Idx] := True;
     ListPath.ItemIndex := Idx;
+    ListPath.Invalidate;
+  end;
   FLastPathIndex := Idx;
 end;
 
