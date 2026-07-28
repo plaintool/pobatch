@@ -14,7 +14,8 @@
 #define MyAppVersion   MyVersion
 #define MyAppPublisher "Alexander Tverskoy"
 #define MyAppURL       "https://github.com/plaintool/pobatch"
-#define MyAppExeName   "pobatch"
+#define MyAppExeName   "pobatch.exe"
+#define MyAppExeName32   "pobatch32.exe"
 #define CurrentYear    GetDateTimeString('yyyy','','')
 
 [Setup]
@@ -35,7 +36,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 
 UninstallDisplayName={#MyAppName} {#MyAppVersion}
-UninstallDisplayIcon={app}\pobatch.exe
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 RestartApplications=no
 
@@ -119,16 +120,16 @@ Name: "ukrainian";  MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-#ifexist "..\pobatch.exe"
+#ifexist "..\" + MyAppExeName
 ; 64-bit
-Source: "..\{#MyAppExeName}.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}.exe"; Check: Is64BitInstallMode; Flags: ignoreversion
+Source: "..\{#MyAppExeName}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Check: Is64BitInstallMode; Flags: ignoreversion
 ;Source: "..\libcrypto-1_1-x64.dll"; DestDir: "{app}"; Check: Is64BitInstallMode; Flags: ignoreversion
 ;Source: "..\libssl-1_1-x64.dll"; DestDir: "{app}"; Check: Is64BitInstallMode; Flags: ignoreversion
 #endif
 
-#ifexist "..\{#MyAppExeName}32.exe"
+#ifexist "..\" + MyAppExeName32
 ; 32-bit
-Source: "..\#MyAppExeName}32.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}32.exe"; Check: not Is64BitInstallMode; Flags: ignoreversion
+Source: "..\{#MyAppExeName32}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Check: not Is64BitInstallMode; Flags: ignoreversion
 ;Source: "..\libcrypto-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: ignoreversion
 ;Source: "..\libssl-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: ignoreversion
 #endif
@@ -136,8 +137,8 @@ Source: "..\#MyAppExeName}32.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}3
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}.exe"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}.exe"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}.exe"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
