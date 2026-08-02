@@ -623,13 +623,19 @@ object formPoBatch: TformPoBatch
       object MenuClearIdentical: TMenuItem
         Action = AClearIdentical
       end
+      object MenuItem3: TMenuItem
+        Action = AValidFile
+      end
       object MenuEditPluralForm: TMenuItem
         Action = AEditPluralForm
+      end
+      object Separator3: TMenuItem
+        Caption = '-'
       end
       object MenuSyncWithPot: TMenuItem
         Action = ASyncWithPot
       end
-      object Separator3: TMenuItem
+      object Separator12: TMenuItem
         Caption = '-'
       end
       object MenuEditTranslationOnly: TMenuItem
@@ -788,11 +794,22 @@ object formPoBatch: TformPoBatch
       ShortCut = 32836
       OnExecute = AClearIdenticalExecute
     end
+    object AValidFile: TAction
+      Category = 'Edit'
+      Caption = 'Mark as Valid'
+      ShortCut = 32854
+      OnExecute = AValidFileExecute
+    end
     object AEditPluralForm: TAction
       Category = 'Edit'
       Caption = 'Edit Plural Form'
       ShortCut = 32848
       OnExecute = AEditPluralFormExecute
+    end
+    object ASyncWithPot: TAction
+      Category = 'Edit'
+      Caption = 'Sync with Pot'
+      OnExecute = ASyncWithPotExecute
     end
     object AEditTranslationOnly: TAction
       Category = 'Edit'
@@ -806,6 +823,11 @@ object formPoBatch: TformPoBatch
       Caption = 'Delete File(s)'
       OnExecute = APathDeleteFileExecute
     end
+    object APathValidFiles: TAction
+      Category = 'Path'
+      Caption = 'Mark File(s) as Valid'
+      OnExecute = APathValidFilesExecute
+    end
     object APathSyncFilesWithPot: TAction
       Category = 'Path'
       Caption = 'Sync File(s) with Pot'
@@ -815,11 +837,6 @@ object formPoBatch: TformPoBatch
       Category = 'Path'
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
-    end
-    object ASyncWithPot: TAction
-      Category = 'Edit'
-      Caption = 'Sync with Pot'
-      OnExecute = ASyncWithPotExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1325,6 +1342,9 @@ object formPoBatch: TformPoBatch
     Top = 160
     object MenuDeleteFile: TMenuItem
       Action = APathDeleteFile
+    end
+    object MenuItem2: TMenuItem
+      Action = APathValidFiles
     end
     object MenuSyncFilesWithPot: TMenuItem
       Action = APathSyncFilesWithPot

@@ -43,6 +43,8 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    AValidFile: TAction;
+    APathValidFiles: TAction;
     ASyncWithPot: TAction;
     APathSyncFilesWithPot: TAction;
     APathSelectAll: TAction;
@@ -94,6 +96,8 @@ type
     MenuDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     MenuSyncWithPot: TMenuItem;
     MenuSyncFilesWithPot: TMenuItem;
     MenuWordWrapTranslatePanel: TMenuItem;
@@ -131,6 +135,7 @@ type
     PopupPath: TPopupMenu;
     Separator10: TMenuItem;
     Separator11: TMenuItem;
+    Separator12: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -156,6 +161,8 @@ type
     procedure APathSelectAllExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
+    procedure APathValidFilesExecute(Sender: TObject);
+    procedure AValidFileExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1056,107 +1063,6 @@ begin
   ListPath.SelectAll;
 end;
 
-procedure TformPoBatch.APathSyncFilesWithPotExecute(Sender: TObject);
-var
-  i, selCount: integer;
-  PoFile: TPOFile;
-  FileName: string;
-  fileList, msg: string;
-begin
-  // Check if the reference POT file is specified
-  if FPotFile = '' then
-  begin
-    ShowMessage('No reference POT file exists in opened path.');
-    Exit;
-  end;
-
-  // Ask to save current file if modified – if user cancels, abort sync
-  if not IsCanClose(True) then
-    Exit;
-
-  // Collect selected files for confirmation message
-  selCount := 0;
-  fileList := '';
-  for i := 0 to ListPath.Items.Count - 1 do
-  begin
-    if ListPath.Selected[i] then
-    begin
-      Inc(selCount);
-      if selCount <= 10 then
-        fileList := fileList + FPoFiles[i] + sLineBreak
-      else if selCount = 11 then
-        fileList := fileList + '... and ' + IntToStr(ListPath.SelCount - 10) + ' more file(s)' + sLineBreak;
-    end;
-  end;
-
-  if selCount = 0 then
-  begin
-    ShowMessage('No PO files selected for synchronization.');
-    Exit;
-  end;
-
-  // Build confirmation message
-  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'reference POT:' +
-    sLineBreak + '  ' + FPotFile + sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
-    Exit;
-
-  // Process each selected file
-  for i := 0 to ListPath.Items.Count - 1 do
-  begin
-    if not ListPath.Selected[i] then Continue;
-
-    if i >= FPoFiles.Count then
-    begin
-      ShowMessageFmt('Internal error: index %d exceeds file list size.', [i]);
-      Continue;
-    end;
-
-    FileName := FPoFiles[i];
-    if not FileExists(FileName) then
-    begin
-      ShowMessageFmt('File not found: %s', [FileName]);
-      Continue;
-    end;
-
-    // Skip the reference POT file itself to avoid self-synchronization
-    if SameFileName(FileName, FPotFile) then
-      Continue;
-
-    PoFile := TPOFile.Create;
-    try
-      PoFile.LoadFromFile(FileName);
-      PoFile.SynchronizeToFile(FPotFile, True);
-      PoFile.SaveToFile(FileName);
-    except
-      on E: Exception do
-      begin
-        ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
-        PoFile.Free;
-        Continue;    // skip reloading this file
-      end;
-    end;
-    PoFile.Free;
-
-    // Refresh list item status
-    AnalizePath(i);
-
-    // If this was the currently opened file, reload it in the editor
-    if FileName = FFileName then
-    begin
-      if LoadFile(FFileName) then
-      begin
-        Changed := False;
-        FillGrid;
-        FillGridHeaders;
-        UpdateTranslatePanel;
-      end;
-    end;
-  end;
-
-  ShowMessage('Synchronization complete.');
-end;
-
 procedure TformPoBatch.ASyncWithPotExecute(Sender: TObject);
 var
   PotFileName: string;
@@ -1201,6 +1107,242 @@ begin
   UpdateTranslatePanel;
   if FPathIndex >= 0 then
     AnalizePath(FPathIndex);
+end;
+
+procedure TformPoBatch.APathSyncFilesWithPotExecute(Sender: TObject);
+var
+  i, selCount: integer;
+  PoFile: TPOFile;
+  FileName: string;
+  fileList, msg: string;
+  SelectedIndices: array of integer = nil; // saved selected indices to survive UI changes
+begin
+  // Check if the reference POT file is specified
+  if FPotFile = '' then
+  begin
+    ShowMessage('No reference POT file exists in opened path.');
+    Exit;
+  end;
+
+  // Ask to save current file if modified – if user cancels, abort sync
+  if not IsCanClose(True) then
+    Exit;
+
+  // Collect selected indices before processing
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected for synchronization.');
+    Exit;
+  end;
+
+  // Build confirmation message
+  fileList := '';
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'reference POT: ' +
+    FPotFile + sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Process each selected file using the saved indices
+  for i := 0 to selCount - 1 do
+  begin
+    FileName := FPoFiles[SelectedIndices[i]];
+    if not FileExists(FileName) then
+    begin
+      ShowMessageFmt('File not found: %s', [FileName]);
+      Continue;
+    end;
+
+    // Skip the reference POT file itself to avoid self-synchronization
+    if SameFileName(FileName, FPotFile) then
+      Continue;
+
+    PoFile := TPOFile.Create;
+    try
+      PoFile.LoadFromFile(FileName);
+      PoFile.SynchronizeToFile(FPotFile, True);
+      PoFile.SaveToFile(FileName);
+    except
+      on E: Exception do
+      begin
+        ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
+        PoFile.Free;
+        Continue;    // skip reloading this file
+      end;
+    end;
+    PoFile.Free;
+
+    // Refresh list item status
+    AnalizePath(SelectedIndices[i]);
+
+    // If this was the currently opened file, reload it in the editor
+    if FileName = FFileName then
+    begin
+      if LoadFile(FFileName) then
+      begin
+        Changed := False;
+        FillGrid;
+        FillGridHeaders;
+        UpdateTranslatePanel;
+      end;
+    end;
+  end;
+
+  ShowMessage('Synchronization complete.');
+end;
+
+procedure TformPoBatch.AValidFileExecute(Sender: TObject);
+var
+  i: integer;
+begin
+  // Check if there is anything to process
+  if FPoFile.Entries.Count = 0 then Exit;
+
+  // Ask for confirmation
+  if MessageDlg('Mark as Valid', 'Mark the current file as valid?' + sLineBreak + 'This will remove the "fuzzy" flag from all entries.',
+    mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+
+  // Save any pending grid changes back to the model
+  SaveGrid;
+
+  // Remove the fuzzy flag from every translatable entry
+  for i := 0 to FPoFile.Entries.Count - 1 do
+  begin
+    // Keep the header entry (empty msgid) untouched
+    if FPoFile.Entries[i].MsgId <> '' then
+      FPoFile.Entries[i].IsFuzzy := False;
+  end;
+
+  Changed := True;
+
+  // Rebuild the grid and update the UI
+  FillGrid;
+  FillGridHeaders;
+  UpdateTranslatePanel;
+
+  // Update the file status in the path list if applicable
+  if FPathIndex >= 0 then
+    AnalizePath(FPathIndex);
+end;
+
+procedure TformPoBatch.APathValidFilesExecute(Sender: TObject);
+var
+  i, j, selCount: integer;
+  PoFile: TPOFile;
+  FileName: string;
+  fileList, msg: string;
+  SelectedIndices: array of integer = nil; // saved selected indices to survive UI changes
+begin
+  // Collect selected indices before showing the dialog
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected.');
+    Exit;
+  end;
+
+  // Build file list for confirmation message
+  fileList := '';
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Mark the following ' + IntToStr(selCount) + ' file(s) as valid?' + sLineBreak +
+    'This will remove the "fuzzy" flag from all entries.' + sLineBreak + 'This action cannot be undone within the application.' +
+    sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Remove fuzzy flag', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Save current file if modified – abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
+
+  // Process each selected file using the saved indices
+  for i := 0 to selCount - 1 do
+  begin
+    FileName := FPoFiles[SelectedIndices[i]];
+    if not FileExists(FileName) then
+    begin
+      ShowMessageFmt('File not found: %s', [FileName]);
+      Continue;
+    end;
+
+    // Skip the reference POT file – it contains no translations
+    if SameFileName(FileName, FPotFile) then
+      Continue;
+
+    PoFile := TPOFile.Create;
+    try
+      try
+        PoFile.LoadFromFile(FileName);
+
+        // Remove fuzzy flag from every translatable entry
+        for j := 0 to PoFile.Entries.Count - 1 do
+        begin
+          if PoFile.Entries[j].MsgId <> '' then
+            PoFile.Entries[j].IsFuzzy := False;
+        end;
+
+        PoFile.SaveToFile(FileName);
+      except
+        on E: Exception do
+        begin
+          ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+          PoFile.Free;
+          Continue;    // skip status update for this file
+        end;
+      end;
+    finally
+      PoFile.Free;
+    end;
+
+    // Update the status of this file in the path list
+    AnalizePath(SelectedIndices[i]);
+
+    // If this was the currently opened file, reload it in the editor
+    if FileName = FFileName then
+    begin
+      if LoadFile(FFileName) then
+      begin
+        Changed := False;
+        FillGrid;
+        FillGridHeaders;
+        UpdateTranslatePanel;
+      end;
+    end;
+  end;
+
+  ShowMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.');
 end;
 
 {%EndRegion}
