@@ -1937,7 +1937,7 @@ begin
   if ListPath.ItemIndex = FLastPathIndex then Exit;
 
   ClearTimeout(FselectPathTimer);
-  SetTimeoutSafe(FSelectPathTimer, 50, @SelectPath);
+  SetTimeout(FSelectPathTimer, 50, @SelectPath);
 end;
 
 procedure TformPoBatch.ListPathMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
