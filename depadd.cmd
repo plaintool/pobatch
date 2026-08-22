@@ -3,7 +3,7 @@ setlocal
 
 if "%~1"=="" (
     echo Error: please specify the submodule name.
-    echo Usage: addlib.cmd synapse [branch]
+    echo Usage: depadd.cmd synapse [branch]
     exit /b 1
 )
 
