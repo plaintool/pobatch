@@ -287,6 +287,7 @@ type
     FPathMouseSelecting: boolean;
 
     FChanged: boolean;
+    FSaving: boolean;
     FPath: string;
     FAutoCheckUpdates: boolean;
     FSortOrder: TSortOrder;
@@ -451,6 +452,7 @@ begin
   FLastPathIndex := -1;
   FWordWrap := True;
   FPathMouseSelecting := False;
+  FSaving := False;
 
   // Initialize components
   Grid.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
@@ -2134,6 +2136,11 @@ var
   mr: TModalResult;
 begin
   Result := True;
+  if FSaving then
+  begin
+    Result := False;
+    Exit;
+  end;
 
   if Changed then
   begin
@@ -2604,6 +2611,8 @@ var
   Stream: TStringStream;
 begin
   Result := False;
+  if FSaving then Exit; // already saving
+
   // Validate filename
   if Trim(AFileName) = string.Empty then
   begin
@@ -2611,55 +2620,60 @@ begin
     Exit;
   end;
 
-  SaveGrid;
-  SaveGridHeaders;
-  FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
-  if not Fast then FillGridHeaders;
-
-  Screen.Cursor := crHourGlass;
-  Output := TStringList.Create;
+  FSaving := True;
   try
+    SaveGrid;
+    SaveGridHeaders;
+    FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+    if not Fast then FillGridHeaders;
+
+    Screen.Cursor := crHourGlass;
+    Output := TStringList.Create;
     try
-      // Save FPoFile content into a string first
-      begin
-        Stream := TStringStream.Create(string.Empty, TEncoding.UTF8);
-        try
-          FPoFile.SaveToStream(Stream);         // serialize all entries to UTF-8 stream
-          Output.Text := Stream.DataString;     // get resulting string
-        finally
-          Stream.Free;
+      try
+        // Save FPoFile content into a string first
+        begin
+          Stream := TStringStream.Create(string.Empty, TEncoding.UTF8);
+          try
+            FPoFile.SaveToStream(Stream);         // serialize all entries to UTF-8 stream
+            Output.Text := Stream.DataString;     // get resulting string
+          finally
+            Stream.Free;
+          end;
+        end;
+
+        // Ensure the file ends with a line break (PO/POT standard)
+        Output.TrailingLineBreak := True;
+
+        // Ensure directory exists
+        ForceDirectories(ExtractFilePath(AFileName));
+
+        // Save file with UTF-8 encoding (without BOM)
+        Output.SaveToFile(AFileName, TEncoding.UTF8);
+        FPoFileBackup.Assign(FPoFile);
+
+        AnalizePath(FPathIndex);
+        if not Fast then
+        begin
+          UpdateInterface;
+          UpdateTranslatePanel;
+        end;
+
+        Result := True;
+      except
+        on E: Exception do
+        begin
+          MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
+            mtError, [mbOK], 0);
+          Result := False;
         end;
       end;
-
-      // Ensure the file ends with a line break (PO/POT standard)
-      Output.TrailingLineBreak := True;
-
-      // Ensure directory exists
-      ForceDirectories(ExtractFilePath(AFileName));
-
-      // Save file with UTF-8 encoding (without BOM)
-      Output.SaveToFile(AFileName, TEncoding.UTF8);
-      FPoFileBackup.Assign(FPoFile);
-
-      AnalizePath(FPathIndex);
-      if not Fast then
-      begin
-        UpdateInterface;
-        UpdateTranslatePanel;
-      end;
-
-      Result := True;
-    except
-      on E: Exception do
-      begin
-        MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
-          mtError, [mbOK], 0);
-        Result := False;
-      end;
+    finally
+      Screen.Cursor := crDefault;
+      Output.Free;
     end;
   finally
-    Screen.Cursor := crDefault;
-    Output.Free;
+    FSaving := False;
   end;
 end;
 
