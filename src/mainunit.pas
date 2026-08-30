@@ -2428,7 +2428,10 @@ begin
       AnalizePath(-1, True);
     end
     else
+    begin
       Path := string.Empty;
+      UpdateInterface; // refresh caption and UI after clearing invalid path
+    end;
   end;
 end;
 
