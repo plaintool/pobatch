@@ -419,7 +419,7 @@ const
 
 implementation
 
-uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, darkutils, checkupdates, osutils;
+uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, controlshelper, darkutils, checkupdates, osutils;
 
   {$R *.lfm}
 
@@ -1911,6 +1911,12 @@ begin
   if (Key = VK_RETURN) and not ((ssCtrl in Shift) or (ssShift in Shift)) then
   begin
     Grid.EditorMode := False;
+    Key := 0;
+  end
+  else if ((Key = Ord('V')) and (ssCtrl in Shift)) or ((Key = VK_INSERT) and (ssShift in Shift)) then
+  begin
+    // Standard paste for now, will be replaced later
+    TMemo(Sender).PasteWithLineEnding;
     Key := 0;
   end;
 end;
