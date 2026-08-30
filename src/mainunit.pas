@@ -1739,8 +1739,7 @@ begin
     Memo.OnExit := @MemoExit;
     Memo.OnChange := @MemoChange;
     Memo.Text := Grid.Cells[aCol, aRow];
-    Memo.SelStart := 0;
-    Memo.SelLength := Length(Memo.Text);
+    Application.QueueAsyncCall(@DelayedSetMemoFocus, 1);
 
     Editor := PanelMemo;
   end;
@@ -3033,8 +3032,11 @@ begin
   if Assigned(Memo) and (Memo.CanFocus) then
   begin
     Memo.SetFocus;
+    if Data = 1 then
+      Memo.SelectAll
+    else
     if (Memo.SelLength = 0) then
-      Memo.SelStart := Length(Memo.Text);
+      Memo.SelStart := Memo.GetTextLen;
   end;
 end;
 
