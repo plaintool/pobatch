@@ -10,3 +10,11 @@
 	path = libs/toolkit
 	url = https://github.com/plainlib/toolkit.git
 	branch = main
+[submodule "libs/richmemo"]
+	path = libs/richmemo
+	url = https://github.com/plainlib/richmemo.git
+	branch = master
+[submodule "libs/richkit"]
+	path = libs/richkit
+	url = https://github.com/plainlib/richkit.git
+	branch = main

@@ -110,6 +110,15 @@ call :BuildComponent Helpers helpers main helpers.lpk "" %DO_PULL% %DO_BUILD%
 :: Build Toolkit
 call :BuildComponent Toolkit toolkit main toolkit.lpk "" %DO_PULL% %DO_BUILD%
 
+:: Build RichMemo
+call :BuildComponent RichMemo richmemo master "richmemopackage.lpk, ide\richmemo_design.lpk" "" %DO_PULL% %DO_BUILD%
+
+:: Build RichKit
+call :BuildComponent RichKit richkit main richkit.lpk "" %DO_PULL% %DO_BUILD%
+
+:: Build DesignKit
+call :BuildComponent DesignKit designkit main designkit.lpk "" %DO_PULL% %DO_BUILD%
+
 echo.
 echo Dependencies OK
 exit /b 0
