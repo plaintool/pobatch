@@ -14,7 +14,10 @@ LAZBUILD_OPTS =
 DEP_LPKS = \
     libs/darkmode/darkmode.lpk \
     libs/helpers/helpers.lpk \
-    libs/toolkit/toolkit.lpk
+    libs/toolkit/toolkit.lpk \
+    libs/richmemo/richmemopackage.lpk \
+    libs/richkit/richkit.lpk \
+    libs/designkit/designkit.lpk
 
 # Default target: get submodules, build dependencies then the project
 all: submodules deps

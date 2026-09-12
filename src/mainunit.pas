@@ -33,6 +33,7 @@ uses
   LCLType,
   LCLIntf,
   RichMemo,
+  RichMemoCellEditor,
   OneShotTimer,
   powrap;
 
@@ -270,8 +271,6 @@ type
     procedure MenuWordWrapGridClick(Sender: TObject);
     procedure MenuWordWrapTranslatePanelClick(Sender: TObject);
     { Inline Editor Events}
-    procedure PanelMemoEnter(Sender: TObject);
-    procedure PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
     procedure MemoEnter(Sender: TObject);
     procedure MemoExit(Sender: TObject);
     procedure MemoChange(Sender: TObject);
@@ -295,8 +294,7 @@ type
     procedure MemoTranslationChange(Sender: TObject);
     {%EndRegion}
   private
-    Memo: TMemo;
-    PanelMemo: TPanel;
+    FRichEditor: TRichMemoCellEditor;
 
     FPoFile: TPoFile;
     FPoFileBackup: TPoFile;
@@ -311,7 +309,6 @@ type
     FPoFiles: TStringList;
     FPotFile: string;
     FFileStatuses: TPOFileStatusArray;
-    FCellValue: string;
     FSelectPathTimer: TTimer;
     FPathMouseSelecting: boolean;
 
@@ -327,6 +324,7 @@ type
     // Properties Methods
     procedure SetChanged(Value: boolean);
     procedure SetSplitRatio(Value: double);
+    procedure SetWordWrap(Value: boolean);
 
     // Methods File Operations
     function IsCanClose(Fast: boolean = False): boolean;
@@ -383,7 +381,7 @@ type
     property PoFiles: TStringList read FPoFiles write FPoFiles;
     property PotFile: string read FPotFile write FPotFile;
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
-    property WordWrap: boolean read FWordWrap write FWordWrap;
+    property WordWrap: boolean read FWordWrap write SetWordWrap;
   end;
 
 var
@@ -494,6 +492,8 @@ begin
   MemoSource.UpdateState;
   MemoTranslation.UpdateState;
   MemoPlural.UpdateState;
+
+  FRichEditor := TRichMemoCellEditor.Create(Grid);
 
   // Headers pick list
   HeaderList := TPOFile.GetHeaderNames;
@@ -729,8 +729,7 @@ end;
 
 procedure TformPoBatch.MenuWordWrapGridClick(Sender: TObject);
 begin
-  FWordWrap := MenuWordWrapGrid.Checked;
-  UpdateRowHeights;
+  WordWrap := MenuWordWrapGrid.Checked;
 end;
 
 procedure TformPoBatch.MenuWordWrapTranslatePanelClick(Sender: TObject);
@@ -1742,6 +1741,10 @@ end;
 
 procedure TformPoBatch.GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
 begin
+  // Read the actual editor content directly
+  if Assigned(FRichEditor) and FRichEditor.Visible then
+    NewValue := FRichEditor.Lines.Text;
+
   if OldValue <> NewValue then
     Changed := True;
 end;
@@ -1841,44 +1844,17 @@ procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; va
 begin
   if (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE]) then
   begin
-    PanelMemo := TPanel.Create(Self);
-    PanelMemo.Parent := Grid;
-    PanelMemo.BorderStyle := bsNone;
-    PanelMemo.Caption := string.Empty;
-    PanelMemo.BevelOuter := bvNone;
-    PanelMemo.TabStop := False;
-    PanelMemo.Visible := False;
-    PanelMemo.OnEnter := @PanelMemoEnter; // Event Enter
-    PanelMemo.OnUTF8KeyPress := @PanelMemoUTF8KeyPress; // Event UTF8KeyPress
-    Memo := TMemo.Create(Self);
-    Memo.Parent := PanelMemo;
-    Memo.Align := alClient;
-    if (Grid.IsCellSelected[aCol, aRow]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
-    begin
-      Memo.Color := clHighlight;
-      Memo.Font.Color := clWhite;
-    end;
-    Memo.HideSelection := False;
-    Memo.BorderStyle := bsNone;
-    Memo.ScrollBars := ssNone;
-    Memo.TabStop := False;
-    Memo.WantTabs := True;
-    Memo.WordWrap := FWordWrap;
-    if FWordWrap then
-      Memo.ScrollBars := ssNone
-    else
-      Memo.ScrollBars := ssAutoHorizontal;
-    Memo.WantReturns := True;
-    Memo.BiDiMode := bdLeftToRight;
-    EditControlSetBounds(PanelMemo, aCol, aRow);
-    Memo.OnKeyDown := @MemoKeyDown;
-    Memo.OnEnter := @MemoEnter;
-    Memo.OnExit := @MemoExit;
-    Memo.OnChange := @MemoChange;
-    Memo.Text := Grid.Cells[aCol, aRow];
-    Application.QueueAsyncCall(@DelayedSetMemoFocus, 1);
+    Editor := FRichEditor;
 
-    Editor := PanelMemo;
+    //if (Grid.IsCellSelected[aCol, aRow]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
+    //begin
+    //  FRichEditor.Color := clHighlight;
+    //  FRichEditor.Font.Color := clWhite;
+    //end;
+    FRichEditor.OnEnter := @MemoEnter;
+    FRichEditor.OnExit := @MemoExit;
+    FRichEditor.OnChange := @MemoChange;
+    FRichEditor.OnKeyDown := @MemoKeyDown;
   end;
 end;
 
@@ -1967,34 +1943,21 @@ end;
 
 {%Region -fold Inline Editor Events}
 
-procedure TformPoBatch.PanelMemoEnter(Sender: TObject);
-begin
-  Application.QueueAsyncCall(@DelayedSetMemoFocus, 0);
-end;
-
-procedure TformPoBatch.PanelMemoUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
-begin
-  if UTF8Key = #8 then  // backspace
-    Memo.SelText := string.Empty
-  else
-    Memo.SelText := UTF8Key;
-end;
-
 procedure TformPoBatch.MemoEnter(Sender: TObject);
 begin
-  FCellValue := Grid.Cells[Grid.Col, Grid.Row];
-
   if (Grid.IsCellSelected[Grid.Col, Grid.Row]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
   begin
-    Memo.Color := clHighlight;
-    Memo.Font.Color := clWhite;
+    FRichEditor.Color := clHighlight;
+    FRichEditor.Font.Color := clWhite;
+  end
+  else
+  begin
+    FRichEditor.Color := clWindow;
+    FRichEditor.Font.Color := clWindowText;
   end;
 
   if not FWordWrap then
-  begin
     Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] + GetSystemMetrics(SM_CYHSCROLL);
-    EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
-  end;
 
   Grid.Invalidate;
 end;
@@ -2011,36 +1974,26 @@ begin
   end;
 
   if not FWordWrap then
-  begin
     Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] - GetSystemMetrics(SM_CYHSCROLL);
-    EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
-  end;
 
   Grid.Invalidate;
 end;
 
 procedure TformPoBatch.MemoChange(Sender: TObject);
 begin
-  Grid.Cells[Grid.Col, Grid.Row] := TMemo(Sender).Text;
-  Changed := True;
   UpdateRowHeights(Grid.Row);
-  EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
 end;
 
 procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
   begin
-    Memo.OnExit := nil;
+    FRichEditor.OnExit := nil;
     Grid.EditorMode := False;
-    Grid.Cells[Grid.Col, Grid.Row] := FCellValue;
-    Memo.OnExit := @MemoExit;
+    FRichEditor.OnExit := @MemoExit;
 
     if not FWordWrap then
-    begin
       Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] - GetSystemMetrics(SM_CYHSCROLL);
-      EditControlSetBounds(PanelMemo, Grid.Col, Grid.Row);
-    end;
 
     Key := 0;
   end
@@ -2267,6 +2220,19 @@ end;
 procedure TformPoBatch.SetSplitRatio(Value: double);
 begin
   FSplitRatio := Value;
+end;
+
+procedure TformPoBatch.SetWordWrap(Value: boolean);
+begin
+  FWordWrap := Value;
+
+  FRichEditor.WordWrap := FWordWrap;
+  if FWordWrap then
+    FRichEditor.ScrollBars := ssNone
+  else
+    FRichEditor.ScrollBars := ssHorizontal;
+
+  UpdateRowHeights;
 end;
 
 {%EndRegion}
@@ -3133,7 +3099,7 @@ function TformPoBatch.CanActionEnable: boolean;
 begin
   //jcf:format=off
   Result :=
-    not (Assigned(Memo) and Memo.Focused) and
+    not (Assigned(FRichEditor) and FRichEditor.Focused) and
     not (Assigned(MemoSource) and MemoSource.Focused) and
     not (Assigned(MemoPlural) and MemoPlural.Focused) and
     not (Assigned(MemoTranslation) and MemoTranslation.Focused) and
@@ -3172,14 +3138,14 @@ end;
 
 procedure TformPoBatch.DelayedSetMemoFocus(Data: PtrInt);
 begin
-  if Assigned(Memo) and (Memo.CanFocus) then
+  if Assigned(FRichEditor) and (FRichEditor.CanFocus) then
   begin
-    Memo.SetFocus;
+    FRichEditor.SetFocus;
     if Data = 1 then
-      Memo.SelectAll
+      FRichEditor.SelectAll
     else
-    if (Memo.SelLength = 0) then
-      Memo.SelStart := Memo.GetTextLen;
+    if (FRichEditor.SelLength = 0) then
+      FRichEditor.SelStart := FRichEditor.GetTextLen;
   end;
 end;
 
