@@ -295,7 +295,7 @@ object formPoBatch: TformPoBatch
             ParentBackground = False
             ParentColor = False
             TabOrder = 0
-            object MemoSource: TMemo
+            object MemoSource: TRichMemo
               Left = 5
               Height = 76
               Hint = 'Source Text'
@@ -305,10 +305,13 @@ object formPoBatch: TformPoBatch
               BorderSpacing.Left = 5
               BorderSpacing.Top = 5
               BorderStyle = bsNone
+              HideSelection = False
+              OnChange = MemoSourceChange
+              PopupMenu = PopupMemo
               ScrollBars = ssAutoBoth
               TabOrder = 0
               WordWrap = False
-              OnChange = MemoSourceChange
+              ZoomFactor = 1
             end
             object ShapePlural: TShape
               Left = 274
@@ -317,8 +320,9 @@ object formPoBatch: TformPoBatch
               Width = 1
               Align = alRight
               Pen.Color = clActiveBorder
+              Visible = False
             end
-            object MemoPlural: TMemo
+            object MemoPlural: TRichMemo
               Left = 280
               Height = 76
               Hint = 'Plural form'
@@ -329,10 +333,14 @@ object formPoBatch: TformPoBatch
               BorderSpacing.Top = 5
               BorderSpacing.Right = 5
               BorderStyle = bsNone
+              HideSelection = False
+              OnChange = MemoPluralChange
+              PopupMenu = PopupMemo
               ScrollBars = ssAutoBoth
               TabOrder = 1
+              Visible = False
               WordWrap = False
-              OnChange = MemoPluralChange
+              ZoomFactor = 1
             end
           end
           object SplitterTranslate: TSplitter
@@ -361,7 +369,7 @@ object formPoBatch: TformPoBatch
             ParentBackground = False
             ParentColor = False
             TabOrder = 2
-            object MemoTranslation: TMemo
+            object MemoTranslation: TRichMemo
               Left = 5
               Height = 76
               Hint = 'Translation'
@@ -371,10 +379,13 @@ object formPoBatch: TformPoBatch
               BorderSpacing.Left = 5
               BorderSpacing.Bottom = 5
               BorderStyle = bsNone
+              HideSelection = False
+              OnChange = MemoTranslationChange
+              PopupMenu = PopupMemo
               ScrollBars = ssAutoBoth
               TabOrder = 0
               WordWrap = False
-              OnChange = MemoTranslationChange
+              ZoomFactor = 1
             end
             object GridPlural: TStringGrid
               Left = 274
@@ -837,6 +848,47 @@ object formPoBatch: TformPoBatch
       Category = 'Path'
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
+    end
+    object AMemoUndo: TAction
+      Category = 'Memo'
+      Caption = 'Undo'
+      OnExecute = AMemoUndoExecute
+    end
+    object AMemoCut: TAction
+      Category = 'Memo'
+      Caption = 'Cut'
+      OnExecute = AMemoCutExecute
+    end
+    object AMemoCopy: TAction
+      Category = 'Memo'
+      Caption = 'Copy'
+      OnExecute = AMemoCopyExecute
+    end
+    object AMemoPaste: TAction
+      Category = 'Memo'
+      Caption = 'Paste'
+      OnExecute = AMemoPasteExecute
+    end
+    object AMemoClear: TAction
+      Category = 'Memo'
+      Caption = 'Clear'
+      OnExecute = AMemoClearExecute
+    end
+    object AMemoSelectAll: TAction
+      Category = 'Memo'
+      Caption = 'Select All'
+      OnExecute = AMemoSelectAllExecute
+    end
+    object AMemoBidiRightToLeft: TAction
+      Category = 'Memo'
+      AutoCheck = True
+      Caption = 'Right-To-Left Reading Order'
+      OnExecute = AMemoBidiRightToLeftExecute
+    end
+    object AMemoDefaultZoom: TAction
+      Category = 'Memo'
+      Caption = 'Default Zoom'
+      OnExecute = AMemoDefaultZoomExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1354,6 +1406,44 @@ object formPoBatch: TformPoBatch
     end
     object MenuItem1: TMenuItem
       Action = APathSelectAll
+    end
+  end
+  object PopupMemo: TPopupMenu
+    Left = 552
+    Top = 160
+    object MenuMemoUndo: TMenuItem
+      Action = AMemoUndo
+    end
+    object Separator13: TMenuItem
+      Caption = '-'
+    end
+    object MenuMemoCut: TMenuItem
+      Action = AMemoCut
+    end
+    object MenuMemoCopy: TMenuItem
+      Action = AMemoCopy
+    end
+    object MenuMemoPaste: TMenuItem
+      Action = AMemoPaste
+    end
+    object MenuMemoClear: TMenuItem
+      Action = AMemoClear
+    end
+    object Separator14: TMenuItem
+      Caption = '-'
+    end
+    object MenuMemoSelectAll: TMenuItem
+      Action = AMemoSelectAll
+    end
+    object Separator15: TMenuItem
+      Caption = '-'
+    end
+    object MenuMemoBidiMode: TMenuItem
+      Action = AMemoBidiRightToLeft
+      AutoCheck = True
+    end
+    object MenuMemoDefaultZoom: TMenuItem
+      Action = AMemoDefaultZoom
     end
   end
 end

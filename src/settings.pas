@@ -27,37 +27,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses powrap;
-
-function GetSettingsDirectory(fileName: string = ''): string;
-  {$IFDEF Windows}
-var
-  baseDir: string;
-  exeDir: string;
-  {$ENDIF}
-begin
-  {$IFDEF Windows}
-  // Get directory where exe is located
-  exeDir := ExtractFilePath(ParamStr(0));
-
-  // Portable mode: settings file exists near exe
-  if FileExists(exeDir + 'form_settings.json') then
-  begin
-    Result := IncludeTrailingPathDelimiter(exeDir) + fileName;
-    Exit;
-  end;
-
-  // Default mode: use LOCALAPPDATA or APPDATA
-  baseDir := GetEnvironmentVariable('LOCALAPPDATA');
-  if baseDir = '' then
-    baseDir := GetEnvironmentVariable('APPDATA');
-
-  Result := IncludeTrailingPathDelimiter(baseDir) + 'PoBatch\' + fileName;
-  {$ELSE}
-  // Unix-like systems: use ~/.config/pobatch
-  Result := IncludeTrailingPathDelimiter(GetUserDir) + '.config/pobatch/' + fileName;
-  {$ENDIF}
-end;
+uses powrap, osutils;
 
 procedure SaveFormSettings(Form: TformPoBatch);
 var
@@ -66,8 +36,8 @@ var
   PoFilesArray, StatusArray: TJSONArray;
   i: integer;
 begin
-  FileName := GetSettingsDirectory('form_settings.json'); // Get settings file name
-  ForceDirectories(GetSettingsDirectory); // Ensure the directory exists
+  FileName := TOS.GetSettingsDirectory(APP_NAME, 'form_settings.json'); // Get settings file name
+  ForceDirectories(TOS.GetSettingsDirectory(APP_NAME)); // Ensure the directory exists
   JSONObj := TJSONObject.Create;
   try
     // Save form position and size
@@ -159,7 +129,7 @@ var
 begin
   Result := False;
   FileContent := string.Empty;
-  FileName := GetSettingsDirectory('form_settings.json'); // Get the settings file name
+  FileName := TOS.GetSettingsDirectory(APP_NAME, 'form_settings.json'); // Get the settings file name
   if not FileExists(FileName) then Exit; // Exit if the file does not exist
 
   // Read from file

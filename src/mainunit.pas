@@ -32,6 +32,7 @@ uses
   Clipbrd,
   LCLType,
   LCLIntf,
+  RichMemo,
   OneShotTimer,
   powrap;
 
@@ -43,6 +44,14 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    AMemoUndo: TAction;
+    AMemoDefaultZoom: TAction;
+    AMemoBidiRightToLeft: TAction;
+    AMemoSelectAll: TAction;
+    AMemoClear: TAction;
+    AMemoPaste: TAction;
+    AMemoCopy: TAction;
+    AMemoCut: TAction;
     AValidFile: TAction;
     APathValidFiles: TAction;
     ASyncWithPot: TAction;
@@ -68,10 +77,10 @@ type
     LabelSwitch: TLabel;
     ListPath: TListBox;
     MainMenu: TMainMenu;
-    MemoSource: TMemo;
+    MemoSource: TRichMemo;
+    MemoPlural: TRichMemo;
+    MemoTranslation: TRichMemo;
     MemoCheck: TMemo;
-    MemoPlural: TMemo;
-    MemoTranslation: TMemo;
     MenuFile: TMenuItem;
     MenuFileOpen: TMenuItem;
     MenuFileSave: TMenuItem;
@@ -98,6 +107,14 @@ type
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuMemoBidiMode: TMenuItem;
+    MenuMemoClear: TMenuItem;
+    MenuMemoCopy: TMenuItem;
+    MenuMemoCut: TMenuItem;
+    MenuMemoDefaultZoom: TMenuItem;
+    MenuMemoPaste: TMenuItem;
+    MenuMemoSelectAll: TMenuItem;
+    MenuMemoUndo: TMenuItem;
     MenuSyncWithPot: TMenuItem;
     MenuSyncFilesWithPot: TMenuItem;
     MenuWordWrapTranslatePanel: TMenuItem;
@@ -133,9 +150,13 @@ type
     dialogSave: TSaveDialog;
     PopupGrid: TPopupMenu;
     PopupPath: TPopupMenu;
+    PopupMemo: TPopupMenu;
     Separator10: TMenuItem;
     Separator11: TMenuItem;
     Separator12: TMenuItem;
+    Separator13: TMenuItem;
+    Separator14: TMenuItem;
+    Separator15: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -157,11 +178,19 @@ type
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
     { Form Events }
+    procedure AMemoUndoExecute(Sender: TObject);
     procedure APathDeleteFileExecute(Sender: TObject);
     procedure APathSelectAllExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
     procedure APathValidFilesExecute(Sender: TObject);
+    procedure AMemoCutExecute(Sender: TObject);
+    procedure AMemoCopyExecute(Sender: TObject);
+    procedure AMemoPasteExecute(Sender: TObject);
+    procedure AMemoClearExecute(Sender: TObject);
+    procedure AMemoSelectAllExecute(Sender: TObject);
+    procedure AMemoBidiRightToLeftExecute(Sender: TObject);
+    procedure AMemoDefaultZoomExecute(Sender: TObject);
     procedure AValidFileExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -419,7 +448,8 @@ const
 
 implementation
 
-uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, controlshelper, darkutils, checkupdates, osutils;
+uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, controlshelper, darkutils, checkupdates, osutils,
+  RichMemoHelper;
 
   {$R *.lfm}
 
@@ -460,6 +490,10 @@ begin
   GridHeaders.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridPlural.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
+
+  MemoSource.UpdateState;
+  MemoTranslation.UpdateState;
+  MemoPlural.UpdateState;
 
   // Headers pick list
   HeaderList := TPOFile.GetHeaderNames;
@@ -1347,6 +1381,109 @@ begin
   ShowMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.');
 end;
 
+procedure TformPoBatch.AMemoUndoExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    AMemo.Undo;
+  end;
+end;
+
+procedure TformPoBatch.AMemoCutExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    if not AMemo.ReadOnly then
+    begin
+      AMemo.CutToClipboard;
+      AMemo.UpdateState;
+    end;
+  end;
+end;
+
+procedure TformPoBatch.AMemoCopyExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    AMemo.CopyToClipboard;
+  end;
+end;
+
+procedure TformPoBatch.AMemoPasteExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    if not AMemo.ReadOnly then
+    begin
+      AMemo.PasteFromClipboard;
+      AMemo.UpdateState;
+    end;
+  end;
+end;
+
+procedure TformPoBatch.AMemoClearExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    if not AMemo.ReadOnly then
+      AMemo.ClearSelection;
+  end;
+end;
+
+procedure TformPoBatch.AMemoSelectAllExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    AMemo.SelectAll;
+  end;
+end;
+
+procedure TformPoBatch.AMemoBidiRightToLeftExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+
+    if AMemoBidiRightToLeft.Checked then
+      AMemo.BiDiMode := bdRightToLeft
+    else
+      AMemo.BiDiMode := bdLeftToRight;
+
+    AMemo.ApplyBidiMode;
+  end;
+end;
+
+procedure TformPoBatch.AMemoDefaultZoomExecute(Sender: TObject);
+var
+  AMemo: TRichMemo;
+begin
+  if Self.ActiveControl is TRichMemo then
+  begin
+    AMemo := Self.ActiveControl as TRichMemo;
+    AMemo.ZoomFactor := 1;
+  end;
+end;
+
 {%EndRegion}
 
 {%Region -fold Grids Universal Events}
@@ -1960,7 +2097,7 @@ begin
       // Do nothing if right-clicked on already selected item with multi-selection
       if ListPath.Selected[idx] and (ListPath.SelCount > 1) then
         Exit;
-      // Clear and set selection to force visual update (fixes initial zero-state highlight)
+      // MenuMemoClear and set selection to force visual update (fixes initial zero-state highlight)
       ListPath.ClearSelection;
       ListPath.Selected[idx] := True;
       ListPath.ItemIndex := idx; // also set focus rectangle
@@ -3062,7 +3199,7 @@ end;
 
 function TformPoBatch.CutGridsSelection: boolean;
 begin
-  // Perform copy first, then clear the selection
+  // Perform copy first, then MenuMemoClear the selection
   Result := CopyGridsSelection;
   if Result then
     Result := DeleteGridsSelection;
