@@ -323,6 +323,7 @@ type
     FSortColumn: integer;
     FSplitRatio: double;
     FWordWrap: boolean;
+    FMaxRowHeight: integer;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -495,6 +496,11 @@ begin
   GridHeaders.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridPlural.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
+
+  // Upper bound for a single row height, so a row cannot grow taller than the visible grid area
+  FMaxRowHeight := Screen.Height div 3;
+  if FMaxRowHeight < Grid.DefaultRowHeight then
+    FMaxRowHeight := Grid.DefaultRowHeight;
 
   MemoSource.UpdateState;
   MemoTranslation.UpdateState;
@@ -1853,11 +1859,6 @@ begin
   begin
     Editor := FRichEditor;
 
-    //if (Grid.IsCellSelected[aCol, aRow]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
-    //begin
-    //  FRichEditor.Color := clHighlight;
-    //  FRichEditor.Font.Color := clWhite;
-    //end;
     FRichEditor.OnEnter := @MemoEnter;
     FRichEditor.OnExit := @MemoExit;
     FRichEditor.OnChange := @MemoChange;
@@ -2237,7 +2238,7 @@ begin
   if FWordWrap then
     FRichEditor.ScrollBars := ssNone
   else
-    FRichEditor.ScrollBars := ssHorizontal;
+    FRichEditor.ScrollBars := ssAutoBoth;
 
   UpdateRowHeights;
 end;
@@ -2859,6 +2860,10 @@ begin
         if H > MaxH then
           MaxH := H;
       end;
+
+      // Clamp the row height so it never exceeds the grid visible area
+      if MaxH > FMaxRowHeight then
+        MaxH := FMaxRowHeight;
 
       Grid.RowHeights[Row] := MaxH;
     end;
