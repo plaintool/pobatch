@@ -298,7 +298,6 @@ object formPoBatch: TformPoBatch
             object MemoSource: TRichMemo
               Left = 5
               Height = 76
-              Hint = 'Source Text'
               Top = 5
               Width = 269
               Align = alClient
@@ -372,7 +371,6 @@ object formPoBatch: TformPoBatch
             object MemoTranslation: TRichMemo
               Left = 5
               Height = 76
-              Hint = 'Translation'
               Top = 0
               Width = 269
               Align = alClient
@@ -1445,5 +1443,24 @@ object formPoBatch: TformPoBatch
     object MenuMemoDefaultZoom: TMenuItem
       Action = AMemoDefaultZoom
     end
+  end
+  object SpellSource: TSpellChecker
+    RichMemo = MemoSource
+    Language = 'en'
+    RealTime = True
+    SubMenuCaption = 'Suggestions'
+    Engine = seHunspell
+    DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
+    Left = 472
+    Top = 224
+  end
+  object SpellTranslation: TSpellChecker
+    RichMemo = MemoTranslation
+    RealTime = True
+    SubMenuCaption = 'Suggestions'
+    Engine = seHunspell
+    DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
+    Left = 552
+    Top = 224
   end
 end

@@ -35,7 +35,7 @@ uses
   RichMemo,
   RichMemoCellEditor,
   OneShotTimer,
-  powrap;
+  powrap, SpellChecker;
 
 type
 
@@ -170,6 +170,8 @@ type
     Separator8: TMenuItem;
     Separator9: TMenuItem;
     ShapePlural: TShape;
+    SpellSource: TSpellChecker;
+    SpellTranslation: TSpellChecker;
     SplitterTranslate: TSplitter;
     SplitterHeaders: TSplitter;
     SplitterPages: TSplitter;
@@ -299,6 +301,7 @@ type
     FPoFile: TPoFile;
     FPoFileBackup: TPoFile;
     FFileName: string;
+    FLanguage: string;
     FInitialized: boolean;
     FCommandLineFile: string;
     FUpdatingGrid: boolean;
@@ -362,6 +365,7 @@ type
     function SelectGridsAll: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     function GetEntiryIndex(aRow: integer = -1): integer;
+    function DetectLanguage(const AFileName: string): string;
     procedure FillGrid;
     procedure SaveRow(aRow: integer = -1);   // Save grid row data to model; -1 = current row
     procedure SaveGrid;
@@ -483,6 +487,9 @@ begin
   FSaving := False;
 
   // Initialize components
+  SpellSource.DicPath := TOS.GetSettingsDirectory(APP_NAME, 'dic');
+  SpellTranslation.DicPath := TOS.GetSettingsDirectory(APP_NAME, 'dic');
+
   Grid.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   Grid.AlternateColor := TDarkUtils.ThemeColor(clLightGray, clLightGrayDark);
   GridHeaders.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
@@ -2701,6 +2708,9 @@ begin
       end;
       FPoFileBackup.Assign(FPoFile);
 
+      FLanguage := DetectLanguage(AFileName);
+      SpellTranslation.Language := FLanguage;
+
       UpdateInterface;
       Result := True;
     except
@@ -2994,6 +3004,8 @@ begin
 end;
 
 procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
+var
+  OriginalOnChange: TNotifyEvent;
 begin
   if aRow = -1 then aRow := Grid.Row;
 
@@ -3001,11 +3013,14 @@ begin
   UpdateSwitch(aRow);
 
   // Update Translations
+  OriginalOnChange := MemoSource.OnChange;
   MemoSource.OnChange := nil;
   try
     MemoSource.Text := Grid.Cells[CELL_TEXT, aRow];
   finally
-    MemoSource.OnChange := @MemoSourceChange;
+    SpellSource.CheckNow;
+    Application.ProcessMessages;
+    MemoSource.OnChange := OriginalOnChange;
   end;
   MemoPlural.OnChange := nil;
   try
@@ -3028,11 +3043,14 @@ begin
     GridPlural.Visible := False;
     MemoTranslation.Visible := True;
 
+    OriginalOnChange := MemoTranslation.OnChange;
     MemoTranslation.OnChange := nil;
     try
       MemoTranslation.Text := Grid.Cells[CELL_TRANSLATION, aRow];
     finally
-      MemoTranslation.OnChange := @MemoTranslationChange;
+      SpellTranslation.CheckNow;
+      Application.ProcessMessages;
+      MemoTranslation.OnChange := OriginalOnChange;
     end;
   end;
 
@@ -3352,6 +3370,38 @@ begin
   // Column 0 holds the permanent entry index
   Result := StrToIntDef(Grid.Cells[0, Row], -1);
   if (Result < 1) or (Result >= FPoFile.Entries.Count) then Exit(-1);
+end;
+
+function TformPoBatch.DetectLanguage(const AFileName: string): string;
+var
+  HeaderLang: string;
+  BaseName: string;
+  Ext: string;
+  Parts: TStringArray;
+  LangCode: string;
+begin
+  Result := '';
+
+  // Prefer the language from the PO header
+  HeaderLang := Trim(FPoFile.HeaderValue['Language']);   // <-- было FPoFile.Headers.Values['Language']
+  if HeaderLang <> '' then
+    Exit(HeaderLang);
+
+  // Fall back to the file name, e.g. "file.en.po" or "app.ru_RU.po"
+  BaseName := ExtractFileName(AFileName);
+  Ext := ExtractFileExt(BaseName);
+  if not SameText(Ext, '.po') then
+    Exit;
+
+  BaseName := ChangeFileExt(BaseName, '');
+  LangCode := '';
+  Parts := BaseName.Split('.');
+  if Length(Parts) > 1 then
+    LangCode := Trim(Parts[High(Parts)]);
+
+  // Sanity check: the candidate must differ from the base name (i.e. the file had a dot)
+  if (LangCode <> '') and (LangCode <> BaseName) then
+    Result := LangCode;
 end;
 
 {%EndRegion}
