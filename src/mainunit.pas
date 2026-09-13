@@ -1758,7 +1758,7 @@ begin
   if Assigned(FRichEditor) and FRichEditor.Visible then
     NewValue := FRichEditor.Lines.Text;
 
-  if OldValue <> NewValue then
+  if not OldValue.EqualNormalized(NewValue) then
     Changed := True;
 end;
 
@@ -2179,7 +2179,7 @@ procedure TformPoBatch.MemoSourceChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
 
-  if MemoSource.Text <> Grid.Cells[CELL_TEXT, Grid.Row] then
+  if not MemoSource.Text.EqualNormalized(Grid.Cells[CELL_TEXT, Grid.Row]) then
   begin
     Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
     Changed := True;
@@ -2192,7 +2192,7 @@ procedure TformPoBatch.MemoPluralChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
 
-  if MemoPlural.Text <> Grid.Cells[CELL_PLURAL, Grid.Row] then
+  if not MemoPlural.Text.EqualNormalized(Grid.Cells[CELL_PLURAL, Grid.Row]) then
   begin
     Grid.Cells[CELL_PLURAL, Grid.Row] := MemoPlural.Text;
     Changed := True;
@@ -2205,7 +2205,7 @@ procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
 
-  if MemoTranslation.Text <> Grid.Cells[CELL_TRANSLATION, Grid.Row] then
+  if not MemoTranslation.Text.EqualNormalized(Grid.Cells[CELL_TRANSLATION, Grid.Row]) then
   begin
     Grid.Cells[CELL_TRANSLATION, Grid.Row] := MemoTranslation.Text;
     Changed := True;
@@ -2236,7 +2236,7 @@ begin
 
   FRichEditor.WordWrap := FWordWrap;
   if FWordWrap then
-    FRichEditor.ScrollBars := ssNone
+    FRichEditor.ScrollBars := ssAutoVertical
   else
     FRichEditor.ScrollBars := ssAutoBoth;
 
