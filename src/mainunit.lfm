@@ -1448,6 +1448,7 @@ object formPoBatch: TformPoBatch
     RichMemo = MemoSource
     Language = 'en'
     RealTime = True
+    MemoChangeOnReplace = True
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
     DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
@@ -1457,6 +1458,7 @@ object formPoBatch: TformPoBatch
   object SpellTranslation: TSpellChecker
     RichMemo = MemoTranslation
     RealTime = True
+    MemoChangeOnReplace = True
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
     DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
