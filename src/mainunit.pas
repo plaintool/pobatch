@@ -507,6 +507,7 @@ begin
   MemoPlural.UpdateState;
 
   FRichEditor := TRichMemoCellEditor.Create(Grid);
+  FRichEditor.ScrollBars := ssAutoVertical;
 
   // Headers pick list
   HeaderList := TPOFile.GetHeaderNames;
