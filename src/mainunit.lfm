@@ -296,12 +296,11 @@ object formPoBatch: TformPoBatch
             ParentColor = False
             TabOrder = 0
             object MemoSource: TRichMemo
-              Left = 5
+              Left = 0
               Height = 76
               Top = 5
-              Width = 269
+              Width = 279
               Align = alClient
-              BorderSpacing.Left = 5
               BorderSpacing.Top = 5
               BorderStyle = bsNone
               HideSelection = False
@@ -313,7 +312,7 @@ object formPoBatch: TformPoBatch
               ZoomFactor = 1
             end
             object ShapePlural: TShape
-              Left = 274
+              Left = 279
               Height = 81
               Top = 0
               Width = 1
@@ -328,7 +327,6 @@ object formPoBatch: TformPoBatch
               Top = 5
               Width = 281
               Align = alRight
-              BorderSpacing.Left = 5
               BorderSpacing.Top = 5
               BorderSpacing.Right = 5
               BorderStyle = bsNone
@@ -369,12 +367,11 @@ object formPoBatch: TformPoBatch
             ParentColor = False
             TabOrder = 2
             object MemoTranslation: TRichMemo
-              Left = 5
+              Left = 0
               Height = 76
               Top = 0
-              Width = 269
+              Width = 274
               Align = alClient
-              BorderSpacing.Left = 5
               BorderSpacing.Bottom = 5
               BorderStyle = bsNone
               HideSelection = False

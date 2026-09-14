@@ -502,9 +502,9 @@ begin
   if FMaxRowHeight < Grid.DefaultRowHeight then
     FMaxRowHeight := Grid.DefaultRowHeight;
 
-  MemoSource.UpdateState;
-  MemoTranslation.UpdateState;
-  MemoPlural.UpdateState;
+  MemoSource.UpdateState(5);
+  MemoTranslation.UpdateState(5);
+  MemoPlural.UpdateState(5);
 
   FRichEditor := TRichMemoCellEditor.Create(Grid);
   FRichEditor.ScrollBars := ssAutoVertical;
