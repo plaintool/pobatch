@@ -488,8 +488,8 @@ begin
   FSaving := False;
 
   // Initialize components
-  SpellSource.DicPath := TOS.GetSettingsDirectory(APP_NAME, 'dic');
-  SpellTranslation.DicPath := TOS.GetSettingsDirectory(APP_NAME, 'dic');
+  SpellSource.DicPath := TOS.GetSettingsDirectory('plaintool', 'dic');
+  SpellTranslation.DicPath := TOS.GetSettingsDirectory('plaintool', 'dic');
 
   Grid.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   Grid.AlternateColor := TDarkUtils.ThemeColor(clLightGray, clLightGrayDark);
