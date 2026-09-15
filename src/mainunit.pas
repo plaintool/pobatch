@@ -216,6 +216,8 @@ type
     procedure MenuPathOpenClick(Sender: TObject);
     procedure MenuPathCloseClick(Sender: TObject);
     procedure MenuFileExitClick(Sender: TObject);
+    procedure MenuWordWrapGridClick(Sender: TObject);
+    procedure MenuWordWrapTranslatePanelClick(Sender: TObject);
     procedure MenuHeadersClick(Sender: TObject);
     procedure MenuColumnContextClick(Sender: TObject);
     procedure MenuColumnReferenceClick(Sender: TObject);
@@ -258,20 +260,18 @@ type
     procedure GridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridHeaderClick(Sender: TObject; IsColumn: boolean; Index: integer);
     procedure GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
-    procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
     procedure GridColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
     procedure GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
     procedure GridGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
     procedure GridSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
-    procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
     procedure GridSelection(Sender: TObject; aCol, aRow: integer);
     procedure GridPrepareCanvas(Sender: TObject; aCol, aRow: integer; aState: TGridDrawState);
     procedure GridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     procedure GridExit(Sender: TObject);
     procedure GridTopLeftChanged(Sender: TObject);
-    procedure MenuWordWrapGridClick(Sender: TObject);
-    procedure MenuWordWrapTranslatePanelClick(Sender: TObject);
+    procedure GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+    procedure GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     { Inline Editor Events}
     procedure MemoEnter(Sender: TObject);
     procedure MemoExit(Sender: TObject);
@@ -290,9 +290,13 @@ type
     procedure PanelSwitchEnter(Sender: TObject);
     procedure PanelSwitchExit(Sender: TObject);
     procedure PanelSwitchPaint(Sender: TObject);
+    procedure SpellSourceSpellCheckComplete(Sender: TObject; ErrorCount: integer);
+    procedure SpellTranslationSpellCheckComplete(Sender: TObject; ErrorCount: integer);
     procedure SplitterTranslateMoved(Sender: TObject);
+    procedure MemoSourceEnter(Sender: TObject);
     procedure MemoSourceChange(Sender: TObject);
     procedure MemoPluralChange(Sender: TObject);
+    procedure MemoTranslationEnter(Sender: TObject);
     procedure MemoTranslationChange(Sender: TObject);
     {%EndRegion}
   private
@@ -1753,16 +1757,6 @@ begin
   UpdateRowHeights;
 end;
 
-procedure TformPoBatch.GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
-begin
-  // Read the actual editor content directly
-  if Assigned(FRichEditor) and FRichEditor.Visible then
-    NewValue := FRichEditor.Lines.Text;
-
-  if not OldValue.EqualNormalized(NewValue) then
-    Changed := True;
-end;
-
 procedure TformPoBatch.GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
 var
   ValA, ValB: string;
@@ -1854,19 +1848,6 @@ begin
   end;
 end;
 
-procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
-begin
-  if (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE]) then
-  begin
-    Editor := FRichEditor;
-
-    FRichEditor.OnEnter := @MemoEnter;
-    FRichEditor.OnExit := @MemoExit;
-    FRichEditor.OnChange := @MemoChange;
-    FRichEditor.OnKeyDown := @MemoKeyDown;
-  end;
-end;
-
 procedure TformPoBatch.GridSelection(Sender: TObject; aCol, aRow: integer);
 begin
   UpdateTranslatePanel(aRow);
@@ -1948,6 +1929,29 @@ begin
     );
 end;
 
+procedure TformPoBatch.GridSelectEditor(Sender: TObject; aCol, aRow: integer; var Editor: TWinControl);
+begin
+  if (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE]) then
+  begin
+    Editor := FRichEditor;
+
+    FRichEditor.OnEnter := @MemoEnter;
+    FRichEditor.OnExit := @MemoExit;
+    FRichEditor.OnChange := @MemoChange;
+    FRichEditor.OnKeyDown := @MemoKeyDown;
+  end;
+end;
+
+procedure TformPoBatch.GridValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+begin
+  // Read the actual editor content directly
+  if Assigned(FRichEditor) and FRichEditor.Visible then
+    NewValue := FRichEditor.Lines.Text;
+
+  if not OldValue.EqualNormalized(NewValue) then
+    Changed := True;
+end;
+
 {%EndRegion}
 
 {%Region -fold Inline Editor Events}
@@ -1967,6 +1971,16 @@ begin
 
   if not FWordWrap then
     Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] + GetSystemMetrics(SM_CYHSCROLL);
+
+  // Switch spell check to active memo
+  //if (Grid.Col = CELL_TEXT) then
+  //  SpellSource.RichMemo := FRichEditor
+  //else
+  //  SpellSource.RichMemo := MemoSource;
+  //if (Grid.Col = CELL_TRANSLATION) then
+  //  SpellTranslation.RichMemo := FRichEditor
+  //else
+  //  SpellTranslation.RichMemo := MemoTranslation;
 
   Grid.Invalidate;
 end;
@@ -2176,6 +2190,23 @@ begin
   FSplitRatio := PanelTranslation.Height / (PanelSource.Height + PanelTranslation.Height);
 end;
 
+procedure TformPoBatch.SpellSourceSpellCheckComplete(Sender: TObject; ErrorCount: integer);
+begin
+  if (Grid.Col = CELL_TEXT) and (SpellSource.RichMemo = FRichEditor) then
+    SpellSource.ApplyErrorsTo(MemoSource);
+end;
+
+procedure TformPoBatch.SpellTranslationSpellCheckComplete(Sender: TObject; ErrorCount: integer);
+begin
+  if (Grid.Col = CELL_TRANSLATION) and (SpellTranslation.RichMemo = FRichEditor) then
+    SpellTranslation.ApplyErrorsTo(MemoTranslation);
+end;
+
+procedure TformPoBatch.MemoSourceEnter(Sender: TObject);
+begin
+//  SpellSource.RichMemo := MemoSource;
+end;
+
 procedure TformPoBatch.MemoSourceChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
@@ -2200,6 +2231,11 @@ begin
     UpdateValid;
     UpdateRowHeights(Grid.Row);
   end;
+end;
+
+procedure TformPoBatch.MemoTranslationEnter(Sender: TObject);
+begin
+//  SpellTranslation.RichMemo := MemoTranslation;
 end;
 
 procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
@@ -3026,6 +3062,7 @@ begin
   finally
     SpellSource.CheckNow;
     Application.ProcessMessages;
+    MemoSource.UpdateState(5);
     MemoSource.OnChange := OriginalOnChange;
   end;
   MemoPlural.OnChange := nil;
@@ -3034,6 +3071,7 @@ begin
     MemoPlural.Visible := MemoPlural.Text <> string.Empty;
     ShapePlural.Visible := MemoPlural.Text <> string.Empty;
   finally
+    MemoPlural.UpdateState(5);
     MemoPlural.OnChange := @MemoPluralChange;
   end;
   if MemoPlural.Visible then
@@ -3056,6 +3094,7 @@ begin
     finally
       SpellTranslation.CheckNow;
       Application.ProcessMessages;
+      MemoTranslation.UpdateState(5);
       MemoTranslation.OnChange := OriginalOnChange;
     end;
   end;

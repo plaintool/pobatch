@@ -305,6 +305,7 @@ object formPoBatch: TformPoBatch
               BorderStyle = bsNone
               HideSelection = False
               OnChange = MemoSourceChange
+              OnEnter = MemoSourceEnter
               PopupMenu = PopupMemo
               ScrollBars = ssAutoBoth
               TabOrder = 0
@@ -376,6 +377,7 @@ object formPoBatch: TformPoBatch
               BorderStyle = bsNone
               HideSelection = False
               OnChange = MemoTranslationChange
+              OnEnter = MemoTranslationEnter
               PopupMenu = PopupMemo
               ScrollBars = ssAutoBoth
               TabOrder = 0
@@ -1449,6 +1451,7 @@ object formPoBatch: TformPoBatch
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
     DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
+    OnSpellCheckComplete = SpellSourceSpellCheckComplete
     Left = 472
     Top = 224
   end
@@ -1459,6 +1462,7 @@ object formPoBatch: TformPoBatch
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
     DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
+    OnSpellCheckComplete = SpellTranslationSpellCheckComplete
     Left = 552
     Top = 224
   end
