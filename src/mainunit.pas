@@ -1842,10 +1842,7 @@ end;
 procedure TformPoBatch.GridSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
 begin
   if aRow <> FLastRow then
-  begin
     FLastRow := aRow;
-    UpdateTranslatePanel(aRow);
-  end;
 end;
 
 procedure TformPoBatch.GridSelection(Sender: TObject; aCol, aRow: integer);
@@ -1973,14 +1970,14 @@ begin
     Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] + GetSystemMetrics(SM_CYHSCROLL);
 
   // Switch spell check to active memo
-  //if (Grid.Col = CELL_TEXT) then
-  //  SpellSource.RichMemo := FRichEditor
-  //else
-  //  SpellSource.RichMemo := MemoSource;
-  //if (Grid.Col = CELL_TRANSLATION) then
-  //  SpellTranslation.RichMemo := FRichEditor
-  //else
-  //  SpellTranslation.RichMemo := MemoTranslation;
+  if (Grid.Col = CELL_TEXT) then
+    SpellSource.RichMemo := FRichEditor
+  else
+    SpellSource.RichMemo := MemoSource;
+  if (Grid.Col = CELL_TRANSLATION) then
+    SpellTranslation.RichMemo := FRichEditor
+  else
+    SpellTranslation.RichMemo := MemoTranslation;
 
   Grid.Invalidate;
 end;
@@ -2226,6 +2223,8 @@ procedure TformPoBatch.MemoSourceChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
 
+  if not MemoSource.Focused then Exit;
+
   if not MemoSource.Text.EqualNormalized(Grid.Cells[CELL_TEXT, Grid.Row]) then
   begin
     Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
@@ -2238,6 +2237,8 @@ end;
 procedure TformPoBatch.MemoPluralChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
+
+  if not MemoPlural.Focused then Exit;
 
   if not MemoPlural.Text.EqualNormalized(Grid.Cells[CELL_PLURAL, Grid.Row]) then
   begin
@@ -2256,6 +2257,8 @@ end;
 procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
+
+  if not MemoTranslation.Focused then Exit;
 
   if not MemoTranslation.Text.EqualNormalized(Grid.Cells[CELL_TRANSLATION, Grid.Row]) then
   begin
