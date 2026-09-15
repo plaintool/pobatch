@@ -1971,19 +1971,21 @@ begin
 
   // Switch spell check to active memo
   if (Grid.Col = CELL_TEXT) then
-    SpellSource.RichMemo := FRichEditor
-  else
-    SpellSource.RichMemo := MemoSource;
+    SpellSource.RichMemo := FRichEditor;
   if (Grid.Col = CELL_TRANSLATION) then
-    SpellTranslation.RichMemo := FRichEditor
-  else
-    SpellTranslation.RichMemo := MemoTranslation;
+    SpellTranslation.RichMemo := FRichEditor;
 
   Grid.Invalidate;
 end;
 
 procedure TformPoBatch.MemoExit(Sender: TObject);
 begin
+  // Switch spell check to bottom memo
+  if SpellSource.RichMemo = FRichEditor then
+    SpellSource.RichMemo := MemoSource;
+  if SpellTranslation.RichMemo = FRichEditor then
+    SpellTranslation.RichMemo := MemoTranslation;
+
   Grid.EditorMode := False;
 
   if (Grid.Col = CELL_TRANSLATION) or ((not MenuEditTranslationOnly.Checked) and
