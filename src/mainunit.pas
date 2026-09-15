@@ -2021,9 +2021,24 @@ begin
     Key := 0;
   end
   else
-  if (Key = VK_RETURN) and not ((ssCtrl in Shift) or (ssShift in Shift)) then
+  if Key = VK_RETURN then
   begin
-    Grid.EditorMode := False;
+    if (ssCtrl in Shift) or (ssShift in Shift) then
+    begin
+      FRichEditor.SelText := sLineBreak;
+      FRichEditor.SelStart := FRichEditor.SelStart + 1;
+      FRichEditor.SelLength := 0;
+      UpdateRowHeights(Grid.Row);
+    end
+    else
+    begin
+      Grid.Cells[Grid.Col, Grid.Row] := FRichEditor.Lines.Text;
+      UpdateValid;
+      UpdateRowHeights(Grid.Row);
+      Changed := True;
+      Grid.EditorMode := False;
+    end;
+
     Key := 0;
   end
   else if ((Key = Ord('V')) and (ssCtrl in Shift)) or ((Key = VK_INSERT) and (ssShift in Shift)) then
@@ -2204,7 +2219,7 @@ end;
 
 procedure TformPoBatch.MemoSourceEnter(Sender: TObject);
 begin
-//  SpellSource.RichMemo := MemoSource;
+  SpellSource.RichMemo := MemoSource;
 end;
 
 procedure TformPoBatch.MemoSourceChange(Sender: TObject);
@@ -2235,7 +2250,7 @@ end;
 
 procedure TformPoBatch.MemoTranslationEnter(Sender: TObject);
 begin
-//  SpellTranslation.RichMemo := MemoTranslation;
+  SpellTranslation.RichMemo := MemoTranslation;
 end;
 
 procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
@@ -2848,6 +2863,7 @@ var
   SavedFont: TFont;
   StartRow, EndRow: integer;
   Flags: cardinal;
+  CellText: string;
 begin
   // Ensure the grid widget is alive and has a valid canvas handle
   Grid.HandleNeeded;
@@ -2880,20 +2896,29 @@ begin
         if ColTextWidth < 10 then
           Continue;
 
-        R := Rect(0, 0, ColTextWidth, 0);
-
-        if FWordWrap then
-          Flags := DT_WORDBREAK or DT_CALCRECT
+        if Grid.EditorMode and (Col = Grid.Col) and (Row = Grid.Row) then
+        begin
+          H := FRichEditor.GetTextHeight(FRichEditor.Lines.Text) - 7;
+        end
         else
-          Flags := DT_CALCRECT;
+        begin
+          CellText := Grid.Cells[Col, Row];
 
-        DrawText(Grid.Canvas.Handle,
-          PChar(Grid.Cells[Col, Row]),
-          Length(Grid.Cells[Col, Row]),
-          R,
-          Flags);
+          R := Rect(0, 0, ColTextWidth, 0);
 
-        H := R.Bottom - R.Top + 8;   // vertical padding
+          if FWordWrap then
+            Flags := DT_WORDBREAK or DT_CALCRECT
+          else
+            Flags := DT_CALCRECT;
+
+          DrawText(Grid.Canvas.Handle,
+            PChar(CellText),
+            Length(CellText),
+            R,
+            Flags);
+
+          H := R.Bottom - R.Top + 8;   // vertical padding
+        end;
         if H > MaxH then
           MaxH := H;
       end;
