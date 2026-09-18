@@ -891,6 +891,7 @@ object formPoBatch: TformPoBatch
   object ApplicationProp: TApplicationProperties
     OnActivate = ApplicationPropActivate
     OnDeactivate = ApplicationPropDeactivate
+    OnException = ApplicationPropException
     Left = 232
     Top = 224
   end

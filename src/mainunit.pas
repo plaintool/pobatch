@@ -181,20 +181,6 @@ type
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
     { Form Events }
-    procedure AMemoUndoExecute(Sender: TObject);
-    procedure APathDeleteFileExecute(Sender: TObject);
-    procedure APathSelectAllExecute(Sender: TObject);
-    procedure APathSyncFilesWithPotExecute(Sender: TObject);
-    procedure ASyncWithPotExecute(Sender: TObject);
-    procedure APathValidFilesExecute(Sender: TObject);
-    procedure AMemoCutExecute(Sender: TObject);
-    procedure AMemoCopyExecute(Sender: TObject);
-    procedure AMemoPasteExecute(Sender: TObject);
-    procedure AMemoClearExecute(Sender: TObject);
-    procedure AMemoSelectAllExecute(Sender: TObject);
-    procedure AMemoBidiRightToLeftExecute(Sender: TObject);
-    procedure AMemoDefaultZoomExecute(Sender: TObject);
-    procedure AValidFileExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -205,7 +191,7 @@ type
     { Application Events }
     procedure ApplicationPropActivate(Sender: TObject);
     procedure ApplicationPropDeactivate(Sender: TObject);
-    procedure ListPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure ApplicationPropException(Sender: TObject; E: Exception);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -243,6 +229,20 @@ type
     procedure AClearIdenticalExecute(Sender: TObject);
     procedure AEditPluralFormExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
+    procedure AMemoUndoExecute(Sender: TObject);
+    procedure APathDeleteFileExecute(Sender: TObject);
+    procedure APathSelectAllExecute(Sender: TObject);
+    procedure APathSyncFilesWithPotExecute(Sender: TObject);
+    procedure ASyncWithPotExecute(Sender: TObject);
+    procedure APathValidFilesExecute(Sender: TObject);
+    procedure AMemoCutExecute(Sender: TObject);
+    procedure AMemoCopyExecute(Sender: TObject);
+    procedure AMemoPasteExecute(Sender: TObject);
+    procedure AMemoClearExecute(Sender: TObject);
+    procedure AMemoSelectAllExecute(Sender: TObject);
+    procedure AMemoBidiRightToLeftExecute(Sender: TObject);
+    procedure AMemoDefaultZoomExecute(Sender: TObject);
+    procedure AValidFileExecute(Sender: TObject);
     { Grids Universal }
     procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
@@ -282,6 +282,7 @@ type
       OffsetTop: integer = 3; OffsetRight: integer = -1; OffsetBottom: integer = 0);
     procedure ListPathClick(Sender: TObject);
     procedure ListPathMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure ListPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
     procedure FilterChange(Sender: TObject);
     procedure btnFilterClearClick(Sender: TObject);
@@ -627,6 +628,15 @@ end;
 procedure TformPoBatch.ApplicationPropDeactivate(Sender: TObject);
 begin
   Invalidate;
+end;
+
+procedure TformPoBatch.ApplicationPropException(Sender: TObject; E: Exception);
+begin
+  {$IFDEF DEBUG}
+  TOS.Log(APP_NAME,
+    'Unhandled exception (' + E.ClassName + '): ' + E.Message + LineEnding + TOS.GetExceptionStackTrace(E));
+  {$ENDIF}
+  MessageDlg(APP_NAME, E.Message, mtWarning, [mbOK], 0);
 end;
 
 {%EndRegion}
