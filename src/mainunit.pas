@@ -35,7 +35,8 @@ uses
   RichMemo,
   RichMemoCellEditor,
   OneShotTimer,
-  powrap, SpellChecker;
+  SpellChecker,
+  powrap;
 
 type
 
@@ -192,6 +193,7 @@ type
     procedure ApplicationPropActivate(Sender: TObject);
     procedure ApplicationPropDeactivate(Sender: TObject);
     procedure ApplicationPropException(Sender: TObject; E: Exception);
+    procedure GridMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     { Menu Events }
     procedure MenuFileNewClick(Sender: TObject);
     procedure MenuFileNewWindowClick(Sender: TObject);
@@ -637,6 +639,12 @@ begin
     'Unhandled exception (' + E.ClassName + '): ' + E.Message + LineEnding + TOS.GetExceptionStackTrace(E));
   {$ENDIF}
   MessageDlg(APP_NAME, E.Message, mtWarning, [mbOK], 0);
+end;
+
+procedure TformPoBatch.GridMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+begin
+  // Cancel a stuck selection drag in the grid
+  Grid.FixStuckSelection(Shift);
 end;
 
 {%EndRegion}
@@ -1976,8 +1984,7 @@ begin
     FRichEditor.Font.Color := clWindowText;
   end;
 
-  if not FWordWrap then
-    Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] + GetSystemMetrics(SM_CYHSCROLL);
+  UpdateRowHeights(Grid.Row);
 
   // Switch spell check to active memo
   if (Grid.Col = CELL_TEXT) then
@@ -1985,6 +1992,7 @@ begin
   if (Grid.Col = CELL_TRANSLATION) then
     SpellTranslation.RichMemo := FRichEditor;
 
+  FRichEditor.UpdateState(1, True);
   Grid.Invalidate;
 end;
 
@@ -2005,8 +2013,7 @@ begin
     UpdateValid;
   end;
 
-  if not FWordWrap then
-    Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] - GetSystemMetrics(SM_CYHSCROLL);
+  UpdateRowHeights(Grid.Row);
 
   Grid.Invalidate;
 end;
@@ -2024,8 +2031,7 @@ begin
     Grid.EditorMode := False;
     FRichEditor.OnExit := @MemoExit;
 
-    if not FWordWrap then
-      Grid.RowHeights[Grid.Row] := Grid.RowHeights[Grid.Row] - GetSystemMetrics(SM_CYHSCROLL);
+    UpdateRowHeights(Grid.Row);
 
     Key := 0;
   end
@@ -2914,6 +2920,8 @@ begin
         if Grid.EditorMode and (Col = Grid.Col) and (Row = Grid.Row) then
         begin
           H := FRichEditor.GetTextHeight(FRichEditor.Lines.Text) - 7;
+          if not FWordWrap then
+            H += GetSystemMetrics(SM_CYHSCROLL);
         end
         else
         begin
