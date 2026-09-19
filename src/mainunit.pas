@@ -2590,9 +2590,29 @@ begin
       // Success: replace the old list with the new one
       FPoFiles.Assign(TempFiles);
       FPathIndex := -1;
+      SetLength(FFileStatuses, 0);
     finally
       TempFiles.Free;
     end;
+  end
+  else
+  begin
+    // Files came from settings, drop entries that no longer exist on disk
+    // and keep FFileStatuses aligned with the shortened list
+    for i := FPoFiles.Count - 1 downto 0 do
+      if not FileExists(FPoFiles[i]) then
+      begin
+        FPoFiles.Delete(i);
+        if i < Length(FFileStatuses) then
+          Delete(FFileStatuses, i, 1);
+
+        // Adjust the index of the currently opened file
+        if FPathIndex = i then
+          FPathIndex := -1
+        else
+        if FPathIndex > i then
+          Dec(FPathIndex);
+      end;
   end;
 
   // Find and store the last .pot file (if any)
