@@ -1948,7 +1948,7 @@ begin
     Exit;
 
   // Only these columns use custom drawing
-  if not (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_REFERENCE]) then
+  if not (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE]) then
     Exit;
 
   MsgCtxt := ifthen(aCol = CELL_TEXT, Grid.Cells[CELL_CONTEXT, aRow], string.Empty);
@@ -3406,12 +3406,17 @@ begin
   // Check translation
   if Pos(LowerFilter, LowerCase(Entry.MsgStrSimple)) > 0 then Exit(True);
 
+  // Check context
+  if Grid.Columns[COLUMN_CONTEXT].Visible and (Pos(LowerFilter, LowerCase(Entry.MsgCtxt)) > 0) then Exit(True);
+
+  // Check plural
+  if Grid.Columns[COLUMN_PLURAL].Visible and (Pos(LowerFilter, LowerCase(Entry.MsgIdPlural)) > 0) then Exit(True);
+
   // Check reference
-  if Pos(LowerFilter, LowerCase(Entry.Reference)) > 0 then Exit(True);
+  if Grid.Columns[COLUMN_REFERENCE].Visible and (Pos(LowerFilter, LowerCase(Entry.Reference)) > 0) then Exit(True);
 
   // Check previous text
   PrevStrings := Entry.GetCommentsOfType(poctPrevious);
-
   try
     Result := Pos(LowerFilter, LowerCase(PrevStrings.Text)) > 0;
   finally
