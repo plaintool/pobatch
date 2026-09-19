@@ -354,7 +354,6 @@ type
     function LoadFile(AFileName: string): boolean;
     function SaveFile(AFileName: string; Fast: boolean = False): boolean;
     // Methods
-    procedure UpdateRowHeights(aRow: integer = -1);
     procedure UpdateCaption;
     procedure UpdateInterface;
     procedure UpdateFileStatus(const AFileName: string);
@@ -459,7 +458,7 @@ const
 implementation
 
 uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, controlshelper, darkutils, checkupdates, osutils,
-  RichMemoHelper;
+  RichMemoHelper, pascalutils;
 
   {$R *.lfm}
 
@@ -1637,7 +1636,8 @@ begin
     GridPlural.Cells[aCol, aRow] := NewValue;
     SaveGridPlural;
     UpdateValid;
-    UpdateRowHeights(Grid.Row);
+
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
   end;
 end;
 
@@ -1653,7 +1653,7 @@ begin
     GridComments.Cells[aCol, aRow] := NewValue;
     SaveGridComments;
     UpdateValid;
-    UpdateRowHeights(Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
   end;
 end;
 
@@ -1772,7 +1772,7 @@ end;
 
 procedure TformPoBatch.GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
 begin
-  UpdateRowHeights;
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
 end;
 
 procedure TformPoBatch.GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
@@ -1984,7 +1984,7 @@ begin
     FRichEditor.Font.Color := clWindowText;
   end;
 
-  UpdateRowHeights(Grid.Row);
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 
   // Switch spell check to active memo
   if (Grid.Col = CELL_TEXT) then
@@ -2013,14 +2013,14 @@ begin
     UpdateValid;
   end;
 
-  UpdateRowHeights(Grid.Row);
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 
   Grid.Invalidate;
 end;
 
 procedure TformPoBatch.MemoChange(Sender: TObject);
 begin
-  UpdateRowHeights(Grid.Row);
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 end;
 
 procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -2031,7 +2031,7 @@ begin
     Grid.EditorMode := False;
     FRichEditor.OnExit := @MemoExit;
 
-    UpdateRowHeights(Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 
     Key := 0;
   end
@@ -2043,13 +2043,13 @@ begin
       FRichEditor.SelText := sLineBreak;
       FRichEditor.SelStart := FRichEditor.SelStart + 1;
       FRichEditor.SelLength := 0;
-      UpdateRowHeights(Grid.Row);
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
     end
     else
     begin
       Grid.Cells[Grid.Col, Grid.Row] := FRichEditor.Lines.Text;
       UpdateValid;
-      UpdateRowHeights(Grid.Row);
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
       Changed := True;
       Grid.EditorMode := False;
     end;
@@ -2248,7 +2248,7 @@ begin
     Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
     Changed := True;
     UpdateValid;
-    UpdateRowHeights(Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
   end;
 end;
 
@@ -2263,7 +2263,7 @@ begin
     Grid.Cells[CELL_PLURAL, Grid.Row] := MemoPlural.Text;
     Changed := True;
     UpdateValid;
-    UpdateRowHeights(Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
   end;
 end;
 
@@ -2283,7 +2283,7 @@ begin
     Grid.Cells[CELL_TRANSLATION, Grid.Row] := MemoTranslation.Text;
     Changed := True;
     UpdateValid;
-    UpdateRowHeights(Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
   end;
 end;
 
@@ -2313,7 +2313,7 @@ begin
   else
     FRichEditor.ScrollBars := ssAutoBoth;
 
-  UpdateRowHeights;
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
 end;
 
 {%EndRegion}
@@ -2876,89 +2876,6 @@ end;
 
 {%Region -fold Methods}
 
-procedure TformPoBatch.UpdateRowHeights(aRow: integer = -1);
-var
-  Row, Col: integer;
-  R: TRect;
-  H, MaxH, ColTextWidth: integer;
-  SavedFont: TFont;
-  StartRow, EndRow: integer;
-  Flags: cardinal;
-  CellText: string;
-begin
-  // Ensure the grid widget is alive and has a valid canvas handle
-  Grid.HandleNeeded;
-
-  SavedFont := TFont.Create;
-  try
-    SavedFont.Assign(Grid.Canvas.Font);
-    Grid.Canvas.Font.Assign(Grid.Font);
-
-    // Determine which rows to process
-    if (aRow >= Grid.FixedRows) and (aRow < Grid.RowCount) then
-    begin
-      StartRow := aRow;
-      EndRow := aRow;
-    end
-    else
-    begin
-      StartRow := Grid.FixedRows;
-      EndRow := Grid.RowCount - 1;
-    end;
-
-    for Row := StartRow to EndRow do
-    begin
-      MaxH := Grid.DefaultRowHeight;
-
-      for Col := 0 to Grid.ColCount - 1 do
-      begin
-        // Calculate usable text width inside the cell
-        ColTextWidth := Grid.ColWidths[Col] - 2 * Grid.GridLineWidth - 4;
-        if ColTextWidth < 10 then
-          Continue;
-
-        if Grid.EditorMode and (Col = Grid.Col) and (Row = Grid.Row) then
-        begin
-          H := FRichEditor.GetTextHeight(FRichEditor.Lines.Text) - 7;
-          if not FWordWrap then
-            H += GetSystemMetrics(SM_CYHSCROLL);
-        end
-        else
-        begin
-          CellText := Grid.Cells[Col, Row];
-
-          R := Rect(0, 0, ColTextWidth, 0);
-
-          if FWordWrap then
-            Flags := DT_WORDBREAK or DT_CALCRECT
-          else
-            Flags := DT_CALCRECT;
-
-          DrawText(Grid.Canvas.Handle,
-            PChar(CellText),
-            Length(CellText),
-            R,
-            Flags);
-
-          H := R.Bottom - R.Top + 8;   // vertical padding
-        end;
-        if H > MaxH then
-          MaxH := H;
-      end;
-
-      // Clamp the row height so it never exceeds the grid visible area
-      if MaxH > FMaxRowHeight then
-        MaxH := FMaxRowHeight;
-
-      Grid.RowHeights[Row] := MaxH;
-    end;
-
-  finally
-    Grid.Canvas.Font.Assign(SavedFont);
-    SavedFont.Free;
-  end;
-end;
-
 procedure TformPoBatch.UpdateCaption;
 var
   BaseTitle: string;
@@ -3337,7 +3254,7 @@ begin
       for i := Grid.FixedRows to Grid.RowCount - 1 do
         UpdateValid(i);
     end;
-    UpdateRowHeights;
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
   end;
 end;
 
@@ -3569,7 +3486,7 @@ begin
     if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
       Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
 
-    UpdateRowHeights;
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
 
     // Restore selection to the previously saved entry index, if possible
     TargetRow := Grid.FixedRows;  // fallback to first data row
