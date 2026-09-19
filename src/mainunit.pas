@@ -321,6 +321,8 @@ type
     FFileStatuses: TPOFileStatusArray;
     FSelectPathTimer: TTimer;
     FPathMouseSelecting: boolean;
+    FFilterUpdating: boolean;
+    FFilterPending: boolean;
 
     FChanged: boolean;
     FSaving: boolean;
@@ -492,6 +494,8 @@ begin
   FWordWrap := True;
   FPathMouseSelecting := False;
   FSaving := False;
+  FFilterUpdating := False;
+  FFilterPending := False;
 
   // Initialize components
   SpellSource.DicPath := TOS.GetSettingsDirectory('plaintool', 'dic');
@@ -785,6 +789,8 @@ procedure TformPoBatch.MenuTranslatePanelClick(Sender: TObject);
 begin
   Pages.Visible := MenuTranslatePanel.Checked;
   SplitterPages.Visible := MenuTranslatePanel.Checked;
+  if MenuTranslatePanel.Checked then
+    UpdateTranslatePanel;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
@@ -2209,9 +2215,27 @@ end;
 
 procedure TformPoBatch.FilterChange(Sender: TObject);
 begin
-  SaveGrid;
-  FillGrid;
-  UpdateTranslatePanel;
+  // Reentrancy guard: fast typing fires OnChange while a previous pass is
+  // still running because UpdateTranslatePanel calls Application.ProcessMessages.
+  // The nested call only marks that another pass is required; the outer loop
+  // will rerun with the already-updated Filter.Text
+  if FFilterUpdating then
+  begin
+    FFilterPending := True;
+    Exit;
+  end;
+
+  FFilterUpdating := True;
+  try
+    repeat
+      FFilterPending := False;
+      SaveGrid;
+      FillGrid;
+      UpdateTranslatePanel;
+    until not FFilterPending;
+  finally
+    FFilterUpdating := False;
+  end;
 end;
 
 procedure TformPoBatch.btnFilterClearClick(Sender: TObject);
@@ -3069,6 +3093,7 @@ procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
 var
   OriginalOnChange: TNotifyEvent;
 begin
+  if not Pages.Visible then Exit;
   if aRow = -1 then aRow := Grid.Row;
 
   // Update Switch state
@@ -3118,7 +3143,6 @@ begin
       MemoTranslation.OnChange := OriginalOnChange;
     end;
   end;
-
   FillGridComments(aRow);
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
