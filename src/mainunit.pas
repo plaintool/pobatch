@@ -1834,8 +1834,41 @@ begin
 end;
 
 procedure TformPoBatch.GridMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: integer; MousePos: TPoint; var Handled: boolean);
+var
+  ScrollBar: TControlScrollBar = nil;
+  LinesToScroll: integer = 0;
+  NewPos: integer = 0;
+  MaxPos: integer = 0;
 begin
-  Grid.EditorMode := False;
+  // Scroll the editor only if it is visible, active, and the cursor is above it.
+  if (Assigned(FRichEditor)) and FRichEditor.Visible and FRichEditor.Focused and
+    FRichEditor.ClientRect.Contains(FRichEditor.ScreenToClient(Mouse.CursorPos)) then
+  begin
+    ScrollBar := FRichEditor.VertScrollBar;
+
+    // And only if the scrollbar is really shown on screen
+    if ScrollBar.IsScrollBarVisible then
+    begin
+      // One notch scrolls several lines; tune the multiplier for comfortable speed
+      LinesToScroll := (WheelDelta div 120) * ScrollBar.Increment * 3;
+
+      MaxPos := ScrollBar.Range - ScrollBar.Page;
+      if MaxPos < 0 then
+        MaxPos := 0;
+
+      NewPos := ScrollBar.Position - LinesToScroll;
+      if NewPos < 0 then
+        NewPos := 0;
+      if NewPos > MaxPos then
+        NewPos := MaxPos;
+
+      ScrollBar.Position := NewPos;
+      Handled := True;
+      Exit;
+    end;
+  end;
+
+  Handled := False;
 end;
 
 procedure TformPoBatch.GridTopLeftChanged(Sender: TObject);
@@ -2043,13 +2076,15 @@ begin
       FRichEditor.SelText := sLineBreak;
       FRichEditor.SelStart := FRichEditor.SelStart + 1;
       FRichEditor.SelLength := 0;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+        Grid.Row);
     end
     else
     begin
       Grid.Cells[Grid.Col, Grid.Row] := FRichEditor.Lines.Text;
       UpdateValid;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+        Grid.Row);
       Changed := True;
       Grid.EditorMode := False;
     end;
