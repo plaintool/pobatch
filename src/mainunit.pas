@@ -323,6 +323,7 @@ type
     FPathMouseSelecting: boolean;
     FFilterUpdating: boolean;
     FFilterPending: boolean;
+    FAnalizeGeneration: integer;
 
     FChanged: boolean;
     FSaving: boolean;
@@ -496,6 +497,7 @@ begin
   FSaving := False;
   FFilterUpdating := False;
   FFilterPending := False;
+  FAnalizeGeneration := 0;
 
   // Initialize components
   SpellSource.DicPath := TOS.GetSettingsDirectory('plaintool', 'dic');
@@ -2600,6 +2602,9 @@ begin
   Result := False;
   if not DirectoryExists(APath) then Exit;
 
+  // Cancel any pending analysis from a previously opened path
+  Inc(FAnalizeGeneration);
+
   if (PoFiles.Count = 0) or Force then
   begin
     TempFiles := TStringList.Create;
@@ -2661,8 +2666,9 @@ end;
 
 procedure TformPoBatch.AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
 var
-  i: integer;
+  Gen, i: integer;
 begin
+  Gen := FAnalizeGeneration;
   try
     // We analyze each file and save the status
     if AIndex < 0 then
@@ -2670,6 +2676,9 @@ begin
       SetLength(FFileStatuses, FPoFiles.Count);
       for i := 0 to FPoFiles.Count - 1 do
       begin
+        if Gen <> FAnalizeGeneration then Exit;
+        if i >= FPoFiles.Count then Exit;
+
         FFileStatuses[i] := TPOFile.GetFileStatus(FPoFiles[i]);
         if ADraw then ListPath.Invalidate;
         Application.ProcessMessages;
@@ -2677,6 +2686,9 @@ begin
     end
     else
     begin
+      if (AIndex < 0) or (AIndex >= FPoFiles.Count) or (AIndex >= Length(FFileStatuses)) then
+        Exit;
+
       FFileStatuses[AIndex] := TPOFile.GetFileStatus(FPoFiles[AIndex]);
       if ADraw then ListPath.Repaint;
       Application.ProcessMessages;
@@ -2720,6 +2732,7 @@ begin
   MenuPathClose.Enabled := Enable;
   if not Enabled then
     FLastPathIndex := -1;
+  UpdateCaption;
 end;
 
 procedure TformPoBatch.SyncPath;
