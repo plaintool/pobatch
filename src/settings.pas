@@ -77,8 +77,10 @@ begin
     JSONObj.Add('SortColumn', Form.SortColumn);
     JSONObj.Add('SortOrder', Ord(Form.SortOrder));
 
-    JSONObj.Add('MenuWordWrapGridChecked', Form.MenuWordWrapGrid.Checked);
-    JSONObj.Add('MenuWordWrapTranslatePanelChecked', Form.MenuWordWrapTranslatePanel.Checked);
+    JSONObj.Add('WordWrapGrid', Form.AWordWrapGrid.Checked);
+    JSONObj.Add('WordWrapTranslatePanel', Form.AWordWrapTranslatePanel.Checked);
+    JSONObj.Add('SpellCheckSource', Form.ASpellCheckSource.Checked);
+    JSONObj.Add('SpellCheckTranslation', Form.ASpellCheckTranslation.Checked);
 
     JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
     JSONObj.Add('MenuTranslatePanelChecked', Form.MenuTranslatePanel.Checked);
@@ -209,17 +211,29 @@ begin
         Form.SortOrder := TSortOrder(JSONObj.FindPath('SortOrder').AsInteger);
       end;
 
-      if JSONObj.FindPath('MenuWordWrapGridChecked') <> nil then
+      if JSONObj.FindPath('WordWrapGrid') <> nil then
       begin
-        Form.MenuWordWrapGrid.Checked := JSONObj.FindPath('MenuWordWrapGridChecked').AsBoolean;
-        if not Form.MenuWordWrapGrid.Checked and Assigned(Form.MenuWordWrapGrid.OnClick) then
-          Form.MenuWordWrapGrid.OnClick(Form.MenuWordWrapGrid);
+        Form.AWordWrapGrid.Checked := JSONObj.FindPath('WordWrapGrid').AsBoolean;
+        if not Form.AWordWrapGrid.Checked and Assigned(Form.AWordWrapGrid.OnExecute) then
+          Form.AWordWrapGrid.OnExecute(Form.AWordWrapGrid);
       end;
-      if JSONObj.FindPath('MenuWordWrapTranslatePanelChecked') <> nil then
+      if JSONObj.FindPath('WordWrapTranslatePanel') <> nil then
       begin
-        Form.MenuWordWrapTranslatePanel.Checked := JSONObj.FindPath('MenuWordWrapTranslatePanelChecked').AsBoolean;
-        if Form.MenuWordWrapTranslatePanel.Checked and Assigned(Form.MenuWordWrapTranslatePanel.OnClick) then
-          Form.MenuWordWrapTranslatePanel.OnClick(Form.MenuWordWrapTranslatePanel);
+        Form.AWordWrapTranslatePanel.Checked := JSONObj.FindPath('WordWrapTranslatePanel').AsBoolean;
+        if Form.AWordWrapTranslatePanel.Checked and Assigned(Form.AWordWrapTranslatePanel.OnExecute) then
+          Form.AWordWrapTranslatePanel.OnExecute(Form.AWordWrapTranslatePanel);
+      end;
+      if JSONObj.FindPath('SpellCheckSource') <> nil then
+      begin
+        Form.ASpellCheckSource.Checked := JSONObj.FindPath('SpellCheckSource').AsBoolean;
+        if not Form.ASpellCheckSource.Checked and Assigned(Form.ASpellCheckSource.OnExecute) then
+          Form.ASpellCheckSource.OnExecute(Form.ASpellCheckSource);
+      end;
+      if JSONObj.FindPath('SpellCheckTranslation') <> nil then
+      begin
+        Form.ASpellCheckTranslation.Checked := JSONObj.FindPath('SpellCheckTranslation').AsBoolean;
+        if not Form.ASpellCheckTranslation.Checked and Assigned(Form.ASpellCheckTranslation.OnExecute) then
+          Form.ASpellCheckTranslation.OnExecute(Form.ASpellCheckTranslation);
       end;
 
       if JSONObj.FindPath('MenuHeadersChecked') <> nil then

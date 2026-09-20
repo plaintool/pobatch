@@ -46,6 +46,10 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    AWordWrapGrid: TAction;
+    AWordWrapTranslatePanel: TAction;
+    ASpellCheckTranslation: TAction;
+    ASpellCheckSource: TAction;
     APathRenameFiles: TAction;
     AMemoUndo: TAction;
     AMemoDefaultZoom: TAction;
@@ -105,6 +109,8 @@ type
     MenuHelpGNUgettext: TMenuItem;
     MenuColumnContext: TMenuItem;
     MenuColumnPlural: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem4: TMenuItem;
     MenuPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
     MenuItem1: TMenuItem;
@@ -161,6 +167,7 @@ type
     Separator13: TMenuItem;
     Separator14: TMenuItem;
     Separator15: TMenuItem;
+    Separator16: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -206,8 +213,6 @@ type
     procedure MenuPathOpenClick(Sender: TObject);
     procedure MenuPathCloseClick(Sender: TObject);
     procedure MenuFileExitClick(Sender: TObject);
-    procedure MenuWordWrapGridClick(Sender: TObject);
-    procedure MenuWordWrapTranslatePanelClick(Sender: TObject);
     procedure MenuHeadersClick(Sender: TObject);
     procedure MenuColumnContextClick(Sender: TObject);
     procedure MenuColumnReferenceClick(Sender: TObject);
@@ -239,6 +244,7 @@ type
     procedure APathSelectAllExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
+    procedure AValidFileExecute(Sender: TObject);
     procedure APathValidFilesExecute(Sender: TObject);
     procedure AMemoCutExecute(Sender: TObject);
     procedure AMemoCopyExecute(Sender: TObject);
@@ -247,7 +253,10 @@ type
     procedure AMemoSelectAllExecute(Sender: TObject);
     procedure AMemoBidiRightToLeftExecute(Sender: TObject);
     procedure AMemoDefaultZoomExecute(Sender: TObject);
-    procedure AValidFileExecute(Sender: TObject);
+    procedure AWordWrapGridExecute(Sender: TObject);
+    procedure AWordWrapTranslatePanelExecute(Sender: TObject);
+    procedure ASpellCheckSourceExecute(Sender: TObject);
+    procedure ASpellCheckTranslationExecute(Sender: TObject);
     { Grids Universal }
     procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
@@ -769,18 +778,6 @@ end;
 procedure TformPoBatch.MenuFileExitClick(Sender: TObject);
 begin
   Close;
-end;
-
-procedure TformPoBatch.MenuWordWrapGridClick(Sender: TObject);
-begin
-  WordWrap := MenuWordWrapGrid.Checked;
-end;
-
-procedure TformPoBatch.MenuWordWrapTranslatePanelClick(Sender: TObject);
-begin
-  MemoSource.WordWrap := MenuWordWrapTranslatePanel.Checked;
-  MemoPlural.WordWrap := MenuWordWrapTranslatePanel.Checked;
-  MemoTranslation.WordWrap := MenuWordWrapTranslatePanel.Checked;
 end;
 
 procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
@@ -1683,6 +1680,28 @@ begin
     AMemo := Self.ActiveControl as TRichMemo;
     AMemo.ZoomFactor := 1;
   end;
+end;
+
+procedure TformPoBatch.AWordWrapGridExecute(Sender: TObject);
+begin
+  WordWrap := MenuWordWrapGrid.Checked;
+end;
+
+procedure TformPoBatch.AWordWrapTranslatePanelExecute(Sender: TObject);
+begin
+  MemoSource.WordWrap := MenuWordWrapTranslatePanel.Checked;
+  MemoPlural.WordWrap := MenuWordWrapTranslatePanel.Checked;
+  MemoTranslation.WordWrap := MenuWordWrapTranslatePanel.Checked;
+end;
+
+procedure TformPoBatch.ASpellCheckSourceExecute(Sender: TObject);
+begin
+  SpellSource.Enabled := ASpellCheckSource.Checked;
+end;
+
+procedure TformPoBatch.ASpellCheckTranslationExecute(Sender: TObject);
+begin
+  SpellTranslation.Enabled := ASpellCheckTranslation.Checked;
 end;
 
 {%EndRegion}

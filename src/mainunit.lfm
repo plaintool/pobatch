@@ -655,15 +655,23 @@ object formPoBatch: TformPoBatch
     object MenuFormat: TMenuItem
       Caption = 'Format'
       object MenuWordWrapGrid: TMenuItem
+        Action = AWordWrapGrid
         AutoCheck = True
-        Caption = 'Word Wrap - Grid'
-        Checked = True
-        OnClick = MenuWordWrapGridClick
       end
       object MenuWordWrapTranslatePanel: TMenuItem
+        Action = AWordWrapTranslatePanel
         AutoCheck = True
-        Caption = 'Word Wrap - Translate Panel'
-        OnClick = MenuWordWrapTranslatePanelClick
+      end
+      object Separator16: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem2: TMenuItem
+        Action = ASpellCheckSource
+        AutoCheck = True
+      end
+      object MenuItem4: TMenuItem
+        Action = ASpellCheckTranslation
+        AutoCheck = True
       end
     end
     object MenuView: TMenuItem
@@ -892,6 +900,33 @@ object formPoBatch: TformPoBatch
       Caption = 'Edit Translation Only'
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
+    end
+    object AWordWrapGrid: TAction
+      Category = 'Format'
+      AutoCheck = True
+      Caption = 'Word Wrap - Grid'
+      Checked = True
+      OnExecute = AWordWrapGridExecute
+    end
+    object AWordWrapTranslatePanel: TAction
+      Category = 'Format'
+      AutoCheck = True
+      Caption = 'Word Wrap - Translate Panel'
+      OnExecute = AWordWrapTranslatePanelExecute
+    end
+    object ASpellCheckSource: TAction
+      Category = 'Format'
+      AutoCheck = True
+      Caption = 'Spell Check Source'
+      Checked = True
+      OnExecute = ASpellCheckSourceExecute
+    end
+    object ASpellCheckTranslation: TAction
+      Category = 'Format'
+      AutoCheck = True
+      Caption = 'Spell Check Translation'
+      Checked = True
+      OnExecute = ASpellCheckTranslationExecute
     end
   end
   object ApplicationProp: TApplicationProperties
