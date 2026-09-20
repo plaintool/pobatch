@@ -3320,8 +3320,7 @@ begin
   Result := False;
   if ActiveControl = Grid then
   begin
-    Grid.PasteFromClipboard(
-      'Clipboard contains multiple lines. If no cell range is selected, pasting will overwrite cells below the current row. Continue?');
+    Grid.PasteFromClipboard;
     Result := True;
   end
   else if ActiveControl = GridHeaders then
