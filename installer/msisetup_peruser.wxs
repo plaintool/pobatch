@@ -71,10 +71,37 @@
                 </Directory>
             </Directory>
         </Directory>
+        <Component Id="PoBatchRegistry" Directory="INSTALLDIR" Guid="D4E5F6A7-B8C9-4D0E-1F2A-3B4C5D6E7F8A" Win64="$(var.Win64Value)">
+            <!-- Add .po extension association -->
+            <RegistryKey Root="HKCU" Key="Software\Classes\.po" Action="createAndRemoveOnUninstall">
+                <RegistryValue Type="string" Value="PoBatch" KeyPath="yes" />
+                <!-- Add "New → PO File" to context menu -->
+                <RegistryKey Key="ShellNew" Action="createAndRemoveOnUninstall">
+                    <RegistryValue Name="NullFile" Type="string" Value="" />
+                </RegistryKey>
+            </RegistryKey>
+            <!-- Define the PoBatch file association -->
+            <RegistryKey Root="HKCU" Key="Software\Classes\PoBatch" Action="createAndRemoveOnUninstall">
+                <RegistryValue Type="string" Value="PoBatch PO File" />
+                <RegistryKey Key="DefaultIcon">
+                    <RegistryValue Type="string" Value="[INSTALLDIR]$(var.ExeName),1" />
+                </RegistryKey>
+                <RegistryKey Key="shell\open\command">
+                    <RegistryValue Type="string" Value="&quot;[INSTALLDIR]$(var.ExeName)&quot; &quot;%1&quot;" />
+                </RegistryKey>
+            </RegistryKey>
+            <!-- Add application association in the registry -->
+            <RegistryKey Root="HKCU" Key="Software\Classes\Applications\$(var.ExeName)" Action="createAndRemoveOnUninstall">
+                <RegistryKey Key="shell\open\command">
+                    <RegistryValue Type="string" Value="&quot;[INSTALLDIR]$(var.ExeName)&quot; &quot;%1&quot;" />
+                </RegistryKey>
+            </RegistryKey>
+        </Component>
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="PoBatchFiles" />
             <ComponentRef Id="PoBatchShortcuts" />
             <ComponentRef Id="StartMenuShortcuts" />
+            <ComponentRef Id="PoBatchRegistry" />
         </Feature>
         <UI>
             <UIRef Id="WixUI_Minimal" />

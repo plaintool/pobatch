@@ -1,3 +1,23 @@
+[Registry]
+;Registry data for PoBatch .po association
+Root: HKA; Subkey: "Software\Classes\.po"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\.po\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\PoBatch"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch"; ValueType: string; ValueName: ""; ValueData: "PoBatch PO File"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\pobatch.exe,1"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open\command"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\pobatch.exe"" ""%1"""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PoBatch\ShellNew"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open\command"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\pobatch.exe"" ""%1"""; Flags: uninsdeletevalue
+;End of registry data for PoBatch
+
 #define MyAppName      "PoBatch"
 
 // --- Version resolving ---

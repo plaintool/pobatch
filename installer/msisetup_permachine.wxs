@@ -7,26 +7,26 @@
     lightArgs: "<projectname>.wixobj" -out "pobatch-allusers.msi" <extensions>
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<?define ProductVersion = "$(var.Version)" ?>
-	<?define OpenSslDir = "..\" ?>
+    <?define ProductVersion = "$(var.Version)" ?>
+    <?define OpenSslDir = "..\" ?>
     <?if $(var.Platform) = x64 ?>
         <?define ProductName = "PoBatch $(var.ProductVersion)" ?>
         <?define Win64Value = "yes" ?>
         <?define ProgramFilesFolderVar = "ProgramFiles64Folder" ?>
-		<?define ExeName = "pobatch.exe" ?>
-		<?define ExeNameUpper = "POBATCH.EXE" ?>
+        <?define ExeName = "pobatch.exe" ?>
+        <?define ExeNameUpper = "POBATCH.EXE" ?>
         <?define SystemFolder = "System64Folder" ?>
-		<?define LibCryptoName = "libcrypto-1_1-x64.dll" ?>
-		<?define LibSslName    = "libssl-1_1-x64.dll" ?>
+        <?define LibCryptoName = "libcrypto-1_1-x64.dll" ?>
+        <?define LibSslName    = "libssl-1_1-x64.dll" ?>
     <?else?>
         <?define ProductName = "PoBatch $(var.ProductVersion) (32-bit)" ?>
         <?define Win64Value = "no" ?>
         <?define ProgramFilesFolderVar = "ProgramFilesFolder" ?>
-		<?define ExeName = "pobatch32.exe" ?>
-		<?define ExeNameUpper = "POBATCH32.EXE" ?>
+        <?define ExeName = "pobatch32.exe" ?>
+        <?define ExeNameUpper = "POBATCH32.EXE" ?>
         <?define SystemFolder = "SystemFolder" ?>
-		<?define LibCryptoName = "libcrypto-1_1.dll" ?>
-		<?define LibSslName    = "libssl-1_1.dll" ?>
+        <?define LibCryptoName = "libcrypto-1_1.dll" ?>
+        <?define LibSslName    = "libssl-1_1.dll" ?>
     <?endif?>
     
     <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="Alexander Tverskoy" UpgradeCode="45C75BC5-3DDC-453B-A7AB-7E2AE0D88699">
@@ -72,10 +72,40 @@
                 </Directory>
             </Directory>
         </Directory>
+
+        <!-- Component for .po file association -->
+        <Component Id="PoBatchRegistry" Directory="INSTALLDIR" Guid="D4E5F6A7-B8C9-4D0E-1F2A-3B4C5D6E7F8A" Win64="$(var.Win64Value)">
+            <!-- Add .po extension association -->
+            <RegistryKey Root="HKLM" Key="Software\Classes\.po" Action="createAndRemoveOnUninstall">
+                <RegistryValue Type="string" Value="PoBatch" KeyPath="yes" />
+                <!-- Add "New → PO File" to context menu -->
+                <RegistryKey Key="ShellNew" Action="createAndRemoveOnUninstall">
+                    <RegistryValue Name="NullFile" Type="string" Value="" />
+                </RegistryKey>
+            </RegistryKey>
+            <!-- Define the PoBatch file association -->
+            <RegistryKey Root="HKLM" Key="Software\Classes\PoBatch" Action="createAndRemoveOnUninstall">
+                <RegistryValue Type="string" Value="PoBatch PO File" />
+                <RegistryKey Key="DefaultIcon">
+                    <RegistryValue Type="string" Value="[INSTALLDIR]$(var.ExeName),1" />
+                </RegistryKey>
+                <RegistryKey Key="shell\open\command">
+                    <RegistryValue Type="string" Value="&quot;[INSTALLDIR]$(var.ExeName)&quot; &quot;%1&quot;" />
+                </RegistryKey>
+            </RegistryKey>
+            <!-- Add application association in the registry -->
+            <RegistryKey Root="HKLM" Key="Software\Classes\Applications\$(var.ExeName)" Action="createAndRemoveOnUninstall">
+                <RegistryKey Key="shell\open\command">
+                    <RegistryValue Type="string" Value="&quot;[INSTALLDIR]$(var.ExeName)&quot; &quot;%1&quot;" />
+                </RegistryKey>
+            </RegistryKey>
+        </Component>
+
         <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
             <ComponentRef Id="PoBatchFiles" />
             <ComponentRef Id="PoBatchShortcuts" />
             <ComponentRef Id="StartMenuShortcuts" />
+            <ComponentRef Id="PoBatchRegistry" />
         </Feature>
         <UI>
             <UIRef Id="WixUI_Minimal" />
