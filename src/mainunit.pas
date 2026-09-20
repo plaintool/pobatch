@@ -2779,6 +2779,7 @@ begin
   FullPath := FPoFiles[Idx];
 
   // Attempt to load the file
+  Self.LockUpdate;
   Grid.OnSelectCell := nil;
   try
     // Ask to save current changes – if user cancels, revert the selection
@@ -2817,6 +2818,8 @@ begin
       FLastPathIndex := FPathIndex;
     end;
   finally
+    Self.UnlockUpdate;
+
     if FPathMouseSelecting then
     begin
       FPathMouseSelecting := False;
