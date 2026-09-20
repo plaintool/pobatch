@@ -74,16 +74,13 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="designkit"/>
-      </Item>
-      <Item>
-        <PackageName Value="richmemopackage"/>
-      </Item>
-      <Item>
-        <PackageName Value="richkit"/>
+        <PackageName Value="LCL"/>
       </Item>
       <Item>
         <PackageName Value="darkmode"/>
+      </Item>
+      <Item>
+        <PackageName Value="richmemopackage"/>
       </Item>
       <Item>
         <PackageName Value="helpers"/>
@@ -92,7 +89,10 @@
         <PackageName Value="toolkit"/>
       </Item>
       <Item>
-        <PackageName Value="LCL"/>
+        <PackageName Value="richkit"/>
+      </Item>
+      <Item>
+        <PackageName Value="designkit"/>
       </Item>
     </RequiredPackages>
     <Units>
