@@ -46,6 +46,7 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    APathRenameFiles: TAction;
     AMemoUndo: TAction;
     AMemoDefaultZoom: TAction;
     AMemoBidiRightToLeft: TAction;
@@ -59,7 +60,7 @@ type
     ASyncWithPot: TAction;
     APathSyncFilesWithPot: TAction;
     APathSelectAll: TAction;
-    APathDeleteFile: TAction;
+    APathDeleteFiles: TAction;
     AEditPluralForm: TAction;
     ApplicationProp: TApplicationProperties;
     ASelectAll: TAction;
@@ -104,11 +105,12 @@ type
     MenuHelpGNUgettext: TMenuItem;
     MenuColumnContext: TMenuItem;
     MenuColumnPlural: TMenuItem;
-    MenuDeleteFile: TMenuItem;
+    MenuPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
     MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
+    MenuPathValidFile: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuPathRenameFile: TMenuItem;
     MenuMemoBidiMode: TMenuItem;
     MenuMemoClear: TMenuItem;
     MenuMemoCopy: TMenuItem;
@@ -232,7 +234,8 @@ type
     procedure AEditPluralFormExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure AMemoUndoExecute(Sender: TObject);
-    procedure APathDeleteFileExecute(Sender: TObject);
+    procedure APathDeleteFilesExecute(Sender: TObject);
+    procedure APathRenameFilesExecute(Sender: TObject);
     procedure APathSelectAllExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
@@ -1076,7 +1079,7 @@ begin
   end;
 end;
 
-procedure TformPoBatch.APathDeleteFileExecute(Sender: TObject);
+procedure TformPoBatch.APathDeleteFilesExecute(Sender: TObject);
 var
   i, Count: integer;
   selectedIndices: array of integer = ();
@@ -1134,6 +1137,162 @@ begin
     UpdatePath;
     AnalizePath(-1, True);
   end;
+end;
+
+procedure TformPoBatch.APathRenameFilesExecute(Sender: TObject);
+var
+  i, selCount, p, NewIdx: integer;
+  FileName, Dir, BaseName, LangPart, NewName: string;
+  DefaultName, OriginalName: string;
+  SelectedIndices: array of integer = nil;
+  fileList, msg: string;
+  RenamedCount: integer;
+  SortList: TStringList;
+begin
+  // Collect indices of selected items
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('Select file(s) to rename!');
+    Exit;
+  end;
+
+  // Take the default name part from the currently opened file if it belongs
+  // to the opened folder, otherwise from the first selected file
+  if (FFileName <> string.Empty) and (FPoFiles.IndexOf(FFileName) >= 0) then
+    BaseName := ChangeFileExt(ExtractFileName(FFileName), '')
+  else
+    BaseName := ChangeFileExt(ExtractFileName(FPoFiles[SelectedIndices[0]]), '');
+
+  p := RPos('.', BaseName);
+  if p > 1 then
+    DefaultName := Copy(BaseName, 1, p - 1)
+  else
+    DefaultName := BaseName;
+
+  OriginalName := DefaultName;
+
+  // Ask the user for the new base name; the language code and extension are kept
+  InputQueryLite('Rename files', 'Enter new base name (language code and extension are kept):', DefaultName);
+
+  DefaultName := Trim(DefaultName);
+  if (DefaultName = string.Empty) or (DefaultName = OriginalName) then
+    Exit;
+
+  // Build a confirmation message with the affected files
+  fileList := string.Empty;
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Rename the following ' + IntToStr(selCount) + ' file(s) using base name "' + DefaultName + '"?' +
+    sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Confirm rename', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Rename each selected file on disk keeping its language code and extension
+  RenamedCount := 0;
+  for i := 0 to selCount - 1 do
+  begin
+    FileName := FPoFiles[SelectedIndices[i]];
+    Dir := ExtractFilePath(FileName);
+    BaseName := ChangeFileExt(ExtractFileName(FileName), '');
+
+    p := RPos('.', BaseName);
+    if p > 1 then
+      LangPart := Copy(BaseName, p, MaxInt)   // includes the leading dot
+    else
+      LangPart := string.Empty;
+
+    NewName := Dir + DefaultName + LangPart + ExtractFileExt(FileName);
+
+    if SameFileName(FileName, NewName) then
+      Continue;
+
+    if not RenameFile(FileName, NewName) then
+    begin
+      ShowMessageFmt('Failed to rename: %s', [FileName]);
+      Continue;
+    end;
+
+    // Update the in-memory path; the file content is unchanged,
+    // so the status entry stays the same
+    FPoFiles[SelectedIndices[i]] := NewName;
+
+    // Keep the currently opened file and the reference POT file in sync
+    if SameFileName(FileName, FFileName) then
+      FFileName := NewName;
+
+    if SameFileName(FileName, FPotFile) then
+      FPotFile := NewName;
+
+    Inc(RenamedCount);
+  end;
+
+  if RenamedCount = 0 then
+    Exit;
+
+  // Re-sort the file list; a renamed file can move to a new position
+  SortList := TStringList.Create;
+  try
+    SortList.Sorted := False;
+    for i := 0 to FPoFiles.Count - 1 do
+      if i < Length(FFileStatuses) then
+        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(FFileStatuses[i]))))
+      else
+        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(psEmptyTranslation))));
+
+    SortList.Sort;
+
+    for i := 0 to SortList.Count - 1 do
+      FPoFiles[i] := SortList[i];
+
+    SetLength(FFileStatuses, SortList.Count);
+    for i := 0 to SortList.Count - 1 do
+      FFileStatuses[i] := TPoFileStatus(PtrInt(SortList.Objects[i]));
+  finally
+    SortList.Free;
+  end;
+
+  // Rebuild the visible list and keep the same file selected after reordering
+  ListPath.Items.BeginUpdate;
+  try
+    ListPath.Items.Clear;
+    for i := 0 to FPoFiles.Count - 1 do
+      ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
+
+    NewIdx := FPoFiles.IndexOf(FFileName);
+    if NewIdx >= 0 then
+    begin
+      ListPath.Selected[NewIdx] := True;
+      ListPath.ItemIndex := NewIdx;
+      FPathIndex := NewIdx;
+      FLastPathIndex := NewIdx;
+    end
+    else
+    begin
+      FPathIndex := -1;
+      FLastPathIndex := -1;
+    end;
+  finally
+    ListPath.Items.EndUpdate;
+  end;
+
+  ListPath.Invalidate;
+  UpdateCaption;
 end;
 
 procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);

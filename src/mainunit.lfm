@@ -809,43 +809,10 @@ object formPoBatch: TformPoBatch
       ShortCut = 32854
       OnExecute = AValidFileExecute
     end
-    object AEditPluralForm: TAction
-      Category = 'Edit'
-      Caption = 'Edit Plural Form'
-      ShortCut = 32848
-      OnExecute = AEditPluralFormExecute
-    end
-    object ASyncWithPot: TAction
-      Category = 'Edit'
-      Caption = 'Sync with Pot'
-      OnExecute = ASyncWithPotExecute
-    end
-    object AEditTranslationOnly: TAction
-      Category = 'Edit'
-      AutoCheck = True
-      Caption = 'Edit Translation Only'
-      Checked = True
-      OnExecute = AEditTranslationOnlyExecute
-    end
-    object APathDeleteFile: TAction
+    object APathDeleteFiles: TAction
       Category = 'Path'
       Caption = 'Delete File(s)'
-      OnExecute = APathDeleteFileExecute
-    end
-    object APathValidFiles: TAction
-      Category = 'Path'
-      Caption = 'Mark File(s) as Valid'
-      OnExecute = APathValidFilesExecute
-    end
-    object APathSyncFilesWithPot: TAction
-      Category = 'Path'
-      Caption = 'Sync File(s) with Pot'
-      OnExecute = APathSyncFilesWithPotExecute
-    end
-    object APathSelectAll: TAction
-      Category = 'Path'
-      Caption = 'Select All'
-      OnExecute = APathSelectAllExecute
+      OnExecute = APathDeleteFilesExecute
     end
     object AMemoUndo: TAction
       Category = 'Memo'
@@ -887,6 +854,44 @@ object formPoBatch: TformPoBatch
       Category = 'Memo'
       Caption = 'Default Zoom'
       OnExecute = AMemoDefaultZoomExecute
+    end
+    object APathRenameFiles: TAction
+      Category = 'Path'
+      Caption = 'Rename File(s)'
+      OnExecute = APathRenameFilesExecute
+    end
+    object APathValidFiles: TAction
+      Category = 'Path'
+      Caption = 'Mark File(s) as Valid'
+      OnExecute = APathValidFilesExecute
+    end
+    object APathSyncFilesWithPot: TAction
+      Category = 'Path'
+      Caption = 'Sync File(s) with Pot'
+      OnExecute = APathSyncFilesWithPotExecute
+    end
+    object APathSelectAll: TAction
+      Category = 'Path'
+      Caption = 'Select All'
+      OnExecute = APathSelectAllExecute
+    end
+    object AEditPluralForm: TAction
+      Category = 'Edit'
+      Caption = 'Edit Plural Form'
+      ShortCut = 32848
+      OnExecute = AEditPluralFormExecute
+    end
+    object ASyncWithPot: TAction
+      Category = 'Edit'
+      Caption = 'Sync with Pot'
+      OnExecute = ASyncWithPotExecute
+    end
+    object AEditTranslationOnly: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Edit Translation Only'
+      Checked = True
+      OnExecute = AEditTranslationOnlyExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1391,10 +1396,13 @@ object formPoBatch: TformPoBatch
   object PopupPath: TPopupMenu
     Left = 472
     Top = 160
-    object MenuDeleteFile: TMenuItem
-      Action = APathDeleteFile
+    object MenuPathDeleteFile: TMenuItem
+      Action = APathDeleteFiles
     end
-    object MenuItem2: TMenuItem
+    object MenuPathRenameFile: TMenuItem
+      Action = APathRenameFiles
+    end
+    object MenuPathValidFile: TMenuItem
       Action = APathValidFiles
     end
     object MenuSyncFilesWithPot: TMenuItem
