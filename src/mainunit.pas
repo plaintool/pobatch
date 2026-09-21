@@ -2205,10 +2205,10 @@ begin
 
   Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 
-  // Switch spell check to active memo
-  if (Grid.Col = CELL_TEXT) then
+  // Switch spell check to active memo (only when it changes)
+  if (Grid.Col = CELL_TEXT) and (SpellSource.RichMemo <> FRichEditor) then
     SpellSource.RichMemo := FRichEditor;
-  if (Grid.Col = CELL_TRANSLATION) then
+  if (Grid.Col = CELL_TRANSLATION) and (SpellTranslation.RichMemo <> FRichEditor) then
     SpellTranslation.RichMemo := FRichEditor;
 
   FRichEditor.UpdateState(1, True);
@@ -2411,8 +2411,8 @@ begin
       FFilterPending := False;
       SaveGrid;
       FillGrid;
-      UpdateTranslatePanel;
     until not FFilterPending;
+    UpdateTranslatePanel;
   finally
     FFilterUpdating := False;
   end;
@@ -3286,33 +3286,44 @@ end;
 procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
 var
   OriginalOnChange: TNotifyEvent;
+  NewText: string;
 begin
   if not Pages.Visible then Exit;
   if aRow = -1 then aRow := Grid.Row;
 
-  // Update Switch state
   UpdateSwitch(aRow);
 
-  // Update Translations
-  OriginalOnChange := MemoSource.OnChange;
-  MemoSource.OnChange := nil;
-  try
-    MemoSource.Text := Grid.Cells[CELL_TEXT, aRow];
-  finally
+  // Source memo
+  NewText := Grid.Cells[CELL_TEXT, aRow];
+  if MemoSource.Text <> NewText then
+  begin
+    OriginalOnChange := MemoSource.OnChange;
+    MemoSource.OnChange := nil;
+    try
+      MemoSource.Text := NewText;
+    finally
+      MemoSource.OnChange := OriginalOnChange;
+    end;
     SpellSource.CheckNow;
     Application.ProcessMessages;
-    MemoSource.UpdateState(5);
-    MemoSource.OnChange := OriginalOnChange;
   end;
-  MemoPlural.OnChange := nil;
-  try
-    MemoPlural.Text := Grid.Cells[CELL_PLURAL, aRow];
-    MemoPlural.Visible := MemoPlural.Text <> string.Empty;
-    ShapePlural.Visible := MemoPlural.Text <> string.Empty;
-  finally
-    MemoPlural.UpdateState(5);
-    MemoPlural.OnChange := @MemoPluralChange;
+  MemoSource.UpdateState(5);
+
+  // Plural memo
+  NewText := Grid.Cells[CELL_PLURAL, aRow];
+  if MemoPlural.Text <> NewText then
+  begin
+    MemoPlural.OnChange := nil;
+    try
+      MemoPlural.Text := NewText;
+    finally
+      MemoPlural.OnChange := @MemoPluralChange;
+    end;
   end;
+  MemoPlural.Visible := MemoPlural.Text <> string.Empty;
+  ShapePlural.Visible := MemoPlural.Text <> string.Empty;
+  MemoPlural.UpdateState(5);
+
   if MemoPlural.Visible then
   begin
     FillGridPlural(aRow);
@@ -3326,16 +3337,20 @@ begin
     GridPlural.Visible := False;
     MemoTranslation.Visible := True;
 
-    OriginalOnChange := MemoTranslation.OnChange;
-    MemoTranslation.OnChange := nil;
-    try
-      MemoTranslation.Text := Grid.Cells[CELL_TRANSLATION, aRow];
-    finally
+    NewText := Grid.Cells[CELL_TRANSLATION, aRow];
+    if MemoTranslation.Text <> NewText then
+    begin
+      OriginalOnChange := MemoTranslation.OnChange;
+      MemoTranslation.OnChange := nil;
+      try
+        MemoTranslation.Text := NewText;
+      finally
+        MemoTranslation.OnChange := OriginalOnChange;
+      end;
       SpellTranslation.CheckNow;
       Application.ProcessMessages;
-      MemoTranslation.UpdateState(5);
-      MemoTranslation.OnChange := OriginalOnChange;
     end;
+    MemoTranslation.UpdateState(5);
   end;
   FillGridComments(aRow);
   Application.QueueAsyncCall(@FixSplitters, 0);
@@ -3531,6 +3546,8 @@ begin
 end;
 
 function TformPoBatch.DeleteGridsSelection: boolean;
+var
+  i: integer;
 begin
   Result := False;
 
@@ -3540,9 +3557,18 @@ begin
       (Grid.Selection.Right = CELL_TRANSLATION))) then
     begin
       if (Grid.Selection.Height > 0) then
-        Grid.Clean(Max(Grid.Selection.Left, CELL_TEXT), Grid.Selection.Top, Grid.Selection.Right, Grid.Selection.Bottom, [gzNormal])
+      begin
+        Grid.Clean(Max(Grid.Selection.Left, CELL_TEXT), Grid.Selection.Top, Grid.Selection.Right, Grid.Selection.Bottom, [gzNormal]);
+
+        // Refresh the valid flag for every affected row
+        for i := Grid.Selection.Top to Grid.Selection.Bottom do
+          UpdateValid(i);
+      end
       else
+      begin
         Grid.Clean(Grid.Col, Grid.Row, Grid.Col, Grid.Row, [gzNormal]);
+        UpdateValid;
+      end;
 
       Changed := True;
       Result := True;
@@ -3572,6 +3598,7 @@ begin
       GridPlural.Clean(GridPlural.Col, GridPlural.Row, GridPlural.Col, GridPlural.Row, [gzNormal]);
 
     SaveGridPlural;
+    UpdateValid;
     Changed := True;
     Result := True;
   end
@@ -3584,6 +3611,7 @@ begin
       GridComments.Clean(GridComments.Col, GridComments.Row, GridComments.Col, GridComments.Row, [gzNormal]);
 
     SaveGridComments;
+    UpdateValid;
     Changed := True;
     Result := True;
   end;
