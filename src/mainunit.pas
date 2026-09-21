@@ -2111,6 +2111,7 @@ begin
   if Grid.EditorMode and (aCol = Grid.Col) and (aRow = Grid.Row) then
   begin
     Grid.Canvas.Brush.Color := clWindow;
+    Grid.Canvas.Font.Color := clWindowText;
     Exit;
   end;
 
