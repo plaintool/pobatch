@@ -373,8 +373,9 @@ type
     procedure UpdateInterface;
     procedure UpdateFileStatus(const AFileName: string);
     procedure UpdateSwitch(aRow: integer = -1);
-    procedure UpdateTranslatePanel(aRow: integer = -1);
     procedure UpdateValid(aRow: integer = -1);
+    procedure UpdateTranslatePanel(aRow: integer = -1);
+    procedure UpdateSpellCheckMemo(Data: PtrInt);
     procedure SwitchCheck;
     function CanActionEnable: boolean;
     function RowEntry(aRow: integer = -1): TPOEntry;
@@ -789,10 +790,15 @@ end;
 
 procedure TformPoBatch.MenuTranslatePanelClick(Sender: TObject);
 begin
+  Grid.EditorMode := False;
   Pages.Visible := MenuTranslatePanel.Checked;
   SplitterPages.Visible := MenuTranslatePanel.Checked;
   if MenuTranslatePanel.Checked then
+  begin
     UpdateTranslatePanel;
+    SpellSource.CheckNow;
+    SpellTranslation.CheckNow;
+  end;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
@@ -1697,11 +1703,15 @@ end;
 procedure TformPoBatch.ASpellCheckSourceExecute(Sender: TObject);
 begin
   SpellSource.Enabled := ASpellCheckSource.Checked;
+  if not SpellSource.Enabled then
+    SpellSource.ClearErrors;
 end;
 
 procedure TformPoBatch.ASpellCheckTranslationExecute(Sender: TObject);
 begin
   SpellTranslation.Enabled := ASpellCheckTranslation.Checked;
+  if not SpellTranslation.Enabled then
+    SpellTranslation.ClearErrors;
 end;
 
 {%EndRegion}
@@ -2205,11 +2215,7 @@ begin
 
   Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 
-  // Switch spell check to active memo (only when it changes)
-  if (Grid.Col = CELL_TEXT) and (SpellSource.RichMemo <> FRichEditor) then
-    SpellSource.RichMemo := FRichEditor;
-  if (Grid.Col = CELL_TRANSLATION) and (SpellTranslation.RichMemo <> FRichEditor) then
-    SpellTranslation.RichMemo := FRichEditor;
+  Application.QueueAsyncCall(@UpdateSpellCheckMemo, 1);
 
   FRichEditor.UpdateState(1, True);
   Grid.Invalidate;
@@ -2217,11 +2223,7 @@ end;
 
 procedure TformPoBatch.MemoExit(Sender: TObject);
 begin
-  // Switch spell check to bottom memo
-  if SpellSource.RichMemo = FRichEditor then
-    SpellSource.RichMemo := MemoSource;
-  if SpellTranslation.RichMemo = FRichEditor then
-    SpellTranslation.RichMemo := MemoTranslation;
+  Application.QueueAsyncCall(@UpdateSpellCheckMemo, 0);
 
   Grid.EditorMode := False;
 
@@ -2246,12 +2248,7 @@ procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShift
 begin
   if Key = VK_ESCAPE then
   begin
-    FRichEditor.OnExit := nil;
     Grid.EditorMode := False;
-    FRichEditor.OnExit := @MemoExit;
-
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
-
     Key := 0;
   end
   else
@@ -2280,7 +2277,10 @@ begin
   else if ((Key = Ord('V')) and (ssCtrl in Shift)) or ((Key = VK_INSERT) and (ssShift in Shift)) then
   begin
     // Standard paste for now, will be replaced later
-    TMemo(Sender).PasteWithLineEnding;
+    if Sender is TRichMemo then
+      TRichMemo(Sender).PasteWithLineEnding
+    else
+      TMemo(Sender).PasteWithLineEnding;
     Key := 0;
   end;
 end;
@@ -2473,7 +2473,7 @@ end;
 
 procedure TformPoBatch.MemoSourceEnter(Sender: TObject);
 begin
-  SpellSource.RichMemo := MemoSource;
+  Application.QueueAsyncCall(@UpdateSpellCheckMemo, 0);
 end;
 
 procedure TformPoBatch.MemoSourceChange(Sender: TObject);
@@ -2508,7 +2508,7 @@ end;
 
 procedure TformPoBatch.MemoTranslationEnter(Sender: TObject);
 begin
-  SpellTranslation.RichMemo := MemoTranslation;
+  Application.QueueAsyncCall(@UpdateSpellCheckMemo, 0);
 end;
 
 procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
@@ -3283,6 +3283,17 @@ begin
   end;
 end;
 
+procedure TformPoBatch.UpdateValid(aRow: integer = -1);
+var
+  Entry: TPOEntry;
+begin
+  SaveRow(aRow);
+  if aRow = -1 then aRow := Grid.Row;
+  Entry := RowEntry(aRow);
+  if Assigned(Entry) then
+    Grid.Cells[CELL_VALID, aRow] := IfThen(Entry.IsValid, '1', '0');
+end;
+
 procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
 var
   OriginalOnChange: TNotifyEvent;
@@ -3295,7 +3306,7 @@ begin
 
   // Source memo
   NewText := Grid.Cells[CELL_TEXT, aRow];
-  if MemoSource.Text <> NewText then
+  if not MemoSource.Text.EqualNormalized(NewText) then
   begin
     OriginalOnChange := MemoSource.OnChange;
     MemoSource.OnChange := nil;
@@ -3304,14 +3315,12 @@ begin
     finally
       MemoSource.OnChange := OriginalOnChange;
     end;
-    SpellSource.CheckNow;
-    Application.ProcessMessages;
   end;
   MemoSource.UpdateState(5);
 
   // Plural memo
   NewText := Grid.Cells[CELL_PLURAL, aRow];
-  if MemoPlural.Text <> NewText then
+  if not MemoPlural.Text.EqualNormalized(NewText) then
   begin
     MemoPlural.OnChange := nil;
     try
@@ -3338,7 +3347,7 @@ begin
     MemoTranslation.Visible := True;
 
     NewText := Grid.Cells[CELL_TRANSLATION, aRow];
-    if MemoTranslation.Text <> NewText then
+    if not MemoTranslation.Text.EqualNormalized(NewText) then
     begin
       OriginalOnChange := MemoTranslation.OnChange;
       MemoTranslation.OnChange := nil;
@@ -3347,8 +3356,6 @@ begin
       finally
         MemoTranslation.OnChange := OriginalOnChange;
       end;
-      SpellTranslation.CheckNow;
-      Application.ProcessMessages;
     end;
     MemoTranslation.UpdateState(5);
   end;
@@ -3356,15 +3363,24 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-procedure TformPoBatch.UpdateValid(aRow: integer = -1);
-var
-  Entry: TPOEntry;
+procedure TformPoBatch.UpdateSpellCheckMemo(Data: PtrInt);
 begin
-  SaveRow(aRow);
-  if aRow = -1 then aRow := Grid.Row;
-  Entry := RowEntry(aRow);
-  if Assigned(Entry) then
-    Grid.Cells[CELL_VALID, aRow] := IfThen(Entry.IsValid, '1', '0');
+  if Data = 1 then
+  begin
+    // Switch spell check to active memo (only when it changes)
+    if (Grid.Col = CELL_TEXT) and (SpellSource.RichMemo <> FRichEditor) then
+      SpellSource.RichMemo := FRichEditor;
+    if (Grid.Col = CELL_TRANSLATION) and (SpellTranslation.RichMemo <> FRichEditor) then
+      SpellTranslation.RichMemo := FRichEditor;
+  end
+  else
+  begin
+    // Switch spell check to bottom memo
+    if SpellSource.RichMemo = FRichEditor then
+      SpellSource.RichMemo := MemoSource;
+    if SpellTranslation.RichMemo = FRichEditor then
+      SpellTranslation.RichMemo := MemoTranslation;
+  end;
 end;
 
 procedure TformPoBatch.SwitchCheck;
