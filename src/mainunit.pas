@@ -36,6 +36,7 @@ uses
   RichMemoCellEditor,
   OneShotTimer,
   SpellChecker,
+  LangCodes,
   powrap;
 
 type
@@ -46,6 +47,15 @@ type
     {%Region -fold Form Common}
     ACopySourceText: TAction;
     AClearIdentical: TAction;
+    AClosePath: TAction;
+    ANewFromPot: TAction;
+    AExit: TAction;
+    AOpenPath: TAction;
+    ASaveAs: TAction;
+    ASave: TAction;
+    AOpen: TAction;
+    ANewWindow: TAction;
+    ANew: TAction;
     AWordWrapGrid: TAction;
     AWordWrapTranslatePanel: TAction;
     ASpellCheckTranslation: TAction;
@@ -111,6 +121,7 @@ type
     MenuColumnPlural: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
     MenuPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
     MenuItem1: TMenuItem;
@@ -204,15 +215,7 @@ type
     procedure ApplicationPropException(Sender: TObject; E: Exception);
     procedure GridMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     { Menu Events }
-    procedure MenuFileNewClick(Sender: TObject);
-    procedure MenuFileNewWindowClick(Sender: TObject);
-    procedure MenuFileOpenClick(Sender: TObject);
-    procedure MenuFileSaveClick(Sender: TObject);
-    procedure MenuFileSaveAsClick(Sender: TObject);
     procedure MenuTranslatePanelClick(Sender: TObject);
-    procedure MenuPathOpenClick(Sender: TObject);
-    procedure MenuPathCloseClick(Sender: TObject);
-    procedure MenuFileExitClick(Sender: TObject);
     procedure MenuHeadersClick(Sender: TObject);
     procedure MenuColumnContextClick(Sender: TObject);
     procedure MenuColumnReferenceClick(Sender: TObject);
@@ -223,6 +226,15 @@ type
     procedure MenuHelpGNUgettextClick(Sender: TObject);
     procedure MenuAboutClick(Sender: TObject);
     { Action Events }
+    procedure ANewExecute(Sender: TObject);
+    procedure ANewWindowExecute(Sender: TObject);
+    procedure ANewFromPotExecute(Sender: TObject);
+    procedure AOpenExecute(Sender: TObject);
+    procedure ASaveExecute(Sender: TObject);
+    procedure ASaveAsExecute(Sender: TObject);
+    procedure AOpenPathExecute(Sender: TObject);
+    procedure AClosePathExecute(Sender: TObject);
+    procedure AExitExecute(Sender: TObject);
     procedure AUndoChangesExecute(Sender: TObject);
     procedure ACopyExecute(Sender: TObject);
     procedure ACutExecute(Sender: TObject);
@@ -669,118 +681,6 @@ end;
 
 {%Region -fold Menu Events}
 
-procedure TformPoBatch.MenuFileNewClick(Sender: TObject);
-begin
-  if not IsCanClose then Exit;
-
-  NewFile;
-end;
-
-procedure TformPoBatch.MenuFileNewWindowClick(Sender: TObject);
-var
-  Process: TProcess;
-begin
-  if Screen.ActiveForm <> Self then exit;
-
-  SaveFormSettings(self); // Save setting for new process
-
-  Process := TProcess.Create(nil); // Create a new process
-  try
-    Process.Executable := ParamStr(0); // Set the executable to the current application
-    Process.Options := []; // No wait, open and forget
-    Process.Execute; // Execute the new instance
-  finally
-    Process.Free; // Free the process object
-  end;
-end;
-
-procedure TformPoBatch.MenuFileOpenClick(Sender: TObject);
-begin
-  if not IsCanClose then Exit;
-
-  dialogOpen.FilterIndex := 1;
-  if dialogOpen.Execute then
-    OpenFile(dialogOpen.FileName, False);
-end;
-
-procedure TformPoBatch.MenuFileSaveClick(Sender: TObject);
-begin
-  if FFileName = string.Empty then
-  begin
-    // No filename yet, use Save As dialog
-    menuFileSaveAsClick(Sender);
-  end
-  else
-  begin
-    // Save to current file
-    if SaveFile(FFileName) then
-    begin
-      Changed := False;
-      UpdateFileStatus(FFileName);
-    end;
-  end;
-end;
-
-procedure TformPoBatch.MenuFileSaveAsClick(Sender: TObject);
-var
-  TempFileName: string;
-begin
-  // Set initial filename in dialog
-  if FFileName <> string.Empty then
-    dialogSave.FileName := ExtractFileName(FFileName)
-  else
-    dialogSave.FileName := 'untitled.po';
-
-  if dialogSave.Execute then
-  begin
-    TempFileName := dialogSave.FileName;
-
-    // Ensure file has extension
-    if ExtractFileExt(TempFileName) = string.Empty then
-      TempFileName := TempFileName + '.po';
-
-    if SaveFile(TempFileName) then
-    begin
-      FFileName := TempFileName;
-      Changed := False;
-      if ExtractFilePath(TempFileName) = IncludeTrailingPathDelimiter(FPath) then
-      begin
-        if OpenPath(FPath, True) then
-        begin
-          UpdatePath;
-          AnalizePath(-1, True);
-        end;
-      end;
-    end;
-  end;
-end;
-
-procedure TformPoBatch.MenuPathOpenClick(Sender: TObject);
-begin
-  if dialogPath.Execute then
-  begin
-    if not OpenPath(dialogPath.FileName, True) then
-    begin
-      ShowMessage('No .po files found in the selected directory!');
-      Exit;
-    end;
-    FPath := dialogPath.FileName;
-    SetLength(FFileStatuses, 0);
-    UpdatePath;
-    AnalizePath(-1, True);
-  end;
-end;
-
-procedure TformPoBatch.MenuPathCloseClick(Sender: TObject);
-begin
-  ClosePath;
-end;
-
-procedure TformPoBatch.MenuFileExitClick(Sender: TObject);
-begin
-  Close;
-end;
-
 procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
 begin
   GridHeaders.Visible := MenuHeaders.Checked;
@@ -853,6 +753,168 @@ end;
 {%EndRegion}
 
 {%Region -fold Action Events}
+
+procedure TformPoBatch.ANewExecute(Sender: TObject);
+begin
+  if not IsCanClose then Exit;
+
+  NewFile;
+end;
+
+procedure TformPoBatch.ANewWindowExecute(Sender: TObject);
+var
+  Process: TProcess;
+begin
+  if Screen.ActiveForm <> Self then exit;
+
+  SaveFormSettings(self); // Save setting for new process
+
+  Process := TProcess.Create(nil); // Create a new process
+  try
+    Process.Executable := ParamStr(0); // Set the executable to the current application
+    Process.Options := []; // No wait, open and forget
+    Process.Execute; // Execute the new instance
+  finally
+    Process.Free; // Free the process object
+  end;
+end;
+
+procedure TformPoBatch.ANewFromPotExecute(Sender: TObject);
+var
+  PotFileName: string;
+  Code: string = string.Empty;
+begin
+  // Ask to save current changes if modified - abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
+
+  // Let the user choose a POT file
+  dialogOpen.FilterIndex := 2;
+  if not dialogOpen.Execute then
+    Exit;
+
+  PotFileName := dialogOpen.FileName;
+  if not FileExists(PotFileName) then
+  begin
+    ShowMessageFmt('POT file not found: %s', [PotFileName]);
+    Exit;
+  end;
+
+  // Ask the user to choose the target language for the new PO file
+  if not SelectLanguage(Code, [cqoEditable]) then
+    Exit;
+
+  // Load the POT content into the model, this also refreshes the current state
+  if not LoadFile(PotFileName) then
+    Exit;
+
+  // Fill in the standard headers in the canonical order and set the chosen language
+  FPoFile.ApplyDefaultHeaders(Code, 'PoBatch ' + GetAppVersion);
+
+  FLanguage := Code;
+  SpellTranslation.Language := FLanguage;
+
+  // The result is a new unsaved document, so clear the file name
+  FFileName := string.Empty;
+
+  // Take a snapshot of the initial state for the undo action
+  FPoFileBackup.Assign(FPoFile);
+  Changed := True;
+
+  // Refresh grids and UI to reflect the loaded POT
+  FillGrid;
+  FillGridHeaders;
+  UpdateTranslatePanel;
+  SyncPath;
+  UpdateInterface;
+end;
+
+procedure TformPoBatch.AOpenExecute(Sender: TObject);
+begin
+  if not IsCanClose then Exit;
+
+  dialogOpen.FilterIndex := 1;
+  if dialogOpen.Execute then
+    OpenFile(dialogOpen.FileName, False);
+end;
+
+procedure TformPoBatch.ASaveExecute(Sender: TObject);
+begin
+  if FFileName = string.Empty then
+  begin
+    // No filename yet, use Save As dialog
+    ASaveAs.Execute;
+  end
+  else
+  begin
+    // Save to current file
+    if SaveFile(FFileName) then
+    begin
+      Changed := False;
+      UpdateFileStatus(FFileName);
+    end;
+  end;
+end;
+
+procedure TformPoBatch.ASaveAsExecute(Sender: TObject);
+var
+  TempFileName: string;
+begin
+  // Set initial filename in dialog
+  if FFileName <> string.Empty then
+    dialogSave.FileName := ExtractFileName(FFileName)
+  else
+    dialogSave.FileName := 'untitled.po';
+
+  if dialogSave.Execute then
+  begin
+    TempFileName := dialogSave.FileName;
+
+    // Ensure file has extension
+    if ExtractFileExt(TempFileName) = string.Empty then
+      TempFileName := TempFileName + '.po';
+
+    if SaveFile(TempFileName) then
+    begin
+      FFileName := TempFileName;
+      Changed := False;
+      if ExtractFilePath(TempFileName) = IncludeTrailingPathDelimiter(FPath) then
+      begin
+        if OpenPath(FPath, True) then
+        begin
+          UpdatePath;
+          AnalizePath(-1, True);
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TformPoBatch.AOpenPathExecute(Sender: TObject);
+begin
+  if dialogPath.Execute then
+  begin
+    if not OpenPath(dialogPath.FileName, True) then
+    begin
+      ShowMessage('No .po files found in the selected directory!');
+      Exit;
+    end;
+    FPath := dialogPath.FileName;
+    SetLength(FFileStatuses, 0);
+    UpdatePath;
+    AnalizePath(-1, True);
+  end;
+end;
+
+procedure TformPoBatch.AClosePathExecute(Sender: TObject);
+begin
+  ClosePath;
+end;
+
+procedure TformPoBatch.AExitExecute(Sender: TObject);
+begin
+  Close;
+end;
 
 procedure TformPoBatch.AUndoChangesExecute(Sender: TObject);
 begin
@@ -1185,7 +1247,7 @@ begin
   OriginalName := DefaultName;
 
   // Ask the user for the new base name; the language code and extension are kept
-  InputQueryLite('Rename files', 'Enter new base name (language code and extension are kept):', DefaultName);
+  InputQueryLite('Rename files', 'Enter new base name:', DefaultName);
 
   DefaultName := Trim(DefaultName);
   if (DefaultName = string.Empty) or (DefaultName = OriginalName) then

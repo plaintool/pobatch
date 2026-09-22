@@ -5,7 +5,7 @@
 //  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
 //-----------------------------------------------------------------------------------
 
-unit powrap;
+unit PoWrap;
 
 {$mode objfpc}{$H+}
 {$modeswitch advancedrecords}
@@ -311,6 +311,7 @@ type
     class function GetCommentTypeName(const APrefix: string): string; static;
     class function GetHeaderNames: TStringList;
     procedure SynchronizeToFile(const AFileName: string; AUpdateHeader: boolean = False);
+    procedure ApplyDefaultHeaders(const ALanguage: string = ''; const AGenerator: string = '');
   end;
 
 implementation
@@ -2407,9 +2408,8 @@ begin
         // 2. Exact (msgctxt+msgid)
         if not Found then
           for k := 1 to Self.Entries.Count - 1 do
-            if (Self.Entries[k].MsgId <> '') and
-               (Self.Entries[k].MsgId = TargetEntry.MsgId) and
-               (Self.Entries[k].MsgCtxt = TargetEntry.MsgCtxt) then
+            if (Self.Entries[k].MsgId <> '') and (Self.Entries[k].MsgId = TargetEntry.MsgId) and
+              (Self.Entries[k].MsgCtxt = TargetEntry.MsgCtxt) then
             begin
               SrcEntry := Self.Entries[k];
               Found := True;
@@ -2428,9 +2428,8 @@ begin
             end;
 
         if Found and not KeysChanged then
-          if (SrcEntry.MsgCtxt <> TargetEntry.MsgCtxt) or
-             (SrcEntry.MsgId <> TargetEntry.MsgId) or
-             (SrcEntry.MsgIdPlural <> TargetEntry.MsgIdPlural) then
+          if (SrcEntry.MsgCtxt <> TargetEntry.MsgCtxt) or (SrcEntry.MsgId <> TargetEntry.MsgId) or
+            (SrcEntry.MsgIdPlural <> TargetEntry.MsgIdPlural) then
             KeysChanged := True;
 
         if Found then
@@ -2448,6 +2447,47 @@ begin
     end;
   finally
     Target.Free;
+  end;
+end;
+
+procedure TPOFile.ApplyDefaultHeaders(const ALanguage: string; const AGenerator: string);
+var
+  ExistingHeaders: TStrings;
+  NewHeaders: TStringList;
+  DefaultValues: array[TPOHeader] of string;
+  h: TPOHeader;
+  OldValue: string;
+begin
+  for h := Low(TPOHeader) to High(TPOHeader) do
+    DefaultValues[h] := '';
+
+  DefaultValues[hMIMEVersion] := '1.0';
+  DefaultValues[hContentType] := 'text/plain; charset=UTF-8';
+  DefaultValues[hContentTransferEncoding] := '8bit';
+  DefaultValues[hXGenerator] := AGenerator;
+
+  ExistingHeaders := GetHeaders;
+  NewHeaders := TStringList.Create;
+  try
+    // Rebuild the header block in the canonical order from POHeaderNames,
+    // keeping the values that were already present in the loaded POT
+    for h := Low(TPOHeader) to High(TPOHeader) do
+    begin
+      OldValue := Trim(ExistingHeaders.Values[POHeaderNames[h]]);
+      if (OldValue <> '') and (h <> hXGenerator) then
+        NewHeaders.Values[POHeaderNames[h]] := OldValue
+      else
+        NewHeaders.Values[POHeaderNames[h]] := DefaultValues[h];
+    end;
+
+    // Force the language when explicitly requested
+    if ALanguage <> '' then
+      NewHeaders.Values['Language'] := ALanguage;
+
+    SetHeaders(NewHeaders);
+  finally
+    NewHeaders.Free;
+    ExistingHeaders.Free;
   end;
 end;
 

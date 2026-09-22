@@ -136,6 +136,12 @@
       <Unit>
         <Filename Value="src\powrap.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="PoWrap"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\langcodes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LangCodes"/>
       </Unit>
     </Units>
   </ProjectOptions>

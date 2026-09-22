@@ -551,49 +551,37 @@ object formPoBatch: TformPoBatch
     object MenuFile: TMenuItem
       Caption = 'File'
       object MenuFileNew: TMenuItem
-        Caption = 'New'
-        ShortCut = 16462
-        OnClick = MenuFileNewClick
+        Action = ANew
       end
       object MenuFileNewWindow: TMenuItem
-        Caption = 'New Window'
-        ShortCut = 24654
-        OnClick = MenuFileNewWindowClick
+        Action = ANewWindow
+      end
+      object MenuItem5: TMenuItem
+        Action = ANewFromPot
       end
       object MenuFileOpen: TMenuItem
-        Caption = 'Open...'
-        ShortCut = 16463
-        OnClick = MenuFileOpenClick
+        Action = AOpen
       end
       object MenuFileSave: TMenuItem
-        Caption = 'Save'
-        ShortCut = 16467
-        OnClick = MenuFileSaveClick
+        Action = ASave
       end
       object MenuFileSaveAs: TMenuItem
-        Caption = 'Save As...'
-        ShortCut = 24659
-        OnClick = MenuFileSaveAsClick
+        Action = ASaveAs
       end
       object Separator1: TMenuItem
         Caption = '-'
       end
       object MenuPathOpen: TMenuItem
-        Caption = 'Open Path...'
-        ShortCut = 16464
-        OnClick = MenuPathOpenClick
+        Action = AOpenPath
       end
       object MenuPathClose: TMenuItem
-        Caption = 'Close Path'
-        Enabled = False
-        OnClick = MenuPathCloseClick
+        Action = AClosePath
       end
       object Separator2: TMenuItem
         Caption = '-'
       end
       object MenuFileExit: TMenuItem
-        Caption = 'Exit'
-        OnClick = MenuFileExitClick
+        Action = AExit
       end
     end
     object MenuEdit: TMenuItem
@@ -927,6 +915,58 @@ object formPoBatch: TformPoBatch
       Caption = 'Spell Check Translation'
       Checked = True
       OnExecute = ASpellCheckTranslationExecute
+    end
+    object ANew: TAction
+      Category = 'File'
+      Caption = 'New'
+      ShortCut = 16462
+      OnExecute = ANewExecute
+    end
+    object ANewWindow: TAction
+      Category = 'File'
+      Caption = 'New Window'
+      ShortCut = 24654
+      OnExecute = ANewWindowExecute
+    end
+    object ANewFromPot: TAction
+      Category = 'File'
+      Caption = 'New From Pot...'
+      ShortCut = 32846
+      OnExecute = ANewFromPotExecute
+    end
+    object AOpen: TAction
+      Category = 'File'
+      Caption = 'Open'
+      ShortCut = 16463
+      OnExecute = AOpenExecute
+    end
+    object ASave: TAction
+      Category = 'File'
+      Caption = 'Save'
+      ShortCut = 16467
+      OnExecute = ASaveExecute
+    end
+    object ASaveAs: TAction
+      Category = 'File'
+      Caption = 'Save As...'
+      ShortCut = 24659
+      OnExecute = ASaveAsExecute
+    end
+    object AOpenPath: TAction
+      Category = 'File'
+      Caption = 'Open Path...'
+      ShortCut = 16464
+      OnExecute = AOpenPathExecute
+    end
+    object AClosePath: TAction
+      Category = 'File'
+      Caption = 'Close Path'
+      OnExecute = AClosePathExecute
+    end
+    object AExit: TAction
+      Category = 'File'
+      Caption = 'Exit'
+      OnExecute = AExitExecute
     end
   end
   object ApplicationProp: TApplicationProperties
