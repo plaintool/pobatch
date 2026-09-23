@@ -1150,7 +1150,7 @@ end;
 procedure TformPoBatch.APathNewFileFromPotExecute(Sender: TObject);
 var
   PotFileName: string;
-  Code: string;
+  Code: string = string.Empty;
   BaseName: string;
   NewFileName: string;
   i, NewIdx: integer;
