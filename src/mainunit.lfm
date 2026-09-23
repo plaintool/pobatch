@@ -805,11 +805,6 @@ object formPoBatch: TformPoBatch
       ShortCut = 32854
       OnExecute = AValidFileExecute
     end
-    object APathDeleteFiles: TAction
-      Category = 'Path'
-      Caption = 'Delete File(s)'
-      OnExecute = APathDeleteFilesExecute
-    end
     object AMemoUndo: TAction
       Category = 'Memo'
       Caption = 'Undo'
@@ -850,26 +845,6 @@ object formPoBatch: TformPoBatch
       Category = 'Memo'
       Caption = 'Default Zoom'
       OnExecute = AMemoDefaultZoomExecute
-    end
-    object APathRenameFiles: TAction
-      Category = 'Path'
-      Caption = 'Rename File(s)'
-      OnExecute = APathRenameFilesExecute
-    end
-    object APathValidFiles: TAction
-      Category = 'Path'
-      Caption = 'Mark File(s) as Valid'
-      OnExecute = APathValidFilesExecute
-    end
-    object APathSyncFilesWithPot: TAction
-      Category = 'Path'
-      Caption = 'Sync File(s) with Pot'
-      OnExecute = APathSyncFilesWithPotExecute
-    end
-    object APathSelectAll: TAction
-      Category = 'Path'
-      Caption = 'Select All'
-      OnExecute = APathSelectAllExecute
     end
     object AEditPluralForm: TAction
       Category = 'Edit'
@@ -967,6 +942,36 @@ object formPoBatch: TformPoBatch
       Category = 'File'
       Caption = 'Exit'
       OnExecute = AExitExecute
+    end
+    object APathNewFileFromPot: TAction
+      Category = 'Path'
+      Caption = 'New File From Pot...'
+      OnExecute = APathNewFileFromPotExecute
+    end
+    object APathSyncFilesWithPot: TAction
+      Category = 'Path'
+      Caption = 'Sync File(s) With Pot'
+      OnExecute = APathSyncFilesWithPotExecute
+    end
+    object APathValidFiles: TAction
+      Category = 'Path'
+      Caption = 'Mark File(s) as Valid'
+      OnExecute = APathValidFilesExecute
+    end
+    object APathRenameFiles: TAction
+      Category = 'Path'
+      Caption = 'Rename File(s)'
+      OnExecute = APathRenameFilesExecute
+    end
+    object APathDeleteFiles: TAction
+      Category = 'Path'
+      Caption = 'Delete File(s)'
+      OnExecute = APathDeleteFilesExecute
+    end
+    object APathSelectAll: TAction
+      Category = 'Path'
+      Caption = 'Select All'
+      OnExecute = APathSelectAllExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1471,17 +1476,20 @@ object formPoBatch: TformPoBatch
   object PopupPath: TPopupMenu
     Left = 472
     Top = 160
-    object MenuPathDeleteFile: TMenuItem
-      Action = APathDeleteFiles
+    object MenuItem6: TMenuItem
+      Action = APathNewFileFromPot
     end
-    object MenuPathRenameFile: TMenuItem
-      Action = APathRenameFiles
+    object MenuSyncFilesWithPot: TMenuItem
+      Action = APathSyncFilesWithPot
     end
     object MenuPathValidFile: TMenuItem
       Action = APathValidFiles
     end
-    object MenuSyncFilesWithPot: TMenuItem
-      Action = APathSyncFilesWithPot
+    object MenuPathRenameFile: TMenuItem
+      Action = APathRenameFiles
+    end
+    object MenuPathDeleteFile: TMenuItem
+      Action = APathDeleteFiles
     end
     object Separator11: TMenuItem
       Caption = '-'

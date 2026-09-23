@@ -48,6 +48,7 @@ type
     ACopySourceText: TAction;
     AClearIdentical: TAction;
     AClosePath: TAction;
+    APathNewFileFromPot: TAction;
     ANewFromPot: TAction;
     AExit: TAction;
     AOpenPath: TAction;
@@ -122,6 +123,7 @@ type
     MenuItem2: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
     MenuPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
     MenuItem1: TMenuItem;
@@ -251,13 +253,14 @@ type
     procedure AEditPluralFormExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure AMemoUndoExecute(Sender: TObject);
-    procedure APathDeleteFilesExecute(Sender: TObject);
-    procedure APathRenameFilesExecute(Sender: TObject);
-    procedure APathSelectAllExecute(Sender: TObject);
+    procedure APathNewFileFromPotExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
+    procedure APathValidFilesExecute(Sender: TObject);
+    procedure APathRenameFilesExecute(Sender: TObject);
+    procedure APathDeleteFilesExecute(Sender: TObject);
+    procedure APathSelectAllExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
     procedure AValidFileExecute(Sender: TObject);
-    procedure APathValidFilesExecute(Sender: TObject);
     procedure AMemoCutExecute(Sender: TObject);
     procedure AMemoCopyExecute(Sender: TObject);
     procedure AMemoPasteExecute(Sender: TObject);
@@ -1144,64 +1147,320 @@ begin
   end;
 end;
 
-procedure TformPoBatch.APathDeleteFilesExecute(Sender: TObject);
+procedure TformPoBatch.APathNewFileFromPotExecute(Sender: TObject);
 var
-  i, Count: integer;
-  selectedIndices: array of integer = ();
-  msg, fileList: string;
+  PotFileName: string;
+  Code: string;
+  BaseName: string;
+  NewFileName: string;
+  i, NewIdx: integer;
+  SortList: TStringList;
 begin
-  // Collect indices of selected items
-  SetLength(selectedIndices, ListPath.Items.Count);
-  Count := 0;
-  for i := 0 to ListPath.Items.Count - 1 do
-    if ListPath.Selected[i] then
-    begin
-      selectedIndices[Count] := i;
-      Inc(Count);
-    end;
-  SetLength(selectedIndices, Count);
-
-  if Count = 0 then
+  // Use the known reference POT, otherwise ask the user to pick one
+  PotFileName := FPotFile;
+  if PotFileName = '' then
   begin
-    ShowMessage('Select file to delete!');
+    dialogOpen.FilterIndex := 2;
+    if not dialogOpen.Execute then
+      Exit;
+    PotFileName := dialogOpen.FileName;
+  end;
+
+  if not FileExists(PotFileName) then
+  begin
+    ShowMessageFmt('POT file not found: %s', [PotFileName]);
     Exit;
   end;
 
-  if Count = 1 then
-  begin
-    // Single file deletion (original behavior)
-    if MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <> mrYes then
-      Exit;
+  // Ask to save the current file if modified - abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
 
-    DeleteFile(PoFiles[selectedIndices[0]]);
-  end
-  else
+  // Ask the user to choose the target language for the new PO file
+  if not SelectLanguage(Code, [cqoEditable]) then
+    Exit;
+
+  // Build the new file name as <base>.<lang>.po in the POT directory
+  BaseName := ChangeFileExt(ExtractFileName(PotFileName), '');
+  NewFileName := IncludeTrailingPathDelimiter(ExtractFilePath(PotFileName)) + BaseName + '.' + Code + '.po';
+
+  // Do not overwrite an existing file without confirmation
+  if FileExists(NewFileName) then
   begin
-    // Multiple files deletion: show names (up to 10) and total count
-    fileList := string.Empty;
-    for i := 0 to Count - 1 do
+    if MessageDlg('File exists', 'The file already exists:' + sLineBreak + NewFileName + sLineBreak +
+      sLineBreak + 'Overwrite it?', mtConfirmation, mbYesNo, 0) <> mrYes then
+      Exit;
+  end;
+
+  // Load the POT content into the model
+  if not LoadFile(PotFileName) then
+    Exit;
+
+  // Fill in the standard headers in the canonical order and set the chosen language
+  FPoFile.ApplyDefaultHeaders(Code, 'PoBatch ' + GetAppVersion);
+
+  FLanguage := Code;
+  SpellTranslation.Language := FLanguage;
+  FFileName := NewFileName;
+
+  // Populate the grid from the freshly loaded POT before saving, otherwise
+  // SaveGrid inside SaveFile would push the previous document back into the model
+  FillGrid;
+  FillGridHeaders;
+
+  // Save the new file to disk and reset the modified flag
+  if not SaveFile(NewFileName) then
+    Exit;
+
+  Changed := False;
+  FPoFileBackup.Assign(FPoFile);
+
+  UpdateTranslatePanel;
+
+  // Add the new file to the internal list and re-sort it, keeping statuses aligned
+  SortList := TStringList.Create;
+  try
+    for i := 0 to FPoFiles.Count - 1 do
+      if i < Length(FFileStatuses) then
+        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(FFileStatuses[i]))))
+      else
+        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(psEmptyTranslation))));
+
+    SortList.AddObject(NewFileName, TObject(PtrInt(Ord(TPOFile.GetFileStatus(NewFileName)))));
+
+    SortList.Sort;
+
+    FPoFiles.Assign(SortList);
+    SetLength(FFileStatuses, SortList.Count);
+    for i := 0 to SortList.Count - 1 do
+      FFileStatuses[i] := TPoFileStatus(PtrInt(SortList.Objects[i]));
+  finally
+    SortList.Free;
+  end;
+
+  // Rebuild the visible list and select the new file
+  ListPath.Items.BeginUpdate;
+  try
+    ListPath.Items.Clear;
+    for i := 0 to FPoFiles.Count - 1 do
+      ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
+
+    NewIdx := FPoFiles.IndexOf(NewFileName);
+    if NewIdx >= 0 then
     begin
-      if i < 10 then
-        fileList := fileList + PoFiles[selectedIndices[i]] + sLineBreak
-      else if i = 10 then
-        fileList := fileList + '... and ' + IntToStr(Count - 10) + ' more file(s)' + sLineBreak;
+      ListPath.Selected[NewIdx] := True;
+      ListPath.ItemIndex := NewIdx;
+      FPathIndex := NewIdx;
+      FLastPathIndex := NewIdx;
     end;
-    msg := 'Are you sure you want to delete the following ' + IntToStr(Count) + ' file(s)?' + sLineBreak + sLineBreak + fileList;
-
-    if MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
-      Exit;
-
-    for i := 0 to Count - 1 do
-      DeleteFile(PoFiles[selectedIndices[i]]);
+  finally
+    ListPath.Items.EndUpdate;
   end;
 
-  // Refresh the file list after deletion
-  NewFile;
-  if OpenPath(FPath, True) then
+  ListPath.Invalidate;
+  UpdateCaption;
+end;
+
+procedure TformPoBatch.APathSyncFilesWithPotExecute(Sender: TObject);
+var
+  i, selCount: integer;
+  PoFile: TPOFile;
+  FileName: string;
+  fileList, msg: string;
+  SelectedIndices: array of integer = nil; // saved selected indices to survive UI changes
+begin
+  // Check if the reference POT file is specified
+  if FPotFile = '' then
   begin
-    UpdatePath;
-    AnalizePath(-1, True);
+    ShowMessage('No reference POT file exists in opened path.');
+    Exit;
   end;
+
+  // Ask to save current file if modified – if user cancels, abort sync
+  if not IsCanClose(True) then
+    Exit;
+
+  // Collect selected indices before processing
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected for synchronization.');
+    Exit;
+  end;
+
+  // Build confirmation message
+  fileList := '';
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'reference POT: ' +
+    FPotFile + sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Process each selected file using the saved indices
+  for i := 0 to selCount - 1 do
+  begin
+    FileName := FPoFiles[SelectedIndices[i]];
+    if not FileExists(FileName) then
+    begin
+      ShowMessageFmt('File not found: %s', [FileName]);
+      Continue;
+    end;
+
+    // Skip the reference POT file itself to avoid self-synchronization
+    if SameFileName(FileName, FPotFile) then
+      Continue;
+
+    PoFile := TPOFile.Create;
+    try
+      PoFile.LoadFromFile(FileName);
+      PoFile.SynchronizeToFile(FPotFile, True);
+      PoFile.SaveToFile(FileName);
+    except
+      on E: Exception do
+      begin
+        ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
+        PoFile.Free;
+        Continue;    // skip reloading this file
+      end;
+    end;
+    PoFile.Free;
+
+    // Refresh list item status
+    AnalizePath(SelectedIndices[i]);
+
+    // If this was the currently opened file, reload it in the editor
+    if FileName = FFileName then
+    begin
+      if LoadFile(FFileName) then
+      begin
+        Changed := False;
+        FillGrid;
+        FillGridHeaders;
+        UpdateTranslatePanel;
+      end;
+    end;
+  end;
+
+  ShowMessage('Synchronization complete.');
+end;
+
+procedure TformPoBatch.APathValidFilesExecute(Sender: TObject);
+var
+  i, j, selCount: integer;
+  PoFile: TPOFile;
+  FileName: string;
+  fileList, msg: string;
+  SelectedIndices: array of integer = nil; // saved selected indices to survive UI changes
+begin
+  // Collect selected indices before showing the dialog
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected.');
+    Exit;
+  end;
+
+  // Build file list for confirmation message
+  fileList := '';
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Mark the following ' + IntToStr(selCount) + ' file(s) as valid?' + sLineBreak +
+    'This will remove the "fuzzy" flag from all entries.' + sLineBreak + 'This action cannot be undone within the application.' +
+    sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Remove fuzzy flag', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Save current file if modified – abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
+
+  // Process each selected file using the saved indices
+  for i := 0 to selCount - 1 do
+  begin
+    FileName := FPoFiles[SelectedIndices[i]];
+    if not FileExists(FileName) then
+    begin
+      ShowMessageFmt('File not found: %s', [FileName]);
+      Continue;
+    end;
+
+    // Skip the reference POT file – it contains no translations
+    if SameFileName(FileName, FPotFile) then
+      Continue;
+
+    PoFile := TPOFile.Create;
+    try
+      try
+        PoFile.LoadFromFile(FileName);
+
+        // Remove fuzzy flag from every translatable entry
+        for j := 0 to PoFile.Entries.Count - 1 do
+        begin
+          if PoFile.Entries[j].MsgId <> '' then
+            PoFile.Entries[j].IsFuzzy := False;
+        end;
+
+        PoFile.SaveToFile(FileName);
+      except
+        on E: Exception do
+        begin
+          ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+          PoFile.Free;
+          Continue;    // skip status update for this file
+        end;
+      end;
+    finally
+      PoFile.Free;
+    end;
+
+    // Update the status of this file in the path list
+    AnalizePath(SelectedIndices[i]);
+
+    // If this was the currently opened file, reload it in the editor
+    if FileName = FFileName then
+    begin
+      if LoadFile(FFileName) then
+      begin
+        Changed := False;
+        FillGrid;
+        FillGridHeaders;
+        UpdateTranslatePanel;
+      end;
+    end;
+  end;
+
+  ShowMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.');
 end;
 
 procedure TformPoBatch.APathRenameFilesExecute(Sender: TObject);
@@ -1360,6 +1619,66 @@ begin
   UpdateCaption;
 end;
 
+procedure TformPoBatch.APathDeleteFilesExecute(Sender: TObject);
+var
+  i, Count: integer;
+  selectedIndices: array of integer = ();
+  msg, fileList: string;
+begin
+  // Collect indices of selected items
+  SetLength(selectedIndices, ListPath.Items.Count);
+  Count := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      selectedIndices[Count] := i;
+      Inc(Count);
+    end;
+  SetLength(selectedIndices, Count);
+
+  if Count = 0 then
+  begin
+    ShowMessage('Select file to delete!');
+    Exit;
+  end;
+
+  if Count = 1 then
+  begin
+    // Single file deletion (original behavior)
+    if MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <> mrYes then
+      Exit;
+
+    DeleteFile(PoFiles[selectedIndices[0]]);
+  end
+  else
+  begin
+    // Multiple files deletion: show names (up to 10) and total count
+    fileList := string.Empty;
+    for i := 0 to Count - 1 do
+    begin
+      if i < 10 then
+        fileList := fileList + PoFiles[selectedIndices[i]] + sLineBreak
+      else if i = 10 then
+        fileList := fileList + '... and ' + IntToStr(Count - 10) + ' more file(s)' + sLineBreak;
+    end;
+    msg := 'Are you sure you want to delete the following ' + IntToStr(Count) + ' file(s)?' + sLineBreak + sLineBreak + fileList;
+
+    if MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+      Exit;
+
+    for i := 0 to Count - 1 do
+      DeleteFile(PoFiles[selectedIndices[i]]);
+  end;
+
+  // Refresh the file list after deletion
+  NewFile;
+  if OpenPath(FPath, True) then
+  begin
+    UpdatePath;
+    AnalizePath(-1, True);
+  end;
+end;
+
 procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);
 begin
   ListPath.SelectAll;
@@ -1411,105 +1730,6 @@ begin
     AnalizePath(FPathIndex);
 end;
 
-procedure TformPoBatch.APathSyncFilesWithPotExecute(Sender: TObject);
-var
-  i, selCount: integer;
-  PoFile: TPOFile;
-  FileName: string;
-  fileList, msg: string;
-  SelectedIndices: array of integer = nil; // saved selected indices to survive UI changes
-begin
-  // Check if the reference POT file is specified
-  if FPotFile = '' then
-  begin
-    ShowMessage('No reference POT file exists in opened path.');
-    Exit;
-  end;
-
-  // Ask to save current file if modified – if user cancels, abort sync
-  if not IsCanClose(True) then
-    Exit;
-
-  // Collect selected indices before processing
-  SetLength(SelectedIndices, ListPath.Items.Count);
-  selCount := 0;
-  for i := 0 to ListPath.Items.Count - 1 do
-    if ListPath.Selected[i] then
-    begin
-      SelectedIndices[selCount] := i;
-      Inc(selCount);
-    end;
-  SetLength(SelectedIndices, selCount);
-
-  if selCount = 0 then
-  begin
-    ShowMessage('No PO files selected for synchronization.');
-    Exit;
-  end;
-
-  // Build confirmation message
-  fileList := '';
-  for i := 0 to selCount - 1 do
-  begin
-    if i < 10 then
-      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
-    else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
-  end;
-
-  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'reference POT: ' +
-    FPotFile + sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
-    Exit;
-
-  // Process each selected file using the saved indices
-  for i := 0 to selCount - 1 do
-  begin
-    FileName := FPoFiles[SelectedIndices[i]];
-    if not FileExists(FileName) then
-    begin
-      ShowMessageFmt('File not found: %s', [FileName]);
-      Continue;
-    end;
-
-    // Skip the reference POT file itself to avoid self-synchronization
-    if SameFileName(FileName, FPotFile) then
-      Continue;
-
-    PoFile := TPOFile.Create;
-    try
-      PoFile.LoadFromFile(FileName);
-      PoFile.SynchronizeToFile(FPotFile, True);
-      PoFile.SaveToFile(FileName);
-    except
-      on E: Exception do
-      begin
-        ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
-        PoFile.Free;
-        Continue;    // skip reloading this file
-      end;
-    end;
-    PoFile.Free;
-
-    // Refresh list item status
-    AnalizePath(SelectedIndices[i]);
-
-    // If this was the currently opened file, reload it in the editor
-    if FileName = FFileName then
-    begin
-      if LoadFile(FFileName) then
-      begin
-        Changed := False;
-        FillGrid;
-        FillGridHeaders;
-        UpdateTranslatePanel;
-      end;
-    end;
-  end;
-
-  ShowMessage('Synchronization complete.');
-end;
-
 procedure TformPoBatch.AValidFileExecute(Sender: TObject);
 var
   i: integer;
@@ -1542,109 +1762,6 @@ begin
   // Update the file status in the path list if applicable
   if FPathIndex >= 0 then
     AnalizePath(FPathIndex);
-end;
-
-procedure TformPoBatch.APathValidFilesExecute(Sender: TObject);
-var
-  i, j, selCount: integer;
-  PoFile: TPOFile;
-  FileName: string;
-  fileList, msg: string;
-  SelectedIndices: array of integer = nil; // saved selected indices to survive UI changes
-begin
-  // Collect selected indices before showing the dialog
-  SetLength(SelectedIndices, ListPath.Items.Count);
-  selCount := 0;
-  for i := 0 to ListPath.Items.Count - 1 do
-    if ListPath.Selected[i] then
-    begin
-      SelectedIndices[selCount] := i;
-      Inc(selCount);
-    end;
-  SetLength(SelectedIndices, selCount);
-
-  if selCount = 0 then
-  begin
-    ShowMessage('No PO files selected.');
-    Exit;
-  end;
-
-  // Build file list for confirmation message
-  fileList := '';
-  for i := 0 to selCount - 1 do
-  begin
-    if i < 10 then
-      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
-    else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
-  end;
-
-  msg := 'Mark the following ' + IntToStr(selCount) + ' file(s) as valid?' + sLineBreak +
-    'This will remove the "fuzzy" flag from all entries.' + sLineBreak + 'This action cannot be undone within the application.' +
-    sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Remove fuzzy flag', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
-    Exit;
-
-  // Save current file if modified – abort if user cancels
-  if not IsCanClose(True) then
-    Exit;
-
-  // Process each selected file using the saved indices
-  for i := 0 to selCount - 1 do
-  begin
-    FileName := FPoFiles[SelectedIndices[i]];
-    if not FileExists(FileName) then
-    begin
-      ShowMessageFmt('File not found: %s', [FileName]);
-      Continue;
-    end;
-
-    // Skip the reference POT file – it contains no translations
-    if SameFileName(FileName, FPotFile) then
-      Continue;
-
-    PoFile := TPOFile.Create;
-    try
-      try
-        PoFile.LoadFromFile(FileName);
-
-        // Remove fuzzy flag from every translatable entry
-        for j := 0 to PoFile.Entries.Count - 1 do
-        begin
-          if PoFile.Entries[j].MsgId <> '' then
-            PoFile.Entries[j].IsFuzzy := False;
-        end;
-
-        PoFile.SaveToFile(FileName);
-      except
-        on E: Exception do
-        begin
-          ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
-          PoFile.Free;
-          Continue;    // skip status update for this file
-        end;
-      end;
-    finally
-      PoFile.Free;
-    end;
-
-    // Update the status of this file in the path list
-    AnalizePath(SelectedIndices[i]);
-
-    // If this was the currently opened file, reload it in the editor
-    if FileName = FFileName then
-    begin
-      if LoadFile(FFileName) then
-      begin
-        Changed := False;
-        FillGrid;
-        FillGridHeaders;
-        UpdateTranslatePanel;
-      end;
-    end;
-  end;
-
-  ShowMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.');
 end;
 
 procedure TformPoBatch.AMemoUndoExecute(Sender: TObject);
@@ -2932,7 +3049,6 @@ begin
 
       FFileStatuses[AIndex] := TPOFile.GetFileStatus(FPoFiles[AIndex]);
       if ADraw then ListPath.Repaint;
-      Application.ProcessMessages;
     end;
   finally
     ListPath.Invalidate;
@@ -3048,7 +3164,12 @@ begin
         Grid.TopRow := SavedTopRow;
         FLastRow := Grid.Row;
         FPathIndex := ListPath.ItemIndex;
-        AnalizePath(FPathIndex);
+        // Reuse the already loaded model instead of re-reading the file
+        if (FPathIndex >= 0) and (FPathIndex < Length(FFileStatuses)) then
+        begin
+          FFileStatuses[FPathIndex] := TPOFile.ComputeStatusFromModel(FPoFile);
+          ListPath.Invalidate;
+        end;
       end;
       UpdateTranslatePanel;
     end

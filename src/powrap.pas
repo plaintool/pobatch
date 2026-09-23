@@ -307,6 +307,7 @@ type
     property PluralFormsExpression: string read GetPluralFormsExpression;
 
     // Po File Operations
+    class function ComputeStatusFromModel(APoFile: TPOFile): TPoFileStatus;
     class function GetFileStatus(const AFileName: string): TPoFileStatus; static;
     class function GetCommentTypeName(const APrefix: string): string; static;
     class function GetHeaderNames: TStringList;
@@ -2108,49 +2109,50 @@ begin
   Result := Copy(Value, p, MaxInt);
 end;
 
-class function TPOFile.GetFileStatus(const AFileName: string): TPoFileStatus;
+class function TPOFile.ComputeStatusFromModel(APoFile: TPOFile): TPoFileStatus;
 var
-  Po: TPOFile;
   i, j: integer;
   Entry: TPOEntry;
   HasEmpty: boolean;
 begin
+  HasEmpty := False;
+  for i := 1 to APoFile.Entries.Count - 1 do
+  begin
+    Entry := APoFile.Entries[i];
+    if Entry.Obsolete then
+      Continue;
+    if Entry.IsFuzzy then
+      Exit(psFuzzy);
+    if not HasEmpty then
+    begin
+      if Entry.IsPlural then
+      begin
+        HasEmpty := True;
+        for j := 0 to Entry.MsgStrCount - 1 do
+          if Entry.MsgStr[j] <> '' then
+          begin
+            HasEmpty := False;
+            Break;
+          end;
+      end
+      else
+        HasEmpty := (Entry.MsgStrSimple = '');
+    end;
+  end;
+  if HasEmpty then
+    Result := psEmptyTranslation
+  else
+    Result := psCorrect;
+end;
+
+class function TPOFile.GetFileStatus(const AFileName: string): TPoFileStatus;
+var
+  Po: TPOFile;
+begin
   Po := TPOFile.Create;
   try
     Po.LoadFromFile(AFileName);
-    HasEmpty := False;
-    // Skip entry 0 (header with empty msgid)
-    for i := 1 to Po.Entries.Count - 1 do
-    begin
-      Entry := Po.Entries[i];
-      // Ignore obsolete entries
-      if Entry.Obsolete then
-        Continue;
-      // Fuzzy is the highest priority problem
-      if Entry.IsFuzzy then
-        Exit(psFuzzy);
-      // Check for empty translation if not already found
-      if not HasEmpty then
-      begin
-        if Entry.IsPlural then
-        begin
-          // Plural: all forms must be non-empty, otherwise it's empty
-          HasEmpty := True;
-          for j := 0 to Entry.MsgStrCount - 1 do
-            if Entry.MsgStr[j] <> '' then
-            begin
-              HasEmpty := False;
-              Break;
-            end;
-        end
-        else
-          HasEmpty := (Entry.MsgStrSimple = '');
-      end;
-    end;
-    if HasEmpty then
-      Result := psEmptyTranslation
-    else
-      Result := psCorrect;
+    Result := ComputeStatusFromModel(Po);
   finally
     Po.Free;
   end;
