@@ -943,10 +943,10 @@ object formPoBatch: TformPoBatch
       Caption = 'Exit'
       OnExecute = AExitExecute
     end
-    object APathNewFileFromPot: TAction
+    object APathNewFilesFromPot: TAction
       Category = 'Path'
-      Caption = 'New File From Pot...'
-      OnExecute = APathNewFileFromPotExecute
+      Caption = 'New File(s) From Pot...'
+      OnExecute = APathNewFilesFromPotExecute
     end
     object APathSyncFilesWithPot: TAction
       Category = 'Path'
@@ -1477,7 +1477,7 @@ object formPoBatch: TformPoBatch
     Left = 472
     Top = 160
     object MenuItem6: TMenuItem
-      Action = APathNewFileFromPot
+      Action = APathNewFilesFromPot
     end
     object MenuSyncFilesWithPot: TMenuItem
       Action = APathSyncFilesWithPot

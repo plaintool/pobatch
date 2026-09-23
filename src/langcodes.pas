@@ -33,11 +33,14 @@ function GetLanguageCodeByName(const AName: string): string;
 // Shows a language selection dialog and returns the chosen ISO code in ACode; returns True on OK.
 function SelectLanguage(var ACode: string; AOptions: TComboQueryOptions = []): boolean;
 
+// Shows a multi-languages selection dialog and returns the chosen ISO code in ACode; returns True on OK.
+function SelectLanguages(var ACodes: TStringArray; AOptions: TComboQueryOptions = []): boolean;
+
 implementation
 
 const
   // ISO 639-1 language list with English names and major regional variants
-  Languages: array[0..276] of TLanguageInfo = (
+  Languages: array[0..275] of TLanguageInfo = (
     (Code: 'aa'; Name: 'Afar'),
     (Code: 'ab'; Name: 'Abkhazian'),
     (Code: 'ae'; Name: 'Avestan'),
@@ -252,9 +255,8 @@ const
     (Code: 'qu'; Name: 'Quechua'),
     (Code: 'rm'; Name: 'Romansh'),
     (Code: 'rn'; Name: 'Rundi'),
-    (Code: 'ro'; Name: 'Romanian; Moldavian; Moldovan'),
+    (Code: 'ro'; Name: 'Romanian'),
     (Code: 'ro-MD'; Name: 'Romanian (Moldova)'),
-    (Code: 'ro-RO'; Name: 'Romanian (Romania)'),
     (Code: 'ru'; Name: 'Russian'),
     (Code: 'rw'; Name: 'Kinyarwanda'),
     (Code: 'sa'; Name: 'Sanskrit'),
@@ -379,7 +381,25 @@ begin
   CodeList := TStringList.Create;
   try
     GetLanguageLists(DisplayList, CodeList);
-    Result := ComboQueryLite('Select language', 'Choose interface language or type a language code', DisplayList, CodeList, ACode, AOptions);
+    Result := ComboQueryLite('Select language', 'Choose interface language or type a language code', DisplayList,
+      CodeList, ACode, AOptions);
+  finally
+    DisplayList.Free;
+    CodeList.Free;
+  end;
+end;
+
+function SelectLanguages(var ACodes: TStringArray; AOptions: TComboQueryOptions = []): boolean;
+var
+  DisplayList: TStringList = nil;
+  CodeList: TStringList = nil;
+begin
+  Result := False;
+  DisplayList := TStringList.Create;
+  CodeList := TStringList.Create;
+  try
+    GetLanguageLists(DisplayList, CodeList);
+    Result := CheckListQueryLite('Select languages', 'Choose interface languages', DisplayList, CodeList, ACodes, AOptions);
   finally
     DisplayList.Free;
     CodeList.Free;

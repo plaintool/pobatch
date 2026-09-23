@@ -48,7 +48,7 @@ type
     ACopySourceText: TAction;
     AClearIdentical: TAction;
     AClosePath: TAction;
-    APathNewFileFromPot: TAction;
+    APathNewFilesFromPot: TAction;
     ANewFromPot: TAction;
     AExit: TAction;
     AOpenPath: TAction;
@@ -253,7 +253,7 @@ type
     procedure AEditPluralFormExecute(Sender: TObject);
     procedure AEditTranslationOnlyExecute(Sender: TObject);
     procedure AMemoUndoExecute(Sender: TObject);
-    procedure APathNewFileFromPotExecute(Sender: TObject);
+    procedure APathNewFilesFromPotExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
     procedure APathValidFilesExecute(Sender: TObject);
     procedure APathRenameFilesExecute(Sender: TObject);
@@ -383,6 +383,7 @@ type
     procedure SelectPath;
     function LoadFile(AFileName: string): boolean;
     function SaveFile(AFileName: string; Fast: boolean = False): boolean;
+    function CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
     // Methods
     procedure UpdateCaption;
     procedure UpdateInterface;
@@ -1147,14 +1148,18 @@ begin
   end;
 end;
 
-procedure TformPoBatch.APathNewFileFromPotExecute(Sender: TObject);
+procedure TformPoBatch.APathNewFilesFromPotExecute(Sender: TObject);
 var
   PotFileName: string;
-  Code: string = string.Empty;
+  Codes: TStringArray = nil;
   BaseName: string;
+  NewFileNames: TStringArray = nil;
   NewFileName: string;
-  i, NewIdx: integer;
+  LastCreatedFile: string;
+  i, NewIdx, CreatedCount: integer;
   SortList: TStringList;
+  ExistingList: string;
+  HasExisting: boolean;
 begin
   // Use the known reference POT, otherwise ask the user to pick one
   PotFileName := FPotFile;
@@ -1176,57 +1181,63 @@ begin
   if not IsCanClose(True) then
     Exit;
 
-  // Ask the user to choose the target language for the new PO file
-  if not SelectLanguage(Code, [cqoEditable]) then
+  // Ask the user to choose the target languages for the new PO files
+  if not SelectLanguages(Codes, [cqoEditable]) then
+    Exit;
+  if Length(Codes) = 0 then
     Exit;
 
-  // Build the new file name as <base>.<lang>.po in the POT directory
+  // Build all target file names and collect the ones that already exist
   BaseName := ChangeFileExt(ExtractFileName(PotFileName), '');
-  NewFileName := IncludeTrailingPathDelimiter(ExtractFilePath(PotFileName)) + BaseName + '.' + Code + '.po';
-
-  // Do not overwrite an existing file without confirmation
-  if FileExists(NewFileName) then
+  SetLength(NewFileNames, Length(Codes));
+  HasExisting := False;
+  ExistingList := string.Empty;
+  for i := 0 to High(Codes) do
   begin
-    if MessageDlg('File exists', 'The file already exists:' + sLineBreak + NewFileName + sLineBreak +
-      sLineBreak + 'Overwrite it?', mtConfirmation, mbYesNo, 0) <> mrYes then
+    NewFileNames[i] := IncludeTrailingPathDelimiter(ExtractFilePath(PotFileName)) + BaseName + '.' + Codes[i] + '.po';
+    if FileExists(NewFileNames[i]) then
+    begin
+      HasExisting := True;
+      ExistingList := ExistingList + NewFileNames[i] + sLineBreak;
+    end;
+  end;
+
+  // Confirm overwriting existing files once, for all languages together
+  if HasExisting then
+  begin
+    if MessageDlg('Files exist', 'The following files already exist:' + sLineBreak + sLineBreak +
+      ExistingList + sLineBreak + 'Overwrite them?', mtConfirmation, mbYesNo, 0) <> mrYes then
       Exit;
   end;
 
-  // Load the POT content into the model
-  if not LoadFile(PotFileName) then
+  // Create a PO file for every selected language
+  CreatedCount := 0;
+  LastCreatedFile := string.Empty;
+  for i := 0 to High(Codes) do
+  begin
+    if CreatePoFileFromPot(PotFileName, Codes[i], NewFileName) then
+    begin
+      FPoFiles.Add(NewFileName);
+      LastCreatedFile := NewFileName;
+      Inc(CreatedCount);
+    end;
+  end;
+
+  if CreatedCount = 0 then
     Exit;
 
-  // Fill in the standard headers in the canonical order and set the chosen language
-  FPoFile.ApplyDefaultHeaders(Code, 'PoBatch ' + GetAppVersion);
-
-  FLanguage := Code;
-  SpellTranslation.Language := FLanguage;
-  FFileName := NewFileName;
-
-  // Populate the grid from the freshly loaded POT before saving, otherwise
-  // SaveGrid inside SaveFile would push the previous document back into the model
-  FillGrid;
-  FillGridHeaders;
-
-  // Save the new file to disk and reset the modified flag
-  if not SaveFile(NewFileName) then
-    Exit;
-
+  // The last created file is already loaded and saved, so drop the modified flag
   Changed := False;
-  FPoFileBackup.Assign(FPoFile);
-
   UpdateTranslatePanel;
 
-  // Add the new file to the internal list and re-sort it, keeping statuses aligned
+  // Re-sort the file list keeping statuses aligned; new files get their status computed
   SortList := TStringList.Create;
   try
     for i := 0 to FPoFiles.Count - 1 do
       if i < Length(FFileStatuses) then
         SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(FFileStatuses[i]))))
       else
-        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(psEmptyTranslation))));
-
-    SortList.AddObject(NewFileName, TObject(PtrInt(Ord(TPOFile.GetFileStatus(NewFileName)))));
+        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(TPOFile.GetFileStatus(FPoFiles[i])))));
 
     SortList.Sort;
 
@@ -1238,14 +1249,14 @@ begin
     SortList.Free;
   end;
 
-  // Rebuild the visible list and select the new file
+  // Rebuild the visible list and select the last created file
   ListPath.Items.BeginUpdate;
   try
     ListPath.Items.Clear;
     for i := 0 to FPoFiles.Count - 1 do
       ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
 
-    NewIdx := FPoFiles.IndexOf(NewFileName);
+    NewIdx := FPoFiles.IndexOf(LastCreatedFile);
     if NewIdx >= 0 then
     begin
       ListPath.Selected[NewIdx] := True;
@@ -1621,9 +1632,13 @@ end;
 
 procedure TformPoBatch.APathDeleteFilesExecute(Sender: TObject);
 var
-  i, Count: integer;
+  i, Count, idx: integer;
   selectedIndices: array of integer = ();
   msg, fileList: string;
+  FileToDelete: string;
+  CurrentFileDeleted: boolean;
+  PotDeleted: boolean;
+  NewIdx: integer;
 begin
   // Collect indices of selected items
   SetLength(selectedIndices, ListPath.Items.Count);
@@ -1647,8 +1662,6 @@ begin
     // Single file deletion (original behavior)
     if MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <> mrYes then
       Exit;
-
-    DeleteFile(PoFiles[selectedIndices[0]]);
   end
   else
   begin
@@ -1665,18 +1678,67 @@ begin
 
     if MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
       Exit;
-
-    for i := 0 to Count - 1 do
-      DeleteFile(PoFiles[selectedIndices[i]]);
   end;
 
-  // Refresh the file list after deletion
-  NewFile;
-  if OpenPath(FPath, True) then
+  // Delete files from disk and drop them from the in-memory lists
+  CurrentFileDeleted := False;
+  PotDeleted := False;
+  // Walk the saved indices from the end so earlier ones stay valid while removing
+  for i := Count - 1 downto 0 do
   begin
-    UpdatePath;
-    AnalizePath(-1, True);
+    idx := selectedIndices[i];
+    if (idx < 0) or (idx >= FPoFiles.Count) then
+      Continue;
+
+    FileToDelete := FPoFiles[idx];
+
+    // Remember whether the currently opened file or the reference POT is going away
+    if SameFileName(FileToDelete, FFileName) then
+      CurrentFileDeleted := True;
+    if (FPotFile <> string.Empty) and SameFileName(FileToDelete, FPotFile) then
+      PotDeleted := True;
+
+    DeleteFile(FileToDelete);
+
+    // Remove the entry from the path list and keep statuses aligned
+    FPoFiles.Delete(idx);
+    if idx < Length(FFileStatuses) then
+      Delete(FFileStatuses, idx, 1);
   end;
+
+  if PotDeleted then
+    FPotFile := string.Empty;
+
+  // If the currently opened file was removed, reset to an empty document
+  if CurrentFileDeleted then
+    NewFile;
+
+  // Rebuild the visible list and restore the selection when possible
+  ListPath.Items.BeginUpdate;
+  try
+    ListPath.Items.Clear;
+    for i := 0 to FPoFiles.Count - 1 do
+      ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
+
+    NewIdx := FPoFiles.IndexOf(FFileName);
+    if NewIdx >= 0 then
+    begin
+      ListPath.Selected[NewIdx] := True;
+      ListPath.ItemIndex := NewIdx;
+      FPathIndex := NewIdx;
+      FLastPathIndex := NewIdx;
+    end
+    else
+    begin
+      FPathIndex := -1;
+      FLastPathIndex := -1;
+    end;
+  finally
+    ListPath.Items.EndUpdate;
+  end;
+
+  ListPath.Invalidate;
+  UpdateCaption;
 end;
 
 procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);
@@ -3327,6 +3389,42 @@ begin
   finally
     FSaving := False;
   end;
+end;
+
+function TformPoBatch.CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
+var
+  BaseName: string;
+begin
+  // Creates a single PO file from the POT template for the given language code;
+  // returns the full path of the new file in ANewFileName on success.
+  Result := False;
+  ANewFileName := string.Empty;
+
+  // Build the target file name as <base>.<lang>.po in the POT directory
+  BaseName := ChangeFileExt(ExtractFileName(APotFileName), '');
+  ANewFileName := IncludeTrailingPathDelimiter(ExtractFilePath(APotFileName)) + BaseName + '.' + ACode + '.po';
+
+  // Load the POT content into the model
+  if not LoadFile(APotFileName) then
+    Exit;
+
+  // Fill in the standard headers in the canonical order and set the chosen language
+  FPoFile.ApplyDefaultHeaders(ACode, 'PoBatch ' + GetAppVersion);
+
+  FLanguage := ACode;
+  SpellTranslation.Language := FLanguage;
+  FFileName := ANewFileName;
+
+  // Populate the grid from the freshly loaded POT before saving, otherwise
+  // SaveGrid inside SaveFile would push the previous document back into the model
+  FillGrid;
+  FillGridHeaders;
+
+  // Save the new file to disk
+  if not SaveFile(ANewFileName) then
+    Exit;
+
+  Result := True;
 end;
 
 {%EndRegion}
