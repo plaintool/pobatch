@@ -4169,9 +4169,15 @@ begin
   for i := Grid.FixedRows to Grid.RowCount - 1 do
     SaveRow(i);
 
-  if GridPlural.Visible then
-    SaveGridPlural;
-  SaveGridComments;
+  // Only pull data from the auxiliary grids when the translate panel is
+  // visible, otherwise they hold stale values from another row and would
+  // overwrite the current entry's msgstr and reference comments
+  if Pages.Visible then
+  begin
+    if GridPlural.Visible then
+      SaveGridPlural;
+    SaveGridComments;
+  end;
 end;
 
 procedure TformPoBatch.FillGridHeaders;
