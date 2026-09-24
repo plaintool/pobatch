@@ -390,6 +390,7 @@ type
     procedure UpdateFileStatus(const AFileName: string);
     procedure UpdateSwitch(aRow: integer = -1);
     procedure UpdateValid(aRow: integer = -1);
+    procedure UpdateQACheck(aRow: integer = -1);
     procedure UpdateTranslatePanel(aRow: integer = -1);
     procedure UpdateSpellCheckMemo(Data: PtrInt);
     procedure SwitchCheck;
@@ -1785,6 +1786,9 @@ begin
     end;
   end;
 
+  // Run QA checks once for the whole file
+  FPoFile.CheckAllQA;
+
   Changed := True;
   FillGrid;
   FillGridHeaders;
@@ -2990,6 +2994,10 @@ begin
     FPoFile.Reset;
     FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
     FFileName := AFileName;
+
+    // Run QA checks once for the whole file
+    FPoFile.CheckAllQA;
+
     Changed := False;
     FPoFileBackup.Assign(FPoFile);
     FillGrid;
@@ -3319,6 +3327,10 @@ begin
       finally
         Stream.Free;
       end;
+
+      // Run QA checks once for the whole file
+      FPoFile.CheckAllQA;
+
       FPoFileBackup.Assign(FPoFile);
 
       FLanguage := DetectLanguage(AFileName);
@@ -3570,7 +3582,6 @@ begin
     end;
 
     PanelCheck.Color := ifthen(ImageSwitch.Tag = 1, TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
-    MemoCheck.Color := PanelCheck.Color;
     if ImageSwitch.Tag = 0 then
       LabelSwitch.Font.Color := TDarkUtils.ThemeColor(clMidGray, clMidGrayDark)
     else
@@ -3593,7 +3604,53 @@ begin
   if aRow = -1 then aRow := Grid.Row;
   Entry := RowEntry(aRow);
   if Assigned(Entry) then
+  begin
+    // Refresh QA results before computing the valid flag
+    FPoFile.CheckEntryQA(Entry);
     Grid.Cells[CELL_VALID, aRow] := IfThen(Entry.IsValid, '1', '0');
+  end;
+end;
+
+procedure TformPoBatch.UpdateQACheck(aRow: integer = -1);
+var
+  Entry: TPOEntry;
+  I, Count: integer;
+begin
+  MemoCheck.Lines.BeginUpdate;
+  try
+    MemoCheck.Lines.Clear;
+
+    if aRow = -1 then
+      aRow := Grid.Row;
+
+    if (aRow < Grid.FixedRows) or (aRow >= Grid.RowCount) then
+    begin
+      MemoCheck.Color := clWindow;
+      Exit;
+    end;
+
+    Entry := RowEntry(aRow);
+    if not Assigned(Entry) then
+    begin
+      MemoCheck.Color := clWindow;
+      Exit;
+    end;
+
+    // Refresh QA results for this entry before showing them
+    FPoFile.CheckEntryQA(Entry);
+
+    Count := Length(Entry.QACheckResults);
+    for I := 0 to Count - 1 do
+      MemoCheck.Lines.Add(Entry.QACheckResults[I]);
+
+    // Highlight the memo when there is at least one QA issue
+    if Count > 0 then
+      MemoCheck.Color := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark)
+    else
+      MemoCheck.Color := clWindow;
+  finally
+    MemoCheck.Lines.EndUpdate;
+  end;
 end;
 
 procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
@@ -3601,8 +3658,11 @@ var
   OriginalOnChange: TNotifyEvent;
   NewText: string;
 begin
-  if not Pages.Visible then Exit;
   if aRow = -1 then aRow := Grid.Row;
+  UpdateQACheck(aRow);
+
+  // We proceed further only if the translation panel is visible
+  if not Pages.Visible then Exit;
 
   UpdateSwitch(aRow);
 
@@ -3737,6 +3797,7 @@ begin
     not (Assigned(MemoSource) and MemoSource.Focused) and
     not (Assigned(MemoPlural) and MemoPlural.Focused) and
     not (Assigned(MemoTranslation) and MemoTranslation.Focused) and
+    not (Assigned(MemoCheck) and MemoCheck.Focused) and
     not (Assigned(Filter) and Filter.Focused) and
     not (Assigned(GridHeaders.InplaceEditor) and GridHeaders.InplaceEditor.Focused) and
     not (Assigned(GridPlural.InplaceEditor) and GridPlural.InplaceEditor.Focused) and
