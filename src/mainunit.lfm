@@ -175,7 +175,7 @@ object formPoBatch: TformPoBatch
           ButtonStyle = cbsCheckboxColumn
           ReadOnly = True
           Title.Caption = 'Valid'
-          Width = 40
+          Width = 55
         end      
         item
           Layout = tlTop

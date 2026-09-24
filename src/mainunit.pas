@@ -2180,7 +2180,7 @@ begin
   if Index = 0 then
   begin
     FSortColumn := -1;
-    FillGrid;
+    Grid.ApplySort(FSortColumn, FSortOrder);
     Exit;
   end;
 
@@ -2188,7 +2188,7 @@ begin
   if GetKeyState(VK_CONTROL) and $8000 <> 0 then
   begin
     FSortColumn := -1;
-    FillGrid;
+    Grid.ApplySort(FSortColumn, FSortOrder);
     Exit;
   end;
 
@@ -2207,9 +2207,7 @@ begin
   end;
 
   FLastRow := -1;
-
-  if (Grid.RowCount > Grid.FixedRows) and (FSortColumn >= 0) then
-    Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+  Grid.ApplySort(FSortColumn, FSortOrder);
 end;
 
 procedure TformPoBatch.GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
@@ -2222,29 +2220,27 @@ var
   ValA, ValB: string;
   NumA, NumB: integer;
 begin
-  // Special rule: when sorting by COL_VALID or COL_TRANSLATION,
-  // put fuzzy entries first (fuzzy flag = '1' before '0').
-  if (FSortColumn = CELL_VALID) then
-  begin
-    ValA := Grid.Cells[CELL_FUZZY, ARow];   // +1 because Cells[0] is row number
-    ValB := Grid.Cells[CELL_FUZZY, BRow];
-    Result := CompareStr(ValA, ValB);          // '1' < '0'
-    if FSortOrder = soAscending then
-      Result := -Result;
-    if Result <> 0 then
-      Exit;
-  end;
-
-  // 1. Primary column (the one we clicked)
+  // 1. Primary key: the column the user clicked
   ValA := Grid.Cells[ACol, ARow];
   ValB := Grid.Cells[ACol, BRow];
   Result := CompareStr(ValA, ValB);
 
-  // Apply user-chosen sort direction
   if (FSortOrder = soDescending) and (Result <> 0) then
     Result := -Result;
 
-  // 3. Final tie-breaker: row number stored in Cells[0, row] (always numeric, ascending)
+  // 2. Secondary key: when sorting by the valid column, use fuzzy as a
+  // tie-breaker so that fuzzy entries bubble to the top of the invalid
+  // group. Only applied when the primary keys are equal.
+  if (Result = 0) and (FSortColumn = CELL_VALID) then
+  begin
+    ValA := Grid.Cells[CELL_FUZZY, ARow];
+    ValB := Grid.Cells[CELL_FUZZY, BRow];
+    Result := CompareStr(ValA, ValB);
+    if (FSortOrder = soDescending) and (Result <> 0) then
+      Result := -Result;
+  end;
+
+  // 3. Final tie-breaker: row number stored in Cells[0, row]
   if Result = 0 then
   begin
     ValA := Grid.Cells[0, ARow];
@@ -2385,6 +2381,10 @@ var
   MsgCtxt: string;
 begin
   CellText := Grid.Cells[aCol, aRow];
+
+  // Draw the sort indicator on top of the header cell
+  if (aRow = 0) and (aCol = FSortColumn) then
+    Grid.DrawSortIndicator(Grid.Canvas, aRect, aCol, FSortColumn, FSortOrder);
 
   // Skip fixed cells
   if (aCol < Grid.FixedCols) or (aRow < Grid.FixedRows) then
@@ -3644,7 +3644,7 @@ begin
       MemoCheck.Lines.Add(Entry.QACheckResults[I]);
 
     // Highlight the memo when there is at least one QA issue
-    if Count > 0 then
+    if Entry.IsFuzzy or (Count > 0) then
       MemoCheck.Color := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark)
     else
       MemoCheck.Color := clWindow;
@@ -4167,8 +4167,7 @@ begin
     end;
 
     // Re-apply active column sort if any
-    if (FSortColumn >= 0) and (Grid.RowCount > Grid.FixedRows) then
-      Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
+    Grid.ApplySort(FSortColumn, FSortOrder);
 
     Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
 
