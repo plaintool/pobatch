@@ -134,14 +134,19 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="src\langcodes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LangCodes"/>
+      </Unit>
+      <Unit>
         <Filename Value="src\powrap.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PoWrap"/>
       </Unit>
       <Unit>
-        <Filename Value="src\langcodes.pas"/>
+        <Filename Value="src\pocheck.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="LangCodes"/>
+        <UnitName Value="PoCheck"/>
       </Unit>
     </Units>
   </ProjectOptions>
