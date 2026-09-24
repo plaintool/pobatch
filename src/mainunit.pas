@@ -928,6 +928,7 @@ begin
   if MessageDlg('Do you want to discard all unsaved changes?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
 
+  Grid.EditorMode := False;
   FPoFile.Assign(FPoFileBackup);
   FillGrid;
   FillGridHeaders;
@@ -2520,10 +2521,29 @@ begin
   begin
     // Standard paste for now, will be replaced later
     if Sender is TRichMemo then
-      TRichMemo(Sender).PasteWithLineEnding
+    begin
+      TRichMemo(Sender).PasteWithLineEnding;
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+        Grid.Row);
+      Key := 0;
+    end
     else
+    if Sender is TMemo then
+    begin
       TMemo(Sender).PasteWithLineEnding;
-    Key := 0;
+      Key := 0;
+    end;
+  end
+  else if ((Key = Ord('X')) and (ssCtrl in Shift)) or ((Key = VK_DELETE) and (ssShift in Shift)) then
+  begin
+    // Cut selection without trailing line breaks
+    if Sender is TRichMemo then
+    begin
+      TRichMemo(Sender).CutToClipboardNoTrailingLineBreak;
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+        Grid.Row);
+      Key := 0;
+    end;
   end;
 end;
 
