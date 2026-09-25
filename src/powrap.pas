@@ -1466,6 +1466,7 @@ begin
   FQACheckOptions.SpaceAfterPunct := True;
   FQACheckOptions.PunctEnd := True;
   FQACheckOptions.PunctBracket := True;
+  FQACheckOptions.Newlines := True;
   FQACheckOptions.FrenchSpacing := False;
 
   Reset;

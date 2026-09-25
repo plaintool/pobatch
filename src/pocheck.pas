@@ -30,6 +30,8 @@ resourcestring
   rsQAPunctuationEndMismatch = 'End punctuation mismatch: source ends with "%s", translation ends with "%s"';
   rsQAPunctuationBracketMismatch = 'Bracket mismatch: expected "%s", found "%s"';
   rsQAPluralFormsMismatch = 'Plural forms count mismatch: expected %d, found %d';
+  rsQANewlineLeadingMismatch = 'Leading newline mismatch';
+  rsQANewlineTrailingMismatch = 'Trailing newline mismatch';
 
 type
 
@@ -48,6 +50,7 @@ type
     SpaceAfterPunct: boolean;
     PunctEnd: boolean;
     PunctBracket: boolean;
+    Newlines: boolean;
     FrenchSpacing: boolean;
   end;
 
@@ -78,6 +81,7 @@ type
     class procedure CheckEndPunctuation(const ASrc, ATrans: string; const AOptions: TQACheckOptions;
       AMsgs: TStrings; out ASkipRest: boolean);
     class procedure CheckBrackets(const ASrc, ATrans: string; const AOptions: TQACheckOptions; AMsgs: TStrings);
+    class procedure CheckNewlines(const ASrc, ATrans: string; const AOptions: TQACheckOptions; AMsgs: TStrings);
   public
     // Run all enabled checks on a single source/translation pair.
     // Returns the list of messages, empty when no issues are found.
@@ -842,6 +846,30 @@ begin
     AMsgs.Add(Format(rsQAPunctuationBracketMismatch, [SrcBrackets, TransBrackets]));
 end;
 
+// Check that the translation preserves leading and trailing newlines of the
+// source. A newline at the start or at the end of the source string must be
+// present in the translation as well, and vice versa. Both LF and CR are
+// treated as newline characters.
+class procedure TPOChecker.CheckNewlines(const ASrc, ATrans: string; const AOptions: TQACheckOptions; AMsgs: TStrings);
+var
+  SrcLead, SrcTrail, TransLead, TransTrail: boolean;
+begin
+  if not AOptions.Newlines then
+    Exit;
+  if (Length(ASrc) = 0) or (Length(ATrans) = 0) then
+    Exit;
+
+  SrcLead := (ASrc[1] = #10) or (ASrc[1] = #13);
+  SrcTrail := (ASrc[Length(ASrc)] = #10) or (ASrc[Length(ASrc)] = #13);
+  TransLead := (ATrans[1] = #10) or (ATrans[1] = #13);
+  TransTrail := (ATrans[Length(ATrans)] = #10) or (ATrans[Length(ATrans)] = #13);
+
+  if SrcLead <> TransLead then
+    AMsgs.Add(rsQANewlineLeadingMismatch);
+  if SrcTrail <> TransTrail then
+    AMsgs.Add(rsQANewlineTrailingMismatch);
+end;
+
 {%EndRegion}
 
 {%Region -fold TPOChecker public API}
@@ -859,6 +887,7 @@ begin
     CheckPlaceholders(ASrc, ATrans, AOptions, Msgs);
     CheckCase(ASrc, ATrans, AOptions, Msgs);
     CheckSpaces(ASrc, ATrans, AOptions, Msgs);
+    CheckNewlines(ASrc, ATrans, AOptions, Msgs);
     CheckEndPunctuation(ASrc, ATrans, AOptions, Msgs, SkipRest);
     if not SkipRest then
       CheckBrackets(ASrc, ATrans, AOptions, Msgs);
