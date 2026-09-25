@@ -1466,6 +1466,7 @@ begin
   FQACheckOptions.SpaceAfterPunct := True;
   FQACheckOptions.PunctEnd := True;
   FQACheckOptions.PunctBracket := True;
+  FQACheckOptions.FrenchSpacing := False;
 
   Reset;
 end;
@@ -2227,6 +2228,8 @@ end;
 {QA check over the whole file}
 
 function TPOFile.GetQACheckOptions: TQACheckOptions;
+var
+  Lang: string;
 begin
   // Start from the stored settings and fill in the actual number of plural
   // forms taken from the Plural-Forms header. Fall back to 2 when the header
@@ -2235,6 +2238,11 @@ begin
   Result.PluralFormsCount := PluralFormsCount;
   if Result.PluralFormsCount = 0 then
     Result.PluralFormsCount := 2;
+
+  // Enable French spacing rules only for European French, not for Canadian
+  // French (fr-CA), where the space before ? ! ; is normally omitted.
+  Lang := HeaderValue['Language'];
+  Result.FrenchSpacing := (Length(Lang) >= 2) and (Copy(Lang, 1, 2) = 'fr') and (Pos('CA', Lang) = 0);
 end;
 
 procedure TPOFile.CheckEntryQA(AEntry: TPOEntry);

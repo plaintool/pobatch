@@ -48,6 +48,7 @@ type
     SpaceAfterPunct: boolean;
     PunctEnd: boolean;
     PunctBracket: boolean;
+    FrenchSpacing: boolean;
   end;
 
   // Stateless class that performs all QA checks on source/translation pairs.
@@ -748,10 +749,14 @@ begin
   // least as many punctuation marks as the source, but puts more whitespace
   // before them. If the translation dropped the punctuation entirely, that
   // is a stylistic choice, not a space issue.
+  // For French (except Canadian French), a space before double punctuation
+  // (?, !, ;, :) is correct and must not be reported.
   if AOptions.SpaceBeforePunct then
     for K := 0 to High(PunctArray) do
     begin
       PunctChar := PunctArray[K];
+      if AOptions.FrenchSpacing and (PunctChar in [';', ':', '!', '?']) then
+        Continue;
       if (CountPunct(ATrans, PunctChar) <= CountPunct(ASrc, PunctChar)) and
         (CountPunctWithSpaceBefore(ATrans, PunctChar) > CountPunctWithSpaceBefore(ASrc, PunctChar)) then
         AMsgs.Add(Format(rsQASpaceBeforePunctuation, [PunctChar]));
