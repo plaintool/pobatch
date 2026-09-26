@@ -35,23 +35,32 @@ resourcestring
 
 type
 
-  // Options that control which QA checks are enabled
+  // Options that control which QA checks are enabled.
+  // The comment next to a field matches the wording of the corresponding
+  // check message, so a user can find the right menu entry by the message.
   TQACheckOptions = record
-    PluralFormsCount: integer;
-    PlaceholderMissing: boolean;
-    PlaceholderExtra: boolean;
-    PluralCount: boolean;
-    CaseFirstChar: boolean;
-    CaseAllUpper: boolean;
-    SpaceLeading: boolean;
-    SpaceTrailing: boolean;
-    SpaceDouble: boolean;
-    SpaceBeforePunct: boolean;
-    SpaceAfterPunct: boolean;
-    PunctEnd: boolean;
-    PunctBracket: boolean;
-    Newlines: boolean;
-    FrenchSpacing: boolean;
+    PluralFormsCount: integer;   // Expected plural forms count
+    PlaceholderMissing: boolean; // Missing placeholder in translation
+    PlaceholderExtra: boolean;   // Extra placeholder in translation
+    PluralCount: boolean;        // Plural forms count mismatch
+    CaseFirstChar: boolean;      // Case mismatch: first character
+    CaseAllUpper: boolean;       // Case mismatch: source is all uppercase
+    SpaceLeading: boolean;       // Leading space in translation
+    SpaceTrailing: boolean;      // Trailing space in translation
+    SpaceDouble: boolean;        // Double space in translation
+    SpaceBeforePunct: boolean;   // Space before punctuation
+    SpaceAfterPunct: boolean;    // Missing space after punctuation
+    PunctEnd: boolean;           // End punctuation mismatch
+    PunctBracket: boolean;       // Bracket mismatch
+    Newlines: boolean;           // Newline mismatch (leading / trailing)
+    FrenchSpacing: boolean;      // French spacing mismatch
+  end;
+
+  // Wraps a TQACheckOptions record so it can be stored in ObjectDictionary
+  TQACheckOptionsHolder = class
+  public
+    Options: TQACheckOptions;
+    constructor Create(const AOptions: TQACheckOptions);
   end;
 
   // Stateless class that performs all QA checks on source/translation pairs.
@@ -88,7 +97,55 @@ type
     class function RunOnText(const ASrc, ATrans: string; const AOptions: TQACheckOptions): TStringArray;
   end;
 
+// Returns a QA options record filled with the built-in defaults, all checks enabled
+function DefaultQACheckOptions: TQACheckOptions;
+// Returns True when two option records have the same value for every field
+function QACheckOptionsEqual(const A, B: TQACheckOptions): boolean;
+
 implementation
+
+{%Region -fold QACheck options holder class}
+
+constructor TQACheckOptionsHolder.Create(const AOptions: TQACheckOptions);
+begin
+  inherited Create;
+  Options := AOptions;
+end;
+
+{%EndRegion}
+
+{%Region -fold Helper functions}
+
+function DefaultQACheckOptions: TQACheckOptions;
+begin
+  Result.PluralFormsCount := 0;
+  Result.PlaceholderMissing := True;
+  Result.PlaceholderExtra := True;
+  Result.PluralCount := True;
+  Result.CaseFirstChar := True;
+  Result.CaseAllUpper := True;
+  Result.SpaceLeading := True;
+  Result.SpaceTrailing := True;
+  Result.SpaceDouble := True;
+  Result.SpaceBeforePunct := True;
+  Result.SpaceAfterPunct := True;
+  Result.PunctEnd := True;
+  Result.PunctBracket := True;
+  Result.Newlines := True;
+  Result.FrenchSpacing := False;
+end;
+
+function QACheckOptionsEqual(const A, B: TQACheckOptions): boolean;
+begin
+  Result :=
+    (A.PlaceholderMissing = B.PlaceholderMissing) and (A.PlaceholderExtra = B.PlaceholderExtra) and
+    (A.PluralCount = B.PluralCount) and (A.CaseFirstChar = B.CaseFirstChar) and (A.CaseAllUpper = B.CaseAllUpper) and
+    (A.SpaceLeading = B.SpaceLeading) and (A.SpaceTrailing = B.SpaceTrailing) and (A.SpaceDouble = B.SpaceDouble) and
+    (A.SpaceBeforePunct = B.SpaceBeforePunct) and (A.SpaceAfterPunct = B.SpaceAfterPunct) and
+    (A.PunctEnd = B.PunctEnd) and (A.PunctBracket = B.PunctBracket) and (A.Newlines = B.Newlines);
+end;
+
+{%EndRegion}
 
 {%Region -fold TPOChecker text helpers}
 

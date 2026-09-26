@@ -34,13 +34,14 @@ uses
   LCLIntf,
   RichMemo,
   RichMemoCellEditor,
+  ObjectDictionary,
   OneShotTimer,
   SpellChecker,
   LangCodes,
-  powrap;
+  PoWrap,
+  PoCheck;
 
 type
-
   { TformPoBatch }
 
   TformPoBatch = class(TForm)
@@ -48,6 +49,19 @@ type
     ACopySourceText: TAction;
     AClearIdentical: TAction;
     AClosePath: TAction;
+    ACheckCaseFirstChar: TAction;
+    ACheckCaseAllUpper: TAction;
+    ACheckNewlines: TAction;
+    ACheckPunctBracket: TAction;
+    ACheckPunctEnd: TAction;
+    ACheckSpaceAfterPunct: TAction;
+    ACheckSpaceBeforePunct: TAction;
+    ACheckSpaceDouble: TAction;
+    ACheckSpaceTrailing: TAction;
+    ACheckSpaceLeading: TAction;
+    ACheckPluralCount: TAction;
+    ACheckPlaceholderExtra: TAction;
+    ACheckPlaceholderMissing: TAction;
     APathNewFilesFromPot: TAction;
     ANewFromPot: TAction;
     AExit: TAction;
@@ -120,15 +134,29 @@ type
     MenuHelpGNUgettext: TMenuItem;
     MenuColumnContext: TMenuItem;
     MenuColumnPlural: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem4: TMenuItem;
+    MenuCheckPluralCount: TMenuItem;
+    MenuCheckCaseFirstChar: TMenuItem;
+    MenuCheckCaseAllUpper: TMenuItem;
+    MenuCheckSpaceLeading: TMenuItem;
+    MenuCheckSpaceTrailing: TMenuItem;
+    MenuCheckSpaceDouble: TMenuItem;
+    MenuCheckSpaceBeforePunct: TMenuItem;
+    MenuCheckSpaceAfterPunct: TMenuItem;
+    MenuCheckPunctEnd: TMenuItem;
+    MenuCheckPunctBracket: TMenuItem;
+    MenuSpellCheckSource: TMenuItem;
+    MenuCheckNewlines: TMenuItem;
+    MenuSpellCheckTranslation: TMenuItem;
     MenuItem5: TMenuItem;
-    MenuItem6: TMenuItem;
+    MenuPathNewFilesFromPot: TMenuItem;
+    MenuCheckPlaceholderMissing: TMenuItem;
+    MenuCheckPlaceholderExtra: TMenuItem;
+    MenuQAChecks: TMenuItem;
     MenuPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
-    MenuItem1: TMenuItem;
+    MenuPathSelectAll: TMenuItem;
     MenuPathValidFile: TMenuItem;
-    MenuItem3: TMenuItem;
+    MenuValidFile: TMenuItem;
     MenuPathRenameFile: TMenuItem;
     MenuMemoBidiMode: TMenuItem;
     MenuMemoClear: TMenuItem;
@@ -139,7 +167,7 @@ type
     MenuMemoSelectAll: TMenuItem;
     MenuMemoUndo: TMenuItem;
     MenuSyncWithPot: TMenuItem;
-    MenuSyncFilesWithPot: TMenuItem;
+    MenuPathSyncFilesWithPot: TMenuItem;
     MenuWordWrapTranslatePanel: TMenuItem;
     MenuWordWrapGrid: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
@@ -181,6 +209,7 @@ type
     Separator14: TMenuItem;
     Separator15: TMenuItem;
     Separator16: TMenuItem;
+    Separator17: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -272,6 +301,19 @@ type
     procedure AWordWrapTranslatePanelExecute(Sender: TObject);
     procedure ASpellCheckSourceExecute(Sender: TObject);
     procedure ASpellCheckTranslationExecute(Sender: TObject);
+    procedure ACheckCaseAllUpperExecute(Sender: TObject);
+    procedure ACheckCaseFirstCharExecute(Sender: TObject);
+    procedure ACheckNewlinesExecute(Sender: TObject);
+    procedure ACheckPlaceholderExtraExecute(Sender: TObject);
+    procedure ACheckPlaceholderMissingExecute(Sender: TObject);
+    procedure ACheckPluralCountExecute(Sender: TObject);
+    procedure ACheckPunctBracketExecute(Sender: TObject);
+    procedure ACheckPunctEndExecute(Sender: TObject);
+    procedure ACheckSpaceAfterPunctExecute(Sender: TObject);
+    procedure ACheckSpaceBeforePunctExecute(Sender: TObject);
+    procedure ACheckSpaceDoubleExecute(Sender: TObject);
+    procedure ACheckSpaceLeadingExecute(Sender: TObject);
+    procedure ACheckSpaceTrailingExecute(Sender: TObject);
     { Grids Universal }
     procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
@@ -331,7 +373,7 @@ type
     {%EndRegion}
   private
     FRichEditor: TRichMemoCellEditor;
-
+    FQACheckOptionsByLang: TObjectDictionary;
     FPoFile: TPoFile;
     FPoFileBackup: TPoFile;
     FFileName: string;
@@ -415,6 +457,13 @@ type
     procedure SaveGridPlural(aRow: integer = -1);
     procedure FillGridComments(aRow: integer = -1);
     procedure SaveGridComments(aRow: integer = -1);
+
+    // QA Check Options
+    procedure SetDefaultQACheckOptions;
+    procedure LoadQACheckOptionsForLanguage(const ALang: string);
+    procedure SaveCurrentQACheckOptions;
+    procedure ApplyQACheckOptionsToMenu;
+    procedure RecheckAllQA;
   public
     property Changed: boolean read FChanged write SetChanged;
     property Path: string read FPath write FPath;
@@ -426,6 +475,7 @@ type
     property PotFile: string read FPotFile write FPotFile;
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write SetWordWrap;
+    property QACheckOptionsByLang: TObjectDictionary read FQACheckOptionsByLang;
   end;
 
 var
@@ -461,6 +511,7 @@ const
   CELL_FUZZY = 7;
 
   UNDEFINED = 'undefined';
+  LANG_KEY_NONE = '*';
 
   // Colors
   clRowHighlight = TColor($FFF0DC);
@@ -512,6 +563,7 @@ begin
   FFileName := string.Empty;
   FPath := string.Empty;
   FPoFiles := TStringList.Create;
+  FQACheckOptionsByLang := TObjectDictionary.Create;
   FPotFile := string.Empty;
   SetLength(FFileStatuses, 0);
   FCommandLineFile := string.Empty;
@@ -582,6 +634,7 @@ begin
   FreeAndNil(FPoFileBackup);
   SetLength(FFileStatuses, 0);
   FreeAndNil(FPoFiles);
+  FreeAndNil(FQACheckOptionsByLang);
 end;
 
 procedure TformPoBatch.FormShow(Sender: TObject);
@@ -818,6 +871,8 @@ begin
 
   FLanguage := Code;
   SpellTranslation.Language := FLanguage;
+  LoadQACheckOptionsForLanguage(FLanguage);
+  ApplyQACheckOptionsToMenu;
 
   // The result is a new unsaved document, so clear the file name
   FFileName := string.Empty;
@@ -1960,6 +2015,149 @@ begin
     SpellTranslation.ClearErrors;
 end;
 
+procedure TformPoBatch.ACheckCaseFirstCharExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.CaseFirstChar := ACheckCaseFirstChar.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckCaseAllUpperExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.CaseAllUpper := ACheckCaseAllUpper.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckNewlinesExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.Newlines := ACheckNewlines.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckPunctBracketExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.PunctBracket := ACheckPunctBracket.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckPunctEndExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.PunctEnd := ACheckPunctEnd.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckSpaceAfterPunctExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.SpaceAfterPunct := ACheckSpaceAfterPunct.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckSpaceBeforePunctExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.SpaceBeforePunct := ACheckSpaceBeforePunct.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckSpaceDoubleExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.SpaceDouble := ACheckSpaceDouble.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckSpaceLeadingExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.SpaceLeading := ACheckSpaceLeading.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckSpaceTrailingExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.SpaceTrailing := ACheckSpaceTrailing.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckPlaceholderMissingExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.PlaceholderMissing := ACheckPlaceholderMissing.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckPlaceholderExtraExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.PlaceholderExtra := ACheckPlaceholderExtra.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
+procedure TformPoBatch.ACheckPluralCountExecute(Sender: TObject);
+var
+  Opt: TQACheckOptions;
+begin
+  Opt := FPoFile.QACheckOptions;
+  Opt.PluralCount := ACheckPluralCount.Checked;
+  FPoFile.QACheckOptions := Opt;
+  SaveCurrentQACheckOptions;
+  RecheckAllQA;
+end;
+
 {%EndRegion}
 
 {%Region -fold Grids Universal Events}
@@ -2993,6 +3191,9 @@ begin
   try
     FPoFile.Reset;
     FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+    FLanguage := string.Empty;
+    SetDefaultQACheckOptions;
+    ApplyQACheckOptionsToMenu;
     FFileName := AFileName;
 
     // Run QA checks once for the whole file
@@ -3328,13 +3529,16 @@ begin
         Stream.Free;
       end;
 
+      // Switch to the QA options remembered for this language
+      FLanguage := DetectLanguage(AFileName);
+      SpellTranslation.Language := FLanguage;
+      LoadQACheckOptionsForLanguage(FLanguage);
+      ApplyQACheckOptionsToMenu;
+
       // Run QA checks once for the whole file
       FPoFile.CheckAllQA;
 
       FPoFileBackup.Assign(FPoFile);
-
-      FLanguage := DetectLanguage(AFileName);
-      SpellTranslation.Language := FLanguage;
 
       UpdateInterface;
       Result := True;
@@ -4474,6 +4678,91 @@ begin
   finally
     Comments.Free;
   end;
+end;
+
+{%EndRegion}
+
+{%Region -fold QACheckOptions}
+
+procedure TformPoBatch.SetDefaultQACheckOptions;
+begin
+  FPoFile.QACheckOptions := DefaultQACheckOptions;
+end;
+
+procedure TformPoBatch.LoadQACheckOptionsForLanguage(const ALang: string);
+var
+  Obj: TObject = nil;
+  LangKey: string;
+begin
+  // Language-less files share one common settings bucket under the '*' key
+  if ALang = string.Empty then
+    LangKey := LANG_KEY_NONE
+  else
+    LangKey := ALang;
+
+  if Assigned(FQACheckOptionsByLang) and FQACheckOptionsByLang.TryGetValue(LangKey, Obj) and (Obj is TQACheckOptionsHolder) then
+    FPoFile.QACheckOptions := TQACheckOptionsHolder(Obj).Options
+  else
+    SetDefaultQACheckOptions;
+end;
+
+procedure TformPoBatch.SaveCurrentQACheckOptions;
+var
+  LangKey: string;
+begin
+  if not Assigned(FQACheckOptionsByLang) then
+    Exit;
+
+  // Language-less files share one common settings bucket under the '*' key
+  if FLanguage = string.Empty then
+    LangKey := LANG_KEY_NONE
+  else
+    LangKey := FLanguage;
+
+  // Keep the map clean: if options match the defaults, no entry is needed
+  if QACheckOptionsEqual(FPoFile.QACheckOptions, DefaultQACheckOptions) then
+    FQACheckOptionsByLang.Remove(LangKey)
+  else
+    FQACheckOptionsByLang[LangKey] := TQACheckOptionsHolder.Create(FPoFile.QACheckOptions);
+end;
+
+procedure TformPoBatch.ApplyQACheckOptionsToMenu;
+var
+  Opt: TQACheckOptions;
+  LangSuffix: string;
+begin
+  Opt := FPoFile.QACheckOptions;
+  ACheckPlaceholderMissing.Checked := Opt.PlaceholderMissing;
+  ACheckPlaceholderExtra.Checked := Opt.PlaceholderExtra;
+  ACheckPluralCount.Checked := Opt.PluralCount;
+  ACheckCaseFirstChar.Checked := Opt.CaseFirstChar;
+  ACheckCaseAllUpper.Checked := Opt.CaseAllUpper;
+  ACheckSpaceLeading.Checked := Opt.SpaceLeading;
+  ACheckSpaceTrailing.Checked := Opt.SpaceTrailing;
+  ACheckSpaceDouble.Checked := Opt.SpaceDouble;
+  ACheckSpaceBeforePunct.Checked := Opt.SpaceBeforePunct;
+  ACheckSpaceAfterPunct.Checked := Opt.SpaceAfterPunct;
+  ACheckPunctEnd.Checked := Opt.PunctEnd;
+  ACheckPunctBracket.Checked := Opt.PunctBracket;
+  ACheckNewlines.Checked := Opt.Newlines;
+
+  // Show the language code in the menu caption, or a neutral label when
+  // the current document has no language code
+  if FLanguage <> string.Empty then
+    LangSuffix := ' (' + FLanguage + ')'
+  else
+    LangSuffix := ' (*)';
+  MenuQAChecks.Caption := 'QA Checks' + LangSuffix;
+end;
+
+procedure TformPoBatch.RecheckAllQA;
+begin
+  if not Assigned(FPoFile) then
+    Exit;
+  SaveGrid;
+  FPoFile.CheckAllQA;
+  FillGrid;
+  UpdateTranslatePanel;
 end;
 
 {%EndRegion}

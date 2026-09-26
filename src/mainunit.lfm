@@ -622,7 +622,7 @@ object formPoBatch: TformPoBatch
       object MenuClearIdentical: TMenuItem
         Action = AClearIdentical
       end
-      object MenuItem3: TMenuItem
+      object MenuValidFile: TMenuItem
         Action = AValidFile
       end
       object MenuEditPluralForm: TMenuItem
@@ -655,13 +655,71 @@ object formPoBatch: TformPoBatch
       object Separator16: TMenuItem
         Caption = '-'
       end
-      object MenuItem2: TMenuItem
+      object MenuSpellCheckSource: TMenuItem
         Action = ASpellCheckSource
         AutoCheck = True
       end
-      object MenuItem4: TMenuItem
+      object MenuSpellCheckTranslation: TMenuItem
         Action = ASpellCheckTranslation
         AutoCheck = True
+      end
+      object Separator17: TMenuItem
+        Caption = '-'
+      end
+      object MenuQAChecks: TMenuItem
+        Caption = 'QA Checks'
+        object MenuCheckPlaceholderMissing: TMenuItem
+          Action = ACheckPlaceholderMissing
+          AutoCheck = True
+        end
+        object MenuCheckPlaceholderExtra: TMenuItem
+          Action = ACheckPlaceholderExtra
+          AutoCheck = True
+        end
+        object MenuCheckPluralCount: TMenuItem
+          Action = ACheckPluralCount
+          AutoCheck = True
+        end
+        object MenuCheckCaseFirstChar: TMenuItem
+          Action = ACheckCaseFirstChar
+          AutoCheck = True
+        end
+        object MenuCheckCaseAllUpper: TMenuItem
+          Action = ACheckCaseAllUpper
+          AutoCheck = True
+        end
+        object MenuCheckSpaceLeading: TMenuItem
+          Action = ACheckSpaceLeading
+          AutoCheck = True
+        end
+        object MenuCheckSpaceTrailing: TMenuItem
+          Action = ACheckSpaceTrailing
+          AutoCheck = True
+        end
+        object MenuCheckSpaceDouble: TMenuItem
+          Action = ACheckSpaceDouble
+          AutoCheck = True
+        end
+        object MenuCheckSpaceBeforePunct: TMenuItem
+          Action = ACheckSpaceBeforePunct
+          AutoCheck = True
+        end
+        object MenuCheckSpaceAfterPunct: TMenuItem
+          Action = ACheckSpaceAfterPunct
+          AutoCheck = True
+        end
+        object MenuCheckPunctEnd: TMenuItem
+          Action = ACheckPunctEnd
+          AutoCheck = True
+        end
+        object MenuCheckPunctBracket: TMenuItem
+          Action = ACheckPunctBracket
+          AutoCheck = True
+        end
+        object MenuCheckNewlines: TMenuItem
+          Action = ACheckNewlines
+          AutoCheck = True
+        end
       end
     end
     object MenuView: TMenuItem
@@ -974,6 +1032,84 @@ object formPoBatch: TformPoBatch
       Category = 'Path'
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
+    end
+    object ACheckPlaceholderMissing: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Missing placeholder in translation'
+      OnExecute = ACheckPlaceholderMissingExecute
+    end
+    object ACheckPlaceholderExtra: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Extra placeholder in translation'
+      OnExecute = ACheckPlaceholderExtraExecute
+    end
+    object ACheckPluralCount: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Plural forms count mismatch'
+      OnExecute = ACheckPluralCountExecute
+    end
+    object ACheckCaseFirstChar: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Case mismatch: first character'
+      OnExecute = ACheckCaseFirstCharExecute
+    end
+    object ACheckCaseAllUpper: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Case mismatch: source is all uppercase'
+      OnExecute = ACheckCaseAllUpperExecute
+    end
+    object ACheckSpaceLeading: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Leading space in translation'
+      OnExecute = ACheckSpaceLeadingExecute
+    end
+    object ACheckSpaceTrailing: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Trailing space in translation'
+      OnExecute = ACheckSpaceTrailingExecute
+    end
+    object ACheckSpaceDouble: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Double space in translation'
+      OnExecute = ACheckSpaceDoubleExecute
+    end
+    object ACheckSpaceBeforePunct: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Space before punctuation'
+      OnExecute = ACheckSpaceBeforePunctExecute
+    end
+    object ACheckSpaceAfterPunct: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Missing space after punctuation'
+      OnExecute = ACheckSpaceAfterPunctExecute
+    end
+    object ACheckPunctEnd: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'End punctuation mismatch'
+      OnExecute = ACheckPunctEndExecute
+    end
+    object ACheckPunctBracket: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Bracket mismatch'
+      OnExecute = ACheckPunctBracketExecute
+    end
+    object ACheckNewlines: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'Newline mismatch (leading / trailing)'
+      OnExecute = ACheckNewlinesExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1478,10 +1614,10 @@ object formPoBatch: TformPoBatch
   object PopupPath: TPopupMenu
     Left = 472
     Top = 160
-    object MenuItem6: TMenuItem
+    object MenuPathNewFilesFromPot: TMenuItem
       Action = APathNewFilesFromPot
     end
-    object MenuSyncFilesWithPot: TMenuItem
+    object MenuPathSyncFilesWithPot: TMenuItem
       Action = APathSyncFilesWithPot
     end
     object MenuPathValidFile: TMenuItem
@@ -1496,7 +1632,7 @@ object formPoBatch: TformPoBatch
     object Separator11: TMenuItem
       Caption = '-'
     end
-    object MenuItem1: TMenuItem
+    object MenuPathSelectAll: TMenuItem
       Action = APathSelectAll
     end
   end

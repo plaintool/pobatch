@@ -1451,23 +1451,8 @@ begin
   FLineEndingStyle := pleLF;   // default to Unix style
   FTrailingEmptyLines := 0;
 
-  // QA checks are enabled by default. PluralFormsCount is always taken
-  // from the Plural-Forms header at check time, so it stays zero here.
-  FQACheckOptions.PluralFormsCount := 0;
-  FQACheckOptions.PlaceholderMissing := True;
-  FQACheckOptions.PlaceholderExtra := True;
-  FQACheckOptions.PluralCount := True;
-  FQACheckOptions.CaseFirstChar := True;
-  FQACheckOptions.CaseAllUpper := True;
-  FQACheckOptions.SpaceLeading := True;
-  FQACheckOptions.SpaceTrailing := True;
-  FQACheckOptions.SpaceDouble := True;
-  FQACheckOptions.SpaceBeforePunct := True;
-  FQACheckOptions.SpaceAfterPunct := True;
-  FQACheckOptions.PunctEnd := True;
-  FQACheckOptions.PunctBracket := True;
-  FQACheckOptions.Newlines := True;
-  FQACheckOptions.FrenchSpacing := False;
+  // QA checks are enabled by default
+  FQACheckOptions := DefaultQACheckOptions;
 
   Reset;
 end;

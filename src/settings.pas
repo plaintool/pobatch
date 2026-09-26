@@ -27,13 +27,68 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses powrap, osutils;
+uses PoWrap, PoCheck, ObjectDictionary, osutils;
+
+function QACheckOptionsToJSON(const AOpt: TQACheckOptions): TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  Result.Add('PlaceholderMissing', AOpt.PlaceholderMissing);
+  Result.Add('PlaceholderExtra', AOpt.PlaceholderExtra);
+  Result.Add('PluralCount', AOpt.PluralCount);
+  Result.Add('CaseFirstChar', AOpt.CaseFirstChar);
+  Result.Add('CaseAllUpper', AOpt.CaseAllUpper);
+  Result.Add('SpaceLeading', AOpt.SpaceLeading);
+  Result.Add('SpaceTrailing', AOpt.SpaceTrailing);
+  Result.Add('SpaceDouble', AOpt.SpaceDouble);
+  Result.Add('SpaceBeforePunct', AOpt.SpaceBeforePunct);
+  Result.Add('SpaceAfterPunct', AOpt.SpaceAfterPunct);
+  Result.Add('PunctEnd', AOpt.PunctEnd);
+  Result.Add('PunctBracket', AOpt.PunctBracket);
+  Result.Add('Newlines', AOpt.Newlines);
+end;
+
+function QACheckOptionsFromJSON(const AObj: TJSONObject): TQACheckOptions;
+var
+  Node: TJSONData;
+begin
+  Result := DefaultQACheckOptions;
+
+  Node := AObj.FindPath('PlaceholderMissing');
+  if Node <> nil then Result.PlaceholderMissing := Node.AsBoolean;
+  Node := AObj.FindPath('PlaceholderExtra');
+  if Node <> nil then Result.PlaceholderExtra := Node.AsBoolean;
+  Node := AObj.FindPath('PluralCount');
+  if Node <> nil then Result.PluralCount := Node.AsBoolean;
+  Node := AObj.FindPath('CaseFirstChar');
+  if Node <> nil then Result.CaseFirstChar := Node.AsBoolean;
+  Node := AObj.FindPath('CaseAllUpper');
+  if Node <> nil then Result.CaseAllUpper := Node.AsBoolean;
+  Node := AObj.FindPath('SpaceLeading');
+  if Node <> nil then Result.SpaceLeading := Node.AsBoolean;
+  Node := AObj.FindPath('SpaceTrailing');
+  if Node <> nil then Result.SpaceTrailing := Node.AsBoolean;
+  Node := AObj.FindPath('SpaceDouble');
+  if Node <> nil then Result.SpaceDouble := Node.AsBoolean;
+  Node := AObj.FindPath('SpaceBeforePunct');
+  if Node <> nil then Result.SpaceBeforePunct := Node.AsBoolean;
+  Node := AObj.FindPath('SpaceAfterPunct');
+  if Node <> nil then Result.SpaceAfterPunct := Node.AsBoolean;
+  Node := AObj.FindPath('PunctEnd');
+  if Node <> nil then Result.PunctEnd := Node.AsBoolean;
+  Node := AObj.FindPath('PunctBracket');
+  if Node <> nil then Result.PunctBracket := Node.AsBoolean;
+  Node := AObj.FindPath('Newlines');
+  if Node <> nil then Result.Newlines := Node.AsBoolean;
+end;
 
 procedure SaveFormSettings(Form: TformPoBatch);
 var
   JSONObj: TJSONObject;
   FileName: string;
   PoFilesArray, StatusArray: TJSONArray;
+  QAMapObj, LangObj: TJSONObject;
+  LangKey: string;
+  Holder: TQACheckOptionsHolder;
   i: integer;
 begin
   FileName := TOS.GetSettingsDirectory(APP_NAME, 'form_settings.json'); // Get settings file name
@@ -105,6 +160,21 @@ begin
       StatusArray.Add(Ord(Form.FileStatuses[i]));
     JSONObj.Add('PoFileStatuses', StatusArray);
 
+    // Save per-language QA check options. Only languages whose options
+    // differ from the defaults are stored, so the map stays minimal
+    QAMapObj := TJSONObject.Create;
+    for i := 0 to Form.QACheckOptionsByLang.Count - 1 do
+    begin
+      LangKey := Form.QACheckOptionsByLang.GetKeyAt(i);
+      Holder := TQACheckOptionsHolder(Form.QACheckOptionsByLang[LangKey]);
+      if Assigned(Holder) then
+      begin
+        LangObj := QACheckOptionsToJSON(Holder.Options);
+        QAMapObj.Add(LangKey, LangObj);
+      end;
+    end;
+    JSONObj.Add('QACheckOptionsByLang', QAMapObj);
+
     // Write to file
     with TStringList.Create do
     try
@@ -127,6 +197,7 @@ var
   FileName: string;
   FileStream: TFileStream;
   FileContent: string;
+  QAMapObj, LangObj: TJSONObject;
   i: integer;
 begin
   Result := False;
@@ -301,6 +372,19 @@ begin
 
       if JSONObj.FindPath('AutoCheckUpdates') <> nil then
         Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
+
+      // Load per-language QA check options
+      if JSONObj.FindPath('QACheckOptionsByLang') <> nil then
+      begin
+        QAMapObj := JSONObj.FindPath('QACheckOptionsByLang') as TJSONObject;
+        Form.QACheckOptionsByLang.Clear;
+        for i := 0 to QAMapObj.Count - 1 do
+        begin
+          LangObj := QAMapObj.Items[i] as TJSONObject;
+          Form.QACheckOptionsByLang[QAMapObj.Names[i]] :=
+            TQACheckOptionsHolder.Create(QACheckOptionsFromJSON(LangObj));
+        end;
+      end;
 
       Result := True;
     finally
