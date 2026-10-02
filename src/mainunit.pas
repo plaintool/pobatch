@@ -62,6 +62,7 @@ type
     ACheckPluralCount: TAction;
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
+    APathShowFileInExplorer: TAction;
     APathNewFilesFromPot: TAction;
     ANewFromPot: TAction;
     AExit: TAction;
@@ -144,6 +145,7 @@ type
     MenuCheckSpaceAfterPunct: TMenuItem;
     MenuCheckPunctEnd: TMenuItem;
     MenuCheckPunctBracket: TMenuItem;
+    MenuItem1: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
@@ -210,6 +212,7 @@ type
     Separator15: TMenuItem;
     Separator16: TMenuItem;
     Separator17: TMenuItem;
+    Separator18: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -287,6 +290,7 @@ type
     procedure APathValidFilesExecute(Sender: TObject);
     procedure APathRenameFilesExecute(Sender: TObject);
     procedure APathDeleteFilesExecute(Sender: TObject);
+    procedure APathShowFileInExplorerExecute(Sender: TObject);
     procedure APathSelectAllExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
     procedure AValidFileExecute(Sender: TObject);
@@ -1796,6 +1800,11 @@ begin
 
   ListPath.Invalidate;
   UpdateCaption;
+end;
+
+procedure TformPoBatch.APathShowFileInExplorerExecute(Sender: TObject);
+begin
+  TOS.ShowFileInExplorer(FFileName);
 end;
 
 procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);
