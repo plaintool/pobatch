@@ -278,6 +278,7 @@ type
     FLineEndingStyle: TPOLineEndingStyle;
     FTrailingEmptyLines: integer;   // Number of empty lines at the end of the file
     FQACheckOptions: TQACheckOptions;
+    FQAChecksEnabled: boolean;
     procedure ParseLine(const Line: string; var CurrentEntry: TPOEntry; var PendingState: TParseState);
     function GetHeaders: TStrings;
     procedure SetHeaders(AHeaders: TStrings);
@@ -331,6 +332,10 @@ type
     // Combined QA settings. PluralFormsCount is ignored here - it is always
     // taken from the 'Plural-Forms' header via GetQACheckOptions.
     property QACheckOptions: TQACheckOptions read FQACheckOptions write FQACheckOptions;
+
+    // Master switch: when False, no QA messages are produced regardless of
+    // the per-language QACheckOptions
+    property QAChecksEnabled: boolean read FQAChecksEnabled write FQAChecksEnabled;
 
     // Po File Operations
     class function ComputeStatusFromModel(APoFile: TPOFile): TPoFileStatus;
@@ -1452,6 +1457,7 @@ begin
   FTrailingEmptyLines := 0;
 
   // QA checks are enabled by default
+  FQAChecksEnabled := True;
   FQACheckOptions := DefaultQACheckOptions;
 
   Reset;
@@ -1476,6 +1482,7 @@ begin
   FLineEndingStyle := Source.LineEndingStyle;
   FTrailingEmptyLines := Source.TrailingEmptyLines;
   FQACheckOptions := Source.FQACheckOptions;
+  FQAChecksEnabled := Source.QAChecksEnabled;
 
   // Deep copy all entries
   for i := 0 to Source.Entries.Count - 1 do
@@ -2217,6 +2224,11 @@ function TPOFile.GetQACheckOptions: TQACheckOptions;
 var
   Lang: string;
 begin
+  // Master switch: bypass every enabled check without touching the
+  // per-language options that remain stored in FQACheckOptions
+  if not FQAChecksEnabled then
+    Exit(BlankQACheckOptions);
+
   // Start from the stored settings and fill in the actual number of plural
   // forms taken from the Plural-Forms header. Fall back to 2 when the header
   // is missing - a safe default for languages with no header.

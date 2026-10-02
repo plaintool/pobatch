@@ -160,6 +160,10 @@ begin
       StatusArray.Add(Ord(Form.FileStatuses[i]));
     JSONObj.Add('PoFileStatuses', StatusArray);
 
+    // Save the master QA switch. Per-language options are stored separately
+    // and are not affected by this flag
+    JSONObj.Add('QAChecksEnabled', Form.ACheckEnabled.Checked);
+
     // Save per-language QA check options. Only languages whose options
     // differ from the defaults are stored, so the map stays minimal
     QAMapObj := TJSONObject.Create;
@@ -372,6 +376,10 @@ begin
 
       if JSONObj.FindPath('AutoCheckUpdates') <> nil then
         Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
+
+      // Restore the master QA switch
+      if JSONObj.FindPath('QAChecksEnabled') <> nil then
+        Form.ACheckEnabled.Checked := JSONObj.FindPath('QAChecksEnabled').AsBoolean;
 
       // Load per-language QA check options
       if JSONObj.FindPath('QACheckOptionsByLang') <> nil then

@@ -666,6 +666,10 @@ object formPoBatch: TformPoBatch
       object Separator17: TMenuItem
         Caption = '-'
       end
+      object MenuItem2: TMenuItem
+        Action = ACheckEnabled
+        AutoCheck = True
+      end
       object MenuQAChecks: TMenuItem
         Caption = 'QA Checks'
         object MenuCheckPlaceholderMissing: TMenuItem
@@ -1033,6 +1037,18 @@ object formPoBatch: TformPoBatch
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
     end
+    object APathShowFileInExplorer: TAction
+      Category = 'Path'
+      Caption = 'Show File In Explorer...'
+      OnExecute = APathShowFileInExplorerExecute
+    end
+    object ACheckEnabled: TAction
+      Category = 'Checks'
+      AutoCheck = True
+      Caption = 'QA Checks Enabled'
+      Checked = True
+      OnExecute = ACheckEnabledExecute
+    end
     object ACheckPlaceholderMissing: TAction
       Category = 'Checks'
       AutoCheck = True
@@ -1110,11 +1126,6 @@ object formPoBatch: TformPoBatch
       AutoCheck = True
       Caption = 'Newline mismatch (leading / trailing)'
       OnExecute = ACheckNewlinesExecute
-    end
-    object APathShowFileInExplorer: TAction
-      Category = 'Path'
-      Caption = 'Show File In Explorer...'
-      OnExecute = APathShowFileInExplorerExecute
     end
   end
   object ApplicationProp: TApplicationProperties

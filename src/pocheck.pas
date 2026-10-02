@@ -99,6 +99,8 @@ type
 
 // Returns a QA options record filled with the built-in defaults, all checks enabled
 function DefaultQACheckOptions: TQACheckOptions;
+// Returns a QA options record with every boolean check disabled
+function BlankQACheckOptions: TQACheckOptions;
 // Returns True when two option records have the same value for every field
 function QACheckOptionsEqual(const A, B: TQACheckOptions): boolean;
 
@@ -132,6 +134,25 @@ begin
   Result.PunctEnd := True;
   Result.PunctBracket := True;
   Result.Newlines := True;
+  Result.FrenchSpacing := False;
+end;
+
+function BlankQACheckOptions: TQACheckOptions;
+begin
+  Result.PluralFormsCount := 0;
+  Result.PlaceholderMissing := False;
+  Result.PlaceholderExtra := False;
+  Result.PluralCount := False;
+  Result.CaseFirstChar := False;
+  Result.CaseAllUpper := False;
+  Result.SpaceLeading := False;
+  Result.SpaceTrailing := False;
+  Result.SpaceDouble := False;
+  Result.SpaceBeforePunct := False;
+  Result.SpaceAfterPunct := False;
+  Result.PunctEnd := False;
+  Result.PunctBracket := False;
+  Result.Newlines := False;
   Result.FrenchSpacing := False;
 end;
 

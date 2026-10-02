@@ -62,6 +62,7 @@ type
     ACheckPluralCount: TAction;
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
+    ACheckEnabled: TAction;
     APathShowFileInExplorer: TAction;
     APathNewFilesFromPot: TAction;
     ANewFromPot: TAction;
@@ -146,6 +147,7 @@ type
     MenuCheckPunctEnd: TMenuItem;
     MenuCheckPunctBracket: TMenuItem;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
@@ -305,6 +307,7 @@ type
     procedure AWordWrapTranslatePanelExecute(Sender: TObject);
     procedure ASpellCheckSourceExecute(Sender: TObject);
     procedure ASpellCheckTranslationExecute(Sender: TObject);
+    procedure ACheckEnabledExecute(Sender: TObject);
     procedure ACheckCaseAllUpperExecute(Sender: TObject);
     procedure ACheckCaseFirstCharExecute(Sender: TObject);
     procedure ACheckNewlinesExecute(Sender: TObject);
@@ -625,6 +628,7 @@ begin
 
   // Load the menu state
   MenuAutoCheckUpdates.Checked := FAutoCheckUpdates;
+  MenuQAChecks.Enabled := ACheckEnabled.Checked;
 
   // Handle command line parameters
   HandleCommandLineParameters;
@@ -990,6 +994,7 @@ begin
 
   Grid.EditorMode := False;
   FPoFile.Assign(FPoFileBackup);
+  FPoFile.QAChecksEnabled := ACheckEnabled.Checked;
   FillGrid;
   FillGridHeaders;
   UpdateTranslatePanel;
@@ -2022,6 +2027,20 @@ begin
   SpellTranslation.Enabled := ASpellCheckTranslation.Checked;
   if not SpellTranslation.Enabled then
     SpellTranslation.ClearErrors;
+end;
+
+procedure TformPoBatch.ACheckEnabledExecute(Sender: TObject);
+begin
+  // Mirror the master switch onto the model. The per-language options in
+  // FQACheckOptions stay untouched, so the individual ACheck* checkboxes
+  // keep their state when the master switch is toggled back on
+  FPoFile.QAChecksEnabled := ACheckEnabled.Checked;
+
+  // The submenu with individual toggles is only usable when the master
+  // switch is on
+  MenuQAChecks.Enabled := ACheckEnabled.Checked;
+
+  RecheckAllQA;
 end;
 
 procedure TformPoBatch.ACheckCaseFirstCharExecute(Sender: TObject);
@@ -3206,6 +3225,7 @@ begin
     FFileName := AFileName;
 
     // Run QA checks once for the whole file
+    FPoFile.QAChecksEnabled := ACheckEnabled.Checked;
     FPoFile.CheckAllQA;
 
     Changed := False;
@@ -3543,6 +3563,9 @@ begin
       SpellTranslation.Language := FLanguage;
       LoadQACheckOptionsForLanguage(FLanguage);
       ApplyQACheckOptionsToMenu;
+
+      // Preserve the master switch across file loads
+      FPoFile.QAChecksEnabled := ACheckEnabled.Checked;
 
       // Run QA checks once for the whole file
       FPoFile.CheckAllQA;
@@ -4762,6 +4785,10 @@ begin
   else
     LangSuffix := ' (*)';
   MenuQAChecks.Caption := 'QA Checks' + LangSuffix;
+
+  // The submenu with individual toggles is only usable when the master
+  // switch is on
+  MenuQAChecks.Enabled := ACheckEnabled.Checked;
 end;
 
 procedure TformPoBatch.RecheckAllQA;
