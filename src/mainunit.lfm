@@ -575,7 +575,7 @@ object formPoBatch: TformPoBatch
   end
   object MainMenu: TMainMenu
     Left = 312
-    Top = 136
+    Top = 120
     object MenuFile: TMenuItem
       Caption = 'File'
       object MenuFileNew: TMenuItem
@@ -821,14 +821,14 @@ object formPoBatch: TformPoBatch
     Filter = 'Po File (*.po)|*.po|Po Template (*.pot)|*.pot'
     Options = [ofOverwritePrompt, ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 312
-    Top = 200
+    Top = 184
   end
   object dialogSave: TSaveDialog
     DefaultExt = '.po'
     Filter = 'Po File (*.po)|*.po|Po Template (*.pot)|*.pot'
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
     Left = 392
-    Top = 200
+    Top = 184
   end
   object dialogPath: TSelectDirectoryDialog
     Left = 312
@@ -836,7 +836,7 @@ object formPoBatch: TformPoBatch
   end
   object ActionList: TActionList
     Left = 232
-    Top = 136
+    Top = 120
     object AUndoChanges: TAction
       Category = 'Edit'
       Caption = 'Undo Changes'
@@ -1159,11 +1159,11 @@ object formPoBatch: TformPoBatch
     OnDeactivate = ApplicationPropDeactivate
     OnException = ApplicationPropException
     Left = 232
-    Top = 200
+    Top = 184
   end
   object PopupGrid: TPopupMenu
     Left = 392
-    Top = 136
+    Top = 120
     object MenuPopupCopySourceText: TMenuItem
       Action = ACopySourceText
     end
@@ -1655,7 +1655,7 @@ object formPoBatch: TformPoBatch
   end
   object PopupPath: TPopupMenu
     Left = 472
-    Top = 136
+    Top = 120
     object MenuPathNewFilesFromPot: TMenuItem
       Action = APathNewFilesFromPot
     end
@@ -1686,7 +1686,7 @@ object formPoBatch: TformPoBatch
   end
   object PopupMemo: TPopupMenu
     Left = 552
-    Top = 136
+    Top = 120
     object MenuMemoUndo: TMenuItem
       Action = AMemoUndo
     end
@@ -1730,10 +1730,10 @@ object formPoBatch: TformPoBatch
     MemoChangeOnReplace = True
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
-    DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
+    DicUrl = 'https://raw.githubusercontent.com/plainlib/dictionaries/main/{plaindict}'
     OnSpellCheckComplete = SpellSourceSpellCheckComplete
     Left = 472
-    Top = 200
+    Top = 184
   end
   object SpellTranslation: TSpellChecker
     RichMemo = MemoTranslation
@@ -1742,10 +1742,10 @@ object formPoBatch: TformPoBatch
     MemoChangeOnReplace = True
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
-    DicUrl = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/{libredict}'
+    DicUrl = 'https://raw.githubusercontent.com/plainlib/dictionaries/main/{plaindict}'
     OnSpellCheckComplete = SpellTranslationSpellCheckComplete
     Left = 552
-    Top = 200
+    Top = 184
   end
   object ImagesWarning: TImageList
     Left = 472
