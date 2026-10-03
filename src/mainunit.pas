@@ -106,6 +106,8 @@ type
     GridHeaders: TStringGrid;
     GridComments: TStringGrid;
     GridPlural: TStringGrid;
+    ImagesWarning: TImageList;
+    ImageQA: TImage;
     ImagesSwitch: TImageList;
     ImageSwitch: TImage;
     LabelSwitch: TLabel;
@@ -114,7 +116,7 @@ type
     MemoSource: TRichMemo;
     MemoPlural: TRichMemo;
     MemoTranslation: TRichMemo;
-    MemoCheck: TMemo;
+    MemoQA: TMemo;
     MenuFile: TMenuItem;
     MenuFileOpen: TMenuItem;
     MenuFileSave: TMenuItem;
@@ -195,6 +197,7 @@ type
     MenuView: TMenuItem;
     MenuPathOpen: TMenuItem;
     Pages: TPageControl;
+    PanelQA: TPanel;
     PanelTranslation: TPanel;
     PanelSource: TPanel;
     PanelPageTranslation: TPanel;
@@ -523,8 +526,8 @@ const
   // Colors
   clRowHighlight = TColor($FFF0DC);
   clRowHighlightDark = TColor($5A4037);
-  clInfo = TColor($96FFFF);
-  clInfoDark = TColor($009696);
+  clInfo = TColor($C0F5FF);
+  clInfoDark = TColor($496269);
   clLine = TColor($E8E8E8);
   clLineDark = TColor($484848);
   clLightGray = TColor($FAFAFA);
@@ -535,8 +538,6 @@ const
   clFontBlueDark = TColor($00DD8F84);
   clSoftBlue = TColor($F0E6D8);
   clSoftBlueDark = TColor($2B1A10);
-  clSoftYellow = TColor($E9FEFE);
-  clSoftYellowDark = TColor($045757);
   clSoftGreen = TColor($DDFBDF);
   clSoftGreenDark = TColor($07410C);
 
@@ -2590,7 +2591,7 @@ begin
   end;
 
   if Grid.Cells[CELL_FUZZY, aRow] = '1' then
-    CustomColor := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark);
+    CustomColor := TDarkUtils.ThemeColor(clInfo, clInfoDark);
 
   if (CustomColor <> clWindow) and (Grid.Canvas.Brush.Color <> clNone) then
   begin
@@ -2855,7 +2856,7 @@ begin
     Status := FFileStatuses[Index];
     case Status of
       psCorrect: BgColor := TDarkUtils.ThemeColor(clSoftGreen, clSoftGreenDark);   // light green
-      psFuzzy: BgColor := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark);   // light yellow
+      psFuzzy: BgColor := TDarkUtils.ThemeColor(clInfo, clInfoDark);   // light yellow
       psEmptyTranslation: BgColor := clWindow;  // default (white)
       else
         BgColor := clWindow;
@@ -3817,7 +3818,7 @@ begin
       ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
     end;
 
-    PanelCheck.Color := ifthen(ImageSwitch.Tag = 1, TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark), clWindow);
+    PanelCheck.Color := ifthen(ImageSwitch.Tag = 1, TDarkUtils.ThemeColor(clInfo, clInfoDark), clWindow);
     if ImageSwitch.Tag = 0 then
       LabelSwitch.Font.Color := TDarkUtils.ThemeColor(clMidGray, clMidGrayDark)
     else
@@ -3851,24 +3852,31 @@ procedure TformPoBatch.UpdateQACheck(aRow: integer = -1);
 var
   Entry: TPOEntry;
   I, Count: integer;
+  BgColor: TColor;
 begin
-  MemoCheck.Lines.BeginUpdate;
+  MemoQA.Lines.BeginUpdate;
   try
-    MemoCheck.Lines.Clear;
+    MemoQA.Lines.Clear;
 
     if aRow = -1 then
       aRow := Grid.Row;
 
     if (aRow < Grid.FixedRows) or (aRow >= Grid.RowCount) then
     begin
-      MemoCheck.Color := clWindow;
+      BgColor := clWindow;
+      PanelQA.Color := BgColor;
+      MemoQA.Color := BgColor;
+      ImageQA.Visible := False;
       Exit;
     end;
 
     Entry := RowEntry(aRow);
     if not Assigned(Entry) then
     begin
-      MemoCheck.Color := clWindow;
+      BgColor := clWindow;
+      PanelQA.Color := BgColor;
+      MemoQA.Color := BgColor;
+      ImageQA.Visible := False;
       Exit;
     end;
 
@@ -3877,15 +3885,22 @@ begin
 
     Count := Length(Entry.QACheckResults);
     for I := 0 to Count - 1 do
-      MemoCheck.Lines.Add(Entry.QACheckResults[I]);
+      MemoQA.Lines.Add(Entry.QACheckResults[I]);
 
-    // Highlight the memo when there is at least one QA issue
+    // Highlight the whole panel when there is at least one QA issue
     if Entry.IsFuzzy or (Count > 0) then
-      MemoCheck.Color := TDarkUtils.ThemeColor(clSoftYellow, clSoftYellowDark)
+      BgColor := TDarkUtils.ThemeColor(clInfo, clInfoDark)
     else
-      MemoCheck.Color := clWindow;
+      BgColor := clWindow;
+
+    PanelQA.Color := BgColor;
+    MemoQA.Color := BgColor;
+
+    // Show the warning icon only when the current entry has QA issues
+    ImageQA.ImageIndex := TDarkUtils.ThemeValue(0, 1);
+    ImageQA.Visible := Count > 0;
   finally
-    MemoCheck.Lines.EndUpdate;
+    MemoQA.Lines.EndUpdate;
   end;
 end;
 
@@ -4033,7 +4048,7 @@ begin
     not (Assigned(MemoSource) and MemoSource.Focused) and
     not (Assigned(MemoPlural) and MemoPlural.Focused) and
     not (Assigned(MemoTranslation) and MemoTranslation.Focused) and
-    not (Assigned(MemoCheck) and MemoCheck.Focused) and
+    not (Assigned(MemoQA) and MemoQA.Focused) and
     not (Assigned(Filter) and Filter.Focused) and
     not (Assigned(GridHeaders.InplaceEditor) and GridHeaders.InplaceEditor.Focused) and
     not (Assigned(GridPlural.InplaceEditor) and GridPlural.InplaceEditor.Focused) and
