@@ -627,6 +627,10 @@ begin
   FPoFileBackup := TPoFile.Create;
   NewFile;
 
+  // Components state after settings loaded
+  SpellSource.Enabled := ASpellCheckSource.Checked;
+  SpellTranslation.Enabled := ASpellCheckTranslation.Checked;
+
   // Load the menu state
   MenuAutoCheckUpdates.Checked := FAutoCheckUpdates;
   MenuQAChecks.Enabled := ACheckEnabled.Checked;

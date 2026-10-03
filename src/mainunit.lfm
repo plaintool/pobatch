@@ -1725,6 +1725,7 @@ object formPoBatch: TformPoBatch
   object SpellSource: TSpellChecker
     RichMemo = MemoSource
     Language = 'en'
+    Enabled = False
     RealTime = True
     MemoChangeOnReplace = True
     SubMenuCaption = 'Suggestions'
@@ -1736,6 +1737,7 @@ object formPoBatch: TformPoBatch
   end
   object SpellTranslation: TSpellChecker
     RichMemo = MemoTranslation
+    Enabled = False
     RealTime = True
     MemoChangeOnReplace = True
     SubMenuCaption = 'Suggestions'
