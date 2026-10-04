@@ -589,6 +589,12 @@ begin
   FFilterPending := False;
   FAnalizeGeneration := 0;
 
+  {$IFDEF WINDOWS}
+  PanelCheck.Height := 35;
+  {$ELSE}
+  PanelCheck.Height := 40;
+  {$ENDIF}
+
   // Initialize components
   SpellSource.DicPath := TOS.GetSettingsDirectory('plaintool', 'dic');
   SpellTranslation.DicPath := TOS.GetSettingsDirectory('plaintool', 'dic');
