@@ -592,7 +592,7 @@ begin
   {$IFDEF WINDOWS}
   PanelCheck.Height := 35;
   {$ELSE}
-  PanelCheck.Height := 40;
+  PanelCheck.Height := 42;
   {$ENDIF}
 
   // Initialize components
@@ -616,6 +616,13 @@ begin
 
   FRichEditor := TRichMemoCellEditor.Create(Grid);
   FRichEditor.ScrollBars := ssAutoVertical;
+
+  {$IFDEF UNIX}
+  MemoSource.EnableUndo;
+  MemoTranslation.EnableUndo;
+  MemoPlural.EnableUndo;
+  FRichEditor.EnableUndo;
+  {$ENDIF}
 
   // Headers pick list
   HeaderList := TPOFile.GetHeaderNames;
