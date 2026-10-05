@@ -5,7 +5,7 @@ set "OP_NAME=OpenSSL DLLs"
 :: Arguments: %1 = architecture (32 or 64), %2 = application name (default trayslate)
 set "ARCH=%~1"
 set "APP_NAME=%~2"
-if "%APP_NAME%"=="" set "APP_NAME=trayslate"
+if "%APP_NAME%"=="" set "APP_NAME=pobatch"
 
 if "%ARCH%"=="" (
     echo [depsbinary.cmd] Architecture not specified. Use 32 or 64.

@@ -16,6 +16,7 @@ DEP_LPKS = \
     libs/helpers/helpers.lpk \
     libs/toolkit/toolkit.lpk \
     libs/richmemo/richmemopackage.lpk \
+    libs/richmemo/ide/richmemo_design.lpk \
     libs/richkit/richkit.lpk \
     libs/designkit/designkit.lpk
 
