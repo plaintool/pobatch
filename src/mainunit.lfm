@@ -1738,6 +1738,7 @@ object formPoBatch: TformPoBatch
     ChunkSize = 2048
     CheckVisibleOnly = True
     OnSpellCheckComplete = SpellSourceSpellCheckComplete
+    TwoPhaseSuggestions = True
     Left = 472
     Top = 184
   end
@@ -1753,6 +1754,7 @@ object formPoBatch: TformPoBatch
     ChunkSize = 2048
     CheckVisibleOnly = True
     OnSpellCheckComplete = SpellTranslationSpellCheckComplete
+    TwoPhaseSuggestions = True
     Left = 552
     Top = 184
   end
