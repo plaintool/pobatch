@@ -538,7 +538,7 @@ const
   clFontBlueDark = TColor($00DD8F84);
   clSoftBlue = TColor($F0E6D8);
   clSoftBlueDark = TColor($2B1A10);
-  clSoftGreen = TColor($DDFBDF);
+  clSoftGreen = TColor($D1FAD3);
   clSoftGreenDark = TColor($07410C);
 
   {%EndRegion}
@@ -604,6 +604,7 @@ begin
   GridHeaders.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridPlural.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
+  ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
 
   // Upper bound for a single row height, so a row cannot grow taller than the visible grid area
   FMaxRowHeight := Screen.Height div 3;

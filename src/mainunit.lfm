@@ -252,6 +252,100 @@ object formPoBatch: TformPoBatch
       ResizeAnchor = akBottom
       Visible = False
     end
+    object PanelCheck: TPanel
+      Left = 1
+      Height = 40
+      Top = 221
+      Width = 574
+      Align = alBottom
+      BevelOuter = bvNone
+      ClientHeight = 40
+      ClientWidth = 574
+      Color = clWindow
+      Constraints.MinHeight = 35
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 1
+      object PanelSwitch: TPanel
+        Left = 0
+        Height = 40
+        Top = 0
+        Width = 200
+        Align = alLeft
+        BevelOuter = bvNone
+        ClientHeight = 40
+        ClientWidth = 200
+        ParentBackground = False
+        TabOrder = 0
+        TabStop = True
+        OnEnter = PanelSwitchEnter
+        OnExit = PanelSwitchExit
+        OnPaint = PanelSwitchPaint
+        object LabelSwitch: TLabel
+          Left = 64
+          Height = 40
+          Top = 0
+          Width = 136
+          Align = alClient
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Needs Validation'
+          Font.Height = -16
+          Layout = tlCenter
+          ParentFont = False
+        end
+        object ImageSwitch: TImage
+          Left = 0
+          Height = 40
+          Top = 0
+          Width = 64
+          Align = alLeft
+          AutoSize = True
+          Center = True
+          Images = ImagesSwitch
+          OnClick = ImageSwitchClick
+        end
+      end
+      object PanelQA: TPanel
+        Left = 200
+        Height = 40
+        Top = 0
+        Width = 374
+        Align = alClient
+        BevelOuter = bvNone
+        ClientHeight = 40
+        ClientWidth = 374
+        ParentBackground = False
+        TabOrder = 1
+        object ImageQA: TImage
+          Left = 0
+          Height = 40
+          Top = 0
+          Width = 16
+          Align = alLeft
+          AutoSize = True
+          Center = True
+          Images = ImagesWarning
+          Visible = False
+        end
+        object MemoQA: TMemo
+          Left = 21
+          Height = 36
+          Top = 2
+          Width = 351
+          Align = alClient
+          BorderSpacing.Left = 5
+          BorderSpacing.Top = 2
+          BorderSpacing.Right = 2
+          BorderSpacing.Bottom = 2
+          BorderStyle = bsNone
+          ParentColor = True
+          ReadOnly = True
+          ScrollBars = ssAutoVertical
+          TabOrder = 0
+        end
+      end
+    end
     object Pages: TPageControl
       Left = 1
       Height = 200
@@ -468,100 +562,6 @@ object formPoBatch: TformPoBatch
           OnKeyDown = GridsUniversalKeyDown
           OnPrepareCanvas = GridUniversalPrepareCanvas
           OnValidateEntry = GridCommentsValidateEntry
-        end
-      end
-    end
-    object PanelCheck: TPanel
-      Left = 1
-      Height = 40
-      Top = 221
-      Width = 574
-      Align = alBottom
-      BevelOuter = bvNone
-      ClientHeight = 40
-      ClientWidth = 574
-      Color = clInfoBk
-      Constraints.MinHeight = 35
-      ParentBackground = False
-      ParentColor = False
-      TabOrder = 1
-      object PanelSwitch: TPanel
-        Left = 0
-        Height = 40
-        Top = 0
-        Width = 200
-        Align = alLeft
-        BevelOuter = bvNone
-        ClientHeight = 40
-        ClientWidth = 200
-        ParentBackground = False
-        TabOrder = 0
-        TabStop = True
-        OnEnter = PanelSwitchEnter
-        OnExit = PanelSwitchExit
-        OnPaint = PanelSwitchPaint
-        object LabelSwitch: TLabel
-          Left = 64
-          Height = 40
-          Top = 0
-          Width = 136
-          Align = alClient
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Needs Validation'
-          Font.Height = -16
-          Layout = tlCenter
-          ParentFont = False
-        end
-        object ImageSwitch: TImage
-          Left = 0
-          Height = 40
-          Top = 0
-          Width = 64
-          Align = alLeft
-          AutoSize = True
-          Center = True
-          Images = ImagesSwitch
-          OnClick = ImageSwitchClick
-        end
-      end
-      object PanelQA: TPanel
-        Left = 200
-        Height = 40
-        Top = 0
-        Width = 374
-        Align = alClient
-        BevelOuter = bvNone
-        ClientHeight = 40
-        ClientWidth = 374
-        ParentBackground = False
-        TabOrder = 1
-        object ImageQA: TImage
-          Left = 0
-          Height = 40
-          Top = 0
-          Width = 16
-          Align = alLeft
-          AutoSize = True
-          Center = True
-          Images = ImagesWarning
-          Visible = False
-        end
-        object MemoQA: TMemo
-          Left = 21
-          Height = 36
-          Top = 2
-          Width = 351
-          Align = alClient
-          BorderSpacing.Left = 5
-          BorderSpacing.Top = 2
-          BorderSpacing.Right = 2
-          BorderSpacing.Bottom = 2
-          BorderStyle = bsNone
-          ParentColor = True
-          ReadOnly = True
-          ScrollBars = ssAutoVertical
-          TabOrder = 0
         end
       end
     end
