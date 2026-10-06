@@ -380,6 +380,7 @@ type
     procedure MemoPluralChange(Sender: TObject);
     procedure MemoTranslationEnter(Sender: TObject);
     procedure MemoTranslationChange(Sender: TObject);
+    procedure MemoPanelKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     {%EndRegion}
   private
     FRichEditor: TRichMemoCellEditor;
@@ -2694,6 +2695,8 @@ end;
 
 procedure TformPoBatch.MemoEnter(Sender: TObject);
 begin
+  FRichEditor.ClearUndoHistory;
+
   if (Grid.IsCellSelected[Grid.Col, Grid.Row]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
   begin
     FRichEditor.Color := clHighlight;
@@ -2763,7 +2766,6 @@ begin
       Changed := True;
       Grid.EditorMode := False;
     end;
-
     Key := 0;
   end
   else if ((Key = Ord('V')) and (ssCtrl in Shift)) or ((Key = VK_INSERT) and (ssShift in Shift)) then
@@ -2789,6 +2791,28 @@ begin
     if Sender is TRichMemo then
     begin
       TRichMemo(Sender).CutToClipboardNoTrailingLineBreak;
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+        Grid.Row);
+      Key := 0;
+    end;
+  end
+  else if (Key = Ord('Z')) and (ssCtrl in Shift) then
+  begin
+    // Undo last action in the rich memo
+    if Sender is TRichMemo then
+    begin
+      TRichMemo(Sender).UndoEx;
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+        Grid.Row);
+      Key := 0;
+    end;
+  end
+  else if (Key = Ord('Y')) and (ssCtrl in Shift) then
+  begin
+    // Redo last undone action in the rich memo
+    if Sender is TRichMemo then
+    begin
+      TRichMemo(Sender).RedoEx;
       Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
         Grid.Row);
       Key := 0;
@@ -3034,6 +3058,36 @@ begin
     Changed := True;
     UpdateValid;
     Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+  end;
+end;
+
+procedure TformPoBatch.MemoPanelKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  // Handle ctrl shortcuts for the panel memos
+  if not (ssCtrl in Shift) then
+    Exit;
+  if not (Sender is TRichMemo) then
+    Exit;
+
+  case Key of
+    VK_V:
+    begin
+      // Ctrl+V, paste text from clipboard without trailing line breaks
+      TRichMemo(Sender).PasteWithLineEnding;
+      Key := 0;
+    end;
+    VK_Z:
+    begin
+      // Ctrl+Z, undo last action
+      TRichMemo(Sender).UndoEx;
+      Key := 0;
+    end;
+    VK_Y:
+    begin
+      // Ctrl+Y, redo last undone action
+      TRichMemo(Sender).RedoEx;
+      Key := 0;
+    end;
   end;
 end;
 
@@ -3946,6 +4000,7 @@ begin
     finally
       MemoSource.OnChange := OriginalOnChange;
     end;
+    MemoSource.ClearUndoHistory;
   end;
   MemoSource.UpdateState(5);
 
@@ -3959,6 +4014,7 @@ begin
     finally
       MemoPlural.OnChange := @MemoPluralChange;
     end;
+    MemoPlural.ClearUndoHistory;
   end;
   MemoPlural.Visible := MemoPlural.Text <> string.Empty;
   ShapePlural.Visible := MemoPlural.Text <> string.Empty;
@@ -3987,6 +4043,7 @@ begin
       finally
         MemoTranslation.OnChange := OriginalOnChange;
       end;
+      MemoTranslation.ClearUndoHistory;
     end;
     MemoTranslation.UpdateState(5);
   end;
