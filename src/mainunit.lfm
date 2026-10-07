@@ -1736,7 +1736,6 @@ object formPoBatch: TformPoBatch
     DicUrl = 'https://raw.githubusercontent.com/plainlib/dictionaries/main/{plaindict}'
     ChunkedCheck = True
     ChunkSize = 2048
-    CheckVisibleOnly = True
     OnSpellCheckComplete = SpellSourceSpellCheckComplete
     TwoPhaseSuggestions = True
     Left = 472
@@ -1752,7 +1751,6 @@ object formPoBatch: TformPoBatch
     DicUrl = 'https://raw.githubusercontent.com/plainlib/dictionaries/main/{plaindict}'
     ChunkedCheck = True
     ChunkSize = 2048
-    CheckVisibleOnly = True
     OnSpellCheckComplete = SpellTranslationSpellCheckComplete
     TwoPhaseSuggestions = True
     Left = 552
