@@ -617,6 +617,7 @@ begin
   MemoPlural.UpdateState(5);
 
   FRichEditor := TRichMemoCellEditor.Create(Grid);
+  FRichEditor.PopupMenu := PopupMemo;
   FRichEditor.ScrollBars := ssAutoVertical;
 
   {$IFDEF UNIX}
@@ -2524,6 +2525,13 @@ var
   NewPos: integer = 0;
   MaxPos: integer = 0;
 begin
+  // Ctrl is reserved for zoom, so let the event go further up
+  if ssCtrl in Shift then
+  begin
+    Handled := False;
+    Exit;
+  end;
+
   // Scroll the editor only if it is visible, active, and the cursor is above it.
   if (Assigned(FRichEditor)) and FRichEditor.Visible and FRichEditor.Focused and
     FRichEditor.ClientRect.Contains(FRichEditor.ScreenToClient(Mouse.CursorPos)) then
@@ -3980,6 +3988,7 @@ procedure TformPoBatch.UpdateTranslatePanel(aRow: integer = -1);
 var
   OriginalOnChange: TNotifyEvent;
   NewText: string;
+  SavedZoom: double = 0;
 begin
   if aRow = -1 then aRow := Grid.Row;
   UpdateQACheck(aRow);
@@ -3995,10 +4004,12 @@ begin
   begin
     OriginalOnChange := MemoSource.OnChange;
     MemoSource.OnChange := nil;
+    SavedZoom := MemoSource.ZoomFactor;
     try
       MemoSource.Text := NewText;
     finally
       MemoSource.OnChange := OriginalOnChange;
+      MemoSource.ZoomFactor := SavedZoom;
     end;
     MemoSource.ClearUndoHistory;
   end;
@@ -4009,10 +4020,12 @@ begin
   if not MemoPlural.Text.EqualNormalized(NewText) then
   begin
     MemoPlural.OnChange := nil;
+    SavedZoom := MemoPlural.ZoomFactor;
     try
       MemoPlural.Text := NewText;
     finally
       MemoPlural.OnChange := @MemoPluralChange;
+      MemoPlural.ZoomFactor := SavedZoom;
     end;
     MemoPlural.ClearUndoHistory;
   end;
@@ -4038,10 +4051,12 @@ begin
     begin
       OriginalOnChange := MemoTranslation.OnChange;
       MemoTranslation.OnChange := nil;
+      SavedZoom := MemoTranslation.ZoomFactor;
       try
         MemoTranslation.Text := NewText;
       finally
         MemoTranslation.OnChange := OriginalOnChange;
+        MemoTranslation.ZoomFactor := SavedZoom;
       end;
       MemoTranslation.ClearUndoHistory;
     end;
