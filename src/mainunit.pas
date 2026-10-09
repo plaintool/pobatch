@@ -667,8 +667,6 @@ begin
 end;
 
 procedure TformPoBatch.FormShow(Sender: TObject);
-var
-  Th: TCheckUpdateThread;
 begin
   if not FInitialized then
   begin
@@ -701,10 +699,7 @@ begin
   PanelTranslation.Height := Round((PanelSource.Height + PanelTranslation.Height) * FSplitRatio);
 
   if AutoCheckUpdates then
-  begin
-    Th := TCheckUpdateThread.Create(REPO, APP_NAME, False);
-    Th.FreeOnTerminate := True;
-  end;
+    StartUpdateCheck(REPO, APP_NAME);
 end;
 
 procedure TformPoBatch.FormCloseQuery(Sender: TObject; var CanClose: boolean);
