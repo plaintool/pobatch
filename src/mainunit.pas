@@ -3992,11 +3992,10 @@ var
 begin
   if aRow = -1 then aRow := Grid.Row;
   UpdateQACheck(aRow);
+  UpdateSwitch(aRow);
 
   // We proceed further only if the translation panel is visible
   if not Pages.Visible then Exit;
-
-  UpdateSwitch(aRow);
 
   // Source memo
   NewText := Grid.Cells[CELL_TEXT, aRow];
