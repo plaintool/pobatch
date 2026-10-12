@@ -551,7 +551,7 @@ const
 implementation
 
 uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, controlshelper, darkutils, checkupdates, osutils,
-  RichMemoHelper, pascalutils;
+  RichMemoHelper, localize, pascalutils;
 
   {$R *.lfm}
 
@@ -709,6 +709,9 @@ end;
 
 procedure TformPoBatch.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
+  // Never treat AltGr-like input as a shortcut
+  if TLocalize.IsCharInputModifier(Shift) then Exit;
+
   if ActiveControl = PanelSwitch then
   begin
     if Key = VK_SPACE then
@@ -2211,6 +2214,9 @@ var
   SelRow: integer;
   GridAny: TStringGrid;
 begin
+  // Never treat AltGr-like input as a shortcut
+  if TLocalize.IsCharInputModifier(Shift) then Exit;
+
   GridAny := (Sender as TStringGrid);
   if not Assigned(GridAny) then exit;
 
@@ -2358,6 +2364,9 @@ var
   SelIndexes: array of integer = ();
   i, Count: integer;
 begin
+  // Never treat AltGr-like input as a shortcut
+  if TLocalize.IsCharInputModifier(Shift) then Exit;
+
   // Delete rows via Ctrl+Del (only when not in translation-only mode)
   if not AEditTranslationOnly.Checked and (ssCtrl in Shift) and (Key = VK_DELETE) then
   begin
@@ -2744,6 +2753,9 @@ end;
 
 procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
+  // Never treat AltGr-like input as a shortcut
+  if TLocalize.IsCharInputModifier(Shift) then Exit;
+
   if Key = VK_ESCAPE then
   begin
     Grid.EditorMode := False;
@@ -2881,6 +2893,9 @@ end;
 
 procedure TformPoBatch.ListPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
+  // Never treat AltGr-like input as a shortcut
+  if TLocalize.IsCharInputModifier(Shift) then Exit;
+
   if (Key = Ord('A')) and (ssCtrl in Shift) then
   begin
     ListPath.SelectAll;
@@ -3069,6 +3084,11 @@ begin
   // Handle ctrl shortcuts for the panel memos
   if not (ssCtrl in Shift) then
     Exit;
+
+  // Never treat AltGr-like input as a shortcut
+  if TLocalize.IsCharInputModifier(Shift) then
+    Exit;
+
   if not (Sender is TRichMemo) then
     Exit;
 
