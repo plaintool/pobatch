@@ -620,7 +620,14 @@ begin
   FRichEditor.PopupMenu := PopupMemo;
   FRichEditor.ScrollBars := ssAutoVertical;
 
-  {$IFDEF UNIX}
+  {$IFDEF WINDOWS}
+  // Enable smart word selection mode
+  MemoSource.EnableSmartSelection;
+  MemoTranslation.EnableSmartSelection;
+  MemoPlural.EnableSmartSelection;
+  FRichEditor.EnableSmartSelection;
+  {$ELSE}
+  // Enable custom undo mode
   MemoSource.EnableUndo;
   MemoTranslation.EnableUndo;
   MemoPlural.EnableUndo;
