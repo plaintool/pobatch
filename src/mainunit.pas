@@ -5,7 +5,7 @@
 //  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
 //-----------------------------------------------------------------------------------
 
-unit mainunit;
+unit MainUnit;
 
 {$mode objfpc}{$H+}
 
@@ -550,8 +550,8 @@ const
 
 implementation
 
-uses formabout, formdonate, settings, stringgridhelper, stringhelper, colorhelper, controlshelper, darkutils, checkupdates, osutils,
-  RichMemoHelper, localize, pascalutils;
+uses FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper, DarkUtils, CheckUpdates, OSUtils,
+  RichMemoHelper, Localize, PascalUtils;
 
   {$R *.lfm}
 

@@ -5,7 +5,7 @@
 //  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
 //-----------------------------------------------------------------------------------
 
-unit settings;
+unit Settings;
 
 {$mode ObjFPC}{$H+}
 {$codepage utf8}
@@ -19,7 +19,7 @@ uses
   Grids,
   fpjson,
   Graphics,
-  mainunit;
+  MainUnit;
 
 procedure SaveFormSettings(Form: TformPoBatch);
 
@@ -27,7 +27,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses PoWrap, PoCheck, ObjectDictionary, osutils;
+uses PoWrap, PoCheck, ObjectDictionary, OSUtils;
 
 function QACheckOptionsToJSON(const AOpt: TQACheckOptions): TJSONObject;
 begin

@@ -12,7 +12,7 @@ unit LangCodes;
 interface
 
 uses
-  Classes, SysUtils, stringhelper;
+  Classes, SysUtils, StringHelper;
 
 type
   // Record to hold a single language entry

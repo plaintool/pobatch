@@ -11,7 +11,7 @@ object formAboutPoBatch: TformAboutPoBatch
   Color = clWhite
   KeyPreview = True
   Position = poDesktopCenter
-  LCLVersion = '4.6.0.0'
+  LCLVersion = '4.8.0.0'
   Scaled = False
   OnCreate = FormCreate
   object buttonOk: TButton

@@ -5,7 +5,7 @@
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //-----------------------------------------------------------------------------------
 
-program pobatch;
+program PoBatch;
 
 {$mode objfpc}{$H+}
 
@@ -22,9 +22,9 @@ uses
   uDarkStyle,
   uWin32WidgetSetDark,
   {$ENDIF}
-  mainunit,
-  formabout,
-  formdonate;
+  MainUnit,
+  FormAbout,
+  FormDonate;
 
   {$R *.res}
 

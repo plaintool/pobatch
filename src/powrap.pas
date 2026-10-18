@@ -16,7 +16,7 @@ uses
   Classes,
   SysUtils,
   Contnrs,
-  pocheck;   // QA check options, messages and the TPOChecker class
+  PoCheck;   // QA check options, messages and the TPOChecker class
 
   // All QA-related resourcestrings, the TQACheckOptions record and the
   // TPOChecker class now live in the pocheck unit.

@@ -5,7 +5,7 @@
 //  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
 //-----------------------------------------------------------------------------------
 
-unit formabout;
+unit FormAbout;
 
 {$mode ObjFPC}{$H+}
 
@@ -15,7 +15,8 @@ uses
   Forms,
   StdCtrls,
   ExtCtrls,
-  LCLIntf, Classes;
+  Classes,
+  LCLIntf;
 
 type
 
@@ -42,7 +43,7 @@ var
 
 implementation
 
-uses checkupdates;
+uses CheckUpdates;
 
   {$R *.lfm}
 
