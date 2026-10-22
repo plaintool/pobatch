@@ -3475,6 +3475,22 @@ begin
         if FPathIndex > i then
           Dec(FPathIndex);
       end;
+
+    // Pick up files that appeared in the directory since the cache was saved
+    TempFiles := TStringList.Create;
+    try
+      TOS.FindFilesByMasks(APath, ['*.po', '*.pot'], TempFiles);
+      for i := 0 to TempFiles.Count - 1 do
+        if FPoFiles.IndexOf(TempFiles[i]) < 0 then
+        begin
+          FPoFiles.Add(TempFiles[i]);
+          SetLength(FFileStatuses, Length(FFileStatuses) + 1);
+          // Status is recomputed by AnalizePath right after OpenPath returns
+          FFileStatuses[High(FFileStatuses)] := psEmptyTranslation;
+        end;
+    finally
+      TempFiles.Free;
+    end;
   end;
 
   // Find and store the last .pot file (if any)
