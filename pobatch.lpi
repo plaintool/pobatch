@@ -114,6 +114,7 @@
         <ComponentName Value="formPoBatch"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MainUnit"/>
       </Unit>
       <Unit>
         <Filename Value="src\formabout.pas"/>

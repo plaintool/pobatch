@@ -1302,66 +1302,71 @@ begin
       Exit;
   end;
 
-  // Create a PO file for every selected language
-  CreatedCount := 0;
-  LastCreatedFile := string.Empty;
-  for i := 0 to High(Codes) do
-  begin
-    if CreatePoFileFromPot(PotFileName, Codes[i], NewFileName) then
-    begin
-      FPoFiles.Add(NewFileName);
-      LastCreatedFile := NewFileName;
-      Inc(CreatedCount);
-    end;
-  end;
-
-  if CreatedCount = 0 then
-    Exit;
-
-  // The last created file is already loaded and saved, so drop the modified flag
-  Changed := False;
-  UpdateTranslatePanel;
-
-  // Re-sort the file list keeping statuses aligned; new files get their status computed
-  SortList := TStringList.Create;
+  Screen.Cursor := crHourGlass;
   try
-    for i := 0 to FPoFiles.Count - 1 do
-      if i < Length(FFileStatuses) then
-        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(FFileStatuses[i]))))
-      else
-        SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(TPOFile.GetFileStatus(FPoFiles[i])))));
-
-    SortList.Sort;
-
-    FPoFiles.Assign(SortList);
-    SetLength(FFileStatuses, SortList.Count);
-    for i := 0 to SortList.Count - 1 do
-      FFileStatuses[i] := TPoFileStatus(PtrInt(SortList.Objects[i]));
-  finally
-    SortList.Free;
-  end;
-
-  // Rebuild the visible list and select the last created file
-  ListPath.Items.BeginUpdate;
-  try
-    ListPath.Items.Clear;
-    for i := 0 to FPoFiles.Count - 1 do
-      ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
-
-    NewIdx := FPoFiles.IndexOf(LastCreatedFile);
-    if NewIdx >= 0 then
+    // Create a PO file for every selected language
+    CreatedCount := 0;
+    LastCreatedFile := string.Empty;
+    for i := 0 to High(Codes) do
     begin
-      ListPath.Selected[NewIdx] := True;
-      ListPath.ItemIndex := NewIdx;
-      FPathIndex := NewIdx;
-      FLastPathIndex := NewIdx;
+      if CreatePoFileFromPot(PotFileName, Codes[i], NewFileName) then
+      begin
+        FPoFiles.Add(NewFileName);
+        LastCreatedFile := NewFileName;
+        Inc(CreatedCount);
+      end;
     end;
-  finally
-    ListPath.Items.EndUpdate;
-  end;
 
-  ListPath.Invalidate;
-  UpdateCaption;
+    if CreatedCount = 0 then
+      Exit;
+
+    // The last created file is already loaded and saved, so drop the modified flag
+    Changed := False;
+    UpdateTranslatePanel;
+
+    // Re-sort the file list keeping statuses aligned; new files get their status computed
+    SortList := TStringList.Create;
+    try
+      for i := 0 to FPoFiles.Count - 1 do
+        if i < Length(FFileStatuses) then
+          SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(FFileStatuses[i]))))
+        else
+          SortList.AddObject(FPoFiles[i], TObject(PtrInt(Ord(TPOFile.GetFileStatus(FPoFiles[i])))));
+
+      SortList.Sort;
+
+      FPoFiles.Assign(SortList);
+      SetLength(FFileStatuses, SortList.Count);
+      for i := 0 to SortList.Count - 1 do
+        FFileStatuses[i] := TPoFileStatus(PtrInt(SortList.Objects[i]));
+    finally
+      SortList.Free;
+    end;
+
+    // Rebuild the visible list and select the last created file
+    ListPath.Items.BeginUpdate;
+    try
+      ListPath.Items.Clear;
+      for i := 0 to FPoFiles.Count - 1 do
+        ListPath.Items.Add(ExtractFileName(FPoFiles[i]));
+
+      NewIdx := FPoFiles.IndexOf(LastCreatedFile);
+      if NewIdx >= 0 then
+      begin
+        ListPath.Selected[NewIdx] := True;
+        ListPath.ItemIndex := NewIdx;
+        FPathIndex := NewIdx;
+        FLastPathIndex := NewIdx;
+      end;
+    finally
+      ListPath.Items.EndUpdate;
+    end;
+
+    ListPath.Invalidate;
+    UpdateCaption;
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TformPoBatch.APathSyncFilesWithPotExecute(Sender: TObject);
@@ -1416,48 +1421,59 @@ begin
     Exit;
 
   // Process each selected file using the saved indices
-  for i := 0 to selCount - 1 do
-  begin
-    FileName := FPoFiles[SelectedIndices[i]];
-    if not FileExists(FileName) then
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
     begin
-      ShowMessageFmt('File not found: %s', [FileName]);
-      Continue;
-    end;
-
-    // Skip the reference POT file itself to avoid self-synchronization
-    if SameFileName(FileName, FPotFile) then
-      Continue;
-
-    PoFile := TPOFile.Create;
-    try
-      PoFile.LoadFromFile(FileName);
-      PoFile.SynchronizeToFile(FPotFile, True);
-      PoFile.SaveToFile(FileName);
-    except
-      on E: Exception do
+      FileName := FPoFiles[SelectedIndices[i]];
+      if not FileExists(FileName) then
       begin
-        ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
-        PoFile.Free;
-        Continue;    // skip reloading this file
+        // Show the warning without the hourglass cursor
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('File not found: %s', [FileName]);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip the reference POT file itself to avoid self-synchronization
+      if SameFileName(FileName, FPotFile) then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        PoFile.LoadFromFile(FileName);
+        PoFile.SynchronizeToFile(FPotFile, True);
+        PoFile.SaveToFile(FileName);
+      except
+        on E: Exception do
+        begin
+          // Show the error without the hourglass cursor
+          Screen.Cursor := crDefault;
+          ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
+          Screen.Cursor := crHourGlass;
+          PoFile.Free;
+          Continue;    // skip reloading this file
+        end;
+      end;
+      PoFile.Free;
+
+      // Refresh list item status
+      AnalizePath(SelectedIndices[i]);
+
+      // If this was the currently opened file, reload it in the editor
+      if FileName = FFileName then
+      begin
+        if LoadFile(FFileName) then
+        begin
+          Changed := False;
+          FillGrid;
+          FillGridHeaders;
+          UpdateTranslatePanel;
+        end;
       end;
     end;
-    PoFile.Free;
-
-    // Refresh list item status
-    AnalizePath(SelectedIndices[i]);
-
-    // If this was the currently opened file, reload it in the editor
-    if FileName = FFileName then
-    begin
-      if LoadFile(FFileName) then
-      begin
-        Changed := False;
-        FillGrid;
-        FillGridHeaders;
-        UpdateTranslatePanel;
-      end;
-    end;
+  finally
+    Screen.Cursor := crDefault;
   end;
 
   ShowMessage('Synchronization complete.');
@@ -1509,58 +1525,69 @@ begin
     Exit;
 
   // Process each selected file using the saved indices
-  for i := 0 to selCount - 1 do
-  begin
-    FileName := FPoFiles[SelectedIndices[i]];
-    if not FileExists(FileName) then
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
     begin
-      ShowMessageFmt('File not found: %s', [FileName]);
-      Continue;
-    end;
-
-    // Skip the reference POT file – it contains no translations
-    if SameFileName(FileName, FPotFile) then
-      Continue;
-
-    PoFile := TPOFile.Create;
-    try
-      try
-        PoFile.LoadFromFile(FileName);
-
-        // Remove fuzzy flag from every translatable entry
-        for j := 0 to PoFile.Entries.Count - 1 do
-        begin
-          if PoFile.Entries[j].MsgId <> '' then
-            PoFile.Entries[j].IsFuzzy := False;
-        end;
-
-        PoFile.SaveToFile(FileName);
-      except
-        on E: Exception do
-        begin
-          ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
-          PoFile.Free;
-          Continue;    // skip status update for this file
-        end;
-      end;
-    finally
-      PoFile.Free;
-    end;
-
-    // Update the status of this file in the path list
-    AnalizePath(SelectedIndices[i]);
-
-    // If this was the currently opened file, reload it in the editor
-    if FileName = FFileName then
-    begin
-      if LoadFile(FFileName) then
+      FileName := FPoFiles[SelectedIndices[i]];
+      if not FileExists(FileName) then
       begin
-        Changed := False;
-        FillGrid;
-        FillGridHeaders;
-        UpdateTranslatePanel;
+        // Show the warning without the hourglass cursor
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('File not found: %s', [FileName]);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip the reference POT file - it contains no translations
+      if SameFileName(FileName, FPotFile) then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        try
+          PoFile.LoadFromFile(FileName);
+
+          // Remove fuzzy flag from every translatable entry
+          for j := 0 to PoFile.Entries.Count - 1 do
+          begin
+            if PoFile.Entries[j].MsgId <> '' then
+              PoFile.Entries[j].IsFuzzy := False;
+          end;
+
+          PoFile.SaveToFile(FileName);
+        except
+          on E: Exception do
+          begin
+            // Show the error without the hourglass cursor
+            Screen.Cursor := crDefault;
+            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            Screen.Cursor := crHourGlass;
+            PoFile.Free;
+            Continue;    // skip status update for this file
+          end;
+        end;
+      finally
+        PoFile.Free;
+      end;
+
+      // Update the status of this file in the path list
+      AnalizePath(SelectedIndices[i]);
+
+      // If this was the currently opened file, reload it in the editor
+      if FileName = FFileName then
+      begin
+        if LoadFile(FFileName) then
+        begin
+          Changed := False;
+          FillGrid;
+          FillGridHeaders;
+          UpdateTranslatePanel;
+        end;
       end;
     end;
+  finally
+    Screen.Cursor := crDefault;
   end;
 
   ShowMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.');
@@ -1632,41 +1659,49 @@ begin
 
   // Rename each selected file on disk keeping its language code and extension
   RenamedCount := 0;
-  for i := 0 to selCount - 1 do
-  begin
-    FileName := FPoFiles[SelectedIndices[i]];
-    Dir := ExtractFilePath(FileName);
-    BaseName := ChangeFileExt(ExtractFileName(FileName), '');
-
-    p := RPos('.', BaseName);
-    if p > 1 then
-      LangPart := Copy(BaseName, p, MaxInt)   // includes the leading dot
-    else
-      LangPart := string.Empty;
-
-    NewName := Dir + DefaultName + LangPart + ExtractFileExt(FileName);
-
-    if SameFileName(FileName, NewName) then
-      Continue;
-
-    if not RenameFile(FileName, NewName) then
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
     begin
-      ShowMessageFmt('Failed to rename: %s', [FileName]);
-      Continue;
+      FileName := FPoFiles[SelectedIndices[i]];
+      Dir := ExtractFilePath(FileName);
+      BaseName := ChangeFileExt(ExtractFileName(FileName), '');
+
+      p := RPos('.', BaseName);
+      if p > 1 then
+        LangPart := Copy(BaseName, p, MaxInt)   // includes the leading dot
+      else
+        LangPart := string.Empty;
+
+      NewName := Dir + DefaultName + LangPart + ExtractFileExt(FileName);
+
+      if SameFileName(FileName, NewName) then
+        Continue;
+
+      if not RenameFile(FileName, NewName) then
+      begin
+        // Show the warning without the hourglass cursor
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('Failed to rename: %s', [FileName]);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Update the in-memory path; the file content is unchanged,
+      // so the status entry stays the same
+      FPoFiles[SelectedIndices[i]] := NewName;
+
+      // Keep the currently opened file and the reference POT file in sync
+      if SameFileName(FileName, FFileName) then
+        FFileName := NewName;
+
+      if SameFileName(FileName, FPotFile) then
+        FPotFile := NewName;
+
+      Inc(RenamedCount);
     end;
-
-    // Update the in-memory path; the file content is unchanged,
-    // so the status entry stays the same
-    FPoFiles[SelectedIndices[i]] := NewName;
-
-    // Keep the currently opened file and the reference POT file in sync
-    if SameFileName(FileName, FFileName) then
-      FFileName := NewName;
-
-    if SameFileName(FileName, FPotFile) then
-      FPotFile := NewName;
-
-    Inc(RenamedCount);
+  finally
+    Screen.Cursor := crDefault;
   end;
 
   if RenamedCount = 0 then
@@ -1775,35 +1810,40 @@ begin
   // Delete files from disk and drop them from the in-memory lists
   CurrentFileDeleted := False;
   PotDeleted := False;
-  // Walk the saved indices from the end so earlier ones stay valid while removing
-  for i := Count - 1 downto 0 do
-  begin
-    idx := selectedIndices[i];
-    if (idx < 0) or (idx >= FPoFiles.Count) then
-      Continue;
+  Screen.Cursor := crHourGlass;
+  try
+    // Walk the saved indices from the end so earlier ones stay valid while removing
+    for i := Count - 1 downto 0 do
+    begin
+      idx := selectedIndices[i];
+      if (idx < 0) or (idx >= FPoFiles.Count) then
+        Continue;
 
-    FileToDelete := FPoFiles[idx];
+      FileToDelete := FPoFiles[idx];
 
-    // Remember whether the currently opened file or the reference POT is going away
-    if SameFileName(FileToDelete, FFileName) then
-      CurrentFileDeleted := True;
-    if (FPotFile <> string.Empty) and SameFileName(FileToDelete, FPotFile) then
-      PotDeleted := True;
+      // Remember whether the currently opened file or the reference POT is going away
+      if SameFileName(FileToDelete, FFileName) then
+        CurrentFileDeleted := True;
+      if (FPotFile <> string.Empty) and SameFileName(FileToDelete, FPotFile) then
+        PotDeleted := True;
 
-    DeleteFile(FileToDelete);
+      DeleteFile(FileToDelete);
 
-    // Remove the entry from the path list and keep statuses aligned
-    FPoFiles.Delete(idx);
-    if idx < Length(FFileStatuses) then
-      Delete(FFileStatuses, idx, 1);
+      // Remove the entry from the path list and keep statuses aligned
+      FPoFiles.Delete(idx);
+      if idx < Length(FFileStatuses) then
+        Delete(FFileStatuses, idx, 1);
+    end;
+
+    if PotDeleted then
+      FPotFile := string.Empty;
+
+    // If the currently opened file was removed, reset to an empty document
+    if CurrentFileDeleted then
+      NewFile;
+  finally
+    Screen.Cursor := crDefault;
   end;
-
-  if PotDeleted then
-    FPotFile := string.Empty;
-
-  // If the currently opened file was removed, reset to an empty document
-  if CurrentFileDeleted then
-    NewFile;
 
   // Rebuild the visible list and restore the selection when possible
   ListPath.Items.BeginUpdate;
@@ -1871,25 +1911,32 @@ begin
     Exit;
 
   // Perform synchronization directly on the already loaded FPoFile object
+  Screen.Cursor := crHourGlass;
   try
-    FPoFile.SynchronizeToFile(PotFileName, True);   // keep existing header
-  except
-    on E: Exception do
-    begin
-      ShowMessageFmt('Error synchronizing file: %s', [E.Message]);
-      Exit;
+    try
+      FPoFile.SynchronizeToFile(PotFileName, True);   // keep existing header
+    except
+      on E: Exception do
+      begin
+        // Show the error dialog without the hourglass cursor
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('Error synchronizing file: %s', [E.Message]);
+        Exit;
+      end;
     end;
+
+    // Run QA checks once for the whole file
+    FPoFile.CheckAllQA;
+
+    Changed := True;
+    FillGrid;
+    FillGridHeaders;
+    UpdateTranslatePanel;
+    if FPathIndex >= 0 then
+      AnalizePath(FPathIndex);
+  finally
+    Screen.Cursor := crDefault;
   end;
-
-  // Run QA checks once for the whole file
-  FPoFile.CheckAllQA;
-
-  Changed := True;
-  FillGrid;
-  FillGridHeaders;
-  UpdateTranslatePanel;
-  if FPathIndex >= 0 then
-    AnalizePath(FPathIndex);
 end;
 
 procedure TformPoBatch.AValidFileExecute(Sender: TObject);
@@ -1903,27 +1950,32 @@ begin
   if MessageDlg('Mark as Valid', 'Mark the current file as valid?' + sLineBreak + 'This will remove the "fuzzy" flag from all entries.',
     mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
 
-  // Save any pending grid changes back to the model
-  SaveGrid;
+  Screen.Cursor := crHourGlass;
+  try
+    // Save any pending grid changes back to the model
+    SaveGrid;
 
-  // Remove the fuzzy flag from every translatable entry
-  for i := 0 to FPoFile.Entries.Count - 1 do
-  begin
-    // Keep the header entry (empty msgid) untouched
-    if FPoFile.Entries[i].MsgId <> '' then
-      FPoFile.Entries[i].IsFuzzy := False;
+    // Remove the fuzzy flag from every translatable entry
+    for i := 0 to FPoFile.Entries.Count - 1 do
+    begin
+      // Keep the header entry (empty msgid) untouched
+      if FPoFile.Entries[i].MsgId <> '' then
+        FPoFile.Entries[i].IsFuzzy := False;
+    end;
+
+    Changed := True;
+
+    // Rebuild the grid and update the UI
+    FillGrid;
+    FillGridHeaders;
+    UpdateTranslatePanel;
+
+    // Update the file status in the path list if applicable
+    if FPathIndex >= 0 then
+      AnalizePath(FPathIndex);
+  finally
+    Screen.Cursor := crDefault;
   end;
-
-  Changed := True;
-
-  // Rebuild the grid and update the UI
-  FillGrid;
-  FillGridHeaders;
-  UpdateTranslatePanel;
-
-  // Update the file status in the path list if applicable
-  if FPathIndex >= 0 then
-    AnalizePath(FPathIndex);
 end;
 
 procedure TformPoBatch.AMemoUndoExecute(Sender: TObject);
