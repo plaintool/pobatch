@@ -16,6 +16,7 @@ uses
   StdCtrls,
   ExtCtrls,
   Classes,
+  Graphics,
   LCLIntf;
 
 type
@@ -32,6 +33,10 @@ type
     LabelLicUrl: TLabel;
     LabelUrlGithub: TLabel;
     Memo1: TMemo;
+    labelVersion: TLabel;
+    panelHeader: TPanel;
+    panelBody: TPanel;
+    panelFooter: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure LabelLicUrlClick(Sender: TObject);
   private
@@ -43,15 +48,35 @@ var
 
 implementation
 
-uses CheckUpdates;
+uses CheckUpdates, DarkUtils;
 
   {$R *.lfm}
 
   { TformAboutPoBatch }
 
 procedure TformAboutPoBatch.FormCreate(Sender: TObject);
+var
+  Arch: string;
 begin
-  labelName.Caption := 'PoBatch © ' + GetAppVersion;
+  {$IFDEF CPU64}
+    Arch := 'x64';
+  {$ELSE}
+    Arch := 'x86';
+  {$ENDIF}
+
+  labelName.Caption    := 'PoBatch © 2026';
+  labelVersion.Caption := 'Version ' + GetAppVersion + ' · ' + Arch;
+
+  // Links: color within the theme
+  LabelLicUrl.Font.Color    := TDarkUtils.ThemeColor(clBlue, clSkyBlue);
+  LabelUrlGithub.Font.Color := LabelLicUrl.Font.Color;
+
+  // Panels: light/dark theme adaptation
+  panelHeader.Color       := TDarkUtils.ThemeColor(16315632, $002D2D2D);
+  panelBody.Color         := TDarkUtils.ThemeColor(clWhite, $001E1E1E);
+  labelVersion.Font.Color := TDarkUtils.ThemeColor(clGray, clSilver);
+  panelFooter.Color       := panelBody.Color;
+  Memo1.Color             := panelBody.Color;
 end;
 
 procedure TformAboutPoBatch.LabelLicUrlClick(Sender: TObject);
