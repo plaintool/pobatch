@@ -4020,9 +4020,11 @@ end;
 
 procedure TformPoBatch.UpdateQACheck(aRow: integer = -1);
 var
-  Entry: TPOEntry;
-  I, Count: integer;
+  Entry, SelEntry: TPOEntry;
+  I, Count, Row: integer;
   BgColor: TColor;
+  StartRow, EndRow: integer;
+  HasIssues: boolean;
 begin
   MemoQA.Lines.BeginUpdate;
   try
@@ -4057,8 +4059,41 @@ begin
     for I := 0 to Count - 1 do
       MemoQA.Lines.Add(Entry.QACheckResults[I]);
 
-    // Highlight the whole panel when there is at least one QA issue
-    if Entry.IsFuzzy or (Count > 0) then
+    // Determine the range of rows to inspect for issue highlighting
+    if Grid.Selection.Top <> Grid.Selection.Bottom then
+    begin
+      StartRow := Grid.Selection.Top;
+      EndRow := Grid.Selection.Bottom;
+    end
+    else
+    begin
+      StartRow := aRow;
+      EndRow := aRow;
+    end;
+
+    // Clamp to valid data rows
+    if StartRow < Grid.FixedRows then
+      StartRow := Grid.FixedRows;
+    if EndRow >= Grid.RowCount then
+      EndRow := Grid.RowCount - 1;
+
+    // Highlight the whole panel when any selected row has QA issues
+    HasIssues := False;
+    for Row := StartRow to EndRow do
+    begin
+      SelEntry := RowEntry(Row);
+      if Assigned(SelEntry) then
+      begin
+        FPoFile.CheckEntryQA(SelEntry);
+        if SelEntry.IsFuzzy or (Length(SelEntry.QACheckResults) > 0) then
+        begin
+          HasIssues := True;
+          Break;
+        end;
+      end;
+    end;
+
+    if HasIssues then
       BgColor := TDarkUtils.ThemeColor(clInfo, clInfoDark)
     else
       BgColor := clWindow;
