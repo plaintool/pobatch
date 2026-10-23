@@ -63,6 +63,7 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    APathCopySource: TAction;
     APathShowFileInExplorer: TAction;
     APathNewFilesFromPot: TAction;
     ANewFromPot: TAction;
@@ -150,6 +151,7 @@ type
     MenuCheckPunctBracket: TMenuItem;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
@@ -218,6 +220,7 @@ type
     Separator16: TMenuItem;
     Separator17: TMenuItem;
     Separator18: TMenuItem;
+    Separator19: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
@@ -241,6 +244,7 @@ type
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
     { Form Events }
+    procedure APathCopySourceExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1477,6 +1481,179 @@ begin
   end;
 
   ShowMessage('Synchronization complete.');
+end;
+
+procedure TformPoBatch.APathCopySourceExecute(Sender: TObject);
+var
+  i, j, k, selCount: integer;
+  PoFile: TPOFile;
+  Entry: TPOEntry;
+  FileName: string;
+  fileList, msg: string;
+  SelectedIndices: array of integer = nil;
+  NewList: TStringList;
+  FormsCount: integer;
+  HasChanges: boolean;
+  CopiedCount: integer;
+  TotalCopied: integer;
+begin
+  // Collect selected indices before processing
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected.');
+    Exit;
+  end;
+
+  // Build the confirmation message with the affected files
+  fileList := string.Empty;
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Copy source text to empty translations in the following ' + IntToStr(selCount) + ' file(s)?' +
+    sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Copy source to empty', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Ask to save the current file if modified - abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
+
+  TotalCopied := 0;
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
+    begin
+      FileName := FPoFiles[SelectedIndices[i]];
+      if not FileExists(FileName) then
+      begin
+        // Show the warning without the hourglass cursor
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('File not found: %s', [FileName]);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip the reference POT file - it contains no translations
+      if SameFileName(FileName, FPotFile) then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        try
+          PoFile.LoadFromFile(FileName);
+          CopiedCount := 0;
+
+          for j := 0 to PoFile.Entries.Count - 1 do
+          begin
+            Entry := PoFile.Entries[j];
+            // Skip the header entry (empty msgid)
+            if Entry.MsgId = string.Empty then
+              Continue;
+
+            if Entry.MsgIdPlural <> string.Empty then
+            begin
+              // Plural entry: fill every empty form with the matching source form
+              FormsCount := Max(Entry.MsgStrCount, PoFile.PluralFormsCount);
+              if FormsCount < 2 then
+                FormsCount := 2;
+
+              NewList := TStringList.Create;
+              try
+                for k := 0 to FormsCount - 1 do
+                begin
+                  if (k < Entry.MsgStrCount) and (Entry.MsgStr[k] <> string.Empty) then
+                    NewList.Add(Entry.MsgStr[k])
+                  else
+                  begin
+                    if k = 0 then
+                      NewList.Add(Entry.MsgId)
+                    else
+                      NewList.Add(Entry.MsgIdPlural);
+                    Inc(CopiedCount);
+                  end;
+                end;
+
+                // Apply only if the form count or content actually changed
+                HasChanges := NewList.Count <> Entry.MsgStrCount;
+                if not HasChanges then
+                  for k := 0 to NewList.Count - 1 do
+                    if NewList[k] <> Entry.MsgStr[k] then
+                    begin
+                      HasChanges := True;
+                      Break;
+                    end;
+
+                if HasChanges then
+                  Entry.MsgStrList := NewList;
+              finally
+                NewList.Free;
+              end;
+            end
+            else
+            begin
+              // Simple entry: copy msgid to msgstr only when msgstr is empty
+              if Entry.MsgStrSimple = string.Empty then
+              begin
+                Entry.MsgStrSimple := Entry.MsgId;
+                Inc(CopiedCount);
+              end;
+            end;
+          end;
+
+          if CopiedCount > 0 then
+          begin
+            PoFile.SaveToFile(FileName);
+            Inc(TotalCopied, CopiedCount);
+          end;
+        except
+          on E: Exception do
+          begin
+            // Show the error without the hourglass cursor
+            Screen.Cursor := crDefault;
+            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            Screen.Cursor := crHourGlass;
+            Continue;
+          end;
+        end;
+      finally
+        PoFile.Free;
+      end;
+
+      // Refresh the status of this file in the path list
+      AnalizePath(SelectedIndices[i]);
+
+      // If this was the currently opened file, reload it in the editor
+      if SameFileName(FileName, FFileName) then
+      begin
+        if LoadFile(FFileName) then
+        begin
+          Changed := False;
+          FillGrid;
+          FillGridHeaders;
+          UpdateTranslatePanel;
+        end;
+      end;
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+
+  ShowMessageFmt('Done. %d translation(s) filled from source.', [TotalCopied]);
 end;
 
 procedure TformPoBatch.APathValidFilesExecute(Sender: TObject);

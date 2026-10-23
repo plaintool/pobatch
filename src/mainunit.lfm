@@ -1046,31 +1046,6 @@ object formPoBatch: TformPoBatch
       Caption = 'Sync File(s) With Pot'
       OnExecute = APathSyncFilesWithPotExecute
     end
-    object APathValidFiles: TAction
-      Category = 'Path'
-      Caption = 'Mark File(s) as Valid'
-      OnExecute = APathValidFilesExecute
-    end
-    object APathRenameFiles: TAction
-      Category = 'Path'
-      Caption = 'Rename File(s)'
-      OnExecute = APathRenameFilesExecute
-    end
-    object APathDeleteFiles: TAction
-      Category = 'Path'
-      Caption = 'Delete File(s)'
-      OnExecute = APathDeleteFilesExecute
-    end
-    object APathSelectAll: TAction
-      Category = 'Path'
-      Caption = 'Select All'
-      OnExecute = APathSelectAllExecute
-    end
-    object APathShowFileInExplorer: TAction
-      Category = 'Path'
-      Caption = 'Show File In Explorer...'
-      OnExecute = APathShowFileInExplorerExecute
-    end
     object ACheckEnabled: TAction
       Category = 'Checks'
       AutoCheck = True
@@ -1155,6 +1130,36 @@ object formPoBatch: TformPoBatch
       AutoCheck = True
       Caption = 'Newline mismatch (leading / trailing)'
       OnExecute = ACheckNewlinesExecute
+    end
+    object APathCopySource: TAction
+      Category = 'Path'
+      Caption = 'Copy Source to Empty'
+      OnExecute = APathCopySourceExecute
+    end
+    object APathValidFiles: TAction
+      Category = 'Path'
+      Caption = 'Mark File(s) as Valid'
+      OnExecute = APathValidFilesExecute
+    end
+    object APathRenameFiles: TAction
+      Category = 'Path'
+      Caption = 'Rename File(s)'
+      OnExecute = APathRenameFilesExecute
+    end
+    object APathDeleteFiles: TAction
+      Category = 'Path'
+      Caption = 'Delete File(s)'
+      OnExecute = APathDeleteFilesExecute
+    end
+    object APathSelectAll: TAction
+      Category = 'Path'
+      Caption = 'Select All'
+      OnExecute = APathSelectAllExecute
+    end
+    object APathShowFileInExplorer: TAction
+      Category = 'Path'
+      Caption = 'Show File In Explorer...'
+      OnExecute = APathShowFileInExplorerExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1667,6 +1672,12 @@ object formPoBatch: TformPoBatch
     end
     object MenuPathDeleteFile: TMenuItem
       Action = APathDeleteFiles
+    end
+    object Separator19: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem3: TMenuItem
+      Action = APathCopySource
     end
     object Separator18: TMenuItem
       Caption = '-'
