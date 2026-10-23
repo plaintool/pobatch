@@ -96,6 +96,7 @@
       <Unit>
         <Filename Value="pobatch.lpr"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="PoBatch"/>
       </Unit>
       <Unit>
         <Filename Value="LICENSE"/>
@@ -146,6 +147,11 @@
         <Filename Value="src\pocheck.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PoCheck"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\batchop.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BatchOp"/>
       </Unit>
     </Units>
   </ProjectOptions>
