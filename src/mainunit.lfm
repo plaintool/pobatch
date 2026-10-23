@@ -1136,6 +1136,11 @@ object formPoBatch: TformPoBatch
       Caption = 'Copy Source to Empty'
       OnExecute = APathCopySourceExecute
     end
+    object APathClearInvalid: TAction
+      Category = 'Path'
+      Caption = 'Clear Invalid'
+      OnExecute = APathClearInvalidExecute
+    end
     object APathValidFiles: TAction
       Category = 'Path'
       Caption = 'Mark File(s) as Valid'
@@ -1676,8 +1681,11 @@ object formPoBatch: TformPoBatch
     object Separator19: TMenuItem
       Caption = '-'
     end
-    object MenuItem3: TMenuItem
+    object MenuPathCopySource: TMenuItem
       Action = APathCopySource
+    end
+    object MenuPathClearInvalid: TMenuItem
+      Action = APathClearInvalid
     end
     object Separator18: TMenuItem
       Caption = '-'

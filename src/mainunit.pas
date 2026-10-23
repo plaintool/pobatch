@@ -63,6 +63,7 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    APathClearInvalid: TAction;
     APathCopySource: TAction;
     APathShowFileInExplorer: TAction;
     APathNewFilesFromPot: TAction;
@@ -151,7 +152,8 @@ type
     MenuCheckPunctBracket: TMenuItem;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
+    MenuPathCopySource: TMenuItem;
+    MenuPathClearInvalid: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
@@ -244,6 +246,7 @@ type
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
     { Form Events }
+    procedure APathClearInvalidExecute(Sender: TObject);
     procedure APathCopySourceExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -1654,6 +1657,145 @@ begin
   end;
 
   ShowMessageFmt('Done. %d translation(s) filled from source.', [TotalCopied]);
+end;
+
+procedure TformPoBatch.APathClearInvalidExecute(Sender: TObject);
+var
+  i, j, selCount: integer;
+  PoFile: TPOFile;
+  Entry: TPOEntry;
+  FileName: string;
+  fileList, msg: string;
+  SelectedIndices: array of integer = nil;
+  ClearedCount, TotalCleared: integer;
+  EmptyList: TStringList;
+begin
+  // Collect selected indices before processing
+  SetLength(SelectedIndices, ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to ListPath.Items.Count - 1 do
+    if ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected.');
+    Exit;
+  end;
+
+  // Build the confirmation message with the affected files
+  fileList := string.Empty;
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + FPoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Clear translations of fuzzy entries in the following ' + IntToStr(selCount) + ' file(s)?' +
+    sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Clear invalid translations', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Ask to save the current file if modified - abort if user cancels
+  if not IsCanClose(True) then
+    Exit;
+
+  TotalCleared := 0;
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
+    begin
+      FileName := FPoFiles[SelectedIndices[i]];
+      if not FileExists(FileName) then
+      begin
+        // Show the warning without the hourglass cursor
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('File not found: %s', [FileName]);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip the reference POT file - it contains no translations
+      if SameFileName(FileName, FPotFile) then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        try
+          PoFile.LoadFromFile(FileName);
+          ClearedCount := 0;
+
+          for j := 0 to PoFile.Entries.Count - 1 do
+          begin
+            Entry := PoFile.Entries[j];
+            // Skip the header entry (empty msgid)
+            if Entry.MsgId = string.Empty then
+              Continue;
+            // Only entries flagged as fuzzy (invalid) are affected
+            if not Entry.IsFuzzy then
+              Continue;
+
+            if Entry.MsgIdPlural <> string.Empty then
+            begin
+              // Plural entry: drop all translation forms at once
+              EmptyList := TStringList.Create;
+              try
+                Entry.MsgStrList := EmptyList;
+              finally
+                EmptyList.Free;
+              end;
+            end
+            else
+              Entry.MsgStrSimple := string.Empty;
+
+            Inc(ClearedCount);
+          end;
+
+          if ClearedCount > 0 then
+          begin
+            PoFile.SaveToFile(FileName);
+            Inc(TotalCleared, ClearedCount);
+          end;
+        except
+          on E: Exception do
+          begin
+            // Show the error without the hourglass cursor
+            Screen.Cursor := crDefault;
+            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            Screen.Cursor := crHourGlass;
+            Continue;
+          end;
+        end;
+      finally
+        PoFile.Free;
+      end;
+
+      // Refresh the status of this file in the path list
+      AnalizePath(SelectedIndices[i]);
+
+      // If this was the currently opened file, reload it in the editor
+      if SameFileName(FileName, FFileName) then
+      begin
+        if LoadFile(FFileName) then
+        begin
+          Changed := False;
+          FillGrid;
+          FillGridHeaders;
+          UpdateTranslatePanel;
+        end;
+      end;
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+
+  ShowMessageFmt('Done. %d invalid translation(s) cleared.', [TotalCleared]);
 end;
 
 procedure TformPoBatch.APathValidFilesExecute(Sender: TObject);
