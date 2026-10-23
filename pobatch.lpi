@@ -91,9 +91,6 @@
       <Item>
         <PackageName Value="richkit"/>
       </Item>
-      <Item>
-        <PackageName Value="designkit"/>
-      </Item>
     </RequiredPackages>
     <Units>
       <Unit>

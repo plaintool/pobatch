@@ -18,7 +18,15 @@
 	path = libs/richkit
 	url = https://github.com/plainlib/richkit.git
 	branch = main
-[submodule "libs/designkit"]
-	path = libs/designkit
-	url = https://github.com/plainlib/designkit.git
+[submodule "libs/translator"]
+	path = libs/translator
+	url = https://github.com/plainlib/translator.git
 	branch = main
+[submodule "libs/openssl"]
+	path = libs/openssl
+	url = https://github.com/plainlib/openssl.git
+	branch = main
+[submodule "libs/synapse"]
+	path = libs/synapse
+	url = https://github.com/plainlib/synapse.git
+	branch = master

@@ -12,13 +12,14 @@ LAZBUILD_OPTS =
 
 # Dependency LPK packages to build first
 DEP_LPKS = \
+    libs/synapse/laz_synapse.lpk \
     libs/darkmode/darkmode.lpk \
     libs/helpers/helpers.lpk \
     libs/toolkit/toolkit.lpk \
     libs/richmemo/richmemopackage.lpk \
     libs/richmemo/ide/richmemo_design.lpk \
     libs/richkit/richkit.lpk \
-    libs/designkit/designkit.lpk
+    libs/translator/translator.lpk
 
 # Default target: get submodules, build dependencies then the project
 all: submodules deps
