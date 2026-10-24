@@ -1156,15 +1156,20 @@ object formPoBatch: TformPoBatch
       Caption = 'Delete File(s)'
       OnExecute = APathDeleteFilesExecute
     end
-    object APathSelectAll: TAction
-      Category = 'Path'
-      Caption = 'Select All'
-      OnExecute = APathSelectAllExecute
-    end
     object APathShowFileInExplorer: TAction
       Category = 'Path'
       Caption = 'Show File In Explorer...'
       OnExecute = APathShowFileInExplorerExecute
+    end
+    object APathRescan: TAction
+      Category = 'Path'
+      Caption = 'Rescan Path'
+      OnExecute = APathRescanExecute
+    end
+    object APathSelectAll: TAction
+      Category = 'Path'
+      Caption = 'Select All'
+      OnExecute = APathSelectAllExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1701,6 +1706,9 @@ object formPoBatch: TformPoBatch
     end
     object Separator11: TMenuItem
       Caption = '-'
+    end
+    object MenuPathRescan: TMenuItem
+      Action = APathRescan
     end
     object MenuPathSelectAll: TMenuItem
       Action = APathSelectAll

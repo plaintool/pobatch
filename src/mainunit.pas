@@ -63,6 +63,7 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    APathRescan: TAction;
     APathClearInvalid: TAction;
     APathCopySource: TAction;
     APathShowFileInExplorer: TAction;
@@ -152,6 +153,7 @@ type
     MenuCheckPunctBracket: TMenuItem;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuPathRescan: TMenuItem;
     MenuPathCopySource: TMenuItem;
     MenuPathClearInvalid: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
@@ -248,6 +250,7 @@ type
     { Form Events }
     procedure APathClearInvalidExecute(Sender: TObject);
     procedure APathCopySourceExecute(Sender: TObject);
+    procedure APathRescanExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1527,6 +1530,29 @@ end;
 procedure TformPoBatch.APathShowFileInExplorerExecute(Sender: TObject);
 begin
   TOS.ShowFileInExplorer(FFileName);
+end;
+
+procedure TformPoBatch.APathRescanExecute(Sender: TObject);
+begin
+  if FPath = string.Empty then
+    Exit;
+
+  // Discard the cached file list so OpenPath performs a full rescan from disk
+  FPoFiles.Clear;
+  SetLength(FFileStatuses, 0);
+
+  if OpenPath(FPath, True) then
+  begin
+    UpdatePath;
+    AnalizePath(-1, True);
+  end
+  else
+  begin
+    // The folder no longer contains any PO or POT files - close the path
+    FPath := string.Empty;
+    UpdatePath;
+    UpdateInterface;
+  end;
 end;
 
 procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);
