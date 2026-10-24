@@ -685,6 +685,8 @@ begin
 end;
 
 procedure TformPoBatch.FormShow(Sender: TObject);
+var
+  CmdDir: string = string.Empty;
 begin
   if not FInitialized then
   begin
@@ -700,6 +702,22 @@ begin
     end
     else
       Exit;
+
+    // When a file is passed on the command line, switch the current path to
+    // its folder only if a path was already open and the folders differ.
+    // A closed path stays closed - the file opens as a standalone document
+    if FCommandLineFile <> string.Empty then
+    begin
+      CmdDir := ExcludeTrailingPathDelimiter(ExpandFileName(ExtractFilePath(FCommandLineFile)));
+      if (FPath <> string.Empty) and (CmdDir <> ExcludeTrailingPathDelimiter(FPath)) and DirectoryExists(CmdDir) then
+      begin
+        FPath := CmdDir;
+        FPoFiles.Clear;
+        SetLength(FFileStatuses, 0);
+        FPathIndex := -1;
+        FLastPathIndex := -1;
+      end;
+    end;
 
     // Load Path
     Application.QueueAsyncCall(@LoadPath, 0);
@@ -996,7 +1014,20 @@ begin
 end;
 
 procedure TformPoBatch.AOpenPathExecute(Sender: TObject);
+var
+  DefaultDir: string = string.Empty;
 begin
+  // Start the folder dialog at the folder of the currently opened file,
+  // falling back to the last opened path when there is no file
+  if FFileName <> string.Empty then
+    DefaultDir := ExtractFilePath(FFileName)
+  else
+    DefaultDir := FPath;
+
+  DefaultDir := ExcludeTrailingPathDelimiter(DefaultDir);
+  if (DefaultDir <> string.Empty) and DirectoryExists(DefaultDir) then
+    dialogPath.InitialDir := DefaultDir;
+
   if dialogPath.Execute then
   begin
     if not OpenPath(dialogPath.FileName, True) then
