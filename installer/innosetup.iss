@@ -2,6 +2,9 @@
 ;Registry data for PoBatch .po association
 Root: HKA; Subkey: "Software\Classes\.po"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\.po\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
+;Registry data for PoBatch .pot association
+Root: HKA; Subkey: "Software\Classes\.pot"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\.pot\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
 Root: HKA; Subkey: "Software\Classes\PoBatch"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\PoBatch"; ValueType: string; ValueName: ""; ValueData: "PoBatch PO File"; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; Flags: uninsdeletekey

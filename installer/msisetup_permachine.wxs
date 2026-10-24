@@ -83,6 +83,14 @@
                     <RegistryValue Name="NullFile" Type="string" Value="" />
                 </RegistryKey>
             </RegistryKey>
+            <!-- Add .pot extension association -->
+            <RegistryKey Root="HKLM" Key="Software\Classes\.pot" Action="createAndRemoveOnUninstall">
+                <RegistryValue Type="string" Value="PoBatch" />
+                <!-- Add "New → POT File" to context menu -->
+                <RegistryKey Key="ShellNew" Action="createAndRemoveOnUninstall">
+                    <RegistryValue Name="NullFile" Type="string" Value="" />
+                </RegistryKey>
+            </RegistryKey>
             <!-- Define the PoBatch file association -->
             <RegistryKey Root="HKLM" Key="Software\Classes\PoBatch" Action="createAndRemoveOnUninstall">
                 <RegistryValue Type="string" Value="PoBatch PO File" />
