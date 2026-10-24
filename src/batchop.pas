@@ -26,6 +26,11 @@ uses
 type
   TBatchOp = class
   public
+    // Resolve the POT file that pairs with AFileName:
+    // - POT returns itself
+    // - PO returns <base>.pot (with the language suffix stripped)
+    // - returns an empty string when no matching POT exists
+    class function FindPotForFile(const AFileName: string): string;
     // Multi-file operations on the opened path
     class procedure CopySourceInFiles(AForm: TformPoBatch);
     class procedure ClearInvalidInFiles(AForm: TformPoBatch);
@@ -48,6 +53,44 @@ uses
   LangCodes, StringHelper, Localize, PoWrap;
 
   { TBatchOp }
+
+class function TBatchOp.FindPotForFile(const AFileName: string): string;
+var
+  Dir: string;
+  Base: string;
+  Candidate: string;
+  DotPos: integer;
+begin
+  Result := string.Empty;
+  if AFileName = string.Empty then
+    Exit;
+
+  // POT files pair with themselves
+  if SameText(ExtractFileExt(AFileName), '.pot') then
+    Exit(AFileName);
+
+  // Only PO files can be paired with a POT
+  if not SameText(ExtractFileExt(AFileName), '.po') then
+    Exit;
+
+  Dir := IncludeTrailingPathDelimiter(ExtractFilePath(AFileName));
+  Base := ChangeFileExt(ExtractFileName(AFileName), '');
+
+  // Try <base>.pot first - covers "module.po" and "module.<lang>.po"
+  // when the POT carries the same suffix
+  Candidate := Dir + Base + '.pot';
+  if FileExists(Candidate) then
+    Exit(Candidate);
+
+  // Fall back to stripping the language suffix: "module.<lang>.po" -> "module.pot"
+  DotPos := RPos('.', Base);
+  if DotPos > 1 then
+  begin
+    Candidate := Dir + Copy(Base, 1, DotPos - 1) + '.pot';
+    if FileExists(Candidate) then
+      Exit(Candidate);
+  end;
+end;
 
 class procedure TBatchOp.CopySourceInFiles(AForm: TformPoBatch);
 var
@@ -114,8 +157,8 @@ begin
         Continue;
       end;
 
-      // Skip the reference POT file - it contains no translations
-      if SameFileName(FileName, AForm.PotFile) then
+      // Skip POT files - they contain no translations
+      if SameText(ExtractFileExt(FileName), '.pot') then
         Continue;
 
       PoFile := TPOFile.Create;
@@ -276,8 +319,8 @@ begin
         Continue;
       end;
 
-      // Skip the reference POT file - it contains no translations
-      if SameFileName(FileName, AForm.PotFile) then
+      // Skip POT files - they contain no translations
+      if SameText(ExtractFileExt(FileName), '.pot') then
         Continue;
 
       PoFile := TPOFile.Create;
@@ -405,8 +448,8 @@ begin
         Continue;
       end;
 
-      // Skip the reference POT file - it contains no translations
-      if SameFileName(FileName, AForm.PotFile) then
+      // Skip POT files - they contain no translations
+      if SameText(ExtractFileExt(FileName), '.pot') then
         Continue;
 
       PoFile := TPOFile.Create;
@@ -455,16 +498,11 @@ var
   i, selCount: integer;
   PoFile: TPOFile;
   FileName: string;
+  PotForFile: string;
   fileList, msg: string;
   SelectedIndices: array of integer = nil;
+  SkippedCount: integer = 0;
 begin
-  // Check if the reference POT file is specified
-  if AForm.PotFile = '' then
-  begin
-    ShowMessage('No reference POT file exists in opened path.');
-    Exit;
-  end;
-
   // Ask to save current file if modified - if user cancels, abort sync
   if not AForm.IsCanClose(True) then
     Exit;
@@ -496,8 +534,8 @@ begin
       fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
   end;
 
-  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'reference POT: ' +
-    AForm.PotFile + sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'their matching POT files?' +
+    sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
   if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
     Exit;
 
@@ -516,15 +554,19 @@ begin
         Continue;
       end;
 
-      // Skip the reference POT file itself to avoid self-synchronization
-      if SameFileName(FileName, AForm.PotFile) then
+      // Skip POT files and PO files with no matching POT
+      PotForFile := FindPotForFile(FileName);
+      if (PotForFile = string.Empty) or SameFileName(FileName, PotForFile) then
+      begin
+        Inc(SkippedCount);
         Continue;
+      end;
 
       PoFile := TPOFile.Create;
       try
         try
           PoFile.LoadFromFile(FileName);
-          PoFile.SynchronizeToFile(AForm.PotFile, True);
+          PoFile.SynchronizeToFile(PotForFile, True);
           PoFile.SaveToFile(FileName);
         except
           on E: Exception do
@@ -533,7 +575,7 @@ begin
             Screen.Cursor := crDefault;
             ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
             Screen.Cursor := crHourGlass;
-            Continue;    // skip reloading this file
+            Continue;
           end;
         end;
       finally
@@ -551,7 +593,10 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ShowMessage('Synchronization complete.');
+  if SkippedCount > 0 then
+    ShowMessageFmt('Synchronization complete. %d file(s) skipped (no matching POT).', [SkippedCount])
+  else
+    ShowMessage('Synchronization complete.');
 end;
 
 class procedure TBatchOp.RenameFiles(AForm: TformPoBatch);
@@ -657,9 +702,6 @@ begin
       if SameFileName(FileName, AForm.FileName) then
         AForm.FileName := NewName;
 
-      if SameFileName(FileName, AForm.PotFile) then
-        AForm.PotFile := NewName;
-
       Inc(RenamedCount);
     end;
   finally
@@ -729,7 +771,6 @@ var
   msg, fileList: string;
   FileToDelete: string;
   CurrentFileDeleted: boolean;
-  PotDeleted: boolean;
   NewIdx: integer;
   Statuses: TPOFileStatusArray;
 begin
@@ -775,7 +816,6 @@ begin
 
   // Delete files from disk and drop them from the in-memory lists
   CurrentFileDeleted := False;
-  PotDeleted := False;
   Screen.Cursor := crHourGlass;
   try
     // Properties cannot be passed by var to Delete, use a local copy
@@ -790,11 +830,9 @@ begin
 
       FileToDelete := AForm.PoFiles[idx];
 
-      // Remember whether the currently opened file or the reference POT is going away
+      // Remember whether the currently opened file is going away
       if SameFileName(FileToDelete, AForm.FileName) then
         CurrentFileDeleted := True;
-      if (AForm.PotFile <> string.Empty) and SameFileName(FileToDelete, AForm.PotFile) then
-        PotDeleted := True;
 
       DeleteFile(FileToDelete);
 
@@ -805,9 +843,6 @@ begin
     end;
 
     AForm.FileStatuses := Statuses;
-
-    if PotDeleted then
-      AForm.PotFile := string.Empty;
 
     // If the currently opened file was removed, reset to an empty document
     if CurrentFileDeleted then
@@ -847,6 +882,8 @@ end;
 class procedure TBatchOp.NewFilesFromPot(AForm: TformPoBatch);
 var
   PotFileName: string;
+  SelIdx: integer;
+  SelFile: string;
   Codes: TStringArray = nil;
   BaseName: string;
   NewFileNames: TStringArray = nil;
@@ -858,10 +895,23 @@ var
   HasExisting: boolean;
   Statuses: TPOFileStatusArray;
 begin
-  // Use the known reference POT, otherwise ask the user to pick one
-  PotFileName := AForm.PotFile;
-  if PotFileName = '' then
+  // A selected file dictates its own POT, missing POT is an error
+  PotFileName := string.Empty;
+  SelIdx := AForm.ListPath.ItemIndex;
+
+  if (SelIdx >= 0) and (SelIdx < AForm.PoFiles.Count) then
   begin
+    SelFile := AForm.PoFiles[SelIdx];
+    PotFileName := FindPotForFile(SelFile);
+    if PotFileName = string.Empty then
+    begin
+      ShowMessageFmt('No matching POT file found for: %s', [SelFile]);
+      Exit;
+    end;
+  end
+  else
+  begin
+    // No selection - ask the user to pick the source POT file
     AForm.dialogOpen.FilterIndex := 2;
     if not AForm.dialogOpen.Execute then
       Exit;

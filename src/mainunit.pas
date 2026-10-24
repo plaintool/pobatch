@@ -405,7 +405,6 @@ type
     FLastRow: integer;
     FPanelFocused: boolean;
     FPoFiles: TStringList;
-    FPotFile: string;
     FFileStatuses: TPOFileStatusArray;
     FSelectPathTimer: TTimer;
     FPathMouseSelecting: boolean;
@@ -481,7 +480,6 @@ type
     property SortColumn: integer read FSortColumn write FSortColumn;
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
     property PoFiles: TStringList read FPoFiles write FPoFiles;
-    property PotFile: string read FPotFile write FPotFile;
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write SetWordWrap;
     property QACheckOptionsByLang: TObjectDictionary read FQACheckOptionsByLang;
@@ -587,7 +585,6 @@ begin
   FPath := string.Empty;
   FPoFiles := TStringList.Create;
   FQACheckOptionsByLang := TObjectDictionary.Create;
-  FPotFile := string.Empty;
   SetLength(FFileStatuses, 0);
   FCommandLineFile := string.Empty;
   FSortColumn := -1;
@@ -2734,15 +2731,6 @@ begin
       TempFiles.Free;
     end;
   end;
-
-  // Find and store the last .pot file (if any)
-  FPotFile := string.Empty;
-  for i := PoFiles.Count - 1 downto 0 do
-    if SameText(ExtractFileExt(PoFiles[i]), '.pot') then
-    begin
-      FPotFile := PoFiles[i];
-      Break;
-    end;
 
   ListPath.Items.Clear;
   for i := 0 to FPoFiles.Count - 1 do

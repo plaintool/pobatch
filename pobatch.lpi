@@ -89,6 +89,9 @@
         <PackageName Value="toolkit"/>
       </Item>
       <Item>
+        <PackageName Value="translator"/>
+      </Item>
+      <Item>
         <PackageName Value="richkit"/>
       </Item>
     </RequiredPackages>
