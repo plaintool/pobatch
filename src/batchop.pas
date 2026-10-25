@@ -1211,6 +1211,7 @@ begin
               for k := 0 to High(BatchEntries) do
               begin
                 BatchEntries[k].MsgStrSimple := ResponseLines[k];
+                BatchEntries[k].IsFuzzy := True;
                 Inc(TranslatedInFile);
               end;
             end
@@ -1232,6 +1233,7 @@ begin
             if TranslatedBatch <> string.Empty then
             begin
               MultiEntries[k].MsgStrSimple := TranslatedBatch;
+              MultiEntries[k].IsFuzzy := True;
               Inc(TranslatedInFile);
             end;
             Application.ProcessMessages;
@@ -1364,8 +1366,7 @@ begin
 
   // Ask for confirmation
   if MessageDlg('Mark as Valid', Format('Mark %d selected entries as valid?', [EndRow - StartRow + 1]) +
-    sLineBreak + 'This will remove the "fuzzy" flag from the selected entries.',
-    mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+    sLineBreak + 'This will remove the "fuzzy" flag from the selected entries.', mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
 
   Screen.Cursor := crHourGlass;
   try
@@ -1672,7 +1673,9 @@ begin
           begin
             Entry := BatchEntries[i];
             Entry.MsgStrSimple := ResponseLines[i];
+            Entry.IsFuzzy := True;
             AForm.Grid.Cells[CELL_TRANSLATION, BatchRows[i]] := ResponseLines[i];
+            AForm.Grid.Cells[CELL_FUZZY, BatchRows[i]] := '1';
             AForm.UpdateValid(BatchRows[i]);
             Inc(TotalTranslated);
           end;
@@ -1705,7 +1708,9 @@ begin
         if TranslatedBatch <> string.Empty then
         begin
           Entry.MsgStrSimple := TranslatedBatch;
+          Entry.IsFuzzy := True;
           AForm.Grid.Cells[CELL_TRANSLATION, MultiRows[i]] := TranslatedBatch;
+          AForm.Grid.Cells[CELL_FUZZY, MultiRows[i]] := '1';
           AForm.UpdateValid(MultiRows[i]);
           Inc(TotalTranslated);
         end;
