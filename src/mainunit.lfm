@@ -652,7 +652,7 @@ object formPoBatch: TformPoBatch
         Action = AClearIdentical
       end
       object MenuValidFile: TMenuItem
-        Action = AValidFile
+        Action = AMarkAsValid
       end
       object MenuEditPluralForm: TMenuItem
         Action = AEditPluralForm
@@ -910,11 +910,11 @@ object formPoBatch: TformPoBatch
       ShortCut = 32836
       OnExecute = AClearIdenticalExecute
     end
-    object AValidFile: TAction
+    object AMarkAsValid: TAction
       Category = 'Edit'
-      Caption = 'Mark as Valid'
+      Caption = 'Mark As Valid'
       ShortCut = 32854
-      OnExecute = AValidFileExecute
+      OnExecute = AMarkAsValidExecute
     end
     object AMemoUndo: TAction
       Category = 'Memo'
@@ -965,7 +965,7 @@ object formPoBatch: TformPoBatch
     end
     object ASyncWithPot: TAction
       Category = 'Edit'
-      Caption = 'Sync with Pot'
+      Caption = 'Sync With Pot'
       OnExecute = ASyncWithPotExecute
     end
     object AEditTranslationOnly: TAction
@@ -1151,7 +1151,7 @@ object formPoBatch: TformPoBatch
     end
     object APathCopySource: TAction
       Category = 'Path'
-      Caption = 'Copy Source to Empty'
+      Caption = 'Copy Source To Empty'
       OnExecute = APathCopySourceExecute
     end
     object APathClearInvalid: TAction
@@ -1161,7 +1161,7 @@ object formPoBatch: TformPoBatch
     end
     object APathValidFiles: TAction
       Category = 'Path'
-      Caption = 'Mark File(s) as Valid'
+      Caption = 'Mark File(s) As Valid'
       OnExecute = APathValidFilesExecute
     end
     object APathRenameFiles: TAction
@@ -1224,6 +1224,9 @@ object formPoBatch: TformPoBatch
     end
     object MenuPopupEditPluralForm: TMenuItem
       Action = AEditPluralForm
+    end
+    object MenuItem4: TMenuItem
+      Action = AMarkAsValid
     end
     object MenuPopupTranslate: TMenuItem
       Action = ATranslateSelected

@@ -92,7 +92,7 @@ type
     AMemoPaste: TAction;
     AMemoCopy: TAction;
     AMemoCut: TAction;
-    AValidFile: TAction;
+    AMarkAsValid: TAction;
     APathValidFiles: TAction;
     ASyncWithPot: TAction;
     APathSyncFilesWithPot: TAction;
@@ -158,6 +158,7 @@ type
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
     MenuPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
     MenuPopupTranslate: TMenuItem;
@@ -341,7 +342,7 @@ type
     { Action Batch Operations }
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
-    procedure AValidFileExecute(Sender: TObject);
+    procedure AMarkAsValidExecute(Sender: TObject);
     procedure ASyncWithPotExecute(Sender: TObject);
     procedure APathNewFilesFromPotExecute(Sender: TObject);
     procedure APathSyncFilesWithPotExecute(Sender: TObject);
@@ -1500,9 +1501,9 @@ begin
   TBatchOp.ClearIdenticalTranslations(Self);
 end;
 
-procedure TformPoBatch.AValidFileExecute(Sender: TObject);
+procedure TformPoBatch.AMarkAsValidExecute(Sender: TObject);
 begin
-  TBatchOp.MarkCurrentFileValid(Self);
+  TBatchOp.MarkSelectedValid(Self);
 end;
 
 procedure TformPoBatch.ASyncWithPotExecute(Sender: TObject);

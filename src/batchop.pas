@@ -42,7 +42,7 @@ type
     class procedure PathTranslateEmpty(AForm: TformPoBatch);
     // Single-file operations
     class procedure SyncCurrentWithPot(AForm: TformPoBatch);
-    class procedure MarkCurrentFileValid(AForm: TformPoBatch);
+    class procedure MarkSelectedValid(AForm: TformPoBatch);
     // Grid-level operations
     class procedure CopySourceToTranslation(AForm: TformPoBatch);
     class procedure ClearIdenticalTranslations(AForm: TformPoBatch);
@@ -1332,28 +1332,71 @@ begin
   end;
 end;
 
-class procedure TBatchOp.MarkCurrentFileValid(AForm: TformPoBatch);
+class procedure TBatchOp.MarkSelectedValid(AForm: TformPoBatch);
 var
-  i: integer;
+  StartRow, EndRow, Row: integer;
+  EntryIndex: integer;
+  Entry: TPOEntry;
+  MarkedCount: integer;
 begin
   // Check if there is anything to process
   if AForm.PoFile.Entries.Count = 0 then Exit;
 
+  // Determine the row range from the current selection
+  if AForm.Grid.Selection.Top = AForm.Grid.Selection.Bottom then
+  begin
+    StartRow := AForm.Grid.Row;
+    EndRow := AForm.Grid.Row;
+  end
+  else
+  begin
+    StartRow := AForm.Grid.Selection.Top;
+    EndRow := AForm.Grid.Selection.Bottom;
+  end;
+
+  // Only data rows are valid
+  if StartRow < AForm.Grid.FixedRows then
+    StartRow := AForm.Grid.FixedRows;
+  if EndRow >= AForm.Grid.RowCount then
+    EndRow := AForm.Grid.RowCount - 1;
+  if StartRow > EndRow then
+    Exit;
+
   // Ask for confirmation
-  if MessageDlg('Mark as Valid', 'Mark the current file as valid?' + sLineBreak + 'This will remove the "fuzzy" flag from all entries.',
+  if MessageDlg('Mark as Valid', Format('Mark %d selected entries as valid?', [EndRow - StartRow + 1]) +
+    sLineBreak + 'This will remove the "fuzzy" flag from the selected entries.',
     mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
 
   Screen.Cursor := crHourGlass;
   try
     // Save any pending grid changes back to the model
+    AForm.Grid.EditorMode := False;
     AForm.SaveGrid;
 
-    // Remove the fuzzy flag from every translatable entry
-    for i := 0 to AForm.PoFile.Entries.Count - 1 do
+    // Remove the fuzzy flag from the selected translatable entries
+    MarkedCount := 0;
+    for Row := StartRow to EndRow do
     begin
-      // Keep the header entry (empty msgid) untouched
-      if AForm.PoFile.Entries[i].MsgId <> '' then
-        AForm.PoFile.Entries[i].IsFuzzy := False;
+      EntryIndex := StrToIntDef(AForm.Grid.Cells[0, Row], -1);
+      if (EntryIndex < 0) or (EntryIndex >= AForm.PoFile.Entries.Count) then
+        Continue;
+
+      Entry := AForm.PoFile.Entries[EntryIndex];
+      if Entry.MsgId = '' then
+        Continue;
+
+      if Entry.IsFuzzy then
+      begin
+        Entry.IsFuzzy := False;
+        Inc(MarkedCount);
+      end;
+    end;
+
+    if MarkedCount = 0 then
+    begin
+      Screen.Cursor := crDefault;
+      ShowMessage('No fuzzy entries in the selection.');
+      Exit;
     end;
 
     AForm.Changed := True;
@@ -1366,6 +1409,9 @@ begin
     // Update the file status in the path list if applicable
     if AForm.PathIndex >= 0 then
       AForm.AnalizePath(AForm.PathIndex);
+
+    Screen.Cursor := crDefault;
+    ShowMessageFmt('%d entries marked as valid.', [MarkedCount]);
   finally
     Screen.Cursor := crDefault;
   end;
