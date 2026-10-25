@@ -1126,6 +1126,8 @@ var
   MaxBatchBytes: integer;
   ChunkStart, ChunkEnd, ChunkSize: integer;
   ChunkBytes, LineBytes: integer;
+  ResponseSnippet: string;
+  SnippetIdx: integer;
 
 // Detect the target language from a PO header, falling back to the file name suffix
   function DetectFileLanguage(AFile: TPOFile; const AFileName: string): string;
@@ -1321,9 +1323,20 @@ begin
               else
               begin
                 Screen.Cursor := crDefault;
+                // Include the raw response, truncated to the first 20 lines
+                ResponseSnippet := string.Empty;
+                for SnippetIdx := 0 to Min(ResponseLines.Count, 20) - 1 do
+                begin
+                  if SnippetIdx > 0 then
+                    ResponseSnippet := ResponseSnippet + sLineBreak;
+                  ResponseSnippet := ResponseSnippet + ResponseLines[SnippetIdx];
+                end;
+                if ResponseLines.Count > 20 then
+                  ResponseSnippet := ResponseSnippet + sLineBreak + '... and ' + IntToStr(ResponseLines.Count - 20) +
+                    ' more line(s)';
                 ReportMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
-                  'single-line entries were skipped.', [ExtractFileName(FileName), ResponseLines.Count,
-                  ChunkSize], AConfirm);
+                  'single-line entries were skipped.' + sLineBreak + sLineBreak + 'Response:' +
+                  sLineBreak + ResponseSnippet, [ExtractFileName(FileName), ResponseLines.Count, ChunkSize], AConfirm);
                 Screen.Cursor := crHourGlass;
               end;
 
@@ -1653,6 +1666,8 @@ var
   MaxBatchBytes: integer;
   ChunkStart, ChunkEnd, ChunkSize: integer;
   ChunkBytes, LineBytes: integer;
+  ResponseSnippet: string;
+  SnippetIdx: integer;
 begin
   // Determine the row range: either the selected rows or the whole file
   if AOnlySelected then
@@ -1820,8 +1835,19 @@ begin
           else
           begin
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Translation service returned %d lines instead of %d; ' +
-              'single-line entries were skipped.', [ResponseLines.Count, ChunkSize]);
+            // Include the raw response, truncated to the first 20 lines
+            ResponseSnippet := string.Empty;
+            for SnippetIdx := 0 to Min(ResponseLines.Count, 20) - 1 do
+            begin
+              if SnippetIdx > 0 then
+                ResponseSnippet := ResponseSnippet + sLineBreak;
+              ResponseSnippet := ResponseSnippet + ResponseLines[SnippetIdx];
+            end;
+            if ResponseLines.Count > 20 then
+              ResponseSnippet := ResponseSnippet + sLineBreak + '... and ' + IntToStr(ResponseLines.Count - 20) +
+                ' more line(s)';
+            ShowMessageFmt('Translation service returned %d lines instead of %d; ' + 'single-line entries were skipped.' +
+              sLineBreak + sLineBreak + 'Response:' + sLineBreak + ResponseSnippet, [ResponseLines.Count, ChunkSize]);
             Screen.Cursor := crHourGlass;
           end;
 
