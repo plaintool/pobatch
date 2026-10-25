@@ -39,12 +39,14 @@ type
     class procedure RenameFiles(AForm: TformPoBatch);
     class procedure DeleteFiles(AForm: TformPoBatch);
     class procedure NewFilesFromPot(AForm: TformPoBatch);
+    class procedure PathTranslateEmpty(AForm: TformPoBatch);
     // Single-file operations
     class procedure SyncCurrentWithPot(AForm: TformPoBatch);
     class procedure MarkCurrentFileValid(AForm: TformPoBatch);
     // Grid-level operations
     class procedure CopySourceToTranslation(AForm: TformPoBatch);
     class procedure ClearIdenticalTranslations(AForm: TformPoBatch);
+    class procedure Translate(AForm: TformPoBatch; ASkipTranslated: boolean = False; AOnlySelected: boolean = True);
   end;
 
 implementation
@@ -1028,6 +1030,252 @@ begin
   end;
 end;
 
+class procedure TBatchOp.PathTranslateEmpty(AForm: TformPoBatch);
+var
+  i, k, selCount: integer;
+  PoFile: TPOFile;
+  Entry: TPOEntry;
+  FileName: string;
+  fileList, msg, BatchText, TranslatedBatch: string;
+  SelectedIndices: array of integer = nil;
+  BatchEntries: array of TPOEntry = nil;
+  MultiEntries: array of TPOEntry = nil;
+  ResponseLines: TStringList;
+  TotalTranslated, FilesTranslated, SkippedFiles: integer;
+  TranslatedInFile: integer;
+  FileLang, SrcLang: string;
+  OrigSource, OrigTarget: string;
+
+// Detect the target language from a PO header, falling back to the file name suffix
+  function DetectFileLanguage(AFile: TPOFile; const AFileName: string): string;
+  var
+    HeaderLang, BaseName, LangCode: string;
+    Parts: TStringArray;
+  begin
+    Result := string.Empty;
+
+    HeaderLang := Trim(AFile.HeaderValue['Language']);
+    if HeaderLang <> string.Empty then
+      Exit(HeaderLang);
+
+    if not SameText(ExtractFileExt(AFileName), '.po') then
+      Exit;
+
+    BaseName := ChangeFileExt(ExtractFileName(AFileName), '');
+    Parts := BaseName.Split('.');
+    if Length(Parts) > 1 then
+    begin
+      LangCode := Trim(Parts[High(Parts)]);
+      if LangCode <> BaseName then
+        Result := LangCode;
+    end;
+  end;
+
+begin
+  // Collect selected indices before processing
+  SetLength(SelectedIndices, AForm.ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to AForm.ListPath.Items.Count - 1 do
+    if AForm.ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ShowMessage('No PO files selected.');
+    Exit;
+  end;
+
+  // Build the confirmation message with the affected files
+  fileList := string.Empty;
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+  end;
+
+  msg := 'Translate missing translations in the following ' + IntToStr(selCount) + ' file(s)?' + sLineBreak +
+    'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  if MessageDlg('Translate missing', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
+
+  // Ask to save current file if modified - abort if user cancels
+  if not AForm.IsCanClose(True) then
+    Exit;
+
+  // Remember the current language pair so it can be restored afterwards
+  OrigSource := AForm.Translate.SourceLanguage;
+  OrigTarget := AForm.Translate.TargetLanguage;
+
+  TotalTranslated := 0;
+  FilesTranslated := 0;
+  SkippedFiles := 0;
+  ResponseLines := TStringList.Create;
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
+    begin
+      FileName := AForm.PoFiles[SelectedIndices[i]];
+      if not FileExists(FileName) then
+      begin
+        Screen.Cursor := crDefault;
+        ShowMessageFmt('File not found: %s', [FileName]);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip POT files - they contain no translations
+      if SameText(ExtractFileExt(FileName), '.pot') then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        try
+          PoFile.LoadFromFile(FileName);
+
+          // Configure the translator for this file's language pair
+          FileLang := DetectFileLanguage(PoFile, FileName);
+          if FileLang = string.Empty then
+          begin
+            // Fall back to the current document's language when the file
+            // carries no language information at all
+            FileLang := OrigTarget;
+          end;
+
+          if FileLang = string.Empty then
+          begin
+            Inc(SkippedFiles);
+            Continue;
+          end;
+
+          SrcLang := Trim(PoFile.HeaderValue['X-Source-Language']);
+          if SrcLang = string.Empty then
+            SrcLang := 'en';
+          AForm.Translate.SourceLanguage := SrcLang;
+          AForm.Translate.TargetLanguage := FileLang;
+
+          // Collect untranslated entries into two groups
+          SetLength(BatchEntries, 0);
+          SetLength(MultiEntries, 0);
+
+          for k := 0 to PoFile.Entries.Count - 1 do
+          begin
+            Entry := PoFile.Entries[k];
+            if Entry.MsgId = string.Empty then
+              Continue;
+            if Trim(Entry.MsgStrSimple) <> string.Empty then
+              Continue;
+
+            if (Pos(#10, Entry.MsgId) > 0) or (Pos(#13, Entry.MsgId) > 0) then
+            begin
+              SetLength(MultiEntries, Length(MultiEntries) + 1);
+              MultiEntries[High(MultiEntries)] := Entry;
+            end
+            else
+            begin
+              SetLength(BatchEntries, Length(BatchEntries) + 1);
+              BatchEntries[High(BatchEntries)] := Entry;
+            end;
+          end;
+
+          if (Length(BatchEntries) = 0) and (Length(MultiEntries) = 0) then
+          begin
+            Inc(SkippedFiles);
+            Continue;
+          end;
+
+          TranslatedInFile := 0;
+
+          // Single-line entries go out in one request; the response must
+          // keep the same line count, otherwise the mapping is unreliable
+          if Length(BatchEntries) > 0 then
+          begin
+            BatchText := string.Empty;
+            for k := 0 to High(BatchEntries) do
+            begin
+              if k > 0 then
+                BatchText := BatchText + sLineBreak;
+              BatchText := BatchText + BatchEntries[k].MsgId;
+            end;
+
+            TranslatedBatch := AForm.Translate.TranslateSync(BatchText);
+            ResponseLines.Text := TranslatedBatch;
+
+            if ResponseLines.Count = Length(BatchEntries) then
+            begin
+              for k := 0 to High(BatchEntries) do
+              begin
+                BatchEntries[k].MsgStrSimple := ResponseLines[k];
+                Inc(TranslatedInFile);
+              end;
+            end
+            else
+            begin
+              Screen.Cursor := crDefault;
+              ShowMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
+                'single-line entries were skipped.', [ExtractFileName(FileName), ResponseLines.Count,
+                Length(BatchEntries)]);
+              Screen.Cursor := crHourGlass;
+            end;
+          end;
+
+          // Multi-line entries are translated one by one to keep their
+          // internal line structure intact
+          for k := 0 to High(MultiEntries) do
+          begin
+            TranslatedBatch := AForm.Translate.TranslateSync(MultiEntries[k].MsgId);
+            if TranslatedBatch <> string.Empty then
+            begin
+              MultiEntries[k].MsgStrSimple := TranslatedBatch;
+              Inc(TranslatedInFile);
+            end;
+            Application.ProcessMessages;
+          end;
+
+          if TranslatedInFile > 0 then
+          begin
+            PoFile.SaveToFile(FileName);
+            Inc(TotalTranslated, TranslatedInFile);
+            Inc(FilesTranslated);
+
+            // Refresh the status in the path list
+            AForm.AnalizePath(SelectedIndices[i]);
+
+            // Reload the current file if it was the one processed
+            if SameFileName(FileName, AForm.FileName) then
+              AForm.ReloadCurrentFile(AForm.FileName);
+          end
+          else
+            Inc(SkippedFiles);
+        except
+          on E: Exception do
+          begin
+            Screen.Cursor := crDefault;
+            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            Screen.Cursor := crHourGlass;
+          end;
+        end;
+      finally
+        PoFile.Free;
+      end;
+    end;
+  finally
+    // Restore the language pair of the currently opened document
+    AForm.Translate.SourceLanguage := OrigSource;
+    AForm.Translate.TargetLanguage := OrigTarget;
+    ResponseLines.Free;
+    Screen.Cursor := crDefault;
+  end;
+
+  ShowMessageFmt('Done. %d translation(s) added in %d file(s). %d file(s) skipped.',
+    [TotalTranslated, FilesTranslated, SkippedFiles]);
+end;
+
 class procedure TBatchOp.SyncCurrentWithPot(AForm: TformPoBatch);
 var
   PotFileName: string;
@@ -1224,6 +1472,219 @@ begin
     );
 
   AForm.Grid.Invalidate;
+end;
+
+class procedure TBatchOp.Translate(AForm: TformPoBatch; ASkipTranslated: boolean = False; AOnlySelected: boolean = True);
+var
+  StartRow, EndRow, Row: integer;
+  EntryIndex, i: integer;
+  Entry: TPOEntry;
+  BatchEntries: array of TPOEntry = nil;
+  BatchRows: array of integer = nil;
+  MultiEntries: array of TPOEntry = nil;
+  MultiRows: array of integer = nil;
+  BatchText: string;
+  TranslatedBatch: string;
+  SourceText: string;
+  ResponseLines: TStringList;
+  BatchCount, MultiCount: integer;
+  TotalTranslated: integer;
+  SkippedCount: integer;
+  ConfirmMsg: string;
+begin
+  // Determine the row range: either the selected rows or the whole file
+  if AOnlySelected then
+  begin
+    if AForm.Grid.Selection.Top = AForm.Grid.Selection.Bottom then
+    begin
+      StartRow := AForm.Grid.Row;
+      EndRow := AForm.Grid.Row;
+    end
+    else
+    begin
+      StartRow := AForm.Grid.Selection.Top;
+      EndRow := AForm.Grid.Selection.Bottom;
+    end;
+  end
+  else
+  begin
+    StartRow := AForm.Grid.FixedRows;
+    EndRow := AForm.Grid.RowCount - 1;
+  end;
+
+  // Only data rows are valid
+  if StartRow < AForm.Grid.FixedRows then
+    StartRow := AForm.Grid.FixedRows;
+  if EndRow >= AForm.Grid.RowCount then
+    EndRow := AForm.Grid.RowCount - 1;
+  if StartRow > EndRow then
+    Exit;
+
+  if AOnlySelected then
+  begin
+    if ASkipTranslated then
+      ConfirmMsg := Format('Translate missing translations in %d selected entries?', [EndRow - StartRow + 1])
+    else
+      ConfirmMsg := Format('Translate %d selected entries?', [EndRow - StartRow + 1]);
+  end
+  else
+  begin
+    if ASkipTranslated then
+      ConfirmMsg := 'Translate all missing translations in the current file?'
+    else
+      ConfirmMsg := 'Translate all entries in the current file?';
+  end;
+
+  if MessageDlg(ConfirmMsg, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
+
+  // Ensure the grid data is pushed to the model before we look at entries
+  AForm.Grid.EditorMode := False;
+  AForm.SaveGrid;
+
+  ResponseLines := TStringList.Create;
+  try
+    SkippedCount := 0;
+
+    // Split the range into single-line and multi-line entries
+    for Row := StartRow to EndRow do
+    begin
+      EntryIndex := StrToIntDef(AForm.Grid.Cells[0, Row], -1);
+      if (EntryIndex < 0) or (EntryIndex >= AForm.PoFile.Entries.Count) then
+        Continue;
+
+      Entry := AForm.PoFile.Entries[EntryIndex];
+      if Entry.MsgId = string.Empty then
+        Continue;
+
+      // Skip entries that already have a translation when requested
+      if ASkipTranslated and (Trim(Entry.MsgStrSimple) <> string.Empty) then
+      begin
+        Inc(SkippedCount);
+        Continue;
+      end;
+
+      if (Pos(#10, Entry.MsgId) > 0) or (Pos(#13, Entry.MsgId) > 0) then
+      begin
+        SetLength(MultiEntries, Length(MultiEntries) + 1);
+        MultiEntries[High(MultiEntries)] := Entry;
+        SetLength(MultiRows, Length(MultiRows) + 1);
+        MultiRows[High(MultiRows)] := Row;
+      end
+      else
+      begin
+        SetLength(BatchEntries, Length(BatchEntries) + 1);
+        BatchEntries[High(BatchEntries)] := Entry;
+        SetLength(BatchRows, Length(BatchRows) + 1);
+        BatchRows[High(BatchRows)] := Row;
+      end;
+    end;
+
+    BatchCount := Length(BatchEntries);
+    MultiCount := Length(MultiEntries);
+
+    if (BatchCount = 0) and (MultiCount = 0) then
+    begin
+      if ASkipTranslated and (SkippedCount > 0) then
+        ShowMessage('Nothing to translate: all entries already have translations.')
+      else
+        ShowMessage('Nothing to translate.');
+      Exit;
+    end;
+
+    TotalTranslated := 0;
+    Screen.Cursor := crHourGlass;
+    try
+      // Single-line entries go out in one request; the response must
+      // keep the same line count, otherwise the mapping is unreliable
+      if BatchCount > 0 then
+      begin
+        BatchText := string.Empty;
+        for i := 0 to BatchCount - 1 do
+        begin
+          if i > 0 then
+            BatchText := BatchText + sLineBreak;
+          BatchText := BatchText + BatchEntries[i].MsgId;
+        end;
+
+        try
+          TranslatedBatch := AForm.Translate.TranslateSync(BatchText);
+        except
+          on E: Exception do
+          begin
+            Screen.Cursor := crDefault;
+            ShowMessageFmt('Translation error: %s', [E.Message]);
+            Exit;
+          end;
+        end;
+
+        ResponseLines.Text := TranslatedBatch;
+
+        if ResponseLines.Count = BatchCount then
+        begin
+          for i := 0 to BatchCount - 1 do
+          begin
+            Entry := BatchEntries[i];
+            Entry.MsgStrSimple := ResponseLines[i];
+            AForm.Grid.Cells[CELL_TRANSLATION, BatchRows[i]] := ResponseLines[i];
+            AForm.UpdateValid(BatchRows[i]);
+            Inc(TotalTranslated);
+          end;
+        end
+        else
+        begin
+          Screen.Cursor := crDefault;
+          ShowMessageFmt('Translation service returned %d lines instead of %d; ' + 'single-line entries were skipped.',
+            [ResponseLines.Count, BatchCount]);
+          Screen.Cursor := crHourGlass;
+        end;
+      end;
+
+      // Multi-line entries are translated one by one to keep their
+      // internal line structure intact
+      for i := 0 to MultiCount - 1 do
+      begin
+        Entry := MultiEntries[i];
+        SourceText := Entry.MsgId;
+        if SourceText = string.Empty then
+          Continue;
+
+        try
+          TranslatedBatch := AForm.Translate.TranslateSync(SourceText);
+        except
+          on E: Exception do
+            Continue;
+        end;
+
+        if TranslatedBatch <> string.Empty then
+        begin
+          Entry.MsgStrSimple := TranslatedBatch;
+          AForm.Grid.Cells[CELL_TRANSLATION, MultiRows[i]] := TranslatedBatch;
+          AForm.UpdateValid(MultiRows[i]);
+          Inc(TotalTranslated);
+        end;
+
+        // Keep the UI responsive between individual requests
+        Application.ProcessMessages;
+      end;
+
+      if TotalTranslated > 0 then
+      begin
+        AForm.Changed := True;
+        AForm.UpdateTranslatePanel;
+      end;
+    finally
+      Screen.Cursor := crDefault;
+    end;
+
+    if ASkipTranslated and (SkippedCount > 0) then
+      ShowMessageFmt('Translation complete. %d entries updated, %d skipped.',
+        [TotalTranslated, SkippedCount])
+    else
+      ShowMessageFmt('Translation complete. %d entries updated.', [TotalTranslated]);
+  finally
+    ResponseLines.Free;
+  end;
 end;
 
 end.

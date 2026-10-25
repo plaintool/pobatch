@@ -135,6 +135,7 @@
       <Unit>
         <Filename Value="src\settings.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Settings"/>
       </Unit>
       <Unit>
         <Filename Value="src\langcodes.pas"/>

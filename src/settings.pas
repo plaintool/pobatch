@@ -89,12 +89,14 @@ var
   QAMapObj, LangObj: TJSONObject;
   LangKey: string;
   Holder: TQACheckOptionsHolder;
-  i: integer;
+  i, DPI: integer;
 begin
   FileName := TOS.GetSettingsDirectory(APP_NAME, 'form_settings.json'); // Get settings file name
   ForceDirectories(TOS.GetSettingsDirectory(APP_NAME)); // Ensure the directory exists
   JSONObj := TJSONObject.Create;
   try
+    DPI := Screen.PixelsPerInch;
+
     // Save form position and size
     if (Form.WindowState in [wsMaximized, wsMinimized]) then
     begin
@@ -142,10 +144,17 @@ begin
     JSONObj.Add('MenuColumnContextChecked', Form.MenuColumnContext.Checked);
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
     JSONObj.Add('MenuColumnPluralChecked', Form.MenuColumnPlural.Checked);
+
+    JSONObj.Add('FormConfigLeft', Round(Form.ConfigManager.FormPosition.Left * 96 / DPI));
+    JSONObj.Add('FormConfigTop', Round(Form.ConfigManager.FormPosition.Top * 96 / DPI));
+    JSONObj.Add('FormConfigWidth', Round(Form.ConfigManager.FormPosition.Width * 96 / DPI));
+    JSONObj.Add('FormConfigHeight', Round(Form.ConfigManager.FormPosition.Height * 96 / DPI));
+    JSONObj.Add('FormConfigSep1', Round(Form.ConfigManager.FormPosition.Sep1 * 96 / DPI));
+    JSONObj.Add('FormConfigSep2', Round(Form.ConfigManager.FormPosition.Sep2 * 96 / DPI));
+
     JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
-
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
-
+    JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
     JSONObj.Add('Path', Form.Path);
 
     // Save PO files list
@@ -202,7 +211,7 @@ var
   FileStream: TFileStream;
   FileContent: string;
   QAMapObj, LangObj: TJSONObject;
-  i: integer;
+  i, DPI: integer;
 begin
   Result := False;
   FileContent := string.Empty;
@@ -212,6 +221,7 @@ begin
   // Read from file
   FileStream := TFileStream.Create(FileName, fmOpenRead);
   try
+    DPI := Screen.PixelsPerInch;
     SetLength(FileContent, FileStream.Size);
     FileStream.Read(Pointer(FileContent)^, FileStream.Size);
     JSONData := GetJSON(FileContent);
@@ -342,6 +352,24 @@ begin
           Form.MenuColumnPlural.OnClick(Form.MenuColumnPlural);
       end;
 
+      if JSONObj.FindPath('FormConfigLeft') <> nil then
+        Form.ConfigManager.FormPosition.Left := Round(JSONObj.FindPath('FormConfigLeft').AsInteger * DPI / 96);
+
+      if JSONObj.FindPath('FormConfigTop') <> nil then
+        Form.ConfigManager.FormPosition.Top := Round(JSONObj.FindPath('FormConfigTop').AsInteger * DPI / 96);
+
+      if JSONObj.FindPath('FormConfigWidth') <> nil then
+        Form.ConfigManager.FormPosition.Width := Round(JSONObj.FindPath('FormConfigWidth').AsInteger * DPI / 96);
+
+      if JSONObj.FindPath('FormConfigHeight') <> nil then
+        Form.ConfigManager.FormPosition.Height := Round(JSONObj.FindPath('FormConfigHeight').AsInteger * DPI / 96);
+
+      if JSONObj.FindPath('FormConfigSep1') <> nil then
+        Form.ConfigManager.FormPosition.Sep1 := Round(JSONObj.FindPath('FormConfigSep1').AsInteger * DPI / 96);
+
+      if JSONObj.FindPath('FormConfigSep2') <> nil then
+        Form.ConfigManager.FormPosition.Sep2 := Round(JSONObj.FindPath('FormConfigSep2').AsInteger * DPI / 96);
+
       if JSONObj.FindPath('ActionEditTranslationOnly') <> nil then
       begin
         Form.AEditTranslationOnly.Checked := JSONObj.FindPath('ActionEditTranslationOnly').AsBoolean;
@@ -376,6 +404,9 @@ begin
 
       if JSONObj.FindPath('AutoCheckUpdates') <> nil then
         Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
+
+      if JSONObj.FindPath('TranslateConfig') <> nil then
+        Form.ConfigManager.ConfigFile := JSONObj.FindPath('TranslateConfig').AsString;
 
       // Restore the master QA switch
       if JSONObj.FindPath('QAChecksEnabled') <> nil then

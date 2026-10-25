@@ -39,7 +39,7 @@ uses
   SpellChecker,
   LangCodes,
   PoWrap,
-  PoCheck;
+  PoCheck, Translate, ConfigManager;
 
 type
   { TformPoBatch }
@@ -63,6 +63,9 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    APathTranslateMissing: TAction;
+    ATranslateMissing: TAction;
+    ATranslateSelected: TAction;
     APathRescan: TAction;
     APathClearInvalid: TAction;
     APathCopySource: TAction;
@@ -105,6 +108,7 @@ type
     AEditTranslationOnly: TAction;
     AUndoChanges: TAction;
     ActionList: TActionList;
+    ConfigManager: TConfigManager;
     Filter: TEdit;
     GridHeaders: TStringGrid;
     GridComments: TStringGrid;
@@ -153,6 +157,13 @@ type
     MenuCheckPunctBracket: TMenuItem;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuPathTranslateEmpty: TMenuItem;
+    MenuTranslateMissing: TMenuItem;
+    MenuPopupTranslate: TMenuItem;
+    MenuTranslateSelected: TMenuItem;
+    MenuTranslateConfig: TMenuItem;
+    MenuTranslate: TMenuItem;
     MenuPathRescan: TMenuItem;
     MenuPathCopySource: TMenuItem;
     MenuPathClearInvalid: TMenuItem;
@@ -223,12 +234,12 @@ type
     Separator15: TMenuItem;
     Separator16: TMenuItem;
     Separator17: TMenuItem;
-    Separator18: TMenuItem;
     Separator19: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
     dialogPath: TSelectDirectoryDialog;
     Separator1: TMenuItem;
+    Separator20: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
@@ -247,10 +258,14 @@ type
     Grid: TStringGrid;
     PageTranslate: TTabSheet;
     PageComments: TTabSheet;
+    Translate: TTranslate;
     { Form Events }
     procedure APathClearInvalidExecute(Sender: TObject);
     procedure APathCopySourceExecute(Sender: TObject);
     procedure APathRescanExecute(Sender: TObject);
+    procedure APathTranslateMissingExecute(Sender: TObject);
+    procedure ATranslateMissingExecute(Sender: TObject);
+    procedure ATranslateSelectedExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -427,6 +442,7 @@ type
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
+    procedure SetLanguage(const Value: string);
     procedure SetSplitRatio(Value: double);
     procedure SetWordWrap(Value: boolean);
 
@@ -477,6 +493,7 @@ type
     procedure RecheckAllQA;
   public
     property Changed: boolean read FChanged write SetChanged;
+    property Language: string read FLanguage write SetLanguage;
     property Path: string read FPath write FPath;
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
     property SortOrder: TSortOrder read FSortOrder write FSortOrder;
@@ -620,6 +637,8 @@ begin
   GridPlural.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
+
+  ConfigManager.AppName := APP_NAME;
 
   // Upper bound for a single row height, so a row cannot grow taller than the visible grid area
   FMaxRowHeight := Screen.Height div 3;
@@ -935,8 +954,7 @@ begin
   // Fill in the standard headers in the canonical order and set the chosen language
   FPoFile.ApplyDefaultHeaders(Code, 'PoBatch ' + GetAppVersion);
 
-  FLanguage := Code;
-  SpellTranslation.Language := FLanguage;
+  Language := Code;
   LoadQACheckOptionsForLanguage(FLanguage);
   ApplyQACheckOptionsToMenu;
 
@@ -1527,6 +1545,11 @@ begin
   TBatchOp.DeleteFiles(Self);
 end;
 
+procedure TformPoBatch.APathTranslateMissingExecute(Sender: TObject);
+begin
+  TBatchOp.PathTranslateEmpty(Self);
+end;
+
 procedure TformPoBatch.APathShowFileInExplorerExecute(Sender: TObject);
 begin
   TOS.ShowFileInExplorer(FFileName);
@@ -1558,6 +1581,17 @@ end;
 procedure TformPoBatch.APathSelectAllExecute(Sender: TObject);
 begin
   ListPath.SelectAll;
+end;
+
+procedure TformPoBatch.ATranslateSelectedExecute(Sender: TObject);
+begin
+  TBatchOp.Translate(Self);
+end;
+
+procedure TformPoBatch.ATranslateMissingExecute(Sender: TObject);
+begin
+  // Missing translations are looked up across the whole file, not just selection
+  TBatchOp.Translate(Self, True, False);
 end;
 
 {%EndRegion}
@@ -2480,6 +2514,32 @@ begin
   UpdateInterface;
 end;
 
+procedure TformPoBatch.SetLanguage(const Value: string);
+var
+  SrcLang: string = 'en';
+begin
+  if FLanguage = Value then Exit;
+  FLanguage := Value;
+
+  // Keep spell checker dictionary in sync with the document language
+  if Assigned(SpellTranslation) then
+    SpellTranslation.Language := Value;
+
+  // Configure the translate service; source language comes from the PO
+  // header when present, otherwise English is assumed
+  if Assigned(Translate) then
+  begin
+    if Assigned(FPoFile) then
+    begin
+      SrcLang := Trim(FPoFile.HeaderValue['X-Source-Language']);
+      if SrcLang = string.Empty then
+        SrcLang := 'en';
+    end;
+    Translate.SourceLanguage := SrcLang;
+    Translate.TargetLanguage := Value;
+  end;
+end;
+
 procedure TformPoBatch.SetSplitRatio(Value: double);
 begin
   FSplitRatio := Value;
@@ -2670,7 +2730,7 @@ begin
   try
     FPoFile.Reset;
     FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
-    FLanguage := string.Empty;
+    Language := string.Empty;
     SetDefaultQACheckOptions;
     ApplyQACheckOptionsToMenu;
     FFileName := AFileName;
@@ -3017,8 +3077,7 @@ begin
       end;
 
       // Switch to the QA options remembered for this language
-      FLanguage := DetectLanguage(AFileName);
-      SpellTranslation.Language := FLanguage;
+      Language := DetectLanguage(AFileName);
       LoadQACheckOptionsForLanguage(FLanguage);
       ApplyQACheckOptionsToMenu;
 
@@ -3137,8 +3196,7 @@ begin
   // Fill in the standard headers in the canonical order and set the chosen language
   FPoFile.ApplyDefaultHeaders(ACode, 'PoBatch ' + GetAppVersion);
 
-  FLanguage := ACode;
-  SpellTranslation.Language := FLanguage;
+  Language := ACode;
   FFileName := ANewFileName;
 
   // Populate the grid from the freshly loaded POT before saving, otherwise
@@ -3840,7 +3898,7 @@ begin
   Result := '';
 
   // Prefer the language from the PO header
-  HeaderLang := Trim(FPoFile.HeaderValue['Language']);   // <-- было FPoFile.Headers.Values['Language']
+  HeaderLang := Trim(FPoFile.HeaderValue['Language']);
   if HeaderLang <> '' then
     Exit(HeaderLang);
 
