@@ -327,9 +327,9 @@ begin
   else
   begin
     DialogTitle := 'Clear all translations';
-    msg := 'Clear ALL translations in the following ' + IntToStr(selCount) + ' file(s)?' +
-      sLineBreak + 'Headers are preserved, all msgstr values are removed.' +
-      sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+    msg := 'Clear ALL translations in the following ' + IntToStr(selCount) + ' file(s)?' + sLineBreak +
+      'Headers are preserved, all msgstr values are removed.' + sLineBreak + 'This action cannot be undone within the application.' +
+      sLineBreak + sLineBreak + fileList;
   end;
 
   if AConfirm and (MessageDlg(DialogTitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
@@ -1123,6 +1123,9 @@ var
   TranslatedInFile: integer;
   FileLang, SrcLang: string;
   OrigSource, OrigTarget: string;
+  MaxBatchBytes: integer;
+  ChunkStart, ChunkEnd, ChunkSize: integer;
+  ChunkBytes, LineBytes: integer;
 
 // Detect the target language from a PO header, falling back to the file name suffix
   function DetectFileLanguage(AFile: TPOFile; const AFileName: string): string;
@@ -1269,37 +1272,63 @@ begin
 
           TranslatedInFile := 0;
 
-          // Single-line entries go out in one request; the response must
-          // keep the same line count, otherwise the mapping is unreliable
+          // Single-line entries go out in chunks bounded by the translator's
+          // MaxLength; the response must keep the same line count per chunk,
+          // otherwise the mapping is unreliable
           if Length(BatchEntries) > 0 then
           begin
-            BatchText := string.Empty;
-            for k := 0 to High(BatchEntries) do
-            begin
-              if k > 0 then
-                BatchText := BatchText + sLineBreak;
-              BatchText := BatchText + BatchEntries[k].MsgId;
-            end;
+            MaxBatchBytes := AForm.Translate.MaxLength;
+            if MaxBatchBytes > 0 then
+              MaxBatchBytes := MaxBatchBytes * 9 div 10;  // safety margin
 
-            TranslatedBatch := AForm.Translate.TranslateSync(BatchText);
-            ResponseLines.Text := TranslatedBatch;
-
-            if ResponseLines.Count = Length(BatchEntries) then
+            ChunkStart := 0;
+            while ChunkStart < Length(BatchEntries) do
             begin
-              for k := 0 to High(BatchEntries) do
+              // Collect lines for the next chunk without exceeding the limit
+              BatchText := string.Empty;
+              ChunkEnd := ChunkStart;
+              ChunkBytes := 0;
+              while ChunkEnd < Length(BatchEntries) do
               begin
-                BatchEntries[k].MsgStrSimple := ResponseLines[k];
-                BatchEntries[k].IsFuzzy := True;
-                Inc(TranslatedInFile);
+                LineBytes := Length(BatchEntries[ChunkEnd].MsgId);
+                if ChunkEnd > ChunkStart then
+                  Inc(LineBytes, Length(sLineBreak));
+                if (MaxBatchBytes > 0) and (ChunkEnd > ChunkStart) and (ChunkBytes + LineBytes > MaxBatchBytes) then
+                  Break;
+                if ChunkEnd > ChunkStart then
+                  BatchText := BatchText + sLineBreak;
+                BatchText := BatchText + BatchEntries[ChunkEnd].MsgId;
+                Inc(ChunkBytes, LineBytes);
+                Inc(ChunkEnd);
               end;
-            end
-            else
-            begin
-              Screen.Cursor := crDefault;
-              ReportMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
-                'single-line entries were skipped.', [ExtractFileName(FileName), ResponseLines.Count,
-                Length(BatchEntries)], AConfirm);
-              Screen.Cursor := crHourGlass;
+
+              ChunkSize := ChunkEnd - ChunkStart;
+              if ChunkSize = 0 then
+                Break;  // safety guard
+
+              TranslatedBatch := AForm.Translate.TranslateSync(BatchText);
+              ResponseLines.Text := TranslatedBatch;
+
+              if ResponseLines.Count = ChunkSize then
+              begin
+                for k := 0 to ChunkSize - 1 do
+                begin
+                  BatchEntries[ChunkStart + k].MsgStrSimple := ResponseLines[k];
+                  BatchEntries[ChunkStart + k].IsFuzzy := True;
+                  Inc(TranslatedInFile);
+                end;
+              end
+              else
+              begin
+                Screen.Cursor := crDefault;
+                ReportMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
+                  'single-line entries were skipped.', [ExtractFileName(FileName), ResponseLines.Count,
+                  ChunkSize], AConfirm);
+                Screen.Cursor := crHourGlass;
+              end;
+
+              ChunkStart := ChunkEnd;
+              Application.ProcessMessages;
             end;
           end;
 
@@ -1621,6 +1650,9 @@ var
   TotalTranslated: integer;
   SkippedCount: integer;
   ConfirmMsg: string;
+  MaxBatchBytes: integer;
+  ChunkStart, ChunkEnd, ChunkSize: integer;
+  ChunkBytes, LineBytes: integer;
 begin
   // Determine the row range: either the selected rows or the whole file
   if AOnlySelected then
@@ -1725,50 +1757,76 @@ begin
     TotalTranslated := 0;
     Screen.Cursor := crHourGlass;
     try
-      // Single-line entries go out in one request; the response must
-      // keep the same line count, otherwise the mapping is unreliable
+      // Single-line entries go out in chunks bounded by the translator's
+      // MaxLength; the response must keep the same line count per chunk,
+      // otherwise the mapping is unreliable
       if BatchCount > 0 then
       begin
-        BatchText := string.Empty;
-        for i := 0 to BatchCount - 1 do
-        begin
-          if i > 0 then
-            BatchText := BatchText + sLineBreak;
-          BatchText := BatchText + BatchEntries[i].MsgId;
-        end;
+        MaxBatchBytes := AForm.Translate.MaxLength;
+        if MaxBatchBytes > 0 then
+          MaxBatchBytes := MaxBatchBytes * 9 div 10;  // safety margin
 
-        try
-          TranslatedBatch := AForm.Translate.TranslateSync(BatchText);
-        except
-          on E: Exception do
+        ChunkStart := 0;
+        while ChunkStart < BatchCount do
+        begin
+          // Collect lines for the next chunk without exceeding the limit
+          BatchText := string.Empty;
+          ChunkEnd := ChunkStart;
+          ChunkBytes := 0;
+          while ChunkEnd < BatchCount do
+          begin
+            LineBytes := Length(BatchEntries[ChunkEnd].MsgId);
+            if ChunkEnd > ChunkStart then
+              Inc(LineBytes, Length(sLineBreak));
+            if (MaxBatchBytes > 0) and (ChunkEnd > ChunkStart) and (ChunkBytes + LineBytes > MaxBatchBytes) then
+              Break;
+            if ChunkEnd > ChunkStart then
+              BatchText := BatchText + sLineBreak;
+            BatchText := BatchText + BatchEntries[ChunkEnd].MsgId;
+            Inc(ChunkBytes, LineBytes);
+            Inc(ChunkEnd);
+          end;
+
+          ChunkSize := ChunkEnd - ChunkStart;
+          if ChunkSize = 0 then
+            Break;  // safety guard
+
+          try
+            TranslatedBatch := AForm.Translate.TranslateSync(BatchText);
+          except
+            on E: Exception do
+            begin
+              Screen.Cursor := crDefault;
+              ShowMessageFmt('Translation error: %s', [E.Message]);
+              Exit;
+            end;
+          end;
+
+          ResponseLines.Text := TranslatedBatch;
+
+          if ResponseLines.Count = ChunkSize then
+          begin
+            for i := 0 to ChunkSize - 1 do
+            begin
+              Entry := BatchEntries[ChunkStart + i];
+              Entry.MsgStrSimple := ResponseLines[i];
+              Entry.IsFuzzy := True;
+              AForm.Grid.Cells[CELL_TRANSLATION, BatchRows[ChunkStart + i]] := ResponseLines[i];
+              AForm.Grid.Cells[CELL_FUZZY, BatchRows[ChunkStart + i]] := '1';
+              AForm.UpdateValid(BatchRows[ChunkStart + i]);
+              Inc(TotalTranslated);
+            end;
+          end
+          else
           begin
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Translation error: %s', [E.Message]);
-            Exit;
+            ShowMessageFmt('Translation service returned %d lines instead of %d; ' +
+              'single-line entries were skipped.', [ResponseLines.Count, ChunkSize]);
+            Screen.Cursor := crHourGlass;
           end;
-        end;
 
-        ResponseLines.Text := TranslatedBatch;
-
-        if ResponseLines.Count = BatchCount then
-        begin
-          for i := 0 to BatchCount - 1 do
-          begin
-            Entry := BatchEntries[i];
-            Entry.MsgStrSimple := ResponseLines[i];
-            Entry.IsFuzzy := True;
-            AForm.Grid.Cells[CELL_TRANSLATION, BatchRows[i]] := ResponseLines[i];
-            AForm.Grid.Cells[CELL_FUZZY, BatchRows[i]] := '1';
-            AForm.UpdateValid(BatchRows[i]);
-            Inc(TotalTranslated);
-          end;
-        end
-        else
-        begin
-          Screen.Cursor := crDefault;
-          ShowMessageFmt('Translation service returned %d lines instead of %d; ' + 'single-line entries were skipped.',
-            [ResponseLines.Count, BatchCount]);
-          Screen.Cursor := crHourGlass;
+          ChunkStart := ChunkEnd;
+          Application.ProcessMessages;
         end;
       end;
 
