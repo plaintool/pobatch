@@ -19,6 +19,8 @@ PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source 
 
 ![sample1](samples/sample1.png)
 
+---
+
 ## Installation
 
 [![latest version](https://img.shields.io/github/v/release/plaintool/pobatch?color=blue&label=Latest%20release&style=for-the-badge)](https://github.com/plaintool/pobatch/releases/latest)
@@ -63,6 +65,90 @@ If there are missing dependencies, fix them by running:
 ```bash
 sudo dnf install -y gtk2
 ```
+
+---
+
+## Console mode
+
+Besides the graphical interface, PoBatch can run batch operations directly from the command line — useful for scripts, CI/CD pipelines, and headless automation. When a known command is present, the application performs the operation and exits without showing the main window.
+
+### Usage
+
+```text
+pobatch <command> <target> [options]
+```
+
+Run `pobatch --help` to print the full list of commands, targets, and options at any time.
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `copy-source`   | Copy source text into empty translations |
+| `clear-fuzzy`   | Clear translations of fuzzy entries |
+| `clear-all`     | Clear all translations (headers are preserved) |
+| `mark-valid`    | Remove the fuzzy flag from all entries |
+| `sync-pot`      | Synchronize with the reference POT file |
+| `translate`     | Translate empty entries via the configured service |
+| `new-from-pot`  | Create new PO files from a POT for the given languages |
+| `rename`        | Rename files by base name |
+
+### Targets
+
+One target is required for most commands.
+
+| Target | Description |
+|--------|-------------|
+| `--file <path>`    | Process a single PO or POT file |
+| `--dir <path>`     | Process all PO and POT files in a directory |
+| `--files <p1;p2>`  | Semicolon-separated list of files |
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `--pot <path>`     | Reference POT file (`sync-pot`, `new-from-pot`) |
+| `--langs <c1,c2>`  | Target language codes (`new-from-pot`) |
+| `--name <base>`    | New base name (`rename`) |
+| `--config <path>`  | Translation config file (name or full path) |
+| `--source <lang>`  | Source language code (default: `en`) |
+| `--target <lang>`  | Target language code |
+| `-h`, `--help`     | Show help and exit |
+
+> [!NOTE]
+> Without `--config`, PoBatch uses the translation profile that was last selected in the GUI. Pass `--config` to override it explicitly — for example `--config config/mymemory.ini`.
+
+### Examples
+
+```bash
+# Copy source text into empty translations across a whole directory
+pobatch copy-source --dir ./locale
+
+# Remove the fuzzy flag from a single file
+pobatch mark-valid --file ./locale/app.ru.po
+
+# Synchronize every PO in a directory with its matching POT
+pobatch sync-pot --dir ./locale
+
+# Translate all empty entries into Russian using a specific profile
+pobatch translate --dir ./locale --target ru --config config/mymemory.ini
+
+# Create Russian and German PO files from a template
+pobatch new-from-pot --pot ./locale/app.pot --langs "ru,de"
+
+# Rename all files in a directory to a new base name
+pobatch rename --dir ./locale --name myapp
+```
+
+POT files are skipped by translation and clearing commands, since they contain no translations. `rename` touches every file, including POT — this keeps the `<base>.pot` pairing valid for later `sync-pot` runs.
+
+### Automation notes
+
+- **Windows:** the application is linked as a GUI binary, so `cmd.exe` returns the prompt before the operation finishes. In scripts and CI, either redirect the output (`pobatch ... > log.txt 2>&1`) or use `start /wait "" pobatch.exe ...` to wait for completion.
+- **Linux / macOS:** `--help` runs without an X server, but commands that load a document still need a graphical session. Use `xvfb-run -a pobatch ...` inside headless CI environments.
+- **Exit code** is `0` on success and `1` on error, so the result can be checked directly in shell scripts.
+
+---
 
 ## Donate 💖
 

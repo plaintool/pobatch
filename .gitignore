@@ -1,14 +1,14 @@
 *.exe
+*.dll
 *.res
 *.lps
 *.dbg
 *.msi
 *.mo
+*.tar.gz
 *.zip
-/lib
+**/lib/
 /installer/*.wixobj
 /installer/*.wixpdb
 /installer/*.pfx
 /installer/history/*
-/samples/**/*.xml
-/samples/**/*.pad
