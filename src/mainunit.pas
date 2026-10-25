@@ -63,11 +63,12 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    APathClearAll: TAction;
     APathTranslateMissing: TAction;
     ATranslateMissing: TAction;
     ATranslateSelected: TAction;
     APathRescan: TAction;
-    APathClearInvalid: TAction;
+    APathClearFuzzy: TAction;
     APathCopySource: TAction;
     APathShowFileInExplorer: TAction;
     APathNewFilesFromPot: TAction;
@@ -159,6 +160,7 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    MenuPathClearAll: TMenuItem;
     MenuPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
     MenuPopupTranslate: TMenuItem;
@@ -167,7 +169,7 @@ type
     MenuTranslate: TMenuItem;
     MenuPathRescan: TMenuItem;
     MenuPathCopySource: TMenuItem;
-    MenuPathClearInvalid: TMenuItem;
+    MenuPathClearFuzzy: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
@@ -261,7 +263,8 @@ type
     PageComments: TTabSheet;
     Translate: TTranslate;
     { Form Events }
-    procedure APathClearInvalidExecute(Sender: TObject);
+    procedure APathClearAllExecute(Sender: TObject);
+    procedure APathClearFuzzyExecute(Sender: TObject);
     procedure APathCopySourceExecute(Sender: TObject);
     procedure APathRescanExecute(Sender: TObject);
     procedure APathTranslateMissingExecute(Sender: TObject);
@@ -1526,9 +1529,14 @@ begin
   TBatchOp.CopySourceInFiles(Self);
 end;
 
-procedure TformPoBatch.APathClearInvalidExecute(Sender: TObject);
+procedure TformPoBatch.APathClearFuzzyExecute(Sender: TObject);
 begin
-  TBatchOp.ClearInvalidInFiles(Self);
+  TBatchOp.ClearInFiles(Self, True);
+end;
+
+procedure TformPoBatch.APathClearAllExecute(Sender: TObject);
+begin
+  TBatchOp.ClearInFiles(Self, False);
 end;
 
 procedure TformPoBatch.APathValidFilesExecute(Sender: TObject);

@@ -1154,10 +1154,31 @@ object formPoBatch: TformPoBatch
       Caption = 'Copy Source To Empty'
       OnExecute = APathCopySourceExecute
     end
-    object APathClearInvalid: TAction
+    object APathClearFuzzy: TAction
       Category = 'Path'
-      Caption = 'Clear Invalid'
-      OnExecute = APathClearInvalidExecute
+      Caption = 'Clear Fuzzy Translations'
+      OnExecute = APathClearFuzzyExecute
+    end
+    object ATranslateSelected: TAction
+      Category = 'Translate'
+      Caption = 'Translate Selected'
+      ShortCut = 32852
+      OnExecute = ATranslateSelectedExecute
+    end
+    object ATranslateMissing: TAction
+      Category = 'Translate'
+      Caption = 'Translate Missing'
+      OnExecute = ATranslateMissingExecute
+    end
+    object APathTranslateMissing: TAction
+      Category = 'Translate'
+      Caption = 'Translate Missing In File(s)'
+      OnExecute = APathTranslateMissingExecute
+    end
+    object APathClearAll: TAction
+      Category = 'Path'
+      Caption = 'Clear All Translations'
+      OnExecute = APathClearAllExecute
     end
     object APathValidFiles: TAction
       Category = 'Path'
@@ -1188,22 +1209,6 @@ object formPoBatch: TformPoBatch
       Category = 'Path'
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
-    end
-    object ATranslateSelected: TAction
-      Category = 'Translate'
-      Caption = 'Translate Selected'
-      ShortCut = 32852
-      OnExecute = ATranslateSelectedExecute
-    end
-    object ATranslateMissing: TAction
-      Category = 'Translate'
-      Caption = 'Translate Missing'
-      OnExecute = ATranslateMissingExecute
-    end
-    object APathTranslateMissing: TAction
-      Category = 'Translate'
-      Caption = 'Translate Missing In File(s)'
-      OnExecute = APathTranslateMissingExecute
     end
   end
   object ApplicationProp: TApplicationProperties
@@ -1738,8 +1743,11 @@ object formPoBatch: TformPoBatch
     object MenuPathCopySource: TMenuItem
       Action = APathCopySource
     end
-    object MenuPathClearInvalid: TMenuItem
-      Action = APathClearInvalid
+    object MenuPathClearFuzzy: TMenuItem
+      Action = APathClearFuzzy
+    end
+    object MenuPathClearAll: TMenuItem
+      Action = APathClearAll
     end
     object Separator11: TMenuItem
       Caption = '-'

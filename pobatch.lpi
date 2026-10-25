@@ -157,6 +157,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="BatchOp"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\consoleop.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsoleOp"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

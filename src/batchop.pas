@@ -25,6 +25,10 @@ uses
 
 type
   TBatchOp = class
+  private
+    // Print to the console when confirmations are off, otherwise show a dialog
+    class procedure ReportMessage(const AMessage: string; AConfirm: boolean);
+    class procedure ReportMessageFmt(const AFormat: string; const Args: array of const; AConfirm: boolean);
   public
     // Resolve the POT file that pairs with AFileName:
     // - POT returns itself
@@ -32,16 +36,17 @@ type
     // - returns an empty string when no matching POT exists
     class function FindPotForFile(const AFileName: string): string;
     // Multi-file operations on the opened path
-    class procedure CopySourceInFiles(AForm: TformPoBatch);
-    class procedure ClearInvalidInFiles(AForm: TformPoBatch);
-    class procedure MarkFilesValid(AForm: TformPoBatch);
-    class procedure SyncFilesWithPot(AForm: TformPoBatch);
-    class procedure RenameFiles(AForm: TformPoBatch);
-    class procedure DeleteFiles(AForm: TformPoBatch);
-    class procedure NewFilesFromPot(AForm: TformPoBatch);
-    class procedure PathTranslateEmpty(AForm: TformPoBatch);
+    class procedure CopySourceInFiles(AForm: TformPoBatch; AConfirm: boolean = True);
+    class procedure ClearInFiles(AForm: TformPoBatch; AFuzzyOnly: boolean = True; AConfirm: boolean = True);
+    class procedure MarkFilesValid(AForm: TformPoBatch; AConfirm: boolean = True);
+    class procedure SyncFilesWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
+    class procedure RenameFiles(AForm: TformPoBatch; const ANewBaseName: string = ''; AConfirm: boolean = True);
+    class procedure DeleteFiles(AForm: TformPoBatch; AConfirm: boolean = True);
+    class procedure NewFilesFromPot(AForm: TformPoBatch; const APotFileName: string = ''; ALangCodes: TStrings = nil;
+      AConfirm: boolean = True);
+    class procedure PathTranslateEmpty(AForm: TformPoBatch; AConfirm: boolean = True);
     // Single-file operations
-    class procedure SyncCurrentWithPot(AForm: TformPoBatch);
+    class procedure SyncCurrentWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
     class procedure MarkSelectedValid(AForm: TformPoBatch);
     // Grid-level operations
     class procedure CopySourceToTranslation(AForm: TformPoBatch);
@@ -55,6 +60,22 @@ uses
   LangCodes, StringHelper, Localize, PoWrap;
 
   { TBatchOp }
+
+class procedure TBatchOp.ReportMessage(const AMessage: string; AConfirm: boolean);
+begin
+  if AConfirm then
+    ShowMessage(AMessage)
+  else
+    WriteLn(AMessage);
+end;
+
+class procedure TBatchOp.ReportMessageFmt(const AFormat: string; const Args: array of const; AConfirm: boolean);
+begin
+  if AConfirm then
+    ShowMessageFmt(AFormat, Args)
+  else
+    WriteLn(Format(AFormat, Args));
+end;
 
 class function TBatchOp.FindPotForFile(const AFileName: string): string;
 var
@@ -94,7 +115,7 @@ begin
   end;
 end;
 
-class procedure TBatchOp.CopySourceInFiles(AForm: TformPoBatch);
+class procedure TBatchOp.CopySourceInFiles(AForm: TformPoBatch; AConfirm: boolean = True);
 var
   i, j, k, selCount: integer;
   PoFile: TPOFile;
@@ -121,7 +142,7 @@ begin
 
   if selCount = 0 then
   begin
-    ShowMessage('No PO files selected.');
+    ReportMessage('No PO files selected.', AConfirm);
     Exit;
   end;
 
@@ -137,7 +158,7 @@ begin
 
   msg := 'Copy source text to empty translations in the following ' + IntToStr(selCount) + ' file(s)?' +
     sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Copy source to empty', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AConfirm and (MessageDlg('Copy source to empty', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Ask to save the current file if modified - abort if user cancels
@@ -154,7 +175,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ShowMessageFmt('File not found: %s', [FileName]);
+        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -236,7 +257,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -256,16 +277,16 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ShowMessageFmt('Done. %d translation(s) filled from source.', [TotalCopied]);
+  ReportMessageFmt('Done. %d translation(s) filled from source.', [TotalCopied], AConfirm);
 end;
 
-class procedure TBatchOp.ClearInvalidInFiles(AForm: TformPoBatch);
+class procedure TBatchOp.ClearInFiles(AForm: TformPoBatch; AFuzzyOnly: boolean = True; AConfirm: boolean = True);
 var
   i, j, selCount: integer;
   PoFile: TPOFile;
   Entry: TPOEntry;
   FileName: string;
-  fileList, msg: string;
+  fileList, msg, DialogTitle: string;
   SelectedIndices: array of integer = nil;
   ClearedCount, TotalCleared: integer;
   EmptyList: TStringList;
@@ -283,7 +304,7 @@ begin
 
   if selCount = 0 then
   begin
-    ShowMessage('No PO files selected.');
+    ReportMessage('No PO files selected.', AConfirm);
     Exit;
   end;
 
@@ -297,9 +318,21 @@ begin
       fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
   end;
 
-  msg := 'Clear translations of fuzzy entries in the following ' + IntToStr(selCount) + ' file(s)?' +
-    sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Clear invalid translations', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AFuzzyOnly then
+  begin
+    DialogTitle := 'Clear invalid translations';
+    msg := 'Clear translations of fuzzy entries in the following ' + IntToStr(selCount) + ' file(s)?' +
+      sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  end
+  else
+  begin
+    DialogTitle := 'Clear all translations';
+    msg := 'Clear ALL translations in the following ' + IntToStr(selCount) + ' file(s)?' +
+      sLineBreak + 'Headers are preserved, all msgstr values are removed.' +
+      sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+  end;
+
+  if AConfirm and (MessageDlg(DialogTitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Ask to save the current file if modified - abort if user cancels
@@ -316,7 +349,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ShowMessageFmt('File not found: %s', [FileName]);
+        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -337,8 +370,8 @@ begin
             // Skip the header entry (empty msgid)
             if Entry.MsgId = string.Empty then
               Continue;
-            // Only entries flagged as fuzzy (invalid) are affected
-            if not Entry.IsFuzzy then
+            // When only fuzzy entries are requested, skip the rest
+            if AFuzzyOnly and not Entry.IsFuzzy then
               Continue;
 
             if Entry.MsgIdPlural <> string.Empty then
@@ -367,7 +400,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -387,10 +420,13 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ShowMessageFmt('Done. %d invalid translation(s) cleared.', [TotalCleared]);
+  if AFuzzyOnly then
+    ReportMessageFmt('Done. %d invalid translation(s) cleared.', [TotalCleared], AConfirm)
+  else
+    ReportMessageFmt('Done. %d translation(s) cleared.', [TotalCleared], AConfirm);
 end;
 
-class procedure TBatchOp.MarkFilesValid(AForm: TformPoBatch);
+class procedure TBatchOp.MarkFilesValid(AForm: TformPoBatch; AConfirm: boolean = True);
 var
   i, j, selCount: integer;
   PoFile: TPOFile;
@@ -411,7 +447,7 @@ begin
 
   if selCount = 0 then
   begin
-    ShowMessage('No PO files selected.');
+    ReportMessage('No PO files selected.', AConfirm);
     Exit;
   end;
 
@@ -428,7 +464,7 @@ begin
   msg := 'Mark the following ' + IntToStr(selCount) + ' file(s) as valid?' + sLineBreak +
     'This will remove the "fuzzy" flag from all entries.' + sLineBreak + 'This action cannot be undone within the application.' +
     sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Remove fuzzy flag', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AConfirm and (MessageDlg('Remove fuzzy flag', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Save current file if modified - abort if user cancels
@@ -445,7 +481,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ShowMessageFmt('File not found: %s', [FileName]);
+        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -472,7 +508,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;    // skip status update for this file
           end;
@@ -492,10 +528,10 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ShowMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.');
+  ReportMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.', AConfirm);
 end;
 
-class procedure TBatchOp.SyncFilesWithPot(AForm: TformPoBatch);
+class procedure TBatchOp.SyncFilesWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
 var
   i, selCount: integer;
   PoFile: TPOFile;
@@ -522,7 +558,7 @@ begin
 
   if selCount = 0 then
   begin
-    ShowMessage('No PO files selected for synchronization.');
+    ReportMessage('No PO files selected for synchronization.', AConfirm);
     Exit;
   end;
 
@@ -538,7 +574,7 @@ begin
 
   msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'their matching POT files?' +
     sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AConfirm and (MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Process each selected file using the saved indices
@@ -551,13 +587,18 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ShowMessageFmt('File not found: %s', [FileName]);
+        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
 
+      // Use the explicit POT when supplied, otherwise auto-detect per file
+      if APotFileName <> string.Empty then
+        PotForFile := APotFileName
+      else
+        PotForFile := FindPotForFile(FileName);
+
       // Skip POT files and PO files with no matching POT
-      PotForFile := FindPotForFile(FileName);
       if (PotForFile = string.Empty) or SameFileName(FileName, PotForFile) then
       begin
         Inc(SkippedCount);
@@ -575,7 +616,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message]);
+            ReportMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -596,12 +637,12 @@ begin
   end;
 
   if SkippedCount > 0 then
-    ShowMessageFmt('Synchronization complete. %d file(s) skipped (no matching POT).', [SkippedCount])
+    ReportMessageFmt('Synchronization complete. %d file(s) skipped (no matching POT).', [SkippedCount], AConfirm)
   else
-    ShowMessage('Synchronization complete.');
+    ReportMessage('Synchronization complete.', AConfirm);
 end;
 
-class procedure TBatchOp.RenameFiles(AForm: TformPoBatch);
+class procedure TBatchOp.RenameFiles(AForm: TformPoBatch; const ANewBaseName: string = ''; AConfirm: boolean = True);
 var
   i, selCount, p, NewIdx: integer;
   FileName, Dir, BaseName, LangPart, NewName: string;
@@ -625,7 +666,7 @@ begin
 
   if selCount = 0 then
   begin
-    ShowMessage('Select file(s) to rename!');
+    ReportMessage('Select file(s) to rename!', AConfirm);
     Exit;
   end;
 
@@ -644,10 +685,20 @@ begin
 
   OriginalName := DefaultName;
 
-  // Ask the user for the new base name; the language code and extension are kept
-  InputQueryLite('Rename files', 'Enter new base name:', DefaultName);
+  // Use the name from the console when supplied, otherwise ask interactively
+  if ANewBaseName <> string.Empty then
+    DefaultName := Trim(ANewBaseName)
+  else
+  begin
+    if not AConfirm then
+    begin
+      ReportMessage('Error: --name is required in console mode', AConfirm);
+      Exit;
+    end;
+    InputQueryLite('Rename files', 'Enter new base name:', DefaultName);
+    DefaultName := Trim(DefaultName);
+  end;
 
-  DefaultName := Trim(DefaultName);
   if (DefaultName = string.Empty) or (DefaultName = OriginalName) then
     Exit;
 
@@ -663,7 +714,7 @@ begin
 
   msg := 'Rename the following ' + IntToStr(selCount) + ' file(s) using base name "' + DefaultName + '"?' +
     sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Confirm rename', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AConfirm and (MessageDlg('Confirm rename', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Rename each selected file on disk keeping its language code and extension
@@ -691,7 +742,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ShowMessageFmt('Failed to rename: %s', [FileName]);
+        ReportMessageFmt('Failed to rename: %s', [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -766,7 +817,7 @@ begin
   AForm.UpdateCaption;
 end;
 
-class procedure TBatchOp.DeleteFiles(AForm: TformPoBatch);
+class procedure TBatchOp.DeleteFiles(AForm: TformPoBatch; AConfirm: boolean = True);
 var
   i, Count, idx: integer;
   selectedIndices: array of integer = ();
@@ -789,14 +840,15 @@ begin
 
   if Count = 0 then
   begin
-    ShowMessage('Select file to delete!');
+    ReportMessage('Select file to delete!', AConfirm);
     Exit;
   end;
 
   if Count = 1 then
   begin
     // Single file deletion (original behavior)
-    if MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <> mrYes then
+    if AConfirm and (MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <>
+      mrYes) then
       Exit;
   end
   else
@@ -812,7 +864,7 @@ begin
     end;
     msg := 'Are you sure you want to delete the following ' + IntToStr(Count) + ' file(s)?' + sLineBreak + sLineBreak + fileList;
 
-    if MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+    if AConfirm and (MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
       Exit;
   end;
 
@@ -881,7 +933,8 @@ begin
   AForm.UpdateCaption;
 end;
 
-class procedure TBatchOp.NewFilesFromPot(AForm: TformPoBatch);
+class procedure TBatchOp.NewFilesFromPot(AForm: TformPoBatch; const APotFileName: string = '';
+  ALangCodes: TStrings = nil; AConfirm: boolean = True);
 var
   PotFileName: string;
   SelIdx: integer;
@@ -897,32 +950,43 @@ var
   HasExisting: boolean;
   Statuses: TPOFileStatusArray;
 begin
-  // A selected file dictates its own POT, missing POT is an error
   PotFileName := string.Empty;
-  SelIdx := AForm.ListPath.ItemIndex;
 
-  if (SelIdx >= 0) and (SelIdx < AForm.PoFiles.Count) then
-  begin
-    SelFile := AForm.PoFiles[SelIdx];
-    PotFileName := FindPotForFile(SelFile);
-    if PotFileName = string.Empty then
-    begin
-      ShowMessageFmt('No matching POT file found for: %s', [SelFile]);
-      Exit;
-    end;
-  end
+  // Use the POT from the console when supplied, otherwise resolve it
+  if APotFileName <> string.Empty then
+    PotFileName := APotFileName
   else
   begin
-    // No selection - ask the user to pick the source POT file
-    AForm.dialogOpen.FilterIndex := 2;
-    if not AForm.dialogOpen.Execute then
-      Exit;
-    PotFileName := AForm.dialogOpen.FileName;
+    SelIdx := AForm.ListPath.ItemIndex;
+
+    if (SelIdx >= 0) and (SelIdx < AForm.PoFiles.Count) then
+    begin
+      SelFile := AForm.PoFiles[SelIdx];
+      PotFileName := FindPotForFile(SelFile);
+      if PotFileName = string.Empty then
+      begin
+        ReportMessageFmt('No matching POT file found for: %s', [SelFile], AConfirm);
+        Exit;
+      end;
+    end
+    else
+    begin
+      // No selection - ask the user to pick the source POT file
+      if not AConfirm then
+      begin
+        ReportMessage('Error: --pot is required in console mode', AConfirm);
+        Exit;
+      end;
+      AForm.dialogOpen.FilterIndex := 2;
+      if not AForm.dialogOpen.Execute then
+        Exit;
+      PotFileName := AForm.dialogOpen.FileName;
+    end;
   end;
 
   if not FileExists(PotFileName) then
   begin
-    ShowMessageFmt('POT file not found: %s', [PotFileName]);
+    ReportMessageFmt('POT file not found: %s', [PotFileName], AConfirm);
     Exit;
   end;
 
@@ -930,9 +994,23 @@ begin
   if not AForm.IsCanClose(True) then
     Exit;
 
-  // Ask the user to choose the target languages for the new PO files
-  if not SelectLanguages(Codes, [cqoEditable]) then
-    Exit;
+  // Use the language codes from the console when supplied, otherwise ask
+  if Assigned(ALangCodes) and (ALangCodes.Count > 0) then
+  begin
+    SetLength(Codes, ALangCodes.Count);
+    for i := 0 to ALangCodes.Count - 1 do
+      Codes[i] := Trim(ALangCodes[i]);
+  end
+  else
+  begin
+    if not AConfirm then
+    begin
+      ReportMessage('Error: --langs is required in console mode', AConfirm);
+      Exit;
+    end;
+    if not SelectLanguages(Codes, [cqoEditable]) then
+      Exit;
+  end;
   if Length(Codes) = 0 then
     Exit;
 
@@ -954,8 +1032,8 @@ begin
   // Confirm overwriting existing files once, for all languages together
   if HasExisting then
   begin
-    if MessageDlg('Files exist', 'The following files already exist:' + sLineBreak + sLineBreak +
-      ExistingList + sLineBreak + 'Overwrite them?', mtConfirmation, mbYesNo, 0) <> mrYes then
+    if AConfirm and (MessageDlg('Files exist', 'The following files already exist:' + sLineBreak + sLineBreak +
+      ExistingList + sLineBreak + 'Overwrite them?', mtConfirmation, mbYesNo, 0) <> mrYes) then
       Exit;
   end;
 
@@ -1030,7 +1108,7 @@ begin
   end;
 end;
 
-class procedure TBatchOp.PathTranslateEmpty(AForm: TformPoBatch);
+class procedure TBatchOp.PathTranslateEmpty(AForm: TformPoBatch; AConfirm: boolean = True);
 var
   i, k, selCount: integer;
   PoFile: TPOFile;
@@ -1085,7 +1163,7 @@ begin
 
   if selCount = 0 then
   begin
-    ShowMessage('No PO files selected.');
+    ReportMessage('No PO files selected.', AConfirm);
     Exit;
   end;
 
@@ -1101,7 +1179,7 @@ begin
 
   msg := 'Translate missing translations in the following ' + IntToStr(selCount) + ' file(s)?' + sLineBreak +
     'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if MessageDlg('Translate missing', msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AConfirm and (MessageDlg('Translate missing', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Ask to save current file if modified - abort if user cancels
@@ -1124,7 +1202,7 @@ begin
       if not FileExists(FileName) then
       begin
         Screen.Cursor := crDefault;
-        ShowMessageFmt('File not found: %s', [FileName]);
+        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -1218,9 +1296,9 @@ begin
             else
             begin
               Screen.Cursor := crDefault;
-              ShowMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
+              ReportMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
                 'single-line entries were skipped.', [ExtractFileName(FileName), ResponseLines.Count,
-                Length(BatchEntries)]);
+                Length(BatchEntries)], AConfirm);
               Screen.Cursor := crHourGlass;
             end;
           end;
@@ -1258,7 +1336,7 @@ begin
           on E: Exception do
           begin
             Screen.Cursor := crDefault;
-            ShowMessageFmt('Error processing file "%s": %s', [FileName, E.Message]);
+            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
           end;
         end;
@@ -1274,11 +1352,11 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ShowMessageFmt('Done. %d translation(s) added in %d file(s). %d file(s) skipped.',
-    [TotalTranslated, FilesTranslated, SkippedFiles]);
+  ReportMessageFmt('Done. %d translation(s) added in %d file(s). %d file(s) skipped.',
+    [TotalTranslated, FilesTranslated, SkippedFiles], AConfirm);
 end;
 
-class procedure TBatchOp.SyncCurrentWithPot(AForm: TformPoBatch);
+class procedure TBatchOp.SyncCurrentWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
 var
   PotFileName: string;
   Msg: string;
@@ -1287,22 +1365,27 @@ begin
   if not AForm.IsCanClose(True) then
     Exit;
 
-  // Let the user choose a POT file
-  AForm.dialogOpen.FilterIndex := 2;
-  if not AForm.dialogOpen.Execute then
-    Exit;
+  // Use the POT from the console when supplied, otherwise let the user pick one
+  if APotFileName <> string.Empty then
+    PotFileName := APotFileName
+  else
+  begin
+    AForm.dialogOpen.FilterIndex := 2;
+    if not AForm.dialogOpen.Execute then
+      Exit;
+    PotFileName := AForm.dialogOpen.FileName;
+  end;
 
-  PotFileName := AForm.dialogOpen.FileName;
   if not FileExists(PotFileName) then
   begin
-    ShowMessageFmt('POT file not found: %s', [PotFileName]);
+    ReportMessageFmt('POT file not found: %s', [PotFileName], AConfirm);
     Exit;
   end;
 
   // Confirm synchronization
   Msg := 'Synchronize current file' + sLineBreak + '  ' + AForm.FileName + sLineBreak + 'with reference POT' +
     sLineBreak + '  ' + PotFileName + ' ?';
-  if MessageDlg('Confirm synchronization', Msg, mtConfirmation, mbYesNo, 0) <> mrYes then
+  if AConfirm and (MessageDlg('Confirm synchronization', Msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Perform synchronization directly on the already loaded FPoFile object
@@ -1315,7 +1398,7 @@ begin
       begin
         // Show the error dialog without the hourglass cursor
         Screen.Cursor := crDefault;
-        ShowMessageFmt('Error synchronizing file: %s', [E.Message]);
+        ReportMessageFmt('Error synchronizing file: %s', [E.Message], AConfirm);
         Exit;
       end;
     end;
