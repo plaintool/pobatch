@@ -2429,7 +2429,7 @@ end;
 
 procedure TformPoBatch.SpellTranslationSpellCheckComplete(Sender: TObject; ErrorCount: integer);
 begin
-  if (Grid.Col = CELL_TRANSLATION) and (SpellTranslation.RichMemo = FRichEditor) then
+  if MemoTranslation.Visible and (Grid.Col = CELL_TRANSLATION) and (SpellTranslation.RichMemo = FRichEditor) then
     SpellTranslation.ApplyErrorsTo(MemoTranslation);
 end;
 
@@ -2470,14 +2470,15 @@ end;
 
 procedure TformPoBatch.MemoTranslationEnter(Sender: TObject);
 begin
-  Application.QueueAsyncCall(@UpdateSpellCheckMemo, 0);
+  if MemoTranslation.Visible then
+    Application.QueueAsyncCall(@UpdateSpellCheckMemo, 0);
 end;
 
 procedure TformPoBatch.MemoTranslationChange(Sender: TObject);
 begin
   if Grid.RowCount <= Grid.FixedRows then Exit;
 
-  if not MemoTranslation.Focused then Exit;
+  if not MemoTranslation.Visible and not MemoTranslation.Focused then Exit;
 
   if not MemoTranslation.Text.EqualNormalized(Grid.Cells[CELL_TRANSLATION, Grid.Row]) then
   begin
@@ -3537,13 +3538,20 @@ begin
   begin
     FillGridPlural(aRow);
     GridPlural.Visible := True;
+    // Zero the width so the memo cannot take space even when its window
+    // stays shown despite Visible being False
+    MemoTranslation.Width := 0;
     MemoTranslation.Visible := False;
+    MemoTranslation.Clear;
     GridPlural.Align := alClient;
+    // Keep the grid above the memo in case the hidden window is still painted
+    GridPlural.BringToFront;
   end
   else
   begin
-    MemoTranslation.Align := alClient;
     GridPlural.Visible := False;
+    MemoTranslation.Align := alClient;
+    MemoTranslation.BringToFront;
     MemoTranslation.Visible := True;
 
     NewText := Grid.Cells[CELL_TRANSLATION, aRow];
