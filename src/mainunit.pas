@@ -1646,7 +1646,7 @@ begin
       Key := 0;
   end
   else
-  if not AEditTranslationOnly.Checked and (Key = VK_INSERT) then
+  if not AEditTranslationOnly.Checked and (Key = VK_INSERT) and not (ssShift in Shift) and not (ssCtrl in Shift) then
   begin
     GridAny.InsertColRow(False, GridAny.Row + 1);
     GridAny.Row := GridAny.ROw + 1;
@@ -1661,13 +1661,13 @@ begin
       Key := 0;
     end
     else
-    if (ssCtrl in Shift) and (Key = VK_C) then
+    if ((ssCtrl in Shift) and (Key = VK_C)) or ((ssCtrl in Shift) and (Key = VK_INSERT)) then
     begin
       CopyGridsSelection;
       Key := 0;
     end
     else
-    if (ssCtrl in Shift) and (Key = VK_V) then
+    if ((ssCtrl in Shift) and (Key = VK_V)) or ((ssShift in Shift) and (Key = VK_INSERT)) then
     begin
       PasteGridsSelection;
       Key := 0;
@@ -1820,7 +1820,7 @@ begin
       Key := 0;
   end
   else
-  if not AEditTranslationOnly.Checked and (Key = VK_INSERT) then
+  if not AEditTranslationOnly.Checked and (Key = VK_INSERT) and not (ssShift in Shift) and not (ssCtrl in Shift) then
   begin
     Grid.InsertColRow(False, Grid.Row + 1);
     Grid.Row := Grid.Row + 1;
@@ -1833,13 +1833,13 @@ begin
     Key := 0;
   end
   else
-  if (ssCtrl in Shift) and (Key = VK_C) then
+  if ((ssCtrl in Shift) and (Key = VK_C)) or ((ssCtrl in Shift) and (Key = VK_INSERT)) then
   begin
     CopyGridsSelection;
     Key := 0;
   end
   else
-  if (ssCtrl in Shift) and (Key = VK_V) then
+  if ((ssCtrl in Shift) and (Key = VK_V)) or ((ssShift in Shift) and (Key = VK_INSERT)) then
   begin
     PasteGridsSelection;
     Key := 0;
@@ -2519,8 +2519,8 @@ end;
 
 procedure TformPoBatch.MemoPanelKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
-  // Handle ctrl shortcuts for the panel memos
-  if not (ssCtrl in Shift) then
+  // Handle ctrl and shift shortcuts for the panel memos
+  if not ((ssCtrl in Shift) or (ssShift in Shift)) then
     Exit;
 
   // Never treat AltGr-like input as a shortcut
@@ -2530,25 +2530,34 @@ begin
   if not (Sender is TRichMemo) then
     Exit;
 
-  case Key of
-    VK_V:
-    begin
-      // Ctrl+V, paste text from clipboard without trailing line breaks
-      TRichMemo(Sender).PasteWithLineEnding;
-      Key := 0;
+  if (ssCtrl in Shift) then
+  begin
+    case Key of
+      VK_V:
+      begin
+        // Ctrl+V, paste text from clipboard without trailing line breaks
+        TRichMemo(Sender).PasteWithLineEnding;
+        Key := 0;
+      end;
+      VK_Z:
+      begin
+        // Ctrl+Z, undo last action
+        TRichMemo(Sender).UndoEx;
+        Key := 0;
+      end;
+      VK_Y:
+      begin
+        // Ctrl+Y, redo last undone action
+        TRichMemo(Sender).RedoEx;
+        Key := 0;
+      end;
     end;
-    VK_Z:
-    begin
-      // Ctrl+Z, undo last action
-      TRichMemo(Sender).UndoEx;
-      Key := 0;
-    end;
-    VK_Y:
-    begin
-      // Ctrl+Y, redo last undone action
-      TRichMemo(Sender).RedoEx;
-      Key := 0;
-    end;
+  end
+  else if (ssShift in Shift) and (Key = VK_INSERT) then
+  begin
+    // Shift+Insert, paste text from clipboard without trailing line breaks
+    TRichMemo(Sender).PasteWithLineEnding;
+    Key := 0;
   end;
 end;
 
