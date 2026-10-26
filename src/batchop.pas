@@ -1902,6 +1902,9 @@ begin
       begin
         AForm.Changed := True;
         AForm.UpdateTranslatePanel;
+        // Force a full repaint so the new fuzzy state and selection
+        // colors are drawn correctly before the modal message appears
+        AForm.Grid.Invalidate;
       end;
     finally
       Screen.Cursor := crDefault;

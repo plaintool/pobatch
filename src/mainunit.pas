@@ -1693,7 +1693,13 @@ begin
   GridAny := (Sender as TStringGrid);
   if not Assigned(GridAny) then exit;
 
-  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not GridAny.Focused)) then
+  if gdSelected in aState then
+  begin
+    // Keep the selection color uniform even when the grid loses focus
+    GridAny.Canvas.Brush.Color := clHighlight;
+    GridAny.Canvas.Font.Color := clHighlightText;
+  end
+  else if gdRowHighlight in aState then
   begin
     GridAny.Canvas.Brush.Color := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
     GridAny.Canvas.Font.Color := clWindowText;
@@ -2032,7 +2038,13 @@ begin
     Exit;
   end;
 
-  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused)) then
+  if gdSelected in aState then
+  begin
+    // Keep the selection color uniform even when the grid loses focus
+    Grid.Canvas.Brush.Color := clHighlight;
+    Grid.Canvas.Font.Color := clHighlightText;
+  end
+  else if gdRowHighlight in aState then
   begin
     Grid.Canvas.Brush.Color := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
     Grid.Canvas.Font.Color := clWindowText;
