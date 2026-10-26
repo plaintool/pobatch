@@ -1705,9 +1705,25 @@ end;
 {%Region -fold Grid Headers Events}
 
 procedure TformPoBatch.GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
+var
+  NewLang: string;
 begin
-  if OldValue <> NewValue then
-    Changed := True;
+  if OldValue = NewValue then
+    Exit;
+
+  Changed := True;
+
+  // Push the edited Language header into the model right away so the
+  // translator and QA checks see it without reopening the file
+  if (aCol = CELL_HEADERS_VALUE) and SameText(GridHeaders.Cells[CELL_HEADERS_NAME, aRow], 'Language') then
+  begin
+    NewLang := Trim(NewValue);
+    FPoFile.HeaderValue['Language'] := NewLang;
+    Language := NewLang;
+    LoadQACheckOptionsForLanguage(FLanguage);
+    ApplyQACheckOptionsToMenu;
+    RecheckAllQA;
+  end;
 end;
 
 procedure TformPoBatch.GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);

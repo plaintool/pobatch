@@ -1221,18 +1221,17 @@ begin
         try
           PoFile.LoadFromFile(FileName);
 
-          // Configure the translator for this file's language pair
+          // Detect the target language from this file's own header or
+          // file name; do not borrow the language of the open document
           FileLang := DetectFileLanguage(PoFile, FileName);
-          if FileLang = string.Empty then
-          begin
-            // Fall back to the current document's language when the file
-            // carries no language information at all
-            FileLang := OrigTarget;
-          end;
 
           if FileLang = string.Empty then
           begin
             Inc(SkippedFiles);
+            Screen.Cursor := crDefault;
+            ReportMessageFmt('File "%s" skipped: target language is not set in the PO header or file name.',
+              [ExtractFileName(FileName)], AConfirm);
+            Screen.Cursor := crHourGlass;
             Continue;
           end;
 
@@ -1373,7 +1372,13 @@ begin
               AForm.ReloadCurrentFile(AForm.FileName);
           end
           else
+          begin
             Inc(SkippedFiles);
+            Screen.Cursor := crDefault;
+            ReportMessageFmt('File "%s" skipped: no translations were produced for language "%s".',
+              [ExtractFileName(FileName), FileLang], AConfirm);
+            Screen.Cursor := crHourGlass;
+          end;
         except
           on E: Exception do
           begin
@@ -1669,6 +1674,13 @@ var
   ResponseSnippet: string;
   SnippetIdx: integer;
 begin
+  // Reject early when the target language is not known
+  if Trim(AForm.Translate.TargetLanguage) = string.Empty then
+  begin
+    ShowMessage('Target language is not set. Please specify the Language header in the PO file.');
+    Exit;
+  end;
+
   // Determine the row range: either the selected rows or the whole file
   if AOnlySelected then
   begin
