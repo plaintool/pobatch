@@ -1856,6 +1856,7 @@ object formPoBatch: TformPoBatch
   object Translate: TTranslate
     SourceLanguage = 'en'
     AllowProxy = True
+    OnGetParameter = TranslateGetParameter
     Left = 312
     Top = 409
   end

@@ -85,7 +85,7 @@ procedure SaveFormSettings(Form: TformPoBatch);
 var
   JSONObj: TJSONObject;
   FileName: string;
-  PoFilesArray, StatusArray: TJSONArray;
+  PoFilesArray, StatusArray, arrParams: TJSONArray;
   QAMapObj, LangObj: TJSONObject;
   LangKey: string;
   Holder: TQACheckOptionsHolder;
@@ -188,6 +188,12 @@ begin
     end;
     JSONObj.Add('QACheckOptionsByLang', QAMapObj);
 
+    // User Parameters
+    arrParams := TJSONArray.Create;
+    for i := 0 to Form.Translate.UserParameters.Count - 1 do
+      arrParams.Add(Form.Translate.UserParameters[i]);
+    JSONObj.Add('UserParameters', arrParams);
+
     // Write to file
     with TStringList.Create do
     try
@@ -205,7 +211,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 var
   JSONData: TJSONData;
   JSONObj: TJSONObject;
-  PoFilesArray, StatusArray: TJSONArray;
+  PoFilesArray, StatusArray, arrParams: TJSONArray;
   TempStatusArray: TPOFileStatusArray = ();
   FileName: string;
   FileStream: TFileStream;
@@ -423,6 +429,15 @@ begin
           Form.QACheckOptionsByLang[QAMapObj.Names[i]] :=
             TQACheckOptionsHolder.Create(QACheckOptionsFromJSON(LangObj));
         end;
+      end;
+
+      // Load user parameters
+      Form.Translate.UserParameters.Clear;
+      if JSONObj.FindPath('UserParameters') <> nil then
+      begin
+        arrParams := JSONObj.FindPath('UserParameters') as TJSONArray;
+        for i := 0 to arrParams.Count - 1 do
+          Form.Translate.UserParameters.Add(arrParams.Items[i].AsString);
       end;
 
       Result := True;

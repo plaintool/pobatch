@@ -405,6 +405,7 @@ type
     procedure SpellSourceSpellCheckComplete(Sender: TObject; ErrorCount: integer);
     procedure SpellTranslationSpellCheckComplete(Sender: TObject; ErrorCount: integer);
     procedure SplitterTranslateMoved(Sender: TObject);
+    procedure TranslateGetParameter(const AParamName: string; var AValue: string; var AHandled: boolean);
     procedure MemoSourceEnter(Sender: TObject);
     procedure MemoSourceChange(Sender: TObject);
     procedure MemoPluralChange(Sender: TObject);
@@ -481,6 +482,7 @@ type
     function SelectGridsAll: boolean;
     function EntryMatchesFilter(Entry: TPOEntry; const AFilter: string): boolean;
     function GetEntiryIndex(aRow: integer = -1): integer;
+    function GetParameterValue(AName: string; out ResultOk: boolean): string;
     function DetectLanguage(const AFileName: string): string;
     procedure SaveRow(aRow: integer = -1);   // Save grid row data to model; -1 = current row
     procedure SaveGridHeaders;
@@ -496,6 +498,18 @@ type
     procedure ApplyQACheckOptionsToMenu;
     procedure RecheckAllQA;
   public
+    function IsCanClose(Fast: boolean = False): boolean;
+    procedure AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
+    procedure SaveGrid;
+    procedure FillGrid;
+    procedure FillGridHeaders;
+    procedure UpdateValid(aRow: integer = -1);
+    procedure UpdateTranslatePanel(aRow: integer = -1);
+    procedure ReloadCurrentFile(const AFileName: string);
+    function NewFile(AFileName: string = string.Empty): boolean;
+    procedure UpdateCaption;
+    function CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
+
     property Changed: boolean read FChanged write SetChanged;
     property Language: string read FLanguage write SetLanguage;
     property Path: string read FPath write FPath;
@@ -512,17 +526,6 @@ type
     property PoFile: TPoFile read FPoFile;
     property PathIndex: integer read FPathIndex write FPathIndex;
     property LastPathIndex: integer read FLastPathIndex write FLastPathIndex;
-    function IsCanClose(Fast: boolean = False): boolean;
-    procedure AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
-    procedure SaveGrid;
-    procedure FillGrid;
-    procedure FillGridHeaders;
-    procedure UpdateValid(aRow: integer = -1);
-    procedure UpdateTranslatePanel(aRow: integer = -1);
-    procedure ReloadCurrentFile(const AFileName: string);
-    function NewFile(AFileName: string = string.Empty): boolean;
-    procedure UpdateCaption;
-    function CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
   end;
 
 var
@@ -2410,6 +2413,14 @@ begin
   FSplitRatio := PanelTranslation.Height / (PanelSource.Height + PanelTranslation.Height);
 end;
 
+procedure TformPoBatch.TranslateGetParameter(const AParamName: string; var AValue: string; var AHandled: boolean);
+var
+  Ok: boolean = False;
+begin
+  AValue := GetParameterValue(AParamName, Ok);
+  AHandled := Ok;
+end;
+
 procedure TformPoBatch.SpellSourceSpellCheckComplete(Sender: TObject; ErrorCount: integer);
 begin
   if (Grid.Col = CELL_TEXT) and (SpellSource.RichMemo = FRichEditor) then
@@ -3894,6 +3905,51 @@ begin
   // Column 0 holds the permanent entry index
   Result := StrToIntDef(Grid.Cells[0, Row], -1);
   if (Result < 1) or (Result >= FPoFile.Entries.Count) then Exit(-1);
+end;
+
+function TformPoBatch.GetParameterValue(AName: string; out ResultOk: boolean): string;
+var
+  Value: string;
+  SavedCursor: TCursor;
+begin
+  Result := string.Empty;
+  ResultOk := True;
+
+  // Check if application or form is destroying
+  if Application.Terminated or (Self = nil) or (Translate.UserParameters = nil) then
+    Exit;
+
+  Value := Translate.UserParameters.Values[AName];
+
+  if Value = string.Empty then
+  begin
+    SavedCursor := Screen.Cursor;
+    Screen.Cursor := crDefault;
+    try
+      if not InputQueryLite('Enter the required parameter', 'Enter' + ' ' + AName, Value) then
+      begin
+        ResultOk := False;
+        Exit;
+      end;
+
+      // Double check after modal dialog closed
+      if Application.Terminated or (Self = nil) or (Translate.UserParameters = nil) then
+      begin
+        ResultOk := False;
+        Exit;
+      end;
+
+      Value := Trim(Value);
+      if Value <> string.Empty then
+        Translate.UserParameters.Values[AName] := Value;
+    finally
+      // Restore cursor only if Screen object is still valid
+      if not Application.Terminated then
+        Screen.Cursor := SavedCursor;
+    end;
+  end;
+
+  Result := Value;
 end;
 
 function TformPoBatch.DetectLanguage(const AFileName: string): string;
