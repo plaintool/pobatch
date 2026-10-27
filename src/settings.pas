@@ -159,15 +159,25 @@ begin
 
     // Save PO files list
     PoFilesArray := TJSONArray.Create;
-    for i := 0 to Form.PoFiles.Count - 1 do
-      PoFilesArray.Add(Form.PoFiles[i]);
-    JSONObj.Add('PoFiles', PoFilesArray);
+    try
+      for i := 0 to Form.PoFiles.Count - 1 do
+        PoFilesArray.Add(Form.PoFiles[i]);
+      JSONObj.Add('PoFiles', PoFilesArray);
+      PoFilesArray := nil; // Ownership transferred to JSONObj
+    finally
+      PoFilesArray.Free;
+    end;
 
     // Save PO file statuses
     StatusArray := TJSONArray.Create;
-    for i := 0 to High(Form.FileStatuses) do
-      StatusArray.Add(Ord(Form.FileStatuses[i]));
-    JSONObj.Add('PoFileStatuses', StatusArray);
+    try
+      for i := 0 to High(Form.FileStatuses) do
+        StatusArray.Add(Ord(Form.FileStatuses[i]));
+      JSONObj.Add('PoFileStatuses', StatusArray);
+      StatusArray := nil; // Ownership transferred to JSONObj
+    finally
+      StatusArray.Free;
+    end;
 
     // Save the master QA switch. Per-language options are stored separately
     // and are not affected by this flag
@@ -176,23 +186,33 @@ begin
     // Save per-language QA check options. Only languages whose options
     // differ from the defaults are stored, so the map stays minimal
     QAMapObj := TJSONObject.Create;
-    for i := 0 to Form.QACheckOptionsByLang.Count - 1 do
-    begin
-      LangKey := Form.QACheckOptionsByLang.GetKeyAt(i);
-      Holder := TQACheckOptionsHolder(Form.QACheckOptionsByLang[LangKey]);
-      if Assigned(Holder) then
+    try
+      for i := 0 to Form.QACheckOptionsByLang.Count - 1 do
       begin
-        LangObj := QACheckOptionsToJSON(Holder.Options);
-        QAMapObj.Add(LangKey, LangObj);
+        LangKey := Form.QACheckOptionsByLang.GetKeyAt(i);
+        Holder := TQACheckOptionsHolder(Form.QACheckOptionsByLang[LangKey]);
+        if Assigned(Holder) and (LangKey <> '') then
+        begin
+          LangObj := QACheckOptionsToJSON(Holder.Options);
+          QAMapObj.Add(LangKey, LangObj);
+        end;
       end;
+      JSONObj.Add('QACheckOptionsByLang', QAMapObj);
+      QAMapObj := nil; // Ownership transferred to JSONObj
+    finally
+      QAMapObj.Free;
     end;
-    JSONObj.Add('QACheckOptionsByLang', QAMapObj);
 
     // User Parameters
     arrParams := TJSONArray.Create;
-    for i := 0 to Form.Translate.UserParameters.Count - 1 do
-      arrParams.Add(Form.Translate.UserParameters[i]);
-    JSONObj.Add('UserParameters', arrParams);
+    try
+      for i := 0 to Form.Translate.UserParameters.Count - 1 do
+        arrParams.Add(Form.Translate.UserParameters[i]);
+      JSONObj.Add('UserParameters', arrParams);
+      arrParams := nil; // Ownership transferred to JSONObj
+    finally
+      arrParams.Free;
+    end;
 
     // Write to file
     with TStringList.Create do
