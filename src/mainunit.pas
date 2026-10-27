@@ -645,6 +645,10 @@ begin
   GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
 
+  // Create FPoFile object
+  FPoFile := TPoFile.Create;
+  FPoFileBackup := TPoFile.Create;
+
   ConfigManager.AppName := APP_NAME;
 
   // Upper bound for a single row height, so a row cannot grow taller than the visible grid area
@@ -685,9 +689,6 @@ begin
   // LoadSettings
   LoadFormSettings(Self);
 
-  // Create FPoFile object
-  FPoFile := TPoFile.Create;
-  FPoFileBackup := TPoFile.Create;
   NewFile;
 
   // Components state after settings loaded

@@ -91,6 +91,11 @@ var
   Holder: TQACheckOptionsHolder;
   i, DPI: integer;
 begin
+  // Form may reach FormDestroy without completing FormCreate (e.g. after
+  // an early exception during finalization), so guard against a nil instance
+  if not Assigned(Form) then
+    Exit;
+
   FileName := TOS.GetSettingsDirectory(APP_NAME, 'form_settings.json'); // Get settings file name
   ForceDirectories(TOS.GetSettingsDirectory(APP_NAME)); // Ensure the directory exists
   JSONObj := TJSONObject.Create;
@@ -160,8 +165,10 @@ begin
     // Save PO files list
     PoFilesArray := TJSONArray.Create;
     try
-      for i := 0 to Form.PoFiles.Count - 1 do
-        PoFilesArray.Add(Form.PoFiles[i]);
+      // PoFiles is nil when the form is destroyed mid-construction
+      if Assigned(Form.PoFiles) then
+        for i := 0 to Form.PoFiles.Count - 1 do
+          PoFilesArray.Add(Form.PoFiles[i]);
       JSONObj.Add('PoFiles', PoFilesArray);
       PoFilesArray := nil; // Ownership transferred to JSONObj
     finally
@@ -187,16 +194,18 @@ begin
     // differ from the defaults are stored, so the map stays minimal
     QAMapObj := TJSONObject.Create;
     try
-      for i := 0 to Form.QACheckOptionsByLang.Count - 1 do
-      begin
-        LangKey := Form.QACheckOptionsByLang.GetKeyAt(i);
-        Holder := TQACheckOptionsHolder(Form.QACheckOptionsByLang[LangKey]);
-        if Assigned(Holder) and (LangKey <> '') then
+      // The dictionary stays nil if FormCreate aborted before creating it
+      if Assigned(Form.QACheckOptionsByLang) then
+        for i := 0 to Form.QACheckOptionsByLang.Count - 1 do
         begin
-          LangObj := QACheckOptionsToJSON(Holder.Options);
-          QAMapObj.Add(LangKey, LangObj);
+          LangKey := Form.QACheckOptionsByLang.GetKeyAt(i);
+          Holder := TQACheckOptionsHolder(Form.QACheckOptionsByLang[LangKey]);
+          if Assigned(Holder) and (LangKey <> '') then
+          begin
+            LangObj := QACheckOptionsToJSON(Holder.Options);
+            QAMapObj.Add(LangKey, LangObj);
+          end;
         end;
-      end;
       JSONObj.Add('QACheckOptionsByLang', QAMapObj);
       QAMapObj := nil; // Ownership transferred to JSONObj
     finally
@@ -206,8 +215,10 @@ begin
     // User Parameters
     arrParams := TJSONArray.Create;
     try
-      for i := 0 to Form.Translate.UserParameters.Count - 1 do
-        arrParams.Add(Form.Translate.UserParameters[i]);
+      // Translate or its UserParameters may be nil during early teardown
+      if Assigned(Form.Translate) and Assigned(Form.Translate.UserParameters) then
+        for i := 0 to Form.Translate.UserParameters.Count - 1 do
+          arrParams.Add(Form.Translate.UserParameters[i]);
       JSONObj.Add('UserParameters', arrParams);
       arrParams := nil; // Ownership transferred to JSONObj
     finally
