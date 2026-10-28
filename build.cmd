@@ -1,5 +1,6 @@
 @echo off
 setlocal
+cd /d "%~dp0"
 set "APP_NAME=pobatch"
 
 :: Determine build architecture: 64-bit by default, 32-bit if first argument is "32"
