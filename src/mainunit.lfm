@@ -239,19 +239,6 @@ object formPoBatch: TformPoBatch
       OnTopLeftChanged = GridTopLeftChanged
       OnValidateEntry = GridValidateEntry
     end
-    object SplitterPages: TSplitter
-      Cursor = crVSplit
-      Left = 1
-      Height = 10
-      Top = 261
-      Width = 574
-      Align = alBottom
-      AutoSnap = False
-      Color = clBtnFace
-      ParentColor = False
-      ResizeAnchor = akBottom
-      Visible = False
-    end
     object PanelCheck: TPanel
       Left = 1
       Height = 40
@@ -345,6 +332,19 @@ object formPoBatch: TformPoBatch
           TabOrder = 0
         end
       end
+    end
+    object SplitterPages: TSplitter
+      Cursor = crVSplit
+      Left = 1
+      Height = 10
+      Top = 261
+      Width = 574
+      Align = alBottom
+      AutoSnap = False
+      Color = clBtnFace
+      ParentColor = False
+      ResizeAnchor = akBottom
+      Visible = False
     end
     object Pages: TPageControl
       Left = 1

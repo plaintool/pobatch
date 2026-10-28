@@ -3733,15 +3733,30 @@ begin
 end;
 
 procedure TformPoBatch.FixSplitters(Data: PtrInt);
+const
+  MinRows = 3;
 begin
   ListPath.Left := 0;
   SplitterPath.Left := ListPath.Left + ListPath.Width;
 
+  // Clamp both panels so a DPI change cannot push the splitters off screen:
+  // headers get at most half the client area, and the bottom panel leaves
+  // at least a few rows for the main grid
+  GridHeaders.Height := Max(Min(GridHeaders.Height, (ClientHeight - StatusBar.Height)), GridHeaders.DefaultRowHeight *
+    GridHeaders.FixedRows);
+  Pages.Height := Max(Min(Pages.Height, ClientHeight - StatusBar.Height - GridHeaders.Height - Grid.DefaultRowHeight * MinRows),
+    Grid.DefaultRowHeight * MinRows);
+
   GridHeaders.Top := 0;
   SplitterHeaders.Top := GridHeaders.Top + GridHeaders.Height;
 
-  Pages.Top := Height;
-  SplitterPages.Top := Pages.Top - 1;
+  // During extreme resize the form height can leave the valid range, and
+  // assigning it to Top raises ELayoutException in the widget set
+  if (Height > 0) and (Height <= High(smallint)) then
+  begin
+    Pages.Top := Height;
+    SplitterPages.Top := Pages.Top - 1;
+  end;
 
   ShapePlural.Left := 0;
 end;
