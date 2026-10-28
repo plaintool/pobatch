@@ -30,21 +30,39 @@ implementation
 uses PoWrap, PoCheck, ObjectDictionary, OSUtils;
 
 function QACheckOptionsToJSON(const AOpt: TQACheckOptions): TJSONObject;
+var
+  Def: TQACheckOptions;
 begin
+  Def := DefaultQACheckOptions;
   Result := TJSONObject.Create;
-  Result.Add('PlaceholderMissing', AOpt.PlaceholderMissing);
-  Result.Add('PlaceholderExtra', AOpt.PlaceholderExtra);
-  Result.Add('PluralCount', AOpt.PluralCount);
-  Result.Add('CaseFirstChar', AOpt.CaseFirstChar);
-  Result.Add('CaseAllUpper', AOpt.CaseAllUpper);
-  Result.Add('SpaceLeading', AOpt.SpaceLeading);
-  Result.Add('SpaceTrailing', AOpt.SpaceTrailing);
-  Result.Add('SpaceDouble', AOpt.SpaceDouble);
-  Result.Add('SpaceBeforePunct', AOpt.SpaceBeforePunct);
-  Result.Add('SpaceAfterPunct', AOpt.SpaceAfterPunct);
-  Result.Add('PunctEnd', AOpt.PunctEnd);
-  Result.Add('PunctBracket', AOpt.PunctBracket);
-  Result.Add('Newlines', AOpt.Newlines);
+  // Store only fields that differ from the built-in defaults, so the
+  // settings file stays small even with many per-language overrides
+  if AOpt.PlaceholderMissing <> Def.PlaceholderMissing then
+    Result.Add('PlaceholderMissing', AOpt.PlaceholderMissing);
+  if AOpt.PlaceholderExtra <> Def.PlaceholderExtra then
+    Result.Add('PlaceholderExtra', AOpt.PlaceholderExtra);
+  if AOpt.PluralCount <> Def.PluralCount then
+    Result.Add('PluralCount', AOpt.PluralCount);
+  if AOpt.CaseFirstChar <> Def.CaseFirstChar then
+    Result.Add('CaseFirstChar', AOpt.CaseFirstChar);
+  if AOpt.CaseAllUpper <> Def.CaseAllUpper then
+    Result.Add('CaseAllUpper', AOpt.CaseAllUpper);
+  if AOpt.SpaceLeading <> Def.SpaceLeading then
+    Result.Add('SpaceLeading', AOpt.SpaceLeading);
+  if AOpt.SpaceTrailing <> Def.SpaceTrailing then
+    Result.Add('SpaceTrailing', AOpt.SpaceTrailing);
+  if AOpt.SpaceDouble <> Def.SpaceDouble then
+    Result.Add('SpaceDouble', AOpt.SpaceDouble);
+  if AOpt.SpaceBeforePunct <> Def.SpaceBeforePunct then
+    Result.Add('SpaceBeforePunct', AOpt.SpaceBeforePunct);
+  if AOpt.SpaceAfterPunct <> Def.SpaceAfterPunct then
+    Result.Add('SpaceAfterPunct', AOpt.SpaceAfterPunct);
+  if AOpt.PunctEnd <> Def.PunctEnd then
+    Result.Add('PunctEnd', AOpt.PunctEnd);
+  if AOpt.PunctBracket <> Def.PunctBracket then
+    Result.Add('PunctBracket', AOpt.PunctBracket);
+  if AOpt.Newlines <> Def.Newlines then
+    Result.Add('Newlines', AOpt.Newlines);
 end;
 
 function QACheckOptionsFromJSON(const AObj: TJSONObject): TQACheckOptions;
@@ -295,19 +313,24 @@ begin
         Form.GridHeaders.Height := Form.Scale96ToForm(JSONObj.FindPath('GridHeadersHeight').AsInteger);
 
       if JSONObj.FindPath('GridHeadersColumnNameWidth') <> nil then
-        Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width := Form.Scale96ToForm(JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger);
+        Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width :=
+          Form.Scale96ToForm(JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger);
 
       if JSONObj.FindPath('GridHeadersColumnValueWidth') <> nil then
-        Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger);
+        Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width :=
+          Form.Scale96ToForm(JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger);
 
       if JSONObj.FindPath('GridPluralColumnPluralWidth') <> nil then
-        Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width := Form.Scale96ToForm(JSONObj.FindPath('GridPluralColumnPluralWidth').AsInteger);
+        Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width :=
+          Form.Scale96ToForm(JSONObj.FindPath('GridPluralColumnPluralWidth').AsInteger);
 
       if JSONObj.FindPath('GridCommentsColumnTypeWidth') <> nil then
-        Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridCommentsColumnTypeWidth').AsInteger);
+        Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width :=
+          Form.Scale96ToForm(JSONObj.FindPath('GridCommentsColumnTypeWidth').AsInteger);
 
       if JSONObj.FindPath('GridCommentsColumnValueWidth') <> nil then
-        Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridCommentsColumnValueWidth').AsInteger);
+        Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width :=
+          Form.Scale96ToForm(JSONObj.FindPath('GridCommentsColumnValueWidth').AsInteger);
 
       if JSONObj.FindPath('GridColumnSourceTextWidth') <> nil then
         Form.Grid.Columns[COLUMN_TEXT].Width := Form.Scale96ToForm(JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger);
