@@ -1172,6 +1172,15 @@ begin
     Exit;
   end;
 
+  // Reject early when no translation configuration is selected
+  if Trim(AForm.Translate.ConfigFile) = string.Empty then
+  begin
+    ReportMessage('Translation configuration is not selected. Please choose a translation service first.', AConfirm);
+    Exit;
+  end;
+
+  // Build the confirmation message with the affected files
+
   // Build the confirmation message with the affected files
   fileList := string.Empty;
   for i := 0 to selCount - 1 do
@@ -1678,6 +1687,13 @@ begin
   if Trim(AForm.Translate.TargetLanguage) = string.Empty then
   begin
     ShowMessage('Target language is not set. Please specify the Language header in the PO file.');
+    Exit;
+  end;
+
+  // Reject early when no translation configuration is selected
+  if Trim(AForm.Translate.ConfigFile) = string.Empty then
+  begin
+    ShowMessage('Translation configuration is not selected. Please choose a translation service first.');
     Exit;
   end;
 
