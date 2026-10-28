@@ -89,7 +89,7 @@ var
   QAMapObj, LangObj: TJSONObject;
   LangKey: string;
   Holder: TQACheckOptionsHolder;
-  i, DPI: integer;
+  i: integer;
 begin
   // Form may reach FormDestroy without completing FormCreate (e.g. after
   // an early exception during finalization), so guard against a nil instance
@@ -100,41 +100,40 @@ begin
   ForceDirectories(TOS.GetSettingsDirectory(APP_NAME)); // Ensure the directory exists
   JSONObj := TJSONObject.Create;
   try
-    DPI := Screen.PixelsPerInch;
-
-    // Save form position and size
+    // Save form position and size in design pixels (96 dpi) so the
+    // values stay consistent when the screen DPI changes between runs
     if (Form.WindowState in [wsMaximized, wsMinimized]) then
     begin
-      JSONObj.Add('Left', Form.RestoredLeft);
-      JSONObj.Add('Top', Form.RestoredTop);
-      JSONObj.Add('Width', Form.RestoredWidth);
-      JSONObj.Add('Height', Form.RestoredHeight);
+      JSONObj.Add('Left', Form.ScaleFormTo96(Form.RestoredLeft));
+      JSONObj.Add('Top', Form.ScaleFormTo96(Form.RestoredTop));
+      JSONObj.Add('Width', Form.ScaleFormTo96(Form.RestoredWidth));
+      JSONObj.Add('Height', Form.ScaleFormTo96(Form.RestoredHeight));
     end
     else
     begin
-      JSONObj.Add('Left', Form.Left);
-      JSONObj.Add('Top', Form.Top);
-      JSONObj.Add('Width', Form.Width);
-      JSONObj.Add('Height', Form.Height);
+      JSONObj.Add('Left', Form.ScaleFormTo96(Form.Left));
+      JSONObj.Add('Top', Form.ScaleFormTo96(Form.Top));
+      JSONObj.Add('Width', Form.ScaleFormTo96(Form.Width));
+      JSONObj.Add('Height', Form.ScaleFormTo96(Form.Height));
     end;
     JSONObj.Add('WindowState', Ord(Form.WindowState));
 
-    JSONObj.Add('ListPathWidth', Form.ListPath.Width);
-    JSONObj.Add('PagesHeight', Form.Pages.Height);
+    JSONObj.Add('ListPathWidth', Form.ScaleFormTo96(Form.ListPath.Width));
+    JSONObj.Add('PagesHeight', Form.ScaleFormTo96(Form.Pages.Height));
     JSONObj.Add('SplitRatio', Form.SplitRatio);
 
-    JSONObj.Add('GridHeadersHeight', Form.GridHeaders.Height);
-    JSONObj.Add('GridHeadersColumnNameWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width);
-    JSONObj.Add('GridHeadersColumnValueWidth', Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width);
-    JSONObj.Add('GridPluralColumnPluralWidth', Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width);
-    JSONObj.Add('GridCommentsColumnTypeWidth', Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width);
-    JSONObj.Add('GridCommentsColumnValueWidth', Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width);
+    JSONObj.Add('GridHeadersHeight', Form.ScaleFormTo96(Form.GridHeaders.Height));
+    JSONObj.Add('GridHeadersColumnNameWidth', Form.ScaleFormTo96(Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width));
+    JSONObj.Add('GridHeadersColumnValueWidth', Form.ScaleFormTo96(Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width));
+    JSONObj.Add('GridPluralColumnPluralWidth', Form.ScaleFormTo96(Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width));
+    JSONObj.Add('GridCommentsColumnTypeWidth', Form.ScaleFormTo96(Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width));
+    JSONObj.Add('GridCommentsColumnValueWidth', Form.ScaleFormTo96(Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width));
 
-    JSONObj.Add('GridColumnSourceTextWidth', Form.Grid.Columns[COLUMN_TEXT].Width);
-    JSONObj.Add('GridColumnTranslationWidth', Form.Grid.Columns[COLUMN_TRANSLATION].Width);
-    JSONObj.Add('GridColumnContextWidth', Form.Grid.Columns[COLUMN_CONTEXT].Width);
-    JSONObj.Add('GridColumnReferenceWidth', Form.Grid.Columns[COLUMN_REFERENCE].Width);
-    JSONObj.Add('GridColumnPluralWidth', Form.Grid.Columns[COLUMN_PLURAL].Width);
+    JSONObj.Add('GridColumnSourceTextWidth', Form.ScaleFormTo96(Form.Grid.Columns[COLUMN_TEXT].Width));
+    JSONObj.Add('GridColumnTranslationWidth', Form.ScaleFormTo96(Form.Grid.Columns[COLUMN_TRANSLATION].Width));
+    JSONObj.Add('GridColumnContextWidth', Form.ScaleFormTo96(Form.Grid.Columns[COLUMN_CONTEXT].Width));
+    JSONObj.Add('GridColumnReferenceWidth', Form.ScaleFormTo96(Form.Grid.Columns[COLUMN_REFERENCE].Width));
+    JSONObj.Add('GridColumnPluralWidth', Form.ScaleFormTo96(Form.Grid.Columns[COLUMN_PLURAL].Width));
     JSONObj.Add('GridSortColumn', Form.SortColumn);
     JSONObj.Add('SortColumn', Form.SortColumn);
     JSONObj.Add('SortOrder', Ord(Form.SortOrder));
@@ -150,12 +149,12 @@ begin
     JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
     JSONObj.Add('MenuColumnPluralChecked', Form.MenuColumnPlural.Checked);
 
-    JSONObj.Add('FormConfigLeft', Round(Form.ConfigManager.FormPosition.Left * 96 / DPI));
-    JSONObj.Add('FormConfigTop', Round(Form.ConfigManager.FormPosition.Top * 96 / DPI));
-    JSONObj.Add('FormConfigWidth', Round(Form.ConfigManager.FormPosition.Width * 96 / DPI));
-    JSONObj.Add('FormConfigHeight', Round(Form.ConfigManager.FormPosition.Height * 96 / DPI));
-    JSONObj.Add('FormConfigSep1', Round(Form.ConfigManager.FormPosition.Sep1 * 96 / DPI));
-    JSONObj.Add('FormConfigSep2', Round(Form.ConfigManager.FormPosition.Sep2 * 96 / DPI));
+    JSONObj.Add('FormConfigLeft', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Left));
+    JSONObj.Add('FormConfigTop', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Top));
+    JSONObj.Add('FormConfigWidth', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Width));
+    JSONObj.Add('FormConfigHeight', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Height));
+    JSONObj.Add('FormConfigSep1', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Sep1));
+    JSONObj.Add('FormConfigSep2', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Sep2));
 
     JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
@@ -248,7 +247,7 @@ var
   FileStream: TFileStream;
   FileContent: string;
   QAMapObj, LangObj: TJSONObject;
-  i, DPI: integer;
+  i: integer;
 begin
   Result := False;
   FileContent := string.Empty;
@@ -258,34 +257,34 @@ begin
   // Read from file
   FileStream := TFileStream.Create(FileName, fmOpenRead);
   try
-    DPI := Screen.PixelsPerInch;
     SetLength(FileContent, FileStream.Size);
     FileStream.Read(Pointer(FileContent)^, FileStream.Size);
     JSONData := GetJSON(FileContent);
     try
       JSONObj := JSONData as TJSONObject;
 
-      // Check and load form's position and size
+      // Restore form position and size from design pixels (96 dpi),
+      // scaled to the current DPI of the form
       if JSONObj.FindPath('Left') <> nil then
-        Form.Left := JSONObj.FindPath('Left').AsInteger;
+        Form.Left := Form.Scale96ToForm(JSONObj.FindPath('Left').AsInteger);
 
       if JSONObj.FindPath('Top') <> nil then
-        Form.Top := JSONObj.FindPath('Top').AsInteger;
+        Form.Top := Form.Scale96ToForm(JSONObj.FindPath('Top').AsInteger);
 
       if JSONObj.FindPath('Width') <> nil then
-        Form.Width := JSONObj.FindPath('Width').AsInteger;
+        Form.Width := Form.Scale96ToForm(JSONObj.FindPath('Width').AsInteger);
 
       if JSONObj.FindPath('Height') <> nil then
-        Form.Height := JSONObj.FindPath('Height').AsInteger;
+        Form.Height := Form.Scale96ToForm(JSONObj.FindPath('Height').AsInteger);
 
       if JSONObj.FindPath('WindowState') <> nil then
         Form.WindowState := TWindowState(JSONObj.FindPath('WindowState').AsInteger);
 
       if JSONObj.FindPath('ListPathWidth') <> nil then
-        Form.ListPath.Width := JSONObj.FindPath('ListPathWidth').AsInteger;
+        Form.ListPath.Width := Form.Scale96ToForm(JSONObj.FindPath('ListPathWidth').AsInteger);
 
       if JSONObj.FindPath('PagesHeight') <> nil then
-        Form.Pages.Height := JSONObj.FindPath('PagesHeight').AsInteger;
+        Form.Pages.Height := Form.Scale96ToForm(JSONObj.FindPath('PagesHeight').AsInteger);
 
       if JSONObj.FindPath('SplitRatio') <> nil then
         Form.SplitRatio := JSONObj.FindPath('SplitRatio').AsFloat
@@ -293,37 +292,37 @@ begin
         Form.SplitRatio := 0.5;
 
       if JSONObj.FindPath('GridHeadersHeight') <> nil then
-        Form.GridHeaders.Height := JSONObj.FindPath('GridHeadersHeight').AsInteger;
+        Form.GridHeaders.Height := Form.Scale96ToForm(JSONObj.FindPath('GridHeadersHeight').AsInteger);
 
       if JSONObj.FindPath('GridHeadersColumnNameWidth') <> nil then
-        Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width := JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger;
+        Form.GridHeaders.Columns[COLUMN_HEADERS_NAME].Width := Form.Scale96ToForm(JSONObj.FindPath('GridHeadersColumnNameWidth').AsInteger);
 
       if JSONObj.FindPath('GridHeadersColumnValueWidth') <> nil then
-        Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width := JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger;
+        Form.GridHeaders.Columns[COLUMN_HEADERS_VALUE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridHeadersColumnValueWidth').AsInteger);
 
       if JSONObj.FindPath('GridPluralColumnPluralWidth') <> nil then
-        Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width := JSONObj.FindPath('GridPluralColumnPluralWidth').AsInteger;
+        Form.GridPlural.Columns[COLUMN_PLURAL_PLURAL].Width := Form.Scale96ToForm(JSONObj.FindPath('GridPluralColumnPluralWidth').AsInteger);
 
       if JSONObj.FindPath('GridCommentsColumnTypeWidth') <> nil then
-        Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width := JSONObj.FindPath('GridCommentsColumnTypeWidth').AsInteger;
+        Form.GridComments.Columns[COLUMN_COMMENTS_TYPE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridCommentsColumnTypeWidth').AsInteger);
 
       if JSONObj.FindPath('GridCommentsColumnValueWidth') <> nil then
-        Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width := JSONObj.FindPath('GridCommentsColumnValueWidth').AsInteger;
+        Form.GridComments.Columns[COLUMN_COMMENTS_VALUE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridCommentsColumnValueWidth').AsInteger);
 
       if JSONObj.FindPath('GridColumnSourceTextWidth') <> nil then
-        Form.Grid.Columns[COLUMN_TEXT].Width := JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_TEXT].Width := Form.Scale96ToForm(JSONObj.FindPath('GridColumnSourceTextWidth').AsInteger);
 
       if JSONObj.FindPath('GridColumnTranslationWidth') <> nil then
-        Form.Grid.Columns[COLUMN_TRANSLATION].Width := JSONObj.FindPath('GridColumnTranslationWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_TRANSLATION].Width := Form.Scale96ToForm(JSONObj.FindPath('GridColumnTranslationWidth').AsInteger);
 
       if JSONObj.FindPath('GridColumnContextWidth') <> nil then
-        Form.Grid.Columns[COLUMN_CONTEXT].Width := JSONObj.FindPath('GridColumnContextWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_CONTEXT].Width := Form.Scale96ToForm(JSONObj.FindPath('GridColumnContextWidth').AsInteger);
 
       if JSONObj.FindPath('GridColumnReferenceWidth') <> nil then
-        Form.Grid.Columns[COLUMN_REFERENCE].Width := JSONObj.FindPath('GridColumnReferenceWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_REFERENCE].Width := Form.Scale96ToForm(JSONObj.FindPath('GridColumnReferenceWidth').AsInteger);
 
       if JSONObj.FindPath('GridColumnPluralWidth') <> nil then
-        Form.Grid.Columns[COLUMN_PLURAL].Width := JSONObj.FindPath('GridColumnPluralWidth').AsInteger;
+        Form.Grid.Columns[COLUMN_PLURAL].Width := Form.Scale96ToForm(JSONObj.FindPath('GridColumnPluralWidth').AsInteger);
 
       if JSONObj.FindPath('SortColumn') <> nil then
         Form.SortColumn := JSONObj.FindPath('SortColumn').AsInteger;
@@ -390,22 +389,22 @@ begin
       end;
 
       if JSONObj.FindPath('FormConfigLeft') <> nil then
-        Form.ConfigManager.FormPosition.Left := Round(JSONObj.FindPath('FormConfigLeft').AsInteger * DPI / 96);
+        Form.ConfigManager.FormPosition.Left := Form.Scale96ToForm(JSONObj.FindPath('FormConfigLeft').AsInteger);
 
       if JSONObj.FindPath('FormConfigTop') <> nil then
-        Form.ConfigManager.FormPosition.Top := Round(JSONObj.FindPath('FormConfigTop').AsInteger * DPI / 96);
+        Form.ConfigManager.FormPosition.Top := Form.Scale96ToForm(JSONObj.FindPath('FormConfigTop').AsInteger);
 
       if JSONObj.FindPath('FormConfigWidth') <> nil then
-        Form.ConfigManager.FormPosition.Width := Round(JSONObj.FindPath('FormConfigWidth').AsInteger * DPI / 96);
+        Form.ConfigManager.FormPosition.Width := Form.Scale96ToForm(JSONObj.FindPath('FormConfigWidth').AsInteger);
 
       if JSONObj.FindPath('FormConfigHeight') <> nil then
-        Form.ConfigManager.FormPosition.Height := Round(JSONObj.FindPath('FormConfigHeight').AsInteger * DPI / 96);
+        Form.ConfigManager.FormPosition.Height := Form.Scale96ToForm(JSONObj.FindPath('FormConfigHeight').AsInteger);
 
       if JSONObj.FindPath('FormConfigSep1') <> nil then
-        Form.ConfigManager.FormPosition.Sep1 := Round(JSONObj.FindPath('FormConfigSep1').AsInteger * DPI / 96);
+        Form.ConfigManager.FormPosition.Sep1 := Form.Scale96ToForm(JSONObj.FindPath('FormConfigSep1').AsInteger);
 
       if JSONObj.FindPath('FormConfigSep2') <> nil then
-        Form.ConfigManager.FormPosition.Sep2 := Round(JSONObj.FindPath('FormConfigSep2').AsInteger * DPI / 96);
+        Form.ConfigManager.FormPosition.Sep2 := Form.Scale96ToForm(JSONObj.FindPath('FormConfigSep2').AsInteger);
 
       if JSONObj.FindPath('ActionEditTranslationOnly') <> nil then
       begin
