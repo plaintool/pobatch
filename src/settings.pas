@@ -453,22 +453,30 @@ begin
       if JSONObj.FindPath('QACheckOptionsByLang') <> nil then
       begin
         QAMapObj := JSONObj.FindPath('QACheckOptionsByLang') as TJSONObject;
-        Form.QACheckOptionsByLang.Clear;
-        for i := 0 to QAMapObj.Count - 1 do
+        // The dictionary may be nil when the form is only partially created
+        if Assigned(Form.QACheckOptionsByLang) then
         begin
-          LangObj := QAMapObj.Items[i] as TJSONObject;
-          Form.QACheckOptionsByLang[QAMapObj.Names[i]] :=
-            TQACheckOptionsHolder.Create(QACheckOptionsFromJSON(LangObj));
+          Form.QACheckOptionsByLang.Clear;
+          for i := 0 to QAMapObj.Count - 1 do
+          begin
+            LangObj := QAMapObj.Items[i] as TJSONObject;
+            Form.QACheckOptionsByLang[QAMapObj.Names[i]] :=
+              TQACheckOptionsHolder.Create(QACheckOptionsFromJSON(LangObj));
+          end;
         end;
       end;
 
       // Load user parameters
-      Form.Translate.UserParameters.Clear;
-      if JSONObj.FindPath('UserParameters') <> nil then
+      // TTranslate.UserParameters may be nil early in the form lifecycle
+      if Assigned(Form.Translate) and Assigned(Form.Translate.UserParameters) then
       begin
-        arrParams := JSONObj.FindPath('UserParameters') as TJSONArray;
-        for i := 0 to arrParams.Count - 1 do
-          Form.Translate.UserParameters.Add(arrParams.Items[i].AsString);
+        Form.Translate.UserParameters.Clear;
+        if JSONObj.FindPath('UserParameters') <> nil then
+        begin
+          arrParams := JSONObj.FindPath('UserParameters') as TJSONArray;
+          for i := 0 to arrParams.Count - 1 do
+            Form.Translate.UserParameters.Add(arrParams.Items[i].AsString);
+        end;
       end;
 
       Result := True;

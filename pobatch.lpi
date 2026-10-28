@@ -83,6 +83,9 @@
         <PackageName Value="richmemopackage"/>
       </Item>
       <Item>
+        <PackageName Value="richmemo_design"/>
+      </Item>
+      <Item>
         <PackageName Value="helpers"/>
       </Item>
       <Item>
