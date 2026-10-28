@@ -3014,14 +3014,15 @@ procedure TformPoBatch.SelectPath;
 var
   Idx: integer;
   FullPath: string;
-  SavedRow, SavedTopRow: integer;   // Remember grid position and scroll
+  SavedRow: integer;
+  SavedScroll: TGridScrollState;
 begin
   Idx := ListPath.ItemIndex;
   if Idx < 0 then Exit;   // no file selected
 
   // Save current row and scroll before any changes
   SavedRow := Grid.Row;
-  SavedTopRow := Grid.TopRow;
+  SavedScroll := Grid.SaveScrollState;
 
   // Remember the previous valid selection
   FPathIndex := FLastPathIndex;
@@ -3057,8 +3058,8 @@ begin
           Grid.Row := SavedRow
         else
           Grid.Row := 1;
-        // Restore vertical scroll position
-        Grid.TopRow := SavedTopRow;
+        // Restore the full viewport scroll (row, column and pixel offsets)
+        Grid.RestoreScrollState(SavedScroll);
         FLastRow := Grid.Row;
         FPathIndex := ListPath.ItemIndex;
         // Reuse the already loaded model instead of re-reading the file
@@ -4040,6 +4041,7 @@ var
   Entry: TPOEntry;
   SavedEntryIndex: integer;    // permanent entry index before refill
   TargetRow: integer;          // row to select after refill
+  State: TGridScrollState;
 begin
   if not Assigned(FPoFile) then
   begin
@@ -4048,6 +4050,7 @@ begin
   end;
 
   // Fill main translation grid
+  State := Grid.SaveScrollState;
   Grid.BeginUpdate;
   FUpdatingGrid := True;
   try
@@ -4125,6 +4128,7 @@ begin
     end;
   finally
     Grid.EndUpdate;
+    Grid.RestoreScrollState(State);
     FUpdatingGrid := False;
   end;
 end;
