@@ -29,12 +29,17 @@ echo.
     "$exe64='%~dp0..\\pobatch.exe';" ^
     "$exe32='%~dp0..\\pobatch32.exe';" ^
     "$settings='%~dp0form_settings.json';" ^
+    "$portable='%~dp0portable';" ^
     "$license='%~dp0LICENSE.rtf';" ^
+    "$dlls=@('%~dp0..\\libcrypto-3-x64.dll','%~dp0..\\libssl-3-x64.dll','%~dp0..\\libcrypto-1_1.dll','%~dp0..\\libssl-1_1.dll');" ^
+    "$configDir='%~dp0..\\config';" ^
     "$destZip='%~dp0pobatch-%VERSION%-x86-x64-portable.zip';" ^
-    "if ((Test-Path $exe64) -and (Test-Path $exe32)) {" ^
+    "if ((Test-Path $exe64) -and (Test-Path $exe32) -and (Test-Path $configDir)) {" ^
     "  if (Test-Path $tmp) { Remove-Item -Recurse -Force $tmp };" ^
-    "  New-Item -ItemType Directory -Path \"$tmp\" -Force | Out-Null;" ^
-    "  Copy-Item $exe64, $exe32, $settings, $license -Destination $tmp;" ^
+    "  New-Item -ItemType Directory -Path \"$tmp/config\" -Force | Out-Null;" ^
+    "  Copy-Item $exe64, $exe32, $settings, $portable, $license -Destination $tmp;" ^
+    "  Copy-Item $dlls -Destination $tmp;" ^
+    "  Copy-Item \"$configDir\\*.ini\" -Destination \"$tmp/config\";" ^
     "  Start-Sleep -Seconds 2;" ^
     "  Compress-Archive -Force -Path \"$tmp\\*\" -DestinationPath $destZip;" ^
     "  Remove-Item -Recurse -Force $tmp;" ^

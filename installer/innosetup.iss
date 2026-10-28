@@ -146,18 +146,30 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 #ifexist "..\" + MyAppExeName
 ; 64-bit
 Source: "..\{#MyAppExeName}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Check: Is64BitInstallMode; Flags: ignoreversion
-;Source: "..\libcrypto-1_1-x64.dll"; DestDir: "{app}"; Check: Is64BitInstallMode; Flags: ignoreversion
-;Source: "..\libssl-1_1-x64.dll"; DestDir: "{app}"; Check: Is64BitInstallMode; Flags: ignoreversion
+Source: "..\libcrypto-3-x64.dll"; DestDir: "{app}"; Check: Is64BitInstallMode; Flags: ignoreversion
+Source: "..\libssl-3-x64.dll"; DestDir: "{app}"; Check: Is64BitInstallMode; Flags: ignoreversion
 #endif
 
 #ifexist "..\" + MyAppExeName32
 ; 32-bit
 Source: "..\{#MyAppExeName32}"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Check: not Is64BitInstallMode; Flags: ignoreversion
-;Source: "..\libcrypto-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: ignoreversion
-;Source: "..\libssl-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: ignoreversion
+Source: "..\libcrypto-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: ignoreversion
+Source: "..\libssl-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: ignoreversion
 #endif
 ; License
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+; Config files
+Source: "..\config\deepl.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\google-get-apis.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\google-get-clients5.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\google-post.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\google-webtran.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\laratranslate.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\LLM7-ai-api.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\microsofttranslator.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\mymemory.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\reverso.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\yandex.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
