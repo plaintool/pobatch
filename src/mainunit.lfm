@@ -356,7 +356,7 @@ object formPoBatch: TformPoBatch
       Constraints.MinHeight = 100
       TabHeight = 20
       TabIndex = 0
-      TabOrder = 2
+      TabOrder = 3
       TabPosition = tpBottom
       Visible = False
       object PageTranslate: TTabSheet
