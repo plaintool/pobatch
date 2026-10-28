@@ -1694,6 +1694,14 @@ begin
   GridAny := (Sender as TStringGrid);
   if not Assigned(GridAny) then exit;
 
+  // Do not paint the blue selection background under an active cell editor
+  if GridAny.EditorMode and (aCol = GridAny.Col) and (aRow = GridAny.Row) then
+  begin
+    GridAny.Canvas.Brush.Color := clWindow;
+    GridAny.Canvas.Font.Color := clWindowText;
+    Exit;
+  end;
+
   if gdSelected in aState then
   begin
     // Keep the selection color uniform even when the grid loses focus
@@ -2139,16 +2147,8 @@ procedure TformPoBatch.MemoEnter(Sender: TObject);
 begin
   FRichEditor.ClearUndoHistory;
 
-  if (Grid.IsCellSelected[Grid.Col, Grid.Row]) and ((Grid.Selection.Height > 0) or (Grid.Selection.Width > 0)) then
-  begin
-    FRichEditor.Color := clHighlight;
-    FRichEditor.Font.Color := clWhite;
-  end
-  else
-  begin
-    FRichEditor.Color := clWindow;
-    FRichEditor.Font.Color := clWindowText;
-  end;
+  FRichEditor.Color := clWindow;
+  FRichEditor.Font.Color := clWindowText;
 
   Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
 
