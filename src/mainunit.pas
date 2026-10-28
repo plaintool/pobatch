@@ -586,6 +586,7 @@ const
 const
   REPO = 'plaintool/pobatch';
   APP_NAME = 'pobatch';
+  AppName = 'PoBatch';
 
 implementation
 
@@ -2788,7 +2789,7 @@ begin
   Result := True;
   try
     FPoFile.Reset;
-    FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+    FPoFile.HeaderValue['X-Generator'] := AppName + ' ' + GetAppVersion;
     Language := string.Empty;
     SetDefaultQACheckOptions;
     ApplyQACheckOptionsToMenu;
@@ -3168,6 +3169,10 @@ function TformPoBatch.SaveFile(AFileName: string; Fast: boolean = False): boolea
 var
   Output: TStringList;
   Stream: TStringStream;
+  OffsetMinutes: integer = 0;
+  TZSign: char = '+';
+  RevisionDate: string = '';
+  IsNewFile: boolean;
 begin
   Result := False;
   if FSaving then Exit; // already saving
@@ -3183,7 +3188,24 @@ begin
   try
     SaveGrid;
     SaveGridHeaders;
-    FPoFile.HeaderValue['X-Generator'] := 'PoBatch ' + GetAppVersion;
+    FPoFile.HeaderValue['X-Generator'] := AppName + ' ' + GetAppVersion;
+
+    // Only refresh PO-Revision-Date when overwriting an existing file, so a
+    // PO file created from a POT keeps the (usually empty) date from the template
+    IsNewFile := not FileExists(AFileName);
+    if not IsNewFile then
+    begin
+      OffsetMinutes := GetLocalTimeOffset;
+      if OffsetMinutes < 0 then
+      begin
+        TZSign := '-';
+        OffsetMinutes := -OffsetMinutes;
+      end;
+      RevisionDate := FormatDateTime('yyyy-mm-dd hh:nn', Now) + TZSign + Format('%.2d%.2d',
+        [OffsetMinutes div 60, OffsetMinutes mod 60]);
+      FPoFile.HeaderValue['PO-Revision-Date'] := RevisionDate;
+    end;
+
     if not Fast then FillGridHeaders;
 
     Screen.Cursor := crHourGlass;

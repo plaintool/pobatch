@@ -348,7 +348,10 @@ type
 
 implementation
 
-{%Region -fold Consts}
+uses
+  LangCodes;
+
+  {%Region -fold Consts}
 
 const
   // Mapping from TPOFlag to the string used in #, comments
@@ -2609,6 +2612,7 @@ var
   DefaultValues: array[TPOHeader] of string;
   h: TPOHeader;
   OldValue: string;
+  PluralValue: string;
 begin
   for h := Low(TPOHeader) to High(TPOHeader) do
     DefaultValues[h] := '';
@@ -2634,7 +2638,13 @@ begin
 
     // Force the language when explicitly requested
     if ALanguage <> '' then
+    begin
       NewHeaders.Values['Language'] := ALanguage;
+      // Fill the plural forms header from the built-in language table
+      PluralValue := GetLanguagePluralForms(ALanguage);
+      if PluralValue <> '' then
+        NewHeaders.Values['Plural-Forms'] := PluralValue;
+    end;
 
     SetHeaders(NewHeaders);
   finally
