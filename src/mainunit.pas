@@ -1760,7 +1760,7 @@ begin
     SaveGridPlural;
     UpdateValid;
 
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
   end;
 end;
 
@@ -1776,7 +1776,7 @@ begin
     GridComments.Cells[aCol, aRow] := NewValue;
     SaveGridComments;
     UpdateValid;
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
   end;
 end;
 
@@ -1896,7 +1896,7 @@ end;
 
 procedure TformPoBatch.GridHeaderSized(Sender: TObject; IsColumn: boolean; Index: integer);
 begin
-  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
 end;
 
 procedure TformPoBatch.GridCompareCells(Sender: TObject; ACol, ARow, BCol, BRow: integer; var Result: integer);
@@ -2151,7 +2151,7 @@ begin
   FRichEditor.Color := clWindow;
   FRichEditor.Font.Color := clWindowText;
 
-  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
 
   Application.QueueAsyncCall(@UpdateSpellCheckMemo, 1);
 
@@ -2172,14 +2172,14 @@ begin
     UpdateValid;
   end;
 
-  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
 
   Grid.Invalidate;
 end;
 
 procedure TformPoBatch.MemoChange(Sender: TObject);
 begin
-  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
 end;
 
 procedure TformPoBatch.MemoKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -2200,14 +2200,14 @@ begin
       FRichEditor.SelText := sLineBreak;
       FRichEditor.SelStart := FRichEditor.SelStart + 1;
       FRichEditor.SelLength := 0;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor,
         Grid.Row);
     end
     else
     begin
       Grid.Cells[Grid.Col, Grid.Row] := FRichEditor.Lines.Text;
       UpdateValid;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor,
         Grid.Row);
       Changed := True;
       Grid.EditorMode := False;
@@ -2220,7 +2220,7 @@ begin
     if Sender is TRichMemo then
     begin
       TRichMemo(Sender).PasteWithLineEnding;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor,
         Grid.Row);
       Key := 0;
     end
@@ -2237,7 +2237,7 @@ begin
     if Sender is TRichMemo then
     begin
       TRichMemo(Sender).CutToClipboardNoTrailingLineBreak;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor,
         Grid.Row);
       Key := 0;
     end;
@@ -2248,7 +2248,7 @@ begin
     if Sender is TRichMemo then
     begin
       TRichMemo(Sender).UndoEx;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor,
         Grid.Row);
       Key := 0;
     end;
@@ -2259,7 +2259,7 @@ begin
     if Sender is TRichMemo then
     begin
       TRichMemo(Sender).RedoEx;
-      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0),
+      Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor,
         Grid.Row);
       Key := 0;
     end;
@@ -2479,7 +2479,7 @@ begin
     Grid.Cells[CELL_TEXT, Grid.Row] := MemoSource.Text;
     Changed := True;
     UpdateValid;
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
   end;
 end;
 
@@ -2494,7 +2494,7 @@ begin
     Grid.Cells[CELL_PLURAL, Grid.Row] := MemoPlural.Text;
     Changed := True;
     UpdateValid;
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
   end;
 end;
 
@@ -2515,7 +2515,7 @@ begin
     Grid.Cells[CELL_TRANSLATION, Grid.Row] := MemoTranslation.Text;
     Changed := True;
     UpdateValid;
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0), Grid.Row);
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor, Grid.Row);
   end;
 end;
 
@@ -2615,7 +2615,7 @@ begin
   else
     FRichEditor.ScrollBars := ssAutoBoth;
 
-  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
 end;
 
 {%EndRegion}
@@ -3845,7 +3845,7 @@ begin
       for i := Grid.FixedRows to Grid.RowCount - 1 do
         UpdateValid(i);
     end;
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
   end;
 end;
 
@@ -4141,7 +4141,7 @@ begin
     // Re-apply active column sort if any
     Grid.ApplySort(FSortColumn, FSortOrder);
 
-    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.GetTextHeight(FRichEditor.Lines.Text), 0));
+    Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
 
     // Restore selection to the previously saved entry index, if possible
     TargetRow := Grid.FixedRows;  // fallback to first data row
