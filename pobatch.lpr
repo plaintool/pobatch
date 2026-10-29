@@ -87,8 +87,8 @@ begin
     InitConsole;
     {$ENDIF}
     RequireDerivedFormResource := True;
-    Application.Title := 'PoBatch';
-    Application.Scaled := True;
+  Application.Title:='PoBatch';
+  Application.Scaled:=True;
     {$PUSH}
     {$WARN 5044 OFF}
     Application.MainFormOnTaskbar := True;

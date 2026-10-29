@@ -39,7 +39,9 @@ uses
   SpellChecker,
   LangCodes,
   PoWrap,
-  PoCheck, Translate, ConfigManager;
+  PoCheck,
+  Translate,
+  ConfigManager;
 
 type
   { TformPoBatch }
@@ -63,6 +65,7 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    ASettings: TAction;
     APathClearAll: TAction;
     APathTranslateMissing: TAction;
     ATranslateMissing: TAction;
@@ -160,6 +163,7 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    MenuItem6: TMenuItem;
     MenuPathClearAll: TMenuItem;
     MenuPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
@@ -237,6 +241,7 @@ type
     Separator15: TMenuItem;
     Separator16: TMenuItem;
     Separator17: TMenuItem;
+    Separator18: TMenuItem;
     Separator19: TMenuItem;
     Separator2: TMenuItem;
     btnFilterClear: TSpeedButton;
@@ -263,13 +268,6 @@ type
     PageComments: TTabSheet;
     Translate: TTranslate;
     { Form Events }
-    procedure APathClearAllExecute(Sender: TObject);
-    procedure APathClearFuzzyExecute(Sender: TObject);
-    procedure APathCopySourceExecute(Sender: TObject);
-    procedure APathRescanExecute(Sender: TObject);
-    procedure APathTranslateMissingExecute(Sender: TObject);
-    procedure ATranslateMissingExecute(Sender: TObject);
-    procedure ATranslateSelectedExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -342,6 +340,7 @@ type
     procedure ACheckSpaceDoubleExecute(Sender: TObject);
     procedure ACheckSpaceLeadingExecute(Sender: TObject);
     procedure ACheckSpaceTrailingExecute(Sender: TObject);
+    procedure ASettingsExecute(Sender: TObject);
     { Action Batch Operations }
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
@@ -354,6 +353,13 @@ type
     procedure APathDeleteFilesExecute(Sender: TObject);
     procedure APathShowFileInExplorerExecute(Sender: TObject);
     procedure APathSelectAllExecute(Sender: TObject);
+    procedure APathClearAllExecute(Sender: TObject);
+    procedure APathClearFuzzyExecute(Sender: TObject);
+    procedure APathCopySourceExecute(Sender: TObject);
+    procedure APathRescanExecute(Sender: TObject);
+    procedure APathTranslateMissingExecute(Sender: TObject);
+    procedure ATranslateMissingExecute(Sender: TObject);
+    procedure ATranslateSelectedExecute(Sender: TObject);
     { Grids Universal }
     procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
@@ -412,6 +418,7 @@ type
     procedure MemoTranslationEnter(Sender: TObject);
     procedure MemoTranslationChange(Sender: TObject);
     procedure MemoPanelKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure SettingsFormClose(Sender: TObject; var CloseAction: TCloseAction);
     {%EndRegion}
   private
     FRichEditor: TRichMemoCellEditor;
@@ -434,6 +441,12 @@ type
     FFilterUpdating: boolean;
     FFilterPending: boolean;
     FAnalizeGeneration: integer;
+    FFormSettingsLeft: integer;
+    FFormSettingsTop: integer;
+    FFormSettingsWidth: integer;
+    FFormSettingsHeight: integer;
+    FFormSettingsSplit: integer;
+    FSettingsPage: integer;
 
     FChanged: boolean;
     FSaving: boolean;
@@ -526,6 +539,12 @@ type
     property PoFile: TPoFile read FPoFile;
     property PathIndex: integer read FPathIndex write FPathIndex;
     property LastPathIndex: integer read FLastPathIndex write FLastPathIndex;
+    // Settings sizes
+    property FormSettingsLeft: integer read FFormSettingsLeft write FFormSettingsLeft;
+    property FormSettingsTop: integer read FFormSettingsTop write FFormSettingsTop;
+    property FormSettingsWidth: integer read FFormSettingsWidth write FFormSettingsWidth;
+    property FormSettingsHeight: integer read FFormSettingsHeight write FFormSettingsHeight;
+    property FormSettingsSplit: integer read FFormSettingsSplit write FFormSettingsSplit;
   end;
 
 var
@@ -590,7 +609,8 @@ const
 
 implementation
 
-uses FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper, DarkUtils, CheckUpdates, OSUtils,
+uses FormSettings, FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper,
+  DarkUtils, CheckUpdates, OSUtils,
   RichMemoHelper, Localize, PascalUtils, BatchOp;
 
   {$R *.lfm}
@@ -628,6 +648,13 @@ begin
   FFilterUpdating := False;
   FFilterPending := False;
   FAnalizeGeneration := 0;
+
+  FFormSettingsLeft := 0;
+  FFormSettingsTop := 0;
+  FFormSettingsWidth := 0;
+  FFormSettingsHeight := 0;
+  FFormSettingsSplit := 0;
+  FSettingsPage := 0;
 
   {$IFDEF WINDOWS}
   PanelCheck.Height := 35;
@@ -1493,6 +1520,42 @@ begin
     GridComments.Options := GridComments.Options + [goAutoAddRows];
     GridComments.Options := GridComments.Options + [goEditing];
   end;
+end;
+
+procedure TformPoBatch.ASettingsExecute(Sender: TObject);
+begin
+  // If the settings form is visible, just raise it up
+  if Assigned(formSettingsPoBatch) and formSettingsPoBatch.Visible then
+  begin
+    formSettingsPoBatch.BringToFront;
+    if formSettingsPoBatch.CanSetFocus then
+      formSettingsPoBatch.SetFocus;
+    Exit;
+  end;
+
+  formSettingsPoBatch := TformSettingsPoBatch.Create(Application);
+  formSettingsPoBatch.OnClose := @SettingsFormClose;
+
+  formSettingsPoBatch.Position := poDesigned;
+  if FormSettingsLeft > 0 then
+    formSettingsPoBatch.Left := FormSettingsLeft
+  else
+    formSettingsPoBatch.Position := poDesktopCenter;
+  if FormSettingsTop > 0 then
+    formSettingsPoBatch.Top := FormSettingsTop
+  else
+    formSettingsPoBatch.Position := poDesktopCenter;
+  if FormSettingsWidth > 0 then
+    formSettingsPoBatch.Width := FormSettingsWidth;
+  if FormSettingsHeight > 0 then
+    formSettingsPoBatch.Height := FormSettingsHeight;
+  if FormSettingsSplit > 0 then
+    formSettingsPoBatch.ListPages.Width := FormSettingsSplit;
+
+  formSettingsPoBatch.PagesSettings.ActivePageIndex := FSettingsPage;
+  formSettingsPoBatch.ListPages.ItemIndex := FSettingsPage;
+
+  formSettingsPoBatch.Show;
 end;
 
 {%EndRegion}
@@ -2572,6 +2635,19 @@ begin
     // Shift+Insert, paste text from clipboard without trailing line breaks
     TRichMemo(Sender).PasteWithLineEnding;
     Key := 0;
+  end;
+end;
+
+procedure TformPoBatch.SettingsFormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  try
+    // Save changes immediately
+    SaveFormSettings(Self);
+
+    FSettingsPage := formSettingsPoBatch.PagesSettings.ActivePageIndex;
+  finally
+    CloseAction := caFree;
+    formSettingsPoBatch := nil;
   end;
 end;
 

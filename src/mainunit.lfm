@@ -608,6 +608,12 @@ object formPoBatch: TformPoBatch
       object MenuPathClose: TMenuItem
         Action = AClosePath
       end
+      object Separator18: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem6: TMenuItem
+        Action = ASettings
+      end
       object Separator2: TMenuItem
         Caption = '-'
       end
@@ -1049,11 +1055,6 @@ object formPoBatch: TformPoBatch
       Caption = 'Close Path'
       OnExecute = AClosePathExecute
     end
-    object AExit: TAction
-      Category = 'File'
-      Caption = 'Exit'
-      OnExecute = AExitExecute
-    end
     object APathNewFilesFromPot: TAction
       Category = 'Path'
       Caption = 'New File(s) From Pot...'
@@ -1209,6 +1210,16 @@ object formPoBatch: TformPoBatch
       Category = 'Path'
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
+    end
+    object ASettings: TAction
+      Category = 'File'
+      Caption = 'Settings...'
+      OnExecute = ASettingsExecute
+    end
+    object AExit: TAction
+      Category = 'File'
+      Caption = 'Exit'
+      OnExecute = AExitExecute
     end
   end
   object ApplicationProp: TApplicationProperties

@@ -28,7 +28,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses PoWrap, PoCheck, ObjectDictionary, OSUtils;
+uses PoWrap, PoCheck, ObjectDictionary, Translate, Network, OSUtils;
 
 function QACheckOptionsToJSON(const AOpt: TQACheckOptions): TJSONObject;
 var
@@ -103,6 +103,8 @@ end;
 procedure SaveFormSettings(Form: TformPoBatch);
 var
   JSONObj: TJSONObject;
+  ProxyObj: TJSONObject;
+  TimeoutObj: TJSONObject;
   FileName: string;
   PoFilesArray, StatusArray, arrParams: TJSONArray;
   QAMapObj, LangObj: TJSONObject;
@@ -175,6 +177,12 @@ begin
     JSONObj.Add('FormConfigSep1', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Sep1));
     JSONObj.Add('FormConfigSep2', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Sep2));
 
+    JSONObj.Add('FormSettingsLeft', Form.ScaleFormTo96(Form.FormSettingsLeft));
+    JSONObj.Add('FormSettingsTop', Form.ScaleFormTo96(Form.FormSettingsTop));
+    JSONObj.Add('FormSettingsWidth', Form.ScaleFormTo96(Form.FormSettingsWidth));
+    JSONObj.Add('FormSettingsHeight', Form.ScaleFormTo96(Form.FormSettingsHeight));
+    JSONObj.Add('FormSettingsSplit', Form.ScaleFormTo96(Form.FormSettingsSplit));
+
     JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
     JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
@@ -230,6 +238,27 @@ begin
       QAMapObj.Free;
     end;
 
+    ProxyObj := TJSONObject.Create;
+    ProxyObj.Add('ProxyMode', Ord(Form.Translate.Proxy.Mode));
+    ProxyObj.Add('ProxyType', Ord(Form.Translate.Proxy.Type_));
+    ProxyObj.Add('Host', Form.Translate.Proxy.Host);
+    ProxyObj.Add('Port', Form.Translate.Proxy.Port);
+    ProxyObj.Add('Authentication', Form.Translate.Proxy.Authentication);
+    ProxyObj.Add('Login', Form.Translate.Proxy.Login);
+    ProxyObj.Add('Password', Form.Translate.Proxy.Password);
+    JSONObj.Add('Proxy', ProxyObj);
+
+    TimeoutObj := TJSONObject.Create;
+    TimeoutObj.Add('Request', Form.Translate.Timeout.Request);
+    TimeoutObj.Add('Connection', Form.Translate.Timeout.Connection);
+    JSONObj.Add('Timeout', TimeoutObj);
+
+    // Proxied configs
+    arrParams := TJSONArray.Create;
+    for i := 0 to Form.ConfigManager.ProxiedConfigs.Count - 1 do
+      arrParams.Add(Form.ConfigManager.ProxiedConfigs[i]);
+    JSONObj.Add('ProxiedConfigs', arrParams);
+
     // User Parameters
     arrParams := TJSONArray.Create;
     try
@@ -260,6 +289,10 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 var
   JSONData: TJSONData;
   JSONObj: TJSONObject;
+  ProxyObj: TJSONObject;
+  TimeoutObj: TJSONObject;
+  Proxy: TTranslateProxy;
+  Timeout: TTRanslateTimeout;
   PoFilesArray, StatusArray, arrParams: TJSONArray;
   TempStatusArray: TPOFileStatusArray = ();
   FileName: string;
@@ -437,6 +470,20 @@ begin
       if JSONObj.FindPath('FormConfigSep2') <> nil then
         Form.ConfigManager.FormPosition.Sep2 := Min(Form.Scale96ToForm(JSONObj.FindPath('FormConfigSep2').AsInteger), Screen.DesktopWidth);
 
+      if JSONObj.FindPath('FormSettingsLeft') <> nil then
+        Form.FormSettingsLeft := Form.Scale96ToForm(JSONObj.FindPath('FormSettingsLeft').AsInteger);
+
+      if JSONObj.FindPath('FormSettingsTop') <> nil then
+        Form.FormSettingsTop := Form.Scale96ToForm(JSONObj.FindPath('FormSettingsTop').AsInteger);
+
+      if JSONObj.FindPath('FormSettingsWidth') <> nil then
+        Form.FormSettingsWidth :=
+          Min(Form.Scale96ToForm(JSONObj.FindPath('FormSettingsWidth').AsInteger), Screen.DesktopWidth);
+
+      if JSONObj.FindPath('FormSettingsHeight') <> nil then
+        Form.FormSettingsHeight :=
+          Min(Form.Scale96ToForm(JSONObj.FindPath('FormSettingsHeight').AsInteger), Screen.DesktopHeight);
+
       if JSONObj.FindPath('ActionEditTranslationOnly') <> nil then
       begin
         Form.AEditTranslationOnly.Checked := JSONObj.FindPath('ActionEditTranslationOnly').AsBoolean;
@@ -494,6 +541,62 @@ begin
               TQACheckOptionsHolder.Create(QACheckOptionsFromJSON(LangObj));
           end;
         end;
+      end;
+
+      // Proxy settings
+      if JSONObj.FindPath('Proxy') <> nil then
+      begin
+        ProxyObj := JSONObj.FindPath('Proxy') as TJSONObject;
+
+        Proxy := Form.Translate.Proxy;
+
+        if ProxyObj.FindPath('ProxyMode') <> nil then
+          Proxy.Mode := TProxyMode(ProxyObj.FindPath('ProxyMode').AsInteger);
+
+        if ProxyObj.FindPath('ProxyType') <> nil then
+          Proxy.Type_ := TProxyType(ProxyObj.FindPath('ProxyType').AsInteger);
+
+        if ProxyObj.FindPath('Host') <> nil then
+          Proxy.Host := ProxyObj.FindPath('Host').AsString;
+
+        if ProxyObj.FindPath('Port') <> nil then
+          Proxy.Port := ProxyObj.FindPath('Port').AsString;
+
+        if ProxyObj.FindPath('Authentication') <> nil then
+          Proxy.Authentication := ProxyObj.FindPath('Authentication').AsBoolean;
+
+        if ProxyObj.FindPath('Login') <> nil then
+          Proxy.Login := ProxyObj.FindPath('Login').AsString;
+
+        if ProxyObj.FindPath('Password') <> nil then
+          Proxy.Password := ProxyObj.FindPath('Password').AsString;
+
+        Form.Translate.Proxy := Proxy;
+      end;
+
+      // Timeout Settings
+      if JSONObj.FindPath('Timeout') <> nil then
+      begin
+        TimeoutObj := JSONObj.FindPath('Timeout') as TJSONObject;
+
+        Timeout := Form.Translate.Timeout;
+
+        if TimeoutObj.FindPath('Request') <> nil then
+          Timeout.Request := TimeoutObj.FindPath('Request').AsInteger;
+
+        if TimeoutObj.FindPath('Connection') <> nil then
+          Timeout.Connection := TimeoutObj.FindPath('Connection').AsInteger;
+
+        Form.Translate.Timeout := Timeout;
+      end;
+
+      // Load proxied configs
+      Form.ConfigManager.ProxiedConfigs.Clear;
+      if JSONObj.FindPath('ProxiedConfigs') <> nil then
+      begin
+        arrParams := JSONObj.FindPath('ProxiedConfigs') as TJSONArray;
+        for i := 0 to arrParams.Count - 1 do
+          Form.ConfigManager.ProxiedConfigs.Add(arrParams.Items[i].AsString);
       end;
 
       // Load user parameters

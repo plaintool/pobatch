@@ -13,7 +13,7 @@ object formDonatePoBatch: TformDonatePoBatch
   LCLVersion = '4.8.0.0'
   OnCreate = FormCreate
   object BtnOk: TButton
-    Left = 362
+    Left = 356
     Height = 25
     Top = 261
     Width = 75
