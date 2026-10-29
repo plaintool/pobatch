@@ -21,6 +21,7 @@ PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source 
 
 ---
 
+<!--
 ## Installation
 
 [![latest version](https://img.shields.io/github/v/release/plaintool/pobatch?color=blue&label=Latest%20release&style=for-the-badge)](https://github.com/plaintool/pobatch/releases/latest)
@@ -67,6 +68,39 @@ sudo dnf install -y gtk2
 ```
 
 ---
+-->
+
+## Building from Source
+
+### Requirements
+- [Lazarus 4.8](https://www.lazarus-ide.org/)
+- [Git](https://git-scm.com/) (Windows only)
+
+### Build Instructions
+
+**Windows**
+
+1. Clone the repository:
+   ```cmd
+   git clone https://github.com/plaintool/pobatch
+   ```
+2. Open the project directory and run:
+   ```bash
+   build.cmd
+   ```
+
+**Linux**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/plaintool/pobatch
+   ```
+2. Open the project directory and run:
+   ```bash
+   make
+   ```
+
+The compiled executable will be available in the project directory.
 
 ## Console mode
 
