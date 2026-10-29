@@ -2113,11 +2113,11 @@ begin
 
   Grid.Canvas.FillRect(aRect);
 
-  InflateRect(aRect, -2, -2);
-
+  // Insets are scaled so the drawn text stays aligned with the cell editor
+  // which uses the same 3px left/top and 2px right/bottom offsets
   Grid.DrawHighlightedText(
     Grid.Canvas,
-    Rect(aRect.Left + 1, aRect.Top + 1, aRect.Right, aRect.Bottom),
+    Rect(aRect.Left + Scale96ToForm(3), aRect.Top + Scale96ToForm(3), aRect.Right - Scale96ToForm(2), aRect.Bottom - Scale96ToForm(2)),
     GridDrawColors(TDarkUtils.ThemeColor(clInfo, clInfoDark), clMaroon, ifthen(gdSelected in AState,
     clWindowText, TDarkUtils.ThemeColor(clFontBlue, clFontBlueDark)), TDarkUtils.ThemeColor(clSoftBlue, clSoftBlueDark)),
     CellText,
