@@ -3789,6 +3789,9 @@ end;
 
 function TformPoBatch.CanActionEnable: boolean;
 begin
+  // Do not let main form actions intercept keys when another form has focus
+  if Screen.ActiveCustomForm <> Self then Exit(False);
+
   //jcf:format=off
   Result :=
     not (Assigned(FRichEditor) and FRichEditor.Focused) and
