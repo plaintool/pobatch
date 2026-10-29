@@ -447,7 +447,6 @@ type
     FFormSettingsHeight: integer;
     FFormSettingsSplit: integer;
     FSettingsPage: integer;
-
     FChanged: boolean;
     FSaving: boolean;
     FPath: string;
@@ -457,6 +456,8 @@ type
     FSplitRatio: double;
     FWordWrap: boolean;
     FMaxRowHeight: integer;
+    FTranslatorName: string;
+    FTranslatorEmail: string;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -527,6 +528,8 @@ type
     property Language: string read FLanguage write SetLanguage;
     property Path: string read FPath write FPath;
     property AutoCheckUpdates: boolean read FAutoCheckUpdates write FAutoCheckUpdates;
+    property TranslatorName: string read FTranslatorName write FTranslatorName;
+    property TranslatorEmail: string read FTranslatorEmail write FTranslatorEmail;
     property SortOrder: TSortOrder read FSortOrder write FSortOrder;
     property SortColumn: integer read FSortColumn write FSortColumn;
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
@@ -635,6 +638,8 @@ begin
   FQACheckOptionsByLang := TObjectDictionary.Create;
   SetLength(FFileStatuses, 0);
   FCommandLineFile := string.Empty;
+  FTranslatorName := string.Empty;
+  FTranslatorEmail := string.Empty;
   FSortColumn := -1;
   FSortOrder := soAscending;
   FLastPathIndex := -1;
@@ -3277,6 +3282,17 @@ begin
     SaveGrid;
     SaveGridHeaders;
     FPoFile.HeaderValue['X-Generator'] := AppName + ' ' + GetAppVersion;
+
+    // Overwrite Last-Translator with the configured values when at least one is set
+    if (Trim(FTranslatorName) <> string.Empty) or (Trim(FTranslatorEmail) <> string.Empty) then
+    begin
+      if (Trim(FTranslatorName) <> string.Empty) and (Trim(FTranslatorEmail) <> string.Empty) then
+        FPoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorName) + ' <' + Trim(FTranslatorEmail) + '>'
+      else if Trim(FTranslatorEmail) <> string.Empty then
+        FPoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorEmail)
+      else
+        FPoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorName);
+    end;
 
     // Only refresh PO-Revision-Date when overwriting an existing file, so a
     // PO file created from a POT keeps the (usually empty) date from the template

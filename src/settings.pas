@@ -185,6 +185,8 @@ begin
 
     JSONObj.Add('ActionEditTranslationOnly', Form.AEditTranslationOnly.Checked);
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
+    JSONObj.Add('TranslatorName', Form.TranslatorName);
+    JSONObj.Add('TranslatorEmail', Form.TranslatorEmail);
     JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
     JSONObj.Add('Path', Form.Path);
 
@@ -518,6 +520,12 @@ begin
 
       if JSONObj.FindPath('AutoCheckUpdates') <> nil then
         Form.AutoCheckUpdates := JSONObj.FindPath('AutoCheckUpdates').AsBoolean;
+
+      if JSONObj.FindPath('TranslatorName') <> nil then
+        Form.TranslatorName := JSONObj.FindPath('TranslatorName').AsString;
+
+      if JSONObj.FindPath('TranslatorEmail') <> nil then
+        Form.TranslatorEmail := JSONObj.FindPath('TranslatorEmail').AsString;
 
       if JSONObj.FindPath('TranslateConfig') <> nil then
         Form.ConfigManager.ConfigFile := JSONObj.FindPath('TranslateConfig').AsString;
