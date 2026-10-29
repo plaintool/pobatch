@@ -1904,6 +1904,18 @@ var
   ValA, ValB: string;
   NumA, NumB: integer;
 begin
+  // Column 0 holds the permanent entry index; compare it numerically so the
+  // order is 1, 2, 3... instead of 1, 10, 100, 101, 11...
+  if ACol = 0 then
+  begin
+    NumA := StrToIntDef(Grid.Cells[0, ARow], 0);
+    NumB := StrToIntDef(Grid.Cells[0, BRow], 0);
+    Result := NumA - NumB;
+    if FSortOrder = soDescending then
+      Result := -Result;
+    Exit;
+  end;
+
   // 1. Primary key: the column the user clicked
   ValA := Grid.Cells[ACol, ARow];
   ValB := Grid.Cells[ACol, BRow];
