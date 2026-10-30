@@ -2404,6 +2404,10 @@ begin
       // Do nothing if right-clicked on already selected item with multi-selection
       if ListPath.Selected[idx] and (ListPath.SelCount > 1) then
         Exit;
+      // Do not reload when right-clicking the file that is already open,
+      // matching the left-click behaviour
+      if idx = FLastPathIndex then
+        Exit;
       // MenuMemoClear and set selection to force visual update (fixes initial zero-state highlight)
       ListPath.ClearSelection;
       ListPath.Selected[idx] := True;
