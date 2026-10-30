@@ -2,7 +2,7 @@
 <XML_DIZ_INFO>
 	<MASTER_PAD_VERSION_INFO>
 		<MASTER_PAD_VERSION>3.11</MASTER_PAD_VERSION>
-		<MASTER_PAD_EDITOR>PoBatch 1.1.0</MASTER_PAD_EDITOR>
+		<MASTER_PAD_EDITOR>PoBatch 1.0.0</MASTER_PAD_EDITOR>
 		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://pad.asp-software.org</MASTER_PAD_INFO>
 	</MASTER_PAD_VERSION_INFO>
 	<Company_Info>
@@ -34,9 +34,9 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>PoBatch</Program_Name>
-		<Program_Version>1.1.0</Program_Version>
-		<Program_Release_Month>01</Program_Release_Month>
-		<Program_Release_Day>16</Program_Release_Day>
+		<Program_Version>1.0.0</Program_Version>
+		<Program_Release_Month />
+		<Program_Release_Day />
 		<Program_Release_Year>2026</Program_Release_Year>
 		<Program_Cost_Dollars />
 		<Program_Cost_Other_Code />
@@ -44,11 +44,11 @@
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>New Release</Program_Release_Status>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
-		<Program_OS_Support>Win7 x32,Win7 x64,WinOther,WinVista,WinVista x64,WinXP,Win10,Win11,Windows XP,Windows 7,Windows 8,Windows 10,Windows 11</Program_OS_Support>
+		<Program_OS_Support>Linux,Win7 x32,Win7 x64,WinOther,WinVista,WinVista x64,WinXP,Win10,Win11,Windows XP,Windows 7,Windows 8,Windows 10,Windows 11</Program_OS_Support>
 		<Program_Language>English</Program_Language>
 		<Program_Change_Info />
 		<Program_Specific_Category>Development</Program_Specific_Category>
-		<Program_Category_Class>Development::Management &amp; Distribution</Program_Category_Class>
+		<Program_Category_Class>Education::Languages</Program_Category_Class>
 		<Program_System_Requirements />
 		<File_Info>
 			<File_Size_Bytes>20054016</File_Size_Bytes>
@@ -70,9 +70,9 @@
 			<Keywords>editor, po, l10n, i18n</Keywords>
 			<Char_Desc_45>PoBatch is an easy-to-use PO file editor for l10n workflows. </Char_Desc_45>
 			<Char_Desc_80>PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file. </Char_Desc_80>
-			<Char_Desc_250>A simple tool for creating and editing PAD XML files used for software distribution and listings. Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products.</Char_Desc_250>
+			<Char_Desc_250 />
 			<Char_Desc_450>A lightweight application designed to create, edit, and maintain PAD (Portable Application Description) XML files. PAD files are used to describe software products in a standardized format for software directories, download sites, and application catalogs, helping automate software listing and distribution.</Char_Desc_450>
-			<Char_Desc_2000>A simple tool for creating and editing PAD XML files used for software distribution and listings. Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. A lightweight application designed to create, edit, and maintain PAD (Portable Application Description) XML files. PAD files are used to describe software products in a standardized format for software directories, download sites, and application catalogs, helping automate software listing and distribution.</Char_Desc_2000>
+			<Char_Desc_2000 />
 		</English>
 	</Program_Descriptions>
 	<Web_Info>

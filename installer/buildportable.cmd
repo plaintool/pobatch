@@ -61,7 +61,6 @@ powershell -NoProfile -Command ^
     "$tmp='%~dp0temp_dist';" ^
     "$exe='%EXE%';" ^
     "$dlls=@('%DLL1%','%DLL2%');" ^
-    "$settings='%~dp0form_settings.json';" ^
     "$portable='%~dp0portable';" ^
     "$license='%~dp0LICENSE.rtf';" ^
     "$configDir='%~dp0..\config';" ^
@@ -69,7 +68,7 @@ powershell -NoProfile -Command ^
     "if ((Test-Path $exe) -and (Test-Path $configDir)) {" ^
     "  if (Test-Path $tmp) { Remove-Item -Recurse -Force $tmp };" ^
     "  New-Item -ItemType Directory -Path \"$tmp/config\" -Force | Out-Null;" ^
-    "  Copy-Item $exe, $settings, $portable, $license -Destination $tmp;" ^
+    "  Copy-Item $exe, $portable, $license -Destination $tmp;" ^
     "  Copy-Item $dlls -Destination $tmp;" ^
     "  Copy-Item \"$configDir\*.ini\" -Destination \"$tmp/config\";" ^
     "  Start-Sleep -Seconds 2;" ^
