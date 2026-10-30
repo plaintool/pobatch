@@ -1692,6 +1692,7 @@ begin
       0
       );
 
+  AForm.UpdateStatusBar;
   AForm.Grid.Invalidate;
 end;
 
@@ -1746,6 +1747,7 @@ begin
       0
       );
 
+  AForm.UpdateStatusBar;
   AForm.Grid.Invalidate;
 end;
 

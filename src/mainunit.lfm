@@ -138,7 +138,7 @@ object formPoBatch: TformPoBatch
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
-      TabOrder = 4
+      TabOrder = 3
       TitleStyle = tsNative
       Visible = False
       OnColRowInserted = GridUniversalColRowInserted
@@ -574,7 +574,18 @@ object formPoBatch: TformPoBatch
     Height = 23
     Top = 497
     Width = 740
-    Panels = <>
+    Panels = <    
+      item
+        Width = 20
+      end    
+      item
+        Width = 300
+      end    
+      item
+        Width = 340
+      end>
+    SimplePanel = False
+    OnMouseMove = StatusBarMouseMove
   end
   object MainMenu: TMainMenu
     Left = 312

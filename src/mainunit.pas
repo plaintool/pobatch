@@ -419,6 +419,7 @@ type
     procedure MemoTranslationChange(Sender: TObject);
     procedure MemoPanelKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure SettingsFormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure StatusBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     {%EndRegion}
   private
     FRichEditor: TRichMemoCellEditor;
@@ -523,6 +524,7 @@ type
     procedure FillGridHeaders;
     procedure UpdateValid(aRow: integer = -1);
     procedure UpdateTranslatePanel(aRow: integer = -1);
+    procedure UpdateStatusBar;
     function NewFile(AFileName: string = string.Empty): boolean;
     procedure UpdateCaption;
     function CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
@@ -655,6 +657,11 @@ resourcestring
 
   rrequiredparamtitle = 'Enter the required parameter';
   rrequiredparamprompt = 'Enter %s';
+
+  rstatustranslated = 'Translated %d of %d (%d%%) Remaining %d';
+  rstatusinvalid = 'Invalid: %d (Fuzzy %d, QA %d, Empty %d)';
+  rstatustranslatedhint = 'Translation progress: translated entries of the total, percentage, remaining count';
+  rstatusinvalidhint = 'Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations';
 
   rqacheckscaption = 'QA Checks';
   {%EndRegion}
@@ -2350,6 +2357,7 @@ begin
         Grid.Row);
       Changed := True;
       Grid.EditorMode := False;
+      UpdateStatusBar;
     end;
     Key := 0;
   end
@@ -2717,6 +2725,28 @@ begin
     CloseAction := caFree;
     formSettingsPoBatch := nil;
   end;
+end;
+
+procedure TformPoBatch.StatusBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  I, PanelLeft: integer;
+  HintText: string;
+begin
+  HintText := string.Empty;
+  PanelLeft := 0;
+  for I := 0 to StatusBar.Panels.Count - 1 do
+  begin
+    if (X >= PanelLeft) and (X < PanelLeft + StatusBar.Panels[I].Width) then
+    begin
+      if I = 1 then
+        HintText := rstatustranslatedhint
+      else if I = 2 then
+        HintText := rstatusinvalidhint;
+      Break;
+    end;
+    Inc(PanelLeft, StatusBar.Panels[I].Width);
+  end;
+  StatusBar.Hint := HintText;
 end;
 
 {%EndRegion}
@@ -3729,6 +3759,7 @@ begin
   if aRow = -1 then aRow := Grid.Row;
   UpdateQACheck(aRow);
   UpdateSwitch(aRow);
+  UpdateStatusBar;
 
   // We proceed further only if the translation panel is visible
   if not Pages.Visible then Exit;
@@ -3826,6 +3857,72 @@ begin
     if SpellTranslation.RichMemo = FRichEditor then
       SpellTranslation.RichMemo := MemoTranslation;
   end;
+end;
+
+procedure TformPoBatch.UpdateStatusBar;
+var
+  I, J: integer;
+  Entry: TPOEntry;
+  Total, Translated, Remaining, Percent: integer;
+  Invalid, Empty, Fuzzy, QA: integer;
+  IsEmpty: boolean;
+begin
+  if not Assigned(StatusBar) or (StatusBar.Panels.Count < 2) then
+    Exit;
+
+  Total := 0;
+  Empty := 0;
+  Invalid := 0;
+  Fuzzy := 0;
+  QA := 0;
+
+  if Assigned(FPoFile) then
+    for I := 0 to FPoFile.Entries.Count - 1 do
+    begin
+      Entry := FPoFile.Entries[I];
+      // Skip the header entry
+      if Entry.MsgId = string.Empty then
+        Continue;
+
+      Inc(Total);
+
+      // An entry counts as translated when at least one form has content
+      if Entry.IsPlural then
+      begin
+        IsEmpty := True;
+        for J := 0 to Entry.MsgStrCount - 1 do
+          if Entry.MsgStr[J] <> string.Empty then
+          begin
+            IsEmpty := False;
+            Break;
+          end;
+      end
+      else
+        IsEmpty := Entry.MsgStrSimple = string.Empty;
+
+      if IsEmpty then
+        Inc(Empty);
+
+      if not Entry.IsValid then
+        Inc(Invalid);
+
+      if Entry.IsFuzzy then
+        Inc(Fuzzy);
+
+      if Length(Entry.QACheckResults) > 0 then
+        Inc(QA);
+    end;
+
+  Translated := Total - Empty;
+  Remaining := Empty;
+
+  if Total > 0 then
+    Percent := Round(Translated * 100 / Total)
+  else
+    Percent := 0;
+
+  StatusBar.Panels[1].Text := Format(rstatustranslated, [Translated, Total, Percent, Remaining]);
+  StatusBar.Panels[2].Text := Format(rstatusinvalid, [Invalid, Fuzzy, QA, Empty]);
 end;
 
 procedure TformPoBatch.SwitchCheck;
@@ -4022,6 +4119,7 @@ begin
         UpdateValid(i);
     end;
     Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
+    UpdateStatusBar;
   end;
 end;
 
@@ -4095,6 +4193,9 @@ begin
     Changed := True;
     Result := True;
   end;
+
+  if Result then
+    UpdateStatusBar;
 end;
 
 function TformPoBatch.SelectGridsAll: boolean;
@@ -4259,6 +4360,7 @@ begin
   if not Assigned(FPoFile) then
   begin
     Grid.RowCount := Grid.FixedRows;
+    UpdateStatusBar;
     Exit;
   end;
 
@@ -4344,6 +4446,8 @@ begin
     Grid.RestoreScrollState(State);
     FUpdatingGrid := False;
   end;
+
+  UpdateStatusBar;
 end;
 
 procedure TformPoBatch.SaveRow(aRow: integer);
