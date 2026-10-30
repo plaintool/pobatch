@@ -117,7 +117,7 @@ if not "%CERTFILE%"=="" (
 
 :: --- Portable ---
 if "%BUILD_PORTABLE%"=="1" (
-    call "%~dp0buildportable.cmd" "%VERSION%"
+    call "%~dp0buildportable.cmd" "%PLATFORM%" "%VERSION%"
 )
 
 endlocal
