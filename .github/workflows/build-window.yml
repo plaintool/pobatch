@@ -129,7 +129,7 @@ jobs:
           BUILD_PORTABLE: 1
         run: installer\\build.cmd x64 %VERSION%
 
-      - name: Build installers (x86 + portable)
+      - name: Build installers (x86)
         shell: cmd
         env:
           BUILD_PORTABLE: 1
