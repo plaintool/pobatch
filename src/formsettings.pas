@@ -40,6 +40,8 @@ type
     BtnFont: TButton;
     BtnOk: TButton;
     BtnReset: TButton;
+    CheckSwitchToTable: TCheckBox;
+    CheckRememberLastFile: TCheckBox;
     CheckProxyAuthentication: TCheckBox;
     ClbProxiedConfigs: TCheckListBox;
     ComboProxyMode: TComboBox;
@@ -50,8 +52,9 @@ type
     EditTranslatorName: TEdit;
     EditTranslatorEmail: TEdit;
     FontDialog: TFontDialog;
+    GroupBehavior: TGroupBox;
     GroupDefaultInformation: TGroupBox;
-    GroupMainWindow: TGroupBox;
+    GroupFont: TGroupBox;
     GroupProxiedConfigs: TGroupBox;
     GroupUserParameters: TGroupBox;
     GroupTimeouts: TGroupBox;
@@ -114,6 +117,10 @@ type
     FOriginalUserParameters: TStringList;
     FOriginalProxiedConfigs: TStringList;
     FOriginalFont: TFont;
+    FOriginalRememberLastFile: boolean;
+    FOriginalSwitchToTable: boolean;
+    FOriginalTranslatorName: string;
+    FOriginalTranslatorEmail: string;
 
     FApplySettings: boolean;
     FOldValueList: string;
@@ -302,6 +309,8 @@ begin
   EditTranslatorName.Text := string.Empty;
   EditTranslatorEmail.Text := string.Empty;
   ValueListUserParameters.Strings.Clear;
+  CheckRememberLastFile.Checked := True;
+  CheckSwitchToTable.Checked := True;
 
   PanelFont.Font.SetDefault;
   SetPanelFont(PanelFont, PanelFont.Font);
@@ -662,6 +671,8 @@ begin
 
     formPoBatch.TranslatorName := EditTranslatorName.Text;
     formPoBatch.TranslatorEmail := EditTranslatorEmail.Text;
+    formPoBatch.RememberLastFile := CheckRememberLastFile.Checked;
+    formPoBatch.SwitchToTable := CheckSwitchToTable.Checked;
 
     formPoBatch.ApplyFont(PanelFont.Font);
 
@@ -680,6 +691,10 @@ begin
   FOriginalUserParameters.Assign(formPoBatch.Translate.UserParameters);
   FOriginalProxiedConfigs.Assign(formPoBatch.ConfigManager.ProxiedConfigs);
   FOriginalFont := formPoBatch.Font;
+  FOriginalRememberLastFile := formPoBatch.RememberLastFile;
+  FOriginalSwitchToTable := formPoBatch.SwitchToTable;
+  FOriginalTranslatorName := formPoBatch.TranslatorName;
+  FOriginalTranslatorEmail := formPoBatch.TranslatorEmail;
 
   SpinConnectTimeout.Value := FOriginalTimeout.Connection div 1000;
   SpinRequestTimeout.Value := FOriginalTimeout.Request div 1000;
@@ -690,8 +705,10 @@ begin
   CheckProxyAuthentication.Checked := FOriginalProxy.Authentication;
   EditProxyLogin.Text := FOriginalProxy.Login;
   EditProxyPassword.Text := FOriginalProxy.Password;
-  EditTranslatorName.Text := formPoBatch.TranslatorName;
-  EditTranslatorEmail.Text := formPoBatch.TranslatorEmail;
+  EditTranslatorName.Text := FOriginalTranslatorName;
+  EditTranslatorEmail.Text := FOriginalTranslatorEmail;
+  CheckRememberLastFile.Checked := FOriginalRememberLastFile;
+  CheckSwitchToTable.Checked := FOriginalSwitchToTable;
 
   for i := 0 to ClbProxiedConfigs.Count - 1 do
     if formPoBatch.ConfigManager.ConfigFiles.Count > i then

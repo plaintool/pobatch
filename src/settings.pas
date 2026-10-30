@@ -198,6 +198,9 @@ begin
 
     JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
     JSONObj.Add('Path', Form.Path);
+    JSONObj.Add('RememberLastFile', Form.RememberLastFile);
+    JSONObj.Add('SwitchToTable', Form.SwitchToTable);
+    JSONObj.Add('LastFile', Form.FileName);
 
     // Save PO files list
     PoFilesArray := TJSONArray.Create;
@@ -552,6 +555,15 @@ begin
 
       if JSONObj.FindPath('TranslateConfig') <> nil then
         Form.ConfigManager.ConfigFile := JSONObj.FindPath('TranslateConfig').AsString;
+
+      if JSONObj.FindPath('RememberLastFile') <> nil then
+        Form.RememberLastFile := JSONObj.FindPath('RememberLastFile').AsBoolean;
+
+      if JSONObj.FindPath('SwitchToTable') <> nil then
+        Form.SwitchToTable := JSONObj.FindPath('SwitchToTable').AsBoolean;
+
+      if JSONObj.FindPath('LastFile') <> nil then
+        Form.LastFile := JSONObj.FindPath('LastFile').AsString;
 
       // Restore the master QA switch
       if JSONObj.FindPath('QAChecksEnabled') <> nil then

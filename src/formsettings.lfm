@@ -65,7 +65,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
         object EditTranslatorEmail: TEdit
           Left = 152
           Height = 23
-          Hint = 'Password used for proxy authentication'
+          Hint = 'The translator''s email address will be recorded in the translation file when it is saved.'
           Top = 44
           Width = 240
           Anchors = [akTop, akLeft, akRight]
@@ -75,7 +75,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
         object EditTranslatorName: TEdit
           Left = 152
           Height = 23
-          Hint = 'Username used for proxy authentication'
+          Hint = 'The translator''s name will be recorded in the translation file when it is saved.'
           Top = 8
           Width = 240
           Anchors = [akTop, akLeft, akRight]
@@ -83,7 +83,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           OnChange = SettingChange
         end
       end
-      object GroupMainWindow: TGroupBox
+      object GroupFont: TGroupBox
         Left = 5
         Height = 99
         Top = 117
@@ -128,6 +128,38 @@ object formSettingsPoBatch: TformSettingsPoBatch
           Enabled = False
           TabOrder = 2
           OnClick = BtnResetClick
+        end
+      end
+      object GroupBehavior: TGroupBox
+        Left = 5
+        Height = 97
+        Top = 221
+        Width = 436
+        Align = alTop
+        BorderSpacing.Around = 5
+        Caption = 'Behavior'
+        ClientHeight = 77
+        ClientWidth = 432
+        TabOrder = 2
+        object CheckSwitchToTable: TCheckBox
+          Left = 16
+          Height = 19
+          Hint = 'Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again.'
+          Top = 40
+          Width = 248
+          Caption = 'Switch to Translation Table on File Selection'
+          TabOrder = 0
+          OnChange = SettingChange
+        end
+        object CheckRememberLastFile: TCheckBox
+          Left = 16
+          Height = 19
+          Hint = 'Automatically reopen the last opened translation file when the application starts.'
+          Top = 8
+          Width = 159
+          Caption = 'Remember last opened file'
+          TabOrder = 1
+          OnChange = SettingChange
         end
       end
     end
@@ -445,7 +477,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           )
           ColWidths = (
             200
-            222
+            205
           )
         end
       end

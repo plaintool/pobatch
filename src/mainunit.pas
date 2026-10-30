@@ -455,6 +455,9 @@ type
     FSortColumn: integer;
     FSplitRatio: double;
     FWordWrap: boolean;
+    FRememberLastFile: boolean;
+    FSwitchToTable: boolean;
+    FLastFile: string;
     FMaxRowHeight: integer;
     FTranslatorName: string;
     FTranslatorEmail: string;
@@ -538,6 +541,9 @@ type
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write SetWordWrap;
     property QACheckOptionsByLang: TObjectDictionary read FQACheckOptionsByLang;
+    property RememberLastFile: boolean read FRememberLastFile write FRememberLastFile;
+    property SwitchToTable: boolean read FSwitchToTable write FSwitchToTable;
+    property LastFile: string read FLastFile write FLastFile;
     // Exposed for TBatchOp
     property FileName: string read FFileName write FFileName;
     property PoFile: TPoFile read FPoFile;
@@ -641,6 +647,9 @@ begin
   FCommandLineFile := string.Empty;
   FTranslatorName := string.Empty;
   FTranslatorEmail := string.Empty;
+  FRememberLastFile := True;
+  FSwitchToTable := True;
+  FLastFile := string.Empty;
   FSortColumn := -1;
   FSortOrder := soAscending;
   FLastPathIndex := -1;
@@ -786,10 +795,16 @@ begin
     // Load Path
     Application.QueueAsyncCall(@LoadPath, 0);
 
-    // Open file from command line if specified, otherwise start with a new document
+    // Open file from command line if specified, otherwise restore the last
+    // opened file, or start with a new document
     if FCommandLineFile <> string.Empty then
     begin
       if not OpenFile(FCommandLineFile) then
+        NewFile;
+    end
+    else if FRememberLastFile and (FLastFile <> string.Empty) and FileExists(FLastFile) then
+    begin
+      if not OpenFile(FLastFile) then
         NewFile;
     end
     else
@@ -3178,7 +3193,8 @@ begin
     if FPathMouseSelecting then
     begin
       FPathMouseSelecting := False;
-      if Grid.CanFocus then Grid.SetFocus;
+      if FSwitchToTable and Grid.CanFocus then
+        Grid.SetFocus;
       Grid.Invalidate;
     end;
 
