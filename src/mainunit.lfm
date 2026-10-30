@@ -18,59 +18,10 @@ object formPoBatch: TformPoBatch
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  object PanelFilter: TPanel
-    Left = 1
-    Height = 20
-    Top = 0
-    Width = 734
-    Align = alTop
-    AutoSize = True
-    BorderSpacing.Left = 1
-    BorderSpacing.Right = 5
-    BevelOuter = bvNone
-    ClientHeight = 20
-    ClientWidth = 734
-    ParentBackground = False
-    TabOrder = 1
-    object Filter: TEdit
-      Left = 5
-      Height = 20
-      Top = 0
-      Width = 711
-      Align = alClient
-      BorderSpacing.Left = 5
-      BorderStyle = bsNone
-      Constraints.MinHeight = 20
-      TabOrder = 0
-      TextHint = 'Type to filter...'
-      OnChange = FilterChange
-    end
-    object btnFilterClear: TSpeedButton
-      Left = 716
-      Height = 20
-      Top = 0
-      Width = 18
-      Align = alRight
-      Flat = True
-      Glyph.Data = {
-        32010000424D3201000000000000360000002800000009000000090000000100
-        180000000000FC00000064000000640000000000000000000000FFFFFFC9C9C9
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC9C9C9FFFFFF00F1F1F15C5C5CADADADFF
-        FFFFFFFFFFFFFFFFADADAD5C5C5CF1F1F100FFFFFFF1F1F15C5C5CADADADFFFF
-        FFADADAD5C5C5CF1F1F1FFFFFF00FFFFFFFFFFFFF1F1F15C5C5CADADAD5C5C5C
-        F1F1F1FFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFF1F1F15C5C5CF1F1F1FFFFFFFF
-        FFFFFFFFFF00FFFFFFFFFFFFF1F1F15C5C5CADADAD5C5C5CF1F1F1FFFFFFFFFF
-        FF00FFFFFFF1F1F15C5C5CADADADFFFFFFADADAD5C5C5CF1F1F1FFFFFF00F1F1
-        F15C5C5CADADADFFFFFFFFFFFFFFFFFFADADAD5C5C5CF1F1F100FFFFFFC9C9C9
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC9C9C9FFFFFF00
-      }
-      OnClick = btnFilterClearClick
-    end
-  end
   object ListPath: TListBox
     Left = 5
-    Height = 472
-    Top = 25
+    Height = 492
+    Top = 5
     Width = 144
     Align = alLeft
     BorderSpacing.Left = 5
@@ -80,7 +31,7 @@ object formPoBatch: TformPoBatch
     MultiSelect = True
     PopupMenu = PopupPath
     Style = lbOwnerDrawFixed
-    TabOrder = 2
+    TabOrder = 1
     Visible = False
     OnClick = ListPathClick
     OnDrawItem = ListPathDrawItem
@@ -89,8 +40,8 @@ object formPoBatch: TformPoBatch
   end
   object SplitterPath: TSplitter
     Left = 149
-    Height = 477
-    Top = 20
+    Height = 497
+    Top = 0
     Width = 10
     AutoSnap = False
     Color = clBtnFace
@@ -99,20 +50,69 @@ object formPoBatch: TformPoBatch
   end
   object PanelClient: TPanel
     Left = 159
-    Height = 472
-    Top = 25
+    Height = 492
+    Top = 5
     Width = 576
     Align = alClient
     BorderSpacing.Top = 5
     BorderSpacing.Right = 5
-    ClientHeight = 472
+    ClientHeight = 492
     ClientWidth = 576
     ParentBackground = False
     TabOrder = 0
+    object PanelFilter: TPanel
+      Left = 2
+      Height = 20
+      Top = 1
+      Width = 568
+      Align = alTop
+      AutoSize = True
+      BorderSpacing.Left = 1
+      BorderSpacing.Right = 5
+      BevelOuter = bvNone
+      ClientHeight = 20
+      ClientWidth = 568
+      ParentBackground = False
+      TabOrder = 6
+      object Filter: TEdit
+        Left = 5
+        Height = 20
+        Top = 0
+        Width = 545
+        Align = alClient
+        BorderSpacing.Left = 5
+        BorderStyle = bsNone
+        Constraints.MinHeight = 20
+        TabOrder = 0
+        TextHint = 'Type to filter...'
+        OnChange = FilterChange
+      end
+      object btnFilterClear: TSpeedButton
+        Left = 550
+        Height = 20
+        Top = 0
+        Width = 18
+        Align = alRight
+        Flat = True
+        Glyph.Data = {
+          32010000424D3201000000000000360000002800000009000000090000000100
+          180000000000FC00000064000000640000000000000000000000FFFFFFC9C9C9
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC9C9C9FFFFFF00F1F1F15C5C5CADADADFF
+          FFFFFFFFFFFFFFFFADADAD5C5C5CF1F1F100FFFFFFF1F1F15C5C5CADADADFFFF
+          FFADADAD5C5C5CF1F1F1FFFFFF00FFFFFFFFFFFFF1F1F15C5C5CADADAD5C5C5C
+          F1F1F1FFFFFFFFFFFF00FFFFFFFFFFFFFFFFFFF1F1F15C5C5CF1F1F1FFFFFFFF
+          FFFFFFFFFF00FFFFFFFFFFFFF1F1F15C5C5CADADAD5C5C5CF1F1F1FFFFFFFFFF
+          FF00FFFFFFF1F1F15C5C5CADADADFFFFFFADADAD5C5C5CF1F1F1FFFFFF00F1F1
+          F15C5C5CADADADFFFFFFFFFFFFFFFFFFADADAD5C5C5CF1F1F100FFFFFFC9C9C9
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC9C9C9FFFFFF00
+        }
+        OnClick = btnFilterClearClick
+      end
+    end
     object GridHeaders: TStringGrid
       Left = 1
       Height = 80
-      Top = 1
+      Top = 21
       Width = 574
       Align = alTop
       BorderStyle = bsNone
@@ -152,7 +152,7 @@ object formPoBatch: TformPoBatch
       Cursor = crVSplit
       Left = 1
       Height = 10
-      Top = 81
+      Top = 101
       Width = 574
       Align = alTop
       AutoSnap = False
@@ -164,7 +164,7 @@ object formPoBatch: TformPoBatch
     object Grid: TStringGrid
       Left = 1
       Height = 130
-      Top = 91
+      Top = 111
       Width = 574
       Align = alClient
       BorderStyle = bsNone
@@ -242,7 +242,7 @@ object formPoBatch: TformPoBatch
     object PanelCheck: TPanel
       Left = 1
       Height = 40
-      Top = 221
+      Top = 241
       Width = 574
       Align = alBottom
       BevelOuter = bvNone
@@ -337,7 +337,7 @@ object formPoBatch: TformPoBatch
       Cursor = crVSplit
       Left = 1
       Height = 10
-      Top = 261
+      Top = 281
       Width = 574
       Align = alBottom
       AutoSnap = False
@@ -349,7 +349,7 @@ object formPoBatch: TformPoBatch
     object Pages: TPageControl
       Left = 1
       Height = 200
-      Top = 271
+      Top = 291
       Width = 574
       ActivePage = PageTranslate
       Align = alBottom
