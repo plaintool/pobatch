@@ -6,4 +6,4 @@ MimeType=application/x-pobatch
 Terminal=false
 Icon=x-pobatch
 Categories=Development;
-StartupWMClass=Padxml
+StartupWMClass=PoBatch

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-pobatch">
-    <comment>Pad file</comment>
-    <generic-icon name="paddoc"/>
+    <comment>Po files</comment>
+    <generic-icon name="podoc"/>
 	<sub-class-of type="text/plain"/>
-    <glob pattern="*.pad"/>
+    <glob pattern="*.po"/>
+    <glob pattern="*.pot"/>
   </mime-type>
 </mime-info>
