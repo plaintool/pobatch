@@ -619,6 +619,46 @@ const
   APP_NAME = 'pobatch';
   AppName = 'PoBatch';
 
+  {%Region -fold Resource Strings}
+resourcestring
+  rpotnotfound = 'POT file not found: %s';
+  rnopofilesfound = 'No .po files found in the selected directory!';
+
+  rdiscardchanges = 'Do you want to discard all unsaved changes?';
+
+  rpluralformtitle = 'Plural form';
+  rpluralformenter = 'Enter plural form';
+  rdeletepluraltitle = 'Delete plural form?';
+  rdeletepluralconfirm = 'Are you sure you want to delete this plural form?';
+
+  rdeleterowtitle = 'Delete row';
+  rdeleterowconfirm = 'Are you sure you want to delete the selected row?';
+  rdeleterowsconfirm = 'Delete selected rows?';
+
+  rsavechangestitle = 'Save Changes';
+  rsavechangesmsg = 'The document "%s" has been modified.'#13#10'Do you want to save your changes?';
+  runtitled = 'Untitled';
+  rpathuntitled = '%s - Untitled';
+
+  rerrortitle = 'Error';
+  rerrornotexist = 'File does not exist:'#13#10'%s';
+  rerrornotexistine = 'File does not exist: %s';
+  ropenfiletitle = 'Open File';
+  ropenfileunknown = 'The file "%s" has an unrecognized extension.'#13#10'Do you want to try opening it anyway?';
+  rlargefiletitle = 'Large File';
+  rlargefileconfirm = 'The file is very large (%d MB).'#13#10'Opening it may take a while. Continue?';
+  rloaderrortitle = 'Load Error';
+  rloaderrormsg = 'Error loading file:'#13#10'%s'#13#10'File may be corrupted or in wrong format.';
+  rerrorinvalidfilename = 'Invalid file name';
+  rsaveerrortitle = 'Save Error';
+  rsaveerrormsg = 'Error saving file:'#13#10'%s';
+
+  rrequiredparamtitle = 'Enter the required parameter';
+  rrequiredparamprompt = 'Enter %s';
+
+  rqacheckscaption = 'QA Checks';
+  {%EndRegion}
+
 implementation
 
 uses FormSettings, FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper,
@@ -999,7 +1039,7 @@ begin
   PotFileName := dialogOpen.FileName;
   if not FileExists(PotFileName) then
   begin
-    ShowMessageFmt('POT file not found: %s', [PotFileName]);
+    ShowMessageFmt(rpotnotfound, [PotFileName]);
     Exit;
   end;
 
@@ -1113,7 +1153,7 @@ begin
   begin
     if not OpenPath(dialogPath.FileName, True) then
     begin
-      ShowMessage('No .po files found in the selected directory!');
+      ShowMessage(rnopofilesfound);
       Exit;
     end;
     FPath := dialogPath.FileName;
@@ -1138,7 +1178,7 @@ begin
   if not Changed then
     Exit;
 
-  if MessageDlg('Do you want to discard all unsaved changes?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+  if MessageDlg(rdiscardchanges, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
 
   Grid.EditorMode := False;
@@ -1494,9 +1534,9 @@ begin
   OldValue := Value;
   Grid.EditorMode := False;
 
-  InputQueryLite('Plural form', 'Enter plural form', Value);
-  if (Value = string.empty) and ((OldValue = string.Empty) or (MessageDlg('Delete plural form?',
-    'Are you sure you want to delete this plural form?', mtConfirmation, mbYesNo, 0) <> mrYes)) then
+  InputQueryLite(rpluralformtitle, rpluralformenter, Value);
+  if (Value = string.empty) and ((OldValue = string.Empty) or (MessageDlg(rdeletepluraltitle, rdeletepluralconfirm,
+    mtConfirmation, mbYesNo, 0) <> mrYes)) then
     Exit;
 
   if (OldValue <> Value) then
@@ -1719,7 +1759,7 @@ begin
     if SelRow < GridAny.FixedRows then Exit;
 
     // Ask for confirmation before deleting
-    if MessageDlg('Delete row', 'Are you sure you want to delete the selected row?', mtConfirmation, mbYesNo, 0) <> mrYes then
+    if MessageDlg(rdeleterowtitle, rdeleterowconfirm, mtConfirmation, mbYesNo, 0) <> mrYes then
       Exit;
 
     // Remove the selected row from the GridAny
@@ -1890,7 +1930,7 @@ begin
   // Delete rows via Ctrl+Del (only when not in translation-only mode)
   if not AEditTranslationOnly.Checked and (ssCtrl in Shift) and (Key = VK_DELETE) then
   begin
-    if MessageDlg('Delete selected rows?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    if MessageDlg(rdeleterowsconfirm, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
 
     // Collect persistent entry indexes from column 0 of the selected rows
@@ -2804,12 +2844,11 @@ var
   FileNameDisplay: string;
 begin
   if FFileName = string.Empty then
-    FileNameDisplay := 'Untitled'
+    FileNameDisplay := runtitled
   else
     FileNameDisplay := ExtractFileName(FFileName);
 
-  Result := MessageDlg('Save Changes', 'The document "' + FileNameDisplay + '" has been modified.' +
-    sLineBreak + 'Do you want to save your changes?', mtConfirmation, [mbYes, mbNo, mbCancel], 0);
+  Result := MessageDlg(rsavechangestitle, Format(rsavechangesmsg, [FileNameDisplay]), mtConfirmation, [mbYes, mbNo, mbCancel], 0);
 end;
 
 procedure TformPoBatch.HandleCommandLineParameters;
@@ -2874,7 +2913,7 @@ begin
   // Check if file exists
   if not FileExists(AFileName) then
   begin
-    MessageDlg('Error', 'File does not exist:' + sLineBreak + AFileName,
+    MessageDlg(rerrortitle, Format(rerrornotexist, [AFileName]),
       mtError, [mbOK], 0);
     Exit;
   end;
@@ -2893,8 +2932,7 @@ begin
   end;
 
   // If file extension is not in our list, ask for confirmation
-  if MessageDlg('Open File', 'The file "' + ExtractFileName(AFileName) + '" has an unrecognized extension.' +
-    sLineBreak + 'Do you want to try opening it anyway?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  if MessageDlg(ropenfiletitle, Format(ropenfileunknown, [ExtractFileName(AFileName)]), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
     Result := True;
   end;
@@ -3218,7 +3256,7 @@ begin
 
   if not FileExists(AFileName) then
   begin
-    MessageDlg('Error', 'File does not exist: ' + AFileName, mtError, [mbOK], 0);
+    MessageDlg(rerrortitle, Format(rerrornotexistine, [AFileName]), mtError, [mbOK], 0);
     Exit;
   end;
 
@@ -3226,8 +3264,8 @@ begin
   try
     if FileSize(AFileName) > 50 * 1024 * 1024 then // 50 MB limit
     begin
-      if MessageDlg('Large File', 'The file is very large (' + IntToStr(FileSize(AFileName) div 1024 div 1024) +
-        ' MB).' + sLineBreak + 'Opening it may take a while. Continue?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+      if MessageDlg(rlargefiletitle, Format(rlargefileconfirm, [FileSize(AFileName) div 1024 div 1024]),
+        mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
         Exit;
     end;
   except
@@ -3272,7 +3310,7 @@ begin
     except
       on E: Exception do
       begin
-        MessageDlg('Load Error', 'Error loading file:' + sLineBreak + E.Message + sLineBreak + 'File may be corrupted or in wrong format.',
+        MessageDlg(rloaderrortitle, Format(rloaderrormsg, [E.Message]),
           mtError, [mbOK], 0);
         Result := False;
       end;
@@ -3297,7 +3335,7 @@ begin
   // Validate filename
   if Trim(AFileName) = string.Empty then
   begin
-    MessageDlg('Error', 'Invalid file name', mtError, [mbOK], 0);
+    MessageDlg(rerrortitle, rerrorinvalidfilename, mtError, [mbOK], 0);
     Exit;
   end;
 
@@ -3372,7 +3410,7 @@ begin
       except
         on E: Exception do
         begin
-          MessageDlg('Save Error', 'Error saving file:' + sLineBreak + E.Message,
+          MessageDlg(rsaveerrortitle, Format(rsaveerrormsg, [E.Message]),
             mtError, [mbOK], 0);
           Result := False;
         end;
@@ -3455,9 +3493,9 @@ begin
   begin
     // No file loaded – show path (if any) with "Untitled"
     if FPath <> string.Empty then
-      BaseTitle := FPath + ' - Untitled'
+      BaseTitle := Format(rpathuntitled, [FPath])
     else
-      BaseTitle := 'Untitled';
+      BaseTitle := runtitled;
   end
   else
   begin
@@ -4148,7 +4186,7 @@ begin
     SavedCursor := Screen.Cursor;
     Screen.Cursor := crDefault;
     try
-      if not InputQueryLite('Enter the required parameter', 'Enter' + ' ' + AName, Value) then
+      if not InputQueryLite(rrequiredparamtitle, Format(rrequiredparamprompt, [AName]), Value) then
       begin
         ResultOk := False;
         Exit;
@@ -4656,10 +4694,10 @@ begin
   // Show the language code in the menu caption, or a neutral label when
   // the current document has no language code
   if FLanguage <> string.Empty then
-    LangSuffix := ' (' + FLanguage + ')'
+    LangSuffix := Format(' (%s)', [FLanguage])
   else
     LangSuffix := ' (*)';
-  MenuQAChecks.Caption := 'QA Checks' + LangSuffix;
+  MenuQAChecks.Caption := rqacheckscaption + LangSuffix;
 
   // The submenu with individual toggles is only usable when the master
   // switch is on

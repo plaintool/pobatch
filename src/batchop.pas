@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------
-//  PoBatch Â© 2026 by Alexander Tverskoy
+//  PoBatch © 2026 by Alexander Tverskoy
 //  https://github.com/plaintool/pobatch
 //  Licensed under the GNU General Public License, Version 3 (GPL-3.0)
 //  You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
@@ -55,6 +55,91 @@ type
     class procedure ClearIdenticalTranslations(AForm: TformPoBatch);
     class procedure Translate(AForm: TformPoBatch; ASkipTranslated: boolean = False; AOnlySelected: boolean = True);
   end;
+
+  {%Region -fold Resource Strings}
+resourcestring
+  rnopofilesselected = 'No PO files selected.';
+  rfilenotfound = 'File not found: %s';
+  rerrorprocessingfile = 'Error processing file "%s": %s';
+  rmorefiles = '... and %d more file(s)';
+  rmorelines = '... and %d more line(s)';
+
+  rcopysourceemptyconfirm = 'Copy source text to empty translations in the following %d file(s)?'#13#10'This action cannot be undone within the application.'#13#10#13#10'%s';
+  rcopysourceemptytitle = 'Copy source to empty';
+  rdonetranslationsfilled = 'Done. %d translation(s) filled from source.';
+
+  rclearinvalidtitle = 'Clear invalid translations';
+  rclearfuzzyconfirm = 'Clear translations of fuzzy entries in the following %d file(s)?'#13#10'This action cannot be undone within the application.'#13#10#13#10'%s';
+  rclearalltitle = 'Clear all translations';
+  rclearallconfirm = 'Clear ALL translations in the following %d file(s)?'#13#10'Headers are preserved, all msgstr values are removed.'#13#10'This action cannot be undone within the application.'#13#10#13#10'%s';
+  rdoneinvalidcleared = 'Done. %d invalid translation(s) cleared.';
+  rdonetranslationscleared = 'Done. %d translation(s) cleared.';
+
+  rmarkvalidconfirm = 'Mark the following %d file(s) as valid?'#13#10'This will remove the "fuzzy" flag from all entries.'#13#10'This action cannot be undone within the application.'#13#10#13#10'%s';
+  rremovefuzzytitle = 'Remove fuzzy flag';
+  rmarkvaliddone = 'Selected files have been marked as valid. All "fuzzy" flags were removed.';
+
+  rnosyncselected = 'No PO files selected for synchronization.';
+  rsyncconfirm = 'Synchronize the following %d file(s) with'#13#10'their matching POT files?'#13#10'This action cannot be undone within the application.'#13#10#13#10'%s';
+  rconfirmsynctitle = 'Confirm synchronization';
+  rerrorsyncfile = 'Error synchronizing file "%s": %s';
+  rsyncdoneskipped = 'Synchronization complete. %d file(s) skipped (no matching POT).';
+  rsyncdone = 'Synchronization complete.';
+
+  rselectrenamemessage = 'Select file(s) to rename!';
+  rnameconsoleerror = 'Error: --name is required in console mode';
+  rrenametitle = 'Rename files';
+  rrenameprompt = 'Enter new base name:';
+  rrenameconfirm = 'Rename the following %d file(s) using base name "%s"?'#13#10#13#10'%s';
+  rconfirmrenametitle = 'Confirm rename';
+  rrenamefailed = 'Failed to rename: %s';
+
+  rselectdeletemessage = 'Select file to delete!';
+  rdeletetitle = 'Delete file';
+  rdeletesingleconfirm = 'Are you sure you want to delete the selected file?';
+  rdeletemultipleconfirm = 'Are you sure you want to delete the following %d file(s)?'#13#10#13#10'%s';
+  rdeletefilestitle = 'Delete files';
+
+  rnopotforfile = 'No matching POT file found for: %s';
+  rpotconsoleerror = 'Error: --pot is required in console mode';
+  rpotnotfound = 'POT file not found: %s';
+  rlangsconsoleerror = 'Error: --langs is required in console mode';
+  rfilesexisttitle = 'Files exist';
+  rfilesexistconfirm = 'The following files already exist:'#13#10#13#10'%s'#13#10'Overwrite them?';
+
+  rtranslationconfignotselected = 'Translation configuration is not selected. Please choose a translation service first.';
+  rtranslatemissingconfirm = 'Translate missing translations in the following %d file(s)?'#13#10'This action cannot be undone within the application.'#13#10#13#10'%s';
+  rtranslatemissingtitle = 'Translate missing';
+  rfilelangnotset = 'File "%s" skipped: target language is not set in the PO header or file name.';
+  rtranslationlinecount = 'File "%s": translation service returned %d lines instead of %d; single-line entries were skipped.'#13#10#13#10'Response:'#13#10'%s';
+  rfiletranslationnone = 'File "%s" skipped: no translations were produced for language "%s".';
+  rdonetranslationsadded = 'Done. %d translation(s) added in %d file(s). %d file(s) skipped.';
+
+  rsynccurrentconfirm = 'Synchronize current file'#13#10'  %s'#13#10'with reference POT'#13#10'  %s ?';
+  rerrorsynccurrent = 'Error synchronizing file: %s';
+
+  rmarkvalidgridtitle = 'Mark as Valid';
+  rmarkvalidgridconfirm = 'Mark %d selected entries as valid?'#13#10'This will remove the "fuzzy" flag from the selected entries.';
+  rnofuzzyentries = 'No fuzzy entries in the selection.';
+  rmarkedvalidcount = '%d entries marked as valid.';
+
+  rcopysourcetotranslationconfirm = 'Copy source text to translations in the selected row(s)?';
+  rcopiedtranslationscount = '%d translations were copied.';
+  rclearidenticalconfirm = 'Clear translations that are identical to the source text in the selected row(s)?';
+  rclearedtranslationscount = '%d translations were cleared.';
+
+  rtargetlangnotset = 'Target language is not set. Please specify the Language header in the PO file.';
+  rtranslatemissingselected = 'Translate missing translations in %d selected entries?';
+  rtranslateselected = 'Translate %d selected entries?';
+  rtranslateallmissing = 'Translate all missing translations in the current file?';
+  rtranslateall = 'Translate all entries in the current file?';
+  rnothingtranslatedall = 'Nothing to translate: all entries already have translations.';
+  rnothingtranslated = 'Nothing to translate.';
+  rtranslationerror = 'Translation error: %s';
+  rtranslationlinecountgrid = 'Translation service returned %d lines instead of %d; single-line entries were skipped.'#13#10#13#10'Response:'#13#10'%s';
+  rtranslatedoneskipped = 'Translation complete. %d entries updated, %d skipped.';
+  rtranslatedone = 'Translation complete. %d entries updated.';
+  {%EndRegion}
 
 implementation
 
@@ -158,7 +243,7 @@ begin
 
   if selCount = 0 then
   begin
-    ReportMessage('No PO files selected.', AConfirm);
+    ReportMessage(rnopofilesselected, AConfirm);
     Exit;
   end;
 
@@ -169,12 +254,11 @@ begin
     if i < 10 then
       fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
     else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
   end;
 
-  msg := 'Copy source text to empty translations in the following ' + IntToStr(selCount) + ' file(s)?' +
-    sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if AConfirm and (MessageDlg('Copy source to empty', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+  msg := Format(rcopysourceemptyconfirm, [selCount, fileList]);
+  if AConfirm and (MessageDlg(rcopysourceemptytitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Ask to save the current file if modified - abort if user cancels
@@ -191,7 +275,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -273,7 +357,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
+            ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -293,7 +377,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ReportSuccessFmt(AForm, 'Done. %d translation(s) filled from source.', [TotalCopied], AConfirm);
+  ReportSuccessFmt(AForm, rdonetranslationsfilled, [TotalCopied], AConfirm);
 end;
 
 class procedure TBatchOp.ClearInFiles(AForm: TformPoBatch; AFuzzyOnly: boolean = True; AConfirm: boolean = True);
@@ -320,7 +404,7 @@ begin
 
   if selCount = 0 then
   begin
-    ReportMessage('No PO files selected.', AConfirm);
+    ReportMessage(rnopofilesselected, AConfirm);
     Exit;
   end;
 
@@ -331,21 +415,18 @@ begin
     if i < 10 then
       fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
     else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
   end;
 
   if AFuzzyOnly then
   begin
-    DialogTitle := 'Clear invalid translations';
-    msg := 'Clear translations of fuzzy entries in the following ' + IntToStr(selCount) + ' file(s)?' +
-      sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
+    DialogTitle := rclearinvalidtitle;
+    msg := Format(rclearfuzzyconfirm, [selCount, fileList]);
   end
   else
   begin
-    DialogTitle := 'Clear all translations';
-    msg := 'Clear ALL translations in the following ' + IntToStr(selCount) + ' file(s)?' + sLineBreak +
-      'Headers are preserved, all msgstr values are removed.' + sLineBreak + 'This action cannot be undone within the application.' +
-      sLineBreak + sLineBreak + fileList;
+    DialogTitle := rclearalltitle;
+    msg := Format(rclearallconfirm, [selCount, fileList]);
   end;
 
   if AConfirm and (MessageDlg(DialogTitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
@@ -365,7 +446,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -416,7 +497,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
+            ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -437,9 +518,9 @@ begin
   end;
 
   if AFuzzyOnly then
-    ReportSuccessFmt(AForm, 'Done. %d invalid translation(s) cleared.', [TotalCleared], AConfirm)
+    ReportSuccessFmt(AForm, rdoneinvalidcleared, [TotalCleared], AConfirm)
   else
-    ReportSuccessFmt(AForm, 'Done. %d translation(s) cleared.', [TotalCleared], AConfirm);
+    ReportSuccessFmt(AForm, rdonetranslationscleared, [TotalCleared], AConfirm);
 end;
 
 class procedure TBatchOp.MarkFilesValid(AForm: TformPoBatch; AConfirm: boolean = True);
@@ -463,7 +544,7 @@ begin
 
   if selCount = 0 then
   begin
-    ReportMessage('No PO files selected.', AConfirm);
+    ReportMessage(rnopofilesselected, AConfirm);
     Exit;
   end;
 
@@ -474,13 +555,11 @@ begin
     if i < 10 then
       fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
     else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
   end;
 
-  msg := 'Mark the following ' + IntToStr(selCount) + ' file(s) as valid?' + sLineBreak +
-    'This will remove the "fuzzy" flag from all entries.' + sLineBreak + 'This action cannot be undone within the application.' +
-    sLineBreak + sLineBreak + fileList;
-  if AConfirm and (MessageDlg('Remove fuzzy flag', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+  msg := Format(rmarkvalidconfirm, [selCount, fileList]);
+  if AConfirm and (MessageDlg(rremovefuzzytitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Save current file if modified - abort if user cancels
@@ -497,7 +576,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -524,7 +603,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
+            ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;    // skip status update for this file
           end;
@@ -544,7 +623,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ReportSuccess(AForm, 'Selected files have been marked as valid. All "fuzzy" flags were removed.', AConfirm);
+  ReportSuccess(AForm, rmarkvaliddone, AConfirm);
 end;
 
 class procedure TBatchOp.SyncFilesWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
@@ -574,7 +653,7 @@ begin
 
   if selCount = 0 then
   begin
-    ReportMessage('No PO files selected for synchronization.', AConfirm);
+    ReportMessage(rnosyncselected, AConfirm);
     Exit;
   end;
 
@@ -585,12 +664,11 @@ begin
     if i < 10 then
       fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
     else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
   end;
 
-  msg := 'Synchronize the following ' + IntToStr(selCount) + ' file(s) with' + sLineBreak + 'their matching POT files?' +
-    sLineBreak + 'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if AConfirm and (MessageDlg('Confirm synchronization', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+  msg := Format(rsyncconfirm, [selCount, fileList]);
+  if AConfirm and (MessageDlg(rconfirmsynctitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Process each selected file using the saved indices
@@ -603,7 +681,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -632,7 +710,7 @@ begin
           begin
             // Show the error without the hourglass cursor
             Screen.Cursor := crDefault;
-            ReportMessageFmt('Error synchronizing file "%s": %s', [FileName, E.Message], AConfirm);
+            ReportMessageFmt(rerrorsyncfile, [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -653,10 +731,9 @@ begin
   end;
 
   if SkippedCount > 0 then
-    ReportSuccessFmt(AForm, 'Synchronization complete. %d file(s) skipped (no matching POT).', [SkippedCount],
-      AConfirm)
+    ReportSuccessFmt(AForm, rsyncdoneskipped, [SkippedCount], AConfirm)
   else
-    ReportSuccess(AForm, 'Synchronization complete.', AConfirm);
+    ReportSuccess(AForm, rsyncdone, AConfirm);
 end;
 
 class procedure TBatchOp.RenameFiles(AForm: TformPoBatch; const ANewBaseName: string = ''; AConfirm: boolean = True);
@@ -683,7 +760,7 @@ begin
 
   if selCount = 0 then
   begin
-    ReportMessage('Select file(s) to rename!', AConfirm);
+    ReportMessage(rselectrenamemessage, AConfirm);
     Exit;
   end;
 
@@ -709,10 +786,10 @@ begin
   begin
     if not AConfirm then
     begin
-      ReportMessage('Error: --name is required in console mode', AConfirm);
+      ReportMessage(rnameconsoleerror, AConfirm);
       Exit;
     end;
-    InputQueryLite('Rename files', 'Enter new base name:', DefaultName);
+    InputQueryLite(rrenametitle, rrenameprompt, DefaultName);
     DefaultName := Trim(DefaultName);
   end;
 
@@ -726,12 +803,11 @@ begin
     if i < 10 then
       fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
     else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
   end;
 
-  msg := 'Rename the following ' + IntToStr(selCount) + ' file(s) using base name "' + DefaultName + '"?' +
-    sLineBreak + sLineBreak + fileList;
-  if AConfirm and (MessageDlg('Confirm rename', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+  msg := Format(rrenameconfirm, [selCount, DefaultName, fileList]);
+  if AConfirm and (MessageDlg(rconfirmrenametitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Rename each selected file on disk keeping its language code and extension
@@ -759,7 +835,7 @@ begin
       begin
         // Show the warning without the hourglass cursor
         Screen.Cursor := crDefault;
-        ReportMessageFmt('Failed to rename: %s', [FileName], AConfirm);
+        ReportMessageFmt(rrenamefailed, [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -857,15 +933,14 @@ begin
 
   if Count = 0 then
   begin
-    ReportMessage('Select file to delete!', AConfirm);
+    ReportMessage(rselectdeletemessage, AConfirm);
     Exit;
   end;
 
   if Count = 1 then
   begin
     // Single file deletion (original behavior)
-    if AConfirm and (MessageDlg('Delete file', 'Are you sure you want to delete the selected file?', mtConfirmation, mbYesNo, 0) <>
-      mrYes) then
+    if AConfirm and (MessageDlg(rdeletetitle, rdeletesingleconfirm, mtConfirmation, mbYesNo, 0) <> mrYes) then
       Exit;
   end
   else
@@ -877,11 +952,11 @@ begin
       if i < 10 then
         fileList := fileList + AForm.PoFiles[selectedIndices[i]] + sLineBreak
       else if i = 10 then
-        fileList := fileList + '... and ' + IntToStr(Count - 10) + ' more file(s)' + sLineBreak;
+        fileList := fileList + Format(rmorefiles, [Count - 10]) + sLineBreak;
     end;
-    msg := 'Are you sure you want to delete the following ' + IntToStr(Count) + ' file(s)?' + sLineBreak + sLineBreak + fileList;
+    msg := Format(rdeletemultipleconfirm, [Count, fileList]);
 
-    if AConfirm and (MessageDlg('Delete files', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+    if AConfirm and (MessageDlg(rdeletefilestitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
       Exit;
   end;
 
@@ -982,7 +1057,7 @@ begin
       PotFileName := FindPotForFile(SelFile);
       if PotFileName = string.Empty then
       begin
-        ReportMessageFmt('No matching POT file found for: %s', [SelFile], AConfirm);
+        ReportMessageFmt(rnopotforfile, [SelFile], AConfirm);
         Exit;
       end;
     end
@@ -991,7 +1066,7 @@ begin
       // No selection - ask the user to pick the source POT file
       if not AConfirm then
       begin
-        ReportMessage('Error: --pot is required in console mode', AConfirm);
+        ReportMessage(rpotconsoleerror, AConfirm);
         Exit;
       end;
       AForm.dialogOpen.FilterIndex := 2;
@@ -1003,7 +1078,7 @@ begin
 
   if not FileExists(PotFileName) then
   begin
-    ReportMessageFmt('POT file not found: %s', [PotFileName], AConfirm);
+    ReportMessageFmt(rpotnotfound, [PotFileName], AConfirm);
     Exit;
   end;
 
@@ -1022,7 +1097,7 @@ begin
   begin
     if not AConfirm then
     begin
-      ReportMessage('Error: --langs is required in console mode', AConfirm);
+      ReportMessage(rlangsconsoleerror, AConfirm);
       Exit;
     end;
     if not SelectLanguages(Codes, [cqoEditable]) then
@@ -1049,8 +1124,8 @@ begin
   // Confirm overwriting existing files once, for all languages together
   if HasExisting then
   begin
-    if AConfirm and (MessageDlg('Files exist', 'The following files already exist:' + sLineBreak + sLineBreak +
-      ExistingList + sLineBreak + 'Overwrite them?', mtConfirmation, mbYesNo, 0) <> mrYes) then
+    if AConfirm and (MessageDlg(rfilesexisttitle, Format(rfilesexistconfirm, [ExistingList]), mtConfirmation, mbYesNo, 0) <>
+      mrYes) then
       Exit;
   end;
 
@@ -1185,14 +1260,14 @@ begin
 
   if selCount = 0 then
   begin
-    ReportMessage('No PO files selected.', AConfirm);
+    ReportMessage(rnopofilesselected, AConfirm);
     Exit;
   end;
 
   // Reject early when no translation configuration is selected
   if Trim(AForm.Translate.ConfigFile) = string.Empty then
   begin
-    ReportMessage('Translation configuration is not selected. Please choose a translation service first.', AConfirm);
+    ReportMessage(rtranslationconfignotselected, AConfirm);
     Exit;
   end;
 
@@ -1205,12 +1280,11 @@ begin
     if i < 10 then
       fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
     else if i = 10 then
-      fileList := fileList + '... and ' + IntToStr(selCount - 10) + ' more file(s)' + sLineBreak;
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
   end;
 
-  msg := 'Translate missing translations in the following ' + IntToStr(selCount) + ' file(s)?' + sLineBreak +
-    'This action cannot be undone within the application.' + sLineBreak + sLineBreak + fileList;
-  if AConfirm and (MessageDlg('Translate missing', msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+  msg := Format(rtranslatemissingconfirm, [selCount, fileList]);
+  if AConfirm and (MessageDlg(rtranslatemissingtitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Ask to save current file if modified - abort if user cancels
@@ -1233,7 +1307,7 @@ begin
       if not FileExists(FileName) then
       begin
         Screen.Cursor := crDefault;
-        ReportMessageFmt('File not found: %s', [FileName], AConfirm);
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
         Screen.Cursor := crHourGlass;
         Continue;
       end;
@@ -1255,8 +1329,7 @@ begin
           begin
             Inc(SkippedFiles);
             Screen.Cursor := crDefault;
-            ReportMessageFmt('File "%s" skipped: target language is not set in the PO header or file name.',
-              [ExtractFileName(FileName)], AConfirm);
+            ReportMessageFmt(rfilelangnotset, [ExtractFileName(FileName)], AConfirm);
             Screen.Cursor := crHourGlass;
             Continue;
           end;
@@ -1357,11 +1430,9 @@ begin
                   ResponseSnippet := ResponseSnippet + ResponseLines[SnippetIdx];
                 end;
                 if ResponseLines.Count > 20 then
-                  ResponseSnippet := ResponseSnippet + sLineBreak + '... and ' + IntToStr(ResponseLines.Count - 20) +
-                    ' more line(s)';
-                ReportMessageFmt('File "%s": translation service returned %d lines instead of %d; ' +
-                  'single-line entries were skipped.' + sLineBreak + sLineBreak + 'Response:' +
-                  sLineBreak + ResponseSnippet, [ExtractFileName(FileName), ResponseLines.Count, ChunkSize], AConfirm);
+                  ResponseSnippet := ResponseSnippet + sLineBreak + Format(rmorelines, [ResponseLines.Count - 20]);
+                ReportMessageFmt(rtranslationlinecount,
+                  [ExtractFileName(FileName), ResponseLines.Count, ChunkSize, ResponseSnippet], AConfirm);
                 Screen.Cursor := crHourGlass;
               end;
 
@@ -1401,15 +1472,14 @@ begin
           begin
             Inc(SkippedFiles);
             Screen.Cursor := crDefault;
-            ReportMessageFmt('File "%s" skipped: no translations were produced for language "%s".',
-              [ExtractFileName(FileName), FileLang], AConfirm);
+            ReportMessageFmt(rfiletranslationnone, [ExtractFileName(FileName), FileLang], AConfirm);
             Screen.Cursor := crHourGlass;
           end;
         except
           on E: Exception do
           begin
             Screen.Cursor := crDefault;
-            ReportMessageFmt('Error processing file "%s": %s', [FileName, E.Message], AConfirm);
+            ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
             Screen.Cursor := crHourGlass;
           end;
         end;
@@ -1425,7 +1495,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ReportSuccessFmt(AForm, 'Done. %d translation(s) added in %d file(s). %d file(s) skipped.',
+  ReportSuccessFmt(AForm, rdonetranslationsadded,
     [TotalTranslated, FilesTranslated, SkippedFiles], AConfirm);
 end;
 
@@ -1451,14 +1521,13 @@ begin
 
   if not FileExists(PotFileName) then
   begin
-    ReportMessageFmt('POT file not found: %s', [PotFileName], AConfirm);
+    ReportMessageFmt(rpotnotfound, [PotFileName], AConfirm);
     Exit;
   end;
 
   // Confirm synchronization
-  Msg := 'Synchronize current file' + sLineBreak + '  ' + AForm.FileName + sLineBreak + 'with reference POT' +
-    sLineBreak + '  ' + PotFileName + ' ?';
-  if AConfirm and (MessageDlg('Confirm synchronization', Msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+  Msg := Format(rsynccurrentconfirm, [AForm.FileName, PotFileName]);
+  if AConfirm and (MessageDlg(rconfirmsynctitle, Msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
     Exit;
 
   // Perform synchronization directly on the already loaded FPoFile object
@@ -1471,7 +1540,7 @@ begin
       begin
         // Show the error dialog without the hourglass cursor
         Screen.Cursor := crDefault;
-        ReportMessageFmt('Error synchronizing file: %s', [E.Message], AConfirm);
+        ReportMessageFmt(rerrorsynccurrent, [E.Message], AConfirm);
         Exit;
       end;
     end;
@@ -1521,8 +1590,8 @@ begin
     Exit;
 
   // Ask for confirmation
-  if MessageDlg('Mark as Valid', Format('Mark %d selected entries as valid?', [EndRow - StartRow + 1]) +
-    sLineBreak + 'This will remove the "fuzzy" flag from the selected entries.', mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+  if MessageDlg(rmarkvalidgridtitle, Format(rmarkvalidgridconfirm, [EndRow - StartRow + 1]), mtConfirmation, mbYesNo, 0) <> mrYes then
+    Exit;
 
   Screen.Cursor := crHourGlass;
   try
@@ -1552,7 +1621,7 @@ begin
     if MarkedCount = 0 then
     begin
       Screen.Cursor := crDefault;
-      ShowMessage('No fuzzy entries in the selection.');
+      ShowMessage(rnofuzzyentries);
       Exit;
     end;
 
@@ -1569,7 +1638,7 @@ begin
 
     Screen.Cursor := crDefault;
     if AForm.ShowSuccess then
-      ShowMessageFmt('%d entries marked as valid.', [MarkedCount]);
+      ShowMessageFmt(rmarkedvalidcount, [MarkedCount]);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -1581,7 +1650,7 @@ var
   CopiedCount: integer;
   StartRow, EndRow: integer;
 begin
-  if MessageDlg('Copy source text to translations in the selected row(s)?', mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+  if MessageDlg(rcopysourcetotranslationconfirm, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
 
   CopiedCount := 0;
@@ -1617,7 +1686,7 @@ begin
 
   if AForm.ShowSuccess then
     MessageDlg(
-      Format('%d translations were copied.', [CopiedCount]),
+      Format(rcopiedtranslationscount, [CopiedCount]),
       mtInformation,
       [mbOK],
       0
@@ -1632,8 +1701,7 @@ var
   ReplacedCount: integer;
   StartRow, EndRow: integer;
 begin
-  if MessageDlg('Clear translations that are identical to the source text in the selected row(s)?',
-    mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+  if MessageDlg(rclearidenticalconfirm, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
 
   ReplacedCount := 0;
@@ -1672,7 +1740,7 @@ begin
 
   if AForm.ShowSuccess then
     MessageDlg(
-      Format('%d translations were cleared.', [ReplacedCount]),
+      Format(rclearedtranslationscount, [ReplacedCount]),
       mtInformation,
       [mbOK],
       0
@@ -1707,14 +1775,14 @@ begin
   // Reject early when the target language is not known
   if Trim(AForm.Translate.TargetLanguage) = string.Empty then
   begin
-    ShowMessage('Target language is not set. Please specify the Language header in the PO file.');
+    ShowMessage(rtargetlangnotset);
     Exit;
   end;
 
   // Reject early when no translation configuration is selected
   if Trim(AForm.Translate.ConfigFile) = string.Empty then
   begin
-    ShowMessage('Translation configuration is not selected. Please choose a translation service first.');
+    ShowMessage(rtranslationconfignotselected);
     Exit;
   end;
 
@@ -1749,16 +1817,16 @@ begin
   if AOnlySelected then
   begin
     if ASkipTranslated then
-      ConfirmMsg := Format('Translate missing translations in %d selected entries?', [EndRow - StartRow + 1])
+      ConfirmMsg := Format(rtranslatemissingselected, [EndRow - StartRow + 1])
     else
-      ConfirmMsg := Format('Translate %d selected entries?', [EndRow - StartRow + 1]);
+      ConfirmMsg := Format(rtranslateselected, [EndRow - StartRow + 1]);
   end
   else
   begin
     if ASkipTranslated then
-      ConfirmMsg := 'Translate all missing translations in the current file?'
+      ConfirmMsg := rtranslateallmissing
     else
-      ConfirmMsg := 'Translate all entries in the current file?';
+      ConfirmMsg := rtranslateall;
   end;
 
   if MessageDlg(ConfirmMsg, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -1812,9 +1880,9 @@ begin
     if (BatchCount = 0) and (MultiCount = 0) then
     begin
       if ASkipTranslated and (SkippedCount > 0) then
-        ShowMessage('Nothing to translate: all entries already have translations.')
+        ShowMessage(rnothingtranslatedall)
       else
-        ShowMessage('Nothing to translate.');
+        ShowMessage(rnothingtranslated);
       Exit;
     end;
 
@@ -1861,7 +1929,7 @@ begin
             on E: Exception do
             begin
               Screen.Cursor := crDefault;
-              ShowMessageFmt('Translation error: %s', [E.Message]);
+              ShowMessageFmt(rtranslationerror, [E.Message]);
               Exit;
             end;
           end;
@@ -1893,10 +1961,8 @@ begin
               ResponseSnippet := ResponseSnippet + ResponseLines[SnippetIdx];
             end;
             if ResponseLines.Count > 20 then
-              ResponseSnippet := ResponseSnippet + sLineBreak + '... and ' + IntToStr(ResponseLines.Count - 20) +
-                ' more line(s)';
-            ShowMessageFmt('Translation service returned %d lines instead of %d; ' + 'single-line entries were skipped.' +
-              sLineBreak + sLineBreak + 'Response:' + sLineBreak + ResponseSnippet, [ResponseLines.Count, ChunkSize]);
+              ResponseSnippet := ResponseSnippet + sLineBreak + Format(rmorelines, [ResponseLines.Count - 20]);
+            ShowMessageFmt(rtranslationlinecountgrid, [ResponseLines.Count, ChunkSize, ResponseSnippet]);
             Screen.Cursor := crHourGlass;
           end;
 
@@ -1950,10 +2016,10 @@ begin
     if AForm.ShowSuccess then
     begin
       if ASkipTranslated and (SkippedCount > 0) then
-        ShowMessageFmt('Translation complete. %d entries updated, %d skipped.',
+        ShowMessageFmt(rtranslatedoneskipped,
           [TotalTranslated, SkippedCount])
       else
-        ShowMessageFmt('Translation complete. %d entries updated.', [TotalTranslated]);
+        ShowMessageFmt(rtranslatedone, [TotalTranslated]);
     end;
   finally
     ResponseLines.Free;
