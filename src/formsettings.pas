@@ -43,6 +43,7 @@ type
     CheckSwitchToTable: TCheckBox;
     CheckRememberLastFile: TCheckBox;
     CheckProxyAuthentication: TCheckBox;
+    CheckShowSuccess: TCheckBox;
     ClbProxiedConfigs: TCheckListBox;
     ComboProxyMode: TComboBox;
     ComboProxyType: TComboBox;
@@ -119,6 +120,7 @@ type
     FOriginalFont: TFont;
     FOriginalRememberLastFile: boolean;
     FOriginalSwitchToTable: boolean;
+    FOriginalShowSuccess: boolean;
     FOriginalTranslatorName: string;
     FOriginalTranslatorEmail: string;
 
@@ -144,6 +146,7 @@ var
 const
   ColorBevel = $00D9D9D9;
   ColorBevelDark = $00555555;
+  Default = 'default';
 
   {%Region -fold Resource Strings}
 
@@ -311,6 +314,7 @@ begin
   ValueListUserParameters.Strings.Clear;
   CheckRememberLastFile.Checked := True;
   CheckSwitchToTable.Checked := True;
+  CheckShowSuccess.Checked := True;
 
   PanelFont.Font.SetDefault;
   SetPanelFont(PanelFont, PanelFont.Font);
@@ -560,7 +564,7 @@ procedure TformSettingsPoBatch.SetPanelFont(Panel: TPanel; const AFont: TFont);
 var
   CaptionText: string;
 begin
-  if (Trim(AFont.Name) = string.Empty) or (LowerCase(AFont.Name) = 'default') then
+  if (Trim(AFont.Name) = string.Empty) or (LowerCase(AFont.Name) = default) then
     CaptionText := rdefaultfont
   else
     CaptionText := AFont.Name;
@@ -673,6 +677,7 @@ begin
     formPoBatch.TranslatorEmail := EditTranslatorEmail.Text;
     formPoBatch.RememberLastFile := CheckRememberLastFile.Checked;
     formPoBatch.SwitchToTable := CheckSwitchToTable.Checked;
+    formPoBatch.ShowSuccess := CheckShowSuccess.Checked;
 
     formPoBatch.ApplyFont(PanelFont.Font);
 
@@ -693,6 +698,7 @@ begin
   FOriginalFont := formPoBatch.Font;
   FOriginalRememberLastFile := formPoBatch.RememberLastFile;
   FOriginalSwitchToTable := formPoBatch.SwitchToTable;
+  FOriginalShowSuccess := formPoBatch.ShowSuccess;
   FOriginalTranslatorName := formPoBatch.TranslatorName;
   FOriginalTranslatorEmail := formPoBatch.TranslatorEmail;
 
@@ -709,6 +715,7 @@ begin
   EditTranslatorEmail.Text := FOriginalTranslatorEmail;
   CheckRememberLastFile.Checked := FOriginalRememberLastFile;
   CheckSwitchToTable.Checked := FOriginalSwitchToTable;
+  CheckShowSuccess.Checked := FOriginalShowSuccess;
 
   for i := 0 to ClbProxiedConfigs.Count - 1 do
     if formPoBatch.ConfigManager.ConfigFiles.Count > i then

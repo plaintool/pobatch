@@ -29,6 +29,8 @@ type
     // Print to the console when confirmations are off, otherwise show a dialog
     class procedure ReportMessage(const AMessage: string; AConfirm: boolean);
     class procedure ReportMessageFmt(const AFormat: string; const Args: array of const; AConfirm: boolean);
+    class procedure ReportSuccess(AForm: TformPoBatch; const AMessage: string; AConfirm: boolean);
+    class procedure ReportSuccessFmt(AForm: TformPoBatch; const AFormat: string; const Args: array of const; AConfirm: boolean);
   public
     // Resolve the POT file that pairs with AFileName:
     // - POT returns itself
@@ -75,6 +77,20 @@ begin
     ShowMessageFmt(AFormat, Args)
   else
     WriteLn(Format(AFormat, Args));
+end;
+
+class procedure TBatchOp.ReportSuccess(AForm: TformPoBatch; const AMessage: string; AConfirm: boolean);
+begin
+  // Console mode always prints, GUI mode respects the form's success toggle
+  if AConfirm and not AForm.ShowSuccess then Exit;
+  ReportMessage(AMessage, AConfirm);
+end;
+
+class procedure TBatchOp.ReportSuccessFmt(AForm: TformPoBatch; const AFormat: string; const Args: array of const; AConfirm: boolean);
+begin
+  // Console mode always prints, GUI mode respects the form's success toggle
+  if AConfirm and not AForm.ShowSuccess then Exit;
+  ReportMessageFmt(AFormat, Args, AConfirm);
 end;
 
 class function TBatchOp.FindPotForFile(const AFileName: string): string;
@@ -277,7 +293,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ReportMessageFmt('Done. %d translation(s) filled from source.', [TotalCopied], AConfirm);
+  ReportSuccessFmt(AForm, 'Done. %d translation(s) filled from source.', [TotalCopied], AConfirm);
 end;
 
 class procedure TBatchOp.ClearInFiles(AForm: TformPoBatch; AFuzzyOnly: boolean = True; AConfirm: boolean = True);
@@ -421,9 +437,9 @@ begin
   end;
 
   if AFuzzyOnly then
-    ReportMessageFmt('Done. %d invalid translation(s) cleared.', [TotalCleared], AConfirm)
+    ReportSuccessFmt(AForm, 'Done. %d invalid translation(s) cleared.', [TotalCleared], AConfirm)
   else
-    ReportMessageFmt('Done. %d translation(s) cleared.', [TotalCleared], AConfirm);
+    ReportSuccessFmt(AForm, 'Done. %d translation(s) cleared.', [TotalCleared], AConfirm);
 end;
 
 class procedure TBatchOp.MarkFilesValid(AForm: TformPoBatch; AConfirm: boolean = True);
@@ -528,7 +544,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ReportMessage('Selected files have been marked as valid. All "fuzzy" flags were removed.', AConfirm);
+  ReportSuccess(AForm, 'Selected files have been marked as valid. All "fuzzy" flags were removed.', AConfirm);
 end;
 
 class procedure TBatchOp.SyncFilesWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
@@ -637,9 +653,10 @@ begin
   end;
 
   if SkippedCount > 0 then
-    ReportMessageFmt('Synchronization complete. %d file(s) skipped (no matching POT).', [SkippedCount], AConfirm)
+    ReportSuccessFmt(AForm, 'Synchronization complete. %d file(s) skipped (no matching POT).', [SkippedCount],
+      AConfirm)
   else
-    ReportMessage('Synchronization complete.', AConfirm);
+    ReportSuccess(AForm, 'Synchronization complete.', AConfirm);
 end;
 
 class procedure TBatchOp.RenameFiles(AForm: TformPoBatch; const ANewBaseName: string = ''; AConfirm: boolean = True);
@@ -1408,7 +1425,7 @@ begin
     Screen.Cursor := crDefault;
   end;
 
-  ReportMessageFmt('Done. %d translation(s) added in %d file(s). %d file(s) skipped.',
+  ReportSuccessFmt(AForm, 'Done. %d translation(s) added in %d file(s). %d file(s) skipped.',
     [TotalTranslated, FilesTranslated, SkippedFiles], AConfirm);
 end;
 
@@ -1551,7 +1568,8 @@ begin
       AForm.AnalizePath(AForm.PathIndex);
 
     Screen.Cursor := crDefault;
-    ShowMessageFmt('%d entries marked as valid.', [MarkedCount]);
+    if AForm.ShowSuccess then
+      ShowMessageFmt('%d entries marked as valid.', [MarkedCount]);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -1596,12 +1614,14 @@ begin
     //  Grid.SortColRow(True, FSortColumn, Grid.FixedRows, Grid.RowCount - 1);
     //Grid.Invalidate;
   end;
-  MessageDlg(
-    Format('%d translations were copied.', [CopiedCount]),
-    mtInformation,
-    [mbOK],
-    0
-    );
+
+  if AForm.ShowSuccess then
+    MessageDlg(
+      Format('%d translations were copied.', [CopiedCount]),
+      mtInformation,
+      [mbOK],
+      0
+      );
 
   AForm.Grid.Invalidate;
 end;
@@ -1650,12 +1670,13 @@ begin
     //Grid.Invalidate;
   end;
 
-  MessageDlg(
-    Format('%d translations were cleared.', [ReplacedCount]),
-    mtInformation,
-    [mbOK],
-    0
-    );
+  if AForm.ShowSuccess then
+    MessageDlg(
+      Format('%d translations were cleared.', [ReplacedCount]),
+      mtInformation,
+      [mbOK],
+      0
+      );
 
   AForm.Grid.Invalidate;
 end;
@@ -1926,11 +1947,14 @@ begin
       Screen.Cursor := crDefault;
     end;
 
-    if ASkipTranslated and (SkippedCount > 0) then
-      ShowMessageFmt('Translation complete. %d entries updated, %d skipped.',
-        [TotalTranslated, SkippedCount])
-    else
-      ShowMessageFmt('Translation complete. %d entries updated.', [TotalTranslated]);
+    if AForm.ShowSuccess then
+    begin
+      if ASkipTranslated and (SkippedCount > 0) then
+        ShowMessageFmt('Translation complete. %d entries updated, %d skipped.',
+          [TotalTranslated, SkippedCount])
+      else
+        ShowMessageFmt('Translation complete. %d entries updated.', [TotalTranslated]);
+    end;
   finally
     ResponseLines.Free;
   end;

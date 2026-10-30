@@ -457,6 +457,7 @@ type
     FWordWrap: boolean;
     FRememberLastFile: boolean;
     FSwitchToTable: boolean;
+    FShowSuccess: boolean;
     FLastFile: string;
     FMaxRowHeight: integer;
     FTranslatorName: string;
@@ -543,6 +544,7 @@ type
     property QACheckOptionsByLang: TObjectDictionary read FQACheckOptionsByLang;
     property RememberLastFile: boolean read FRememberLastFile write FRememberLastFile;
     property SwitchToTable: boolean read FSwitchToTable write FSwitchToTable;
+    property ShowSuccess: boolean read FShowSuccess write FShowSuccess;
     property LastFile: string read FLastFile write FLastFile;
     // Exposed for TBatchOp
     property FileName: string read FFileName write FFileName;
@@ -649,6 +651,7 @@ begin
   FTranslatorEmail := string.Empty;
   FRememberLastFile := True;
   FSwitchToTable := True;
+  FShowSuccess := True;
   FLastFile := string.Empty;
   FSortColumn := -1;
   FSortOrder := soAscending;
