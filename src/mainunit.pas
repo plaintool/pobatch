@@ -2937,9 +2937,15 @@ begin
   begin
     Param := ParamStr(i);
 
-    // Skip empty parameters and command-line switches
-    if (Param = string.Empty) or (Param[1] in ['-', '/']) then
+    // Skip empty parameters and command-line switches. A leading '/' is
+    // a switch only on Windows: on Unix-like systems it starts an absolute
+    // path, so it must reach the FileExists check below
+    if (Param = string.Empty) or (Param[1] = '-') then
       Continue;
+    {$IFDEF WINDOWS}
+    if Param[1] = '/' then
+      Continue;
+    {$ENDIF}
 
     // Check if parameter is a file
     if FileExists(Param) then

@@ -2,14 +2,14 @@ Name:           pobatch
 Version:        %{?version}
 Release:        2%{?dist}
 Summary:        PoBatch
-License:        MIT
+License:        GPLv3
 BuildArch:      x86_64
 Requires:       gtk2
 
 %define _build_name_fmt %%{name}-%%{version}.rpm
 
 %description
-A simple tool for creating and editing PAD XML files used for software distribution and listings. 
+PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file.
 
 %prep
 
