@@ -37,7 +37,9 @@ type
     BtnDefault: TButton;
     BtnApply: TButton;
     BtnCancel: TButton;
+    BtnFont: TButton;
     BtnOk: TButton;
+    BtnReset: TButton;
     CheckProxyAuthentication: TCheckBox;
     ClbProxiedConfigs: TCheckListBox;
     ComboProxyMode: TComboBox;
@@ -47,7 +49,9 @@ type
     EditProxyPassword: TEdit;
     EditTranslatorName: TEdit;
     EditTranslatorEmail: TEdit;
+    FontDialog: TFontDialog;
     GroupDefaultInformation: TGroupBox;
+    GroupMainWindow: TGroupBox;
     GroupProxiedConfigs: TGroupBox;
     GroupUserParameters: TGroupBox;
     GroupTimeouts: TGroupBox;
@@ -65,6 +69,7 @@ type
     LabelRequestTimeout: TLabel;
     ListPages: TListBox;
     PagesSettings: TPageControl;
+    PanelFont: TPanel;
     PanelPages: TPanel;
     PanelBottom: TPanel;
     PageGeneral: TTabSheet;
@@ -76,6 +81,8 @@ type
     PageNetwork: TTabSheet;
     PageParameters: TTabSheet;
     ValueListUserParameters: TValueListEditor;
+    procedure BtnFontClick(Sender: TObject);
+    procedure BtnResetClick(Sender: TObject);
     procedure FormChangeBounds(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -106,10 +113,12 @@ type
     FOriginalTimeout: TTranslateTimeout;
     FOriginalUserParameters: TStringList;
     FOriginalProxiedConfigs: TStringList;
+    FOriginalFont: TFont;
 
     FApplySettings: boolean;
     FOldValueList: string;
     FLastFocused: TWinControl;
+    procedure SetPanelFont(Panel: TPanel; const AFont: TFont);
   public
     procedure Apply;
     procedure Reset;
@@ -133,6 +142,7 @@ const
 
 resourcestring
   rdefaultsettings = 'Are you sure you want to restore default settings?';
+  rdefaultfont = 'Default';
 
   rproxymodenoproxy = 'No Proxy';
   rproxymodesystemproxy = 'System Proxy';
@@ -158,6 +168,7 @@ begin
   PanelPages.BevelColor := TDarkUtils.ThemeColor(ColorBevel, ColorBevelDark);
   PagesSettings.PageIndex := 0;
   BtnCancel.Cancel := True;
+  BtnReset.Enabled := True;
   FApplySettings := False;
   FOldValueList := string.Empty;
 
@@ -291,6 +302,10 @@ begin
   EditTranslatorName.Text := string.Empty;
   EditTranslatorEmail.Text := string.Empty;
   ValueListUserParameters.Strings.Clear;
+
+  PanelFont.Font.SetDefault;
+  SetPanelFont(PanelFont, PanelFont.Font);
+  BtnReset.Enabled := False;
 
   Apply;
 end;
@@ -506,9 +521,42 @@ begin
   end;
 end;
 
+procedure TformSettingsPoBatch.BtnFontClick(Sender: TObject);
+begin
+  FontDialog.Font.Assign(PanelFont.Font);
+  if FontDialog.Execute then
+  begin
+    PanelFont.Font.Assign(FontDialog.Font);
+    SetPanelFont(PanelFont, FontDialog.Font);
+
+    BtnReset.Enabled := True;
+    BtnApply.Enabled := True;
+  end;
+end;
+
+procedure TformSettingsPoBatch.BtnResetClick(Sender: TObject);
+begin
+  PanelFont.Font.SetDefault;
+  PanelFont.Font.Color := TDarkUtils.ThemeColor(clBlack, clWhite);
+  SetPanelFont(PanelFont, PanelFont.Font);
+  BtnReset.Enabled := False;
+  SettingChange(Self);
+end;
+
 {%EndRegion}
 
 {%Region -fold Methods}
+
+procedure TformSettingsPoBatch.SetPanelFont(Panel: TPanel; const AFont: TFont);
+var
+  CaptionText: string;
+begin
+  if (Trim(AFont.Name) = string.Empty) or (LowerCase(AFont.Name) = 'default') then
+    CaptionText := rdefaultfont
+  else
+    CaptionText := AFont.Name;
+  Panel.Caption := CaptionText + ',' + IntToStr(AFont.Size);
+end;
 
 procedure TformSettingsPoBatch.FillListPages;
 var
@@ -615,6 +663,8 @@ begin
     formPoBatch.TranslatorName := EditTranslatorName.Text;
     formPoBatch.TranslatorEmail := EditTranslatorEmail.Text;
 
+    formPoBatch.ApplyFont(PanelFont.Font);
+
     Reset;
   finally
     FApplySettings := False;
@@ -629,6 +679,7 @@ begin
   FOriginalTimeout := formPoBatch.Translate.Timeout;
   FOriginalUserParameters.Assign(formPoBatch.Translate.UserParameters);
   FOriginalProxiedConfigs.Assign(formPoBatch.ConfigManager.ProxiedConfigs);
+  FOriginalFont := formPoBatch.Font;
 
   SpinConnectTimeout.Value := FOriginalTimeout.Connection div 1000;
   SpinRequestTimeout.Value := FOriginalTimeout.Request div 1000;
@@ -647,6 +698,9 @@ begin
       ClbProxiedConfigs.Checked[i] := FOriginalProxiedConfigs.Contains(formPoBatch.ConfigManager.ConfigFiles[i]);
 
   ValueListUserParameters.Strings.Assign(FOriginalUserParameters);
+
+  PanelFont.Font.Assign(FOriginalFont);
+  SetPanelFont(PanelFont, FOriginalFont);
 
   BtnApply.Enabled := False;
   SetState;

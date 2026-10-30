@@ -519,10 +519,11 @@ type
     procedure FillGridHeaders;
     procedure UpdateValid(aRow: integer = -1);
     procedure UpdateTranslatePanel(aRow: integer = -1);
-    procedure ReloadCurrentFile(const AFileName: string);
     function NewFile(AFileName: string = string.Empty): boolean;
     procedure UpdateCaption;
     function CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
+    procedure ReloadCurrentFile(const AFileName: string);
+    procedure ApplyFont(const AFont: TFont);
 
     property Changed: boolean read FChanged write SetChanged;
     property Language: string read FLanguage write SetLanguage;
@@ -3408,6 +3409,13 @@ begin
   end;
 end;
 
+procedure TformPoBatch.ApplyFont(const AFont: TFont);
+begin
+  // Apply the configured font to the main form and all text controls
+  Font.Assign(AFont);
+  UpdateInterface;
+end;
+
 {%EndRegion}
 
 {%Region -fold Methods}
@@ -3456,7 +3464,7 @@ end;
 procedure TformPoBatch.UpdateInterface;
 begin
   UpdateCaption;
-  ListPath.ItemHeight := ListPath.Canvas.TextHeight('Hg') + 4;
+  ListPath.ItemHeight := Self.Canvas.TextHeight('Hg') + 4;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 

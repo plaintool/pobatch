@@ -187,6 +187,15 @@ begin
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
     JSONObj.Add('TranslatorName', Form.TranslatorName);
     JSONObj.Add('TranslatorEmail', Form.TranslatorEmail);
+
+    // Save main font
+    JSONObj.Add('FontName', Form.Font.Name);
+    JSONObj.Add('FontSize', Form.Font.Size);
+    JSONObj.Add('FontStyle', integer(Form.Font.Style));
+    JSONObj.Add('FontCharset', Form.Font.Charset);
+    JSONObj.Add('FontColor', Form.Font.Color);
+    JSONObj.Add('FontPitch', Ord(Form.Font.Pitch));
+
     JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
     JSONObj.Add('Path', Form.Path);
 
@@ -527,6 +536,20 @@ begin
       if JSONObj.FindPath('TranslatorEmail') <> nil then
         Form.TranslatorEmail := JSONObj.FindPath('TranslatorEmail').AsString;
 
+      // Load main font
+      if JSONObj.FindPath('FontName') <> nil then
+        Form.Font.Name := JSONObj.FindPath('FontName').AsString;
+      if JSONObj.FindPath('FontSize') <> nil then
+        Form.Font.Size := JSONObj.FindPath('FontSize').AsInteger;
+      if JSONObj.FindPath('FontStyle') <> nil then
+        Form.Font.Style := TFontStyles(JSONObj.FindPath('FontStyle').AsInteger);
+      if JSONObj.FindPath('FontCharset') <> nil then
+        Form.Font.Charset := JSONObj.FindPath('FontCharset').AsInteger;
+      if JSONObj.FindPath('FontColor') <> nil then
+        Form.Font.Color := JSONObj.FindPath('FontColor').AsInteger;
+      if JSONObj.FindPath('FontPitch') <> nil then
+        Form.Font.Pitch := TFontPitch(JSONObj.FindPath('FontPitch').AsInteger);
+
       if JSONObj.FindPath('TranslateConfig') <> nil then
         Form.ConfigManager.ConfigFile := JSONObj.FindPath('TranslateConfig').AsString;
 
@@ -619,6 +642,9 @@ begin
             Form.Translate.UserParameters.Add(arrParams.Items[i].AsString);
         end;
       end;
+
+      // Propagate the loaded font to all text controls
+      Form.ApplyFont(Form.Font);
 
       Result := True;
     finally

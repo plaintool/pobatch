@@ -83,6 +83,53 @@ object formSettingsPoBatch: TformSettingsPoBatch
           OnChange = SettingChange
         end
       end
+      object GroupMainWindow: TGroupBox
+        Left = 5
+        Height = 99
+        Top = 117
+        Width = 436
+        Align = alTop
+        BorderSpacing.Around = 5
+        Caption = 'Font'
+        ClientHeight = 79
+        ClientWidth = 432
+        TabOrder = 1
+        object PanelFont: TPanel
+          Left = 16
+          Height = 57
+          Top = 8
+          Width = 290
+          Anchors = [akTop, akLeft, akRight]
+          BevelOuter = bvNone
+          Caption = 'Default, 0'
+          Color = clMenu
+          ParentBackground = False
+          ParentColor = False
+          ParentFont = False
+          TabOrder = 0
+        end
+        object BtnFont: TButton
+          Left = 318
+          Height = 25
+          Top = 8
+          Width = 91
+          Anchors = [akTop, akRight]
+          Caption = 'Font...'
+          TabOrder = 1
+          OnClick = BtnFontClick
+        end
+        object BtnReset: TButton
+          Left = 318
+          Height = 25
+          Top = 40
+          Width = 91
+          Anchors = [akTop, akRight]
+          Caption = 'Reset'
+          Enabled = False
+          TabOrder = 2
+          OnClick = BtnResetClick
+        end
+      end
     end
     object PageNetwork: TTabSheet
       Caption = 'Network'
@@ -398,7 +445,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           )
           ColWidths = (
             200
-            205
+            222
           )
         end
       end
@@ -726,5 +773,11 @@ object formSettingsPoBatch: TformSettingsPoBatch
       F589B8FC87BCD759D9EBF6B425FF072E9DF521EF8F339FD3AC276279EE197F66
       7AD3E93DDEDB5FB3A3DDFBFFBF9DA5FF1BC971C5F6
     }
+  end
+  object FontDialog: TFontDialog
+    MinFontSize = 0
+    MaxFontSize = 0
+    Left = 32
+    Top = 96
   end
 end
