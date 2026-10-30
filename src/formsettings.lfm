@@ -59,7 +59,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           Width = 104
           Alignment = taRightJustify
           AutoSize = False
-          Caption = 'E-Mail'
+          Caption = 'Email'
           WordWrap = True
         end
         object EditTranslatorEmail: TEdit

@@ -35,6 +35,10 @@ function GetLanguageCodeByName(const AName: string): string;
 // or an empty string when the code is unknown
 function GetLanguagePluralForms(const ACode: string): string;
 
+// Fills AList with every distinct Plural-Forms expression found in the
+// language table, in the order of first occurrence
+procedure GetAllPluralForms(AList: TStrings);
+
 // Shows a language selection dialog and returns the chosen ISO code in ACode; returns True on OK.
 function SelectLanguage(var ACode: string; AOptions: TComboQueryOptions = []): boolean;
 
@@ -421,6 +425,27 @@ begin
       Result := Languages[I].PluralForms;
       Break;
     end;
+end;
+
+procedure GetAllPluralForms(AList: TStrings);
+var
+  I: integer;
+  Value: string;
+begin
+  if AList = nil then
+    Exit;
+  AList.BeginUpdate;
+  try
+    AList.Clear;
+    for I := Low(Languages) to High(Languages) do
+    begin
+      Value := Languages[I].PluralForms;
+      if (Value <> '') and (AList.IndexOf(Value) < 0) then
+        AList.Add(Value);
+    end;
+  finally
+    AList.EndUpdate;
+  end;
 end;
 
 function SelectLanguage(var ACode: string; AOptions: TComboQueryOptions = []): boolean;

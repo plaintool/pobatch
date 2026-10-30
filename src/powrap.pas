@@ -84,6 +84,30 @@ type
     hXGenerator
     );
 
+  // Standard values for the Content-Transfer-Encoding header
+  TPOContentTransferEncoding = (
+    cte8bit,
+    cte7bit,
+    cteBinary
+    );
+
+  // Common character sets for the Content-Type header
+  TPOCharset = (
+    csUTF8,
+    csISO88591,
+    csISO88592,
+    csISO88595,
+    csISO88597,
+    csISO88599,
+    csISO885915,
+    csCP1251,
+    csKOI8R,
+    csShiftJIS,
+    csEUCJP,
+    csGB2312,
+    csBig5
+    );
+
   {%EndRegion}
 
   TParseState = record
@@ -346,11 +370,6 @@ type
     procedure ApplyDefaultHeaders(const ALanguage: string = ''; const AGenerator: string = '');
   end;
 
-implementation
-
-uses
-  LangCodes;
-
   {%Region -fold Consts}
 
 const
@@ -390,7 +409,36 @@ const
     'X-Generator'
     );
 
+  // Mapping from TPOContentTransferEncoding to the string used in the PO header
+  ContentTransferEncodingNames: array[TPOContentTransferEncoding] of string = (
+    '8bit',
+    '7bit',
+    'binary'
+    );
+
+  // Mapping from TPOCharset to the value of the Content-Type header
+  ContentTypeValues: array[TPOCharset] of string = (
+    'text/plain; charset=UTF-8',
+    'text/plain; charset=ISO-8859-1',
+    'text/plain; charset=ISO-8859-2',
+    'text/plain; charset=ISO-8859-5',
+    'text/plain; charset=ISO-8859-7',
+    'text/plain; charset=ISO-8859-9',
+    'text/plain; charset=ISO-8859-15',
+    'text/plain; charset=CP1251',
+    'text/plain; charset=KOI8-R',
+    'text/plain; charset=Shift_JIS',
+    'text/plain; charset=EUC-JP',
+    'text/plain; charset=GB2312',
+    'text/plain; charset=Big5'
+    );
+
   {%EndRegion}
+
+implementation
+
+uses
+  LangCodes;
 
   {%Region -fold Plain utility functions}
 
@@ -444,6 +492,30 @@ function CompareIndexStringsDesc(List: TStringList; Index1, Index2: integer): in
 begin
   // Sort as numbers in descending order
   Result := StrToIntDef(List[Index2], 0) - StrToIntDef(List[Index1], 0);
+end;
+
+function GetHeaderPickList(const AHeaderName: string; AList: TStrings): boolean;
+var
+  E: TPOContentTransferEncoding;
+  C: TPOCharset;
+begin
+  Result := True;
+  AList.Clear;
+
+  if SameText(AHeaderName, 'MIME-Version') then
+    AList.Add('1.0')
+  else if SameText(AHeaderName, 'Content-Transfer-Encoding') then
+  begin
+    for E := Low(TPOContentTransferEncoding) to High(TPOContentTransferEncoding) do
+      AList.Add(ContentTransferEncodingNames[E]);
+  end
+  else if SameText(AHeaderName, 'Content-Type') then
+  begin
+    for C := Low(TPOCharset) to High(TPOCharset) do
+      AList.Add(ContentTypeValues[C]);
+  end
+  else
+    Result := False;
 end;
 
 {%EndRegion}

@@ -368,6 +368,7 @@ type
     { Grid Headers Events }
     procedure GridHeadersValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     procedure GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
+    procedure GridHeadersSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
     { Grid Plural Events }
     procedure GridPluralValidateEntry(Sender: TObject; aCol, aRow: integer; const OldValue: string; var NewValue: string);
     { Grid Comments Events }
@@ -463,6 +464,8 @@ type
     FMaxRowHeight: integer;
     FTranslatorName: string;
     FTranslatorEmail: string;
+    FLanguageCodes: TStringList;
+    FPluralForms: TStringList;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -509,6 +512,7 @@ type
     procedure SaveGridPlural(aRow: integer = -1);
     procedure FillGridComments(aRow: integer = -1);
     procedure SaveGridComments(aRow: integer = -1);
+    function GetHeaderPickList(const AHeaderName: string; AList: TStrings): boolean;
 
     // QA Check Options
     procedure SetDefaultQACheckOptions;
@@ -681,6 +685,7 @@ uses FormSettings, FormAbout, FormDonate, Settings, StringGridHelper, StringHelp
 procedure TformPoBatch.FormCreate(Sender: TObject);
 var
   HeaderList: TStringList;
+  LangDisplay: TStringList;
 begin
   // Enable file dropping
   AllowDropFiles := True;
@@ -779,6 +784,19 @@ begin
     HeaderList.Free;
   end;
 
+  // Language codes pick list, switched per-row in GridHeadersSelectCell
+  FLanguageCodes := TStringList.Create;
+  LangDisplay := TStringList.Create;
+  try
+    GetLanguageLists(LangDisplay, FLanguageCodes);
+  finally
+    LangDisplay.Free;
+  end;
+
+  // Distinct Plural-Forms values from the language table
+  FPluralForms := TStringList.Create;
+  GetAllPluralForms(FPluralForms);
+
   // LoadSettings
   LoadFormSettings(Self);
 
@@ -805,6 +823,8 @@ begin
   SetLength(FFileStatuses, 0);
   FreeAndNil(FPoFiles);
   FreeAndNil(FQACheckOptionsByLang);
+  FreeAndNil(FLanguageCodes);
+  FreeAndNil(FPluralForms);
 end;
 
 procedure TformPoBatch.FormShow(Sender: TObject);
@@ -1879,6 +1899,27 @@ end;
 procedure TformPoBatch.GridHeadersGetCellHint(Sender: TObject; ACol, ARow: integer; var HintText: string);
 begin
   HintText := GridHeaders.Cells[ACol, ARow];
+end;
+
+procedure TformPoBatch.GridHeadersSelectCell(Sender: TObject; aCol, aRow: integer; var CanSelect: boolean);
+var
+  HeaderName: string;
+begin
+  // Pick lists are switched per row: Language and Plural-Forms use the
+  // language table, the remaining known headers use the predefined values
+  // from PoWrap; everything else stays a plain editor
+  if (aCol = CELL_HEADERS_VALUE) and (aRow >= GridHeaders.FixedRows) then
+  begin
+    HeaderName := GridHeaders.Cells[CELL_HEADERS_NAME, aRow];
+    if SameText(HeaderName, 'Language') then
+      GridHeaders.Columns[COLUMN_HEADERS_VALUE].PickList.Assign(FLanguageCodes)
+    else if SameText(HeaderName, 'Plural-Forms') then
+      GridHeaders.Columns[COLUMN_HEADERS_VALUE].PickList.Assign(FPluralForms)
+    else if not GetHeaderPickList(HeaderName, GridHeaders.Columns[COLUMN_HEADERS_VALUE].PickList) then
+      GridHeaders.Columns[COLUMN_HEADERS_VALUE].PickList.Clear;
+  end
+  else
+    GridHeaders.Columns[COLUMN_HEADERS_VALUE].PickList.Clear;
 end;
 
 {%EndRegion}
@@ -4043,6 +4084,7 @@ begin
     Grid.DefaultRowHeight * MinRows);
 
   GridHeaders.Top := 0;
+  PanelFilter.Top := 0;
   SplitterHeaders.Top := GridHeaders.Top + GridHeaders.Height;
 
   // During extreme resize the form height can leave the valid range, and
@@ -4727,6 +4769,31 @@ begin
   finally
     Comments.Free;
   end;
+end;
+
+function TformPoBatch.GetHeaderPickList(const AHeaderName: string; AList: TStrings): boolean;
+var
+  E: TPOContentTransferEncoding;
+  C: TPOCharset;
+begin
+  Result := True;
+  AList.Clear;
+
+  // Language is a dynamic list, so it is handled by the caller
+  if SameText(AHeaderName, 'MIME-Version') then
+    AList.Add('1.0')
+  else if SameText(AHeaderName, 'Content-Transfer-Encoding') then
+  begin
+    for E := Low(TPOContentTransferEncoding) to High(TPOContentTransferEncoding) do
+      AList.Add(ContentTransferEncodingNames[E]);
+  end
+  else if SameText(AHeaderName, 'Content-Type') then
+  begin
+    for C := Low(TPOCharset) to High(TPOCharset) do
+      AList.Add(ContentTypeValues[C]);
+  end
+  else
+    Result := False;
 end;
 
 {%EndRegion}
