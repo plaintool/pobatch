@@ -42,9 +42,6 @@
 {"hash":5671589,"name":"tformpobatch.apaste.caption","sourcebytes":[80,97,115,116,101],"value":"Paste"},
 {"hash":78392485,"name":"tformpobatch.adelete.caption","sourcebytes":[68,101,108,101,116,101],"value":"Delete"},
 {"hash":195288076,"name":"tformpobatch.aselectall.caption","sourcebytes":[83,101,108,101,99,116,32,65,108,108],"value":"Select All"},
-{"hash":36398596,"name":"tformpobatch.acopysourcetext.caption","sourcebytes":[67,111,112,121,32,83,111,117,114,99,101,32,84,101,120,116],"value":"Copy Source Text"},
-{"hash":31390972,"name":"tformpobatch.aclearidentical.caption","sourcebytes":[67,108,101,97,114,32,73,100,101,110,116,105,99,97,108],"value":"Clear Identical"},
-{"hash":114603556,"name":"tformpobatch.amarkasvalid.caption","sourcebytes":[77,97,114,107,32,65,115,32,86,97,108,105,100],"value":"Mark As Valid"},
 {"hash":378031,"name":"tformpobatch.amemoundo.caption","sourcebytes":[85,110,100,111],"value":"Undo"},
 {"hash":19140,"name":"tformpobatch.amemocut.caption","sourcebytes":[67,117,116],"value":"Cut"},
 {"hash":304761,"name":"tformpobatch.amemocopy.caption","sourcebytes":[67,111,112,121],"value":"Copy"},
@@ -53,9 +50,6 @@
 {"hash":195288076,"name":"tformpobatch.amemoselectall.caption","sourcebytes":[83,101,108,101,99,116,32,65,108,108],"value":"Select All"},
 {"hash":205357346,"name":"tformpobatch.amemobidirighttoleft.caption","sourcebytes":[82,105,103,104,116,45,84,111,45,76,101,102,116,32,82,101,97,100,105,110,103,32,79,114,100,101,114],"value":"Right-To-Left Reading Order"},
 {"hash":131063453,"name":"tformpobatch.amemodefaultzoom.caption","sourcebytes":[68,101,102,97,117,108,116,32,90,111,111,109],"value":"Default Zoom"},
-{"hash":28791053,"name":"tformpobatch.aeditpluralform.caption","sourcebytes":[69,100,105,116,32,80,108,117,114,97,108,32,70,111,114,109],"value":"Edit Plural Form"},
-{"hash":195953908,"name":"tformpobatch.asyncwithpot.caption","sourcebytes":[83,121,110,99,32,87,105,116,104,32,80,111,116],"value":"Sync With Pot"},
-{"hash":67386889,"name":"tformpobatch.aedittranslationonly.caption","sourcebytes":[69,100,105,116,32,84,114,97,110,115,108,97,116,105,111,110,32,79,110,108,121],"value":"Edit Translation Only"},
 {"hash":78612052,"name":"tformpobatch.awordwrapgrid.caption","sourcebytes":[87,111,114,100,32,87,114,97,112,32,45,32,71,114,105,100],"value":"Word Wrap - Grid"},
 {"hash":155369852,"name":"tformpobatch.awordwraptranslatepanel.caption","sourcebytes":[87,111,114,100,32,87,114,97,112,32,45,32,84,114,97,110,115,108,97,116,101,32,80,97,110,101,108],"value":"Word Wrap - Translate Panel"},
 {"hash":79606693,"name":"tformpobatch.aspellchecksource.caption","sourcebytes":[83,112,101,108,108,32,67,104,101,99,107,32,83,111,117,114,99,101],"value":"Spell Check Source"},
@@ -97,5 +91,12 @@
 {"hash":140353848,"name":"tformpobatch.apathrescan.caption","sourcebytes":[82,101,115,99,97,110,32,80,97,116,104],"value":"Rescan Path"},
 {"hash":195288076,"name":"tformpobatch.apathselectall.caption","sourcebytes":[83,101,108,101,99,116,32,65,108,108],"value":"Select All"},
 {"hash":1551550,"name":"tformpobatch.asettings.caption","sourcebytes":[83,101,116,116,105,110,103,115,46,46,46],"value":"Settings..."},
-{"hash":315140,"name":"tformpobatch.aexit.caption","sourcebytes":[69,120,105,116],"value":"Exit"}
+{"hash":315140,"name":"tformpobatch.aexit.caption","sourcebytes":[69,120,105,116],"value":"Exit"},
+{"hash":22750702,"name":"tformpobatch.agoto.caption","sourcebytes":[71,111,32,84,111,46,46,46],"value":"Go To..."},
+{"hash":36398596,"name":"tformpobatch.acopysourcetext.caption","sourcebytes":[67,111,112,121,32,83,111,117,114,99,101,32,84,101,120,116],"value":"Copy Source Text"},
+{"hash":31390972,"name":"tformpobatch.aclearidentical.caption","sourcebytes":[67,108,101,97,114,32,73,100,101,110,116,105,99,97,108],"value":"Clear Identical"},
+{"hash":114603556,"name":"tformpobatch.amarkasvalid.caption","sourcebytes":[77,97,114,107,32,65,115,32,86,97,108,105,100],"value":"Mark As Valid"},
+{"hash":28791053,"name":"tformpobatch.aeditpluralform.caption","sourcebytes":[69,100,105,116,32,80,108,117,114,97,108,32,70,111,114,109],"value":"Edit Plural Form"},
+{"hash":195953908,"name":"tformpobatch.asyncwithpot.caption","sourcebytes":[83,121,110,99,32,87,105,116,104,32,80,111,116],"value":"Sync With Pot"},
+{"hash":67386889,"name":"tformpobatch.aedittranslationonly.caption","sourcebytes":[69,100,105,116,32,84,114,97,110,115,108,97,116,105,111,110,32,79,110,108,121],"value":"Edit Translation Only"}
 ]}

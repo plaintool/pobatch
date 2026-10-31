@@ -65,6 +65,7 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    AGoTo: TAction;
     ASettings: TAction;
     APathClearAll: TAction;
     APathTranslateMissing: TAction;
@@ -164,6 +165,7 @@ type
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
     MenuPathClearAll: TMenuItem;
     MenuPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
@@ -248,6 +250,7 @@ type
     dialogPath: TSelectDirectoryDialog;
     Separator1: TMenuItem;
     Separator20: TMenuItem;
+    Separator21: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
@@ -341,6 +344,7 @@ type
     procedure ACheckSpaceLeadingExecute(Sender: TObject);
     procedure ACheckSpaceTrailingExecute(Sender: TObject);
     procedure ASettingsExecute(Sender: TObject);
+    procedure AGoToExecute(Sender: TObject);
     { Action Batch Operations }
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
@@ -668,6 +672,11 @@ resourcestring
   rstatusinvalidhint = 'Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations';
 
   rqacheckscaption = 'QA Checks';
+
+  rgotoentrytitle = 'Go to entry';
+  rgotoentryprompt = 'Enter entry number:';
+  rinvalidnumber = 'Invalid number: %s';
+  rnotfoundentry = 'Entry number %s not found.';
   {%EndRegion}
 
 implementation
@@ -1647,6 +1656,43 @@ begin
   formSettingsPoBatch.ListPages.ItemIndex := FSettingsPage;
 
   formSettingsPoBatch.Show;
+end;
+
+procedure TformPoBatch.AGoToExecute(Sender: TObject);
+var
+  Value: string = string.Empty;
+  TargetIndex: integer = 0;
+  i: integer = 0;
+  Found: boolean = False;
+begin
+  if Grid.RowCount <= Grid.FixedRows then
+    Exit;
+
+  if not InputQueryLite(rgotoentrytitle, rgotoentryprompt, Value, True) then
+    Exit;
+
+  if not TryStrToInt(Value, TargetIndex) then
+  begin
+    MessageDlg(rerrortitle, Format(rinvalidnumber, [Value]), mtWarning, [mbOK], 0);
+    Exit;
+  end;
+
+  for i := Grid.FixedRows to Grid.RowCount - 1 do
+    if StrToIntDef(Grid.Cells[0, i], -1) = TargetIndex then
+    begin
+      Grid.Row := i;
+      Found := True;
+      Break;
+    end;
+
+  if not Found then
+    MessageDlg(rerrortitle, Format(rnotfoundentry, [Value]), mtWarning, [mbOK], 0)
+  else
+  begin
+    if Grid.CanFocus then
+      Grid.SetFocus;
+    UpdateTranslatePanel;
+  end;
 end;
 
 {%EndRegion}

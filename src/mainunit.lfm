@@ -655,6 +655,12 @@ object formPoBatch: TformPoBatch
       object MenuDelete: TMenuItem
         Action = ADelete
       end
+      object Separator21: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem7: TMenuItem
+        Action = AGoTo
+      end
       object Separator6: TMenuItem
         Caption = '-'
       end
@@ -917,24 +923,6 @@ object formPoBatch: TformPoBatch
       OnExecute = ASelectAllExecute
       OnUpdate = ASelectAllUpdate
     end
-    object ACopySourceText: TAction
-      Category = 'Edit'
-      Caption = 'Copy Source Text'
-      ShortCut = 32835
-      OnExecute = ACopySourceTextExecute
-    end
-    object AClearIdentical: TAction
-      Category = 'Edit'
-      Caption = 'Clear Identical'
-      ShortCut = 32836
-      OnExecute = AClearIdenticalExecute
-    end
-    object AMarkAsValid: TAction
-      Category = 'Edit'
-      Caption = 'Mark As Valid'
-      ShortCut = 32854
-      OnExecute = AMarkAsValidExecute
-    end
     object AMemoUndo: TAction
       Category = 'Memo'
       Caption = 'Undo'
@@ -975,24 +963,6 @@ object formPoBatch: TformPoBatch
       Category = 'Memo'
       Caption = 'Default Zoom'
       OnExecute = AMemoDefaultZoomExecute
-    end
-    object AEditPluralForm: TAction
-      Category = 'Edit'
-      Caption = 'Edit Plural Form'
-      ShortCut = 32848
-      OnExecute = AEditPluralFormExecute
-    end
-    object ASyncWithPot: TAction
-      Category = 'Edit'
-      Caption = 'Sync With Pot'
-      OnExecute = ASyncWithPotExecute
-    end
-    object AEditTranslationOnly: TAction
-      Category = 'Edit'
-      AutoCheck = True
-      Caption = 'Edit Translation Only'
-      Checked = True
-      OnExecute = AEditTranslationOnlyExecute
     end
     object AWordWrapGrid: TAction
       Category = 'Format'
@@ -1233,6 +1203,48 @@ object formPoBatch: TformPoBatch
       Category = 'File'
       Caption = 'Exit'
       OnExecute = AExitExecute
+    end
+    object AGoTo: TAction
+      Category = 'Edit'
+      Caption = 'Go To...'
+      ShortCut = 16455
+      OnExecute = AGoToExecute
+    end
+    object ACopySourceText: TAction
+      Category = 'Edit'
+      Caption = 'Copy Source Text'
+      ShortCut = 32835
+      OnExecute = ACopySourceTextExecute
+    end
+    object AClearIdentical: TAction
+      Category = 'Edit'
+      Caption = 'Clear Identical'
+      ShortCut = 32836
+      OnExecute = AClearIdenticalExecute
+    end
+    object AMarkAsValid: TAction
+      Category = 'Edit'
+      Caption = 'Mark As Valid'
+      ShortCut = 32854
+      OnExecute = AMarkAsValidExecute
+    end
+    object AEditPluralForm: TAction
+      Category = 'Edit'
+      Caption = 'Edit Plural Form'
+      ShortCut = 32848
+      OnExecute = AEditPluralFormExecute
+    end
+    object ASyncWithPot: TAction
+      Category = 'Edit'
+      Caption = 'Sync With Pot'
+      OnExecute = ASyncWithPotExecute
+    end
+    object AEditTranslationOnly: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Edit Translation Only'
+      Checked = True
+      OnExecute = AEditTranslationOnlyExecute
     end
   end
   object ApplicationProp: TApplicationProperties
