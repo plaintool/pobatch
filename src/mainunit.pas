@@ -476,6 +476,8 @@ type
     procedure SetLanguage(const Value: string);
     procedure SetSplitRatio(Value: double);
     procedure SetWordWrap(Value: boolean);
+    function GetGridEditorZoom: double;
+    procedure SetGridEditorZoom(Value: double);
 
     // Methods File Operations
     function PromptSaveChanges: TModalResult;
@@ -551,6 +553,7 @@ type
     property PoFiles: TStringList read FPoFiles write FPoFiles;
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write SetWordWrap;
+    property GridEditorZoom: double read GetGridEditorZoom write SetGridEditorZoom;
     property QACheckOptionsByLang: TObjectDictionary read FQACheckOptionsByLang;
     property RememberLastFile: boolean read FRememberLastFile write FRememberLastFile;
     property SwitchToTable: boolean read FSwitchToTable write FSwitchToTable;
@@ -2889,6 +2892,20 @@ begin
     FRichEditor.ScrollBars := ssAutoBoth;
 
   Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight, iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
+end;
+
+function TformPoBatch.GetGridEditorZoom: double;
+begin
+  if Assigned(FRichEditor) then
+    Result := FRichEditor.ZoomFactor
+  else
+    Result := 1;
+end;
+
+procedure TformPoBatch.SetGridEditorZoom(Value: double);
+begin
+  if Assigned(FRichEditor) then
+    FRichEditor.ZoomFactor := Value;
 end;
 
 {%EndRegion}

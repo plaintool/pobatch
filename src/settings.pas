@@ -196,6 +196,12 @@ begin
     JSONObj.Add('FontColor', Form.Font.Color);
     JSONObj.Add('FontPitch', Ord(Form.Font.Pitch));
 
+    // Save RichMemo zoom factors
+    JSONObj.Add('MemoSourceZoom', Form.MemoSource.ZoomFactor);
+    JSONObj.Add('MemoPluralZoom', Form.MemoPlural.ZoomFactor);
+    JSONObj.Add('MemoTranslationZoom', Form.MemoTranslation.ZoomFactor);
+    JSONObj.Add('GridEditorZoom', Form.GridEditorZoom);
+
     JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
     JSONObj.Add('Path', Form.Path);
     JSONObj.Add('RememberLastFile', Form.RememberLastFile);
@@ -553,6 +559,16 @@ begin
         Form.Font.Color := JSONObj.FindPath('FontColor').AsInteger;
       if JSONObj.FindPath('FontPitch') <> nil then
         Form.Font.Pitch := TFontPitch(JSONObj.FindPath('FontPitch').AsInteger);
+
+      // Load RichMemo zoom factors
+      if JSONObj.FindPath('MemoSourceZoom') <> nil then
+        Form.MemoSource.ZoomFactor := JSONObj.FindPath('MemoSourceZoom').AsFloat;
+      if JSONObj.FindPath('MemoPluralZoom') <> nil then
+        Form.MemoPlural.ZoomFactor := JSONObj.FindPath('MemoPluralZoom').AsFloat;
+      if JSONObj.FindPath('MemoTranslationZoom') <> nil then
+        Form.MemoTranslation.ZoomFactor := JSONObj.FindPath('MemoTranslationZoom').AsFloat;
+      if JSONObj.FindPath('GridEditorZoom') <> nil then
+        Form.GridEditorZoom := JSONObj.FindPath('GridEditorZoom').AsFloat;
 
       if JSONObj.FindPath('TranslateConfig') <> nil then
         Form.ConfigManager.ConfigFile := JSONObj.FindPath('TranslateConfig').AsString;
