@@ -318,7 +318,6 @@ begin
 
   PanelFont.Font.SetDefault;
   SetPanelFont(PanelFont, PanelFont.Font);
-  BtnReset.Enabled := False;
 
   Apply;
 end;
@@ -552,7 +551,6 @@ begin
   PanelFont.Font.SetDefault;
   PanelFont.Font.Color := TDarkUtils.ThemeColor(clBlack, clWhite);
   SetPanelFont(PanelFont, PanelFont.Font);
-  BtnReset.Enabled := False;
   SettingChange(Self);
 end;
 

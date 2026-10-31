@@ -3549,8 +3549,15 @@ end;
 
 procedure TformPoBatch.ApplyFont(const AFont: TFont);
 begin
+  Grid.EditorMode := False;
+
   // Apply the configured font to the main form and all text controls
   Font.Assign(AFont);
+
+  // Row heights depend on the font metrics, so recalculate every row
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight,
+    iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
+
   UpdateInterface;
 end;
 
