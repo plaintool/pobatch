@@ -68,11 +68,25 @@
 	<Program_Descriptions>
 		<English>
 			<Keywords>editor, po, l10n, i18n</Keywords>
-			<Char_Desc_45>PoBatch is an easy-to-use PO file editor for l10n workflows. </Char_Desc_45>
-			<Char_Desc_80>PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file. </Char_Desc_80>
-			<Char_Desc_250 />
-			<Char_Desc_450>A lightweight application designed to create, edit, and maintain PAD (Portable Application Description) XML files. PAD files are used to describe software products in a standardized format for software directories, download sites, and application catalogs, helping automate software listing and distribution.</Char_Desc_450>
-			<Char_Desc_2000 />
+			<Char_Desc_45>Batch PO editor for gettext localization.</Char_Desc_45>
+			<Char_Desc_80>Batch-edit gettext PO files: grid editor, QA checks, translate, sync with POT.</Char_Desc_80>
+			<Char_Desc_250>PoBatch is a fast grid editor for gettext PO files. Source and translation are shown side by side, with bulk copy and paste, QA checks for placeholders, spacing and punctuation, POT sync and batch processing of a whole folder.</Char_Desc_250>
+			<Char_Desc_450>PoBatch is an easy-to-use PO file editor for gettext localization. Source and translation are shown in a grid, so rows or columns can be copied or pasted in bulk. Per-language QA checks cover placeholders, case, spacing and punctuation. Headers, comments and plural forms are editable, POT sync and spell checking are built in. Batch operations copy source, clear fuzzy entries, mark files valid or rename files across a folder.</Char_Desc_450>
+			<Char_Desc_2000>PoBatch is a fast, easy-to-use editor for gettext PO and POT files, built for localization workflows where many translation files have to be reviewed, cleaned up or updated at once. Source strings and translations are shown side by side in a grid, so rows or columns can be selected and copied or pasted in bulk instead of editing one entry at a time.
+
+Each file is split into connected views: the main translation grid, a headers grid for the standard PO header block (Language, Plural-Forms, Last-Translator and so on), and a comments grid for translator, extracted, reference and previous comments. Plural entries are edited in a dedicated plural grid, one field per grammatical form, and the number of forms is taken from the Plural-Forms header automatically.
+
+PoBatch includes a configurable set of QA checks that run on every entry and per language: missing or extra placeholders, case mismatches, leading, trailing and double spaces, spaces before and after punctuation, mismatched end punctuation, bracket mismatches, plural form count, and leading or trailing newlines. Problems are shown next to the grid and highlighted in the row, so translators can fix them without leaving the editor. Each language remembers its own set of enabled checks.
+
+The editor supports spell checking for source and translation, undo and redo for every edit, right-to-left editing, word wrap and configurable columns. Filters and sorting narrow the grid to untranslated entries, fuzzy entries or any text match.
+
+Batch operations work across a whole folder of PO files at once: copy source text into empty translations, clear translations of fuzzy entries, clear all translations while keeping headers, remove fuzzy flags, rename files, or delete files. The folder can be synchronized with its POT templates, or new PO files can be generated from a POT for a list of languages, with the correct Plural-Forms expression filled in automatically.
+
+An optional translation service integration can translate selected entries, all empty entries, or every empty entry in a whole folder.
+
+A command-line mode exposes the batch operations to scripts and CI pipelines, so the same tasks can run on a directory without opening the graphical interface.
+
+PoBatch runs on Windows and Linux and is licensed under the GNU GPL v3.</Char_Desc_2000>
 		</English>
 	</Program_Descriptions>
 	<Web_Info>
