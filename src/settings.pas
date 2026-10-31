@@ -202,6 +202,18 @@ begin
     JSONObj.Add('MemoTranslationZoom', Form.MemoTranslation.ZoomFactor);
     JSONObj.Add('GridEditorZoom', Form.GridEditorZoom);
 
+    // Save recent files list
+    arrParams := TJSONArray.Create;
+    try
+      if Assigned(Form.RecentFiles) then
+        for i := 0 to Form.RecentFiles.Count - 1 do
+          arrParams.Add(Form.RecentFiles[i]);
+      JSONObj.Add('RecentFiles', arrParams);
+      arrParams := nil;
+    finally
+      arrParams.Free;
+    end;
+
     JSONObj.Add('TranslateConfig', Form.ConfigManager.ConfigFile);
     JSONObj.Add('Path', Form.Path);
     JSONObj.Add('RememberLastFile', Form.RememberLastFile);
@@ -320,6 +332,7 @@ var
   FileStream: TFileStream;
   FileContent: string;
   QAMapObj, LangObj: TJSONObject;
+  RecentArray: TJSONArray;
   i: integer;
 begin
   Result := False;
@@ -569,6 +582,15 @@ begin
         Form.MemoTranslation.ZoomFactor := JSONObj.FindPath('MemoTranslationZoom').AsFloat;
       if JSONObj.FindPath('GridEditorZoom') <> nil then
         Form.GridEditorZoom := JSONObj.FindPath('GridEditorZoom').AsFloat;
+
+      // Load recent files list
+      if Assigned(Form.RecentFiles) and (JSONObj.FindPath('RecentFiles') <> nil) then
+      begin
+        RecentArray := JSONObj.FindPath('RecentFiles') as TJSONArray;
+        Form.RecentFiles.Clear;
+        for i := 0 to RecentArray.Count - 1 do
+          Form.RecentFiles.Add(RecentArray.Items[i].AsString);
+      end;
 
       if JSONObj.FindPath('TranslateConfig') <> nil then
         Form.ConfigManager.ConfigFile := JSONObj.FindPath('TranslateConfig').AsString;

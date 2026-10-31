@@ -18,6 +18,7 @@
 {"hash":376933,"name":"tformpobatch.gridcomments.columns[0].title.caption","sourcebytes":[84,121,112,101],"value":"Type"},
 {"hash":6063029,"name":"tformpobatch.gridcomments.columns[1].title.caption","sourcebytes":[86,97,108,117,101],"value":"Value"},
 {"hash":315429,"name":"tformpobatch.menufile.caption","sourcebytes":[70,105,108,101],"value":"File"},
+{"hash":98433108,"name":"tformpobatch.menuopenrecent.caption","sourcebytes":[79,112,101,110,32,82,101,99,101,110,116],"value":"Open Recent"},
 {"hash":310020,"name":"tformpobatch.menuedit.caption","sourcebytes":[69,100,105,116],"value":"Edit"},
 {"hash":81171332,"name":"tformpobatch.menuformat.caption","sourcebytes":[70,111,114,109,97,116],"value":"Format"},
 {"hash":77524243,"name":"tformpobatch.menuqachecks.caption","sourcebytes":[81,65,32,67,104,101,99,107,115],"value":"QA Checks"},

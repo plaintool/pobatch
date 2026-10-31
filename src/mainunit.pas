@@ -166,6 +166,7 @@ type
     MenuItem4: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    MenuOpenRecent: TMenuItem;
     MenuPathClearAll: TMenuItem;
     MenuPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
@@ -470,6 +471,7 @@ type
     FTranslatorEmail: string;
     FLanguageCodes: TStringList;
     FPluralForms: TStringList;
+    FRecentFiles: TStringList;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -526,8 +528,14 @@ type
     procedure SaveCurrentQACheckOptions;
     procedure ApplyQACheckOptionsToMenu;
     procedure RecheckAllQA;
+
+    // Recent files
+    procedure RebuildRecentMenu;
+    procedure OpenRecentFile(Sender: TObject);
+    procedure ClearRecentFiles(Sender: TObject);
   public
     function IsCanClose(Fast: boolean = False): boolean;
+    procedure AddRecentFile(const AFileName: string);
     procedure AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
     procedure SaveGrid;
     procedure FillGrid;
@@ -551,6 +559,7 @@ type
     property SortColumn: integer read FSortColumn write FSortColumn;
     property SplitRatio: double read FSplitRatio write SetSplitRatio;
     property PoFiles: TStringList read FPoFiles write FPoFiles;
+    property RecentFiles: TStringList read FRecentFiles;
     property FileStatuses: TPOFileStatusArray read FFileStatuses write FFileStatuses;
     property WordWrap: boolean read FWordWrap write SetWordWrap;
     property GridEditorZoom: double read GetGridEditorZoom write SetGridEditorZoom;
@@ -631,6 +640,7 @@ const
   REPO = 'plaintool/pobatch';
   APP_NAME = 'pobatch';
   AppName = 'PoBatch';
+  MAX_RECENT_FILES = 10;
 
   {%Region -fold Resource Strings}
 resourcestring
@@ -680,6 +690,8 @@ resourcestring
   rgotoentryprompt = 'Enter entry number:';
   rinvalidnumber = 'Invalid number: %s';
   rnotfoundentry = 'Entry number %s not found.';
+
+  ropenrecentclear = 'Clear List';
   {%EndRegion}
 
 implementation
@@ -708,6 +720,7 @@ begin
   FFileName := string.Empty;
   FPath := string.Empty;
   FPoFiles := TStringList.Create;
+  FRecentFiles := TStringList.Create;
   FQACheckOptionsByLang := TObjectDictionary.Create;
   SetLength(FFileStatuses, 0);
   FCommandLineFile := string.Empty;
@@ -812,6 +825,9 @@ begin
   // LoadSettings
   LoadFormSettings(Self);
 
+  // Build the recent files submenu from the loaded list
+  RebuildRecentMenu;
+
   NewFile;
 
   // Components state after settings loaded
@@ -834,6 +850,7 @@ begin
   FreeAndNil(FPoFileBackup);
   SetLength(FFileStatuses, 0);
   FreeAndNil(FPoFiles);
+  FreeAndNil(FRecentFiles);
   FreeAndNil(FQACheckOptionsByLang);
   FreeAndNil(FLanguageCodes);
   FreeAndNil(FPluralForms);
@@ -1160,6 +1177,7 @@ begin
     if SaveFile(TempFileName) then
     begin
       FFileName := TempFileName;
+      AddRecentFile(FFileName);
       Changed := False;
       if ExtractFilePath(TempFileName) = IncludeTrailingPathDelimiter(FPath) then
       begin
@@ -3121,6 +3139,7 @@ begin
   if LoadFile(AFileName) then
   begin
     FFileName := AFileName;
+    AddRecentFile(FFileName);
     Changed := False;
     FillGrid;
     FillGridHeaders;
@@ -3622,6 +3641,105 @@ begin
     iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
 
   UpdateInterface;
+end;
+
+procedure TformPoBatch.AddRecentFile(const AFileName: string);
+var
+  FullPath: string;
+  Idx: integer;
+begin
+  if AFileName = string.Empty then
+    Exit;
+
+  FullPath := ExpandFileName(AFileName);
+  if not FileExists(FullPath) then
+    Exit;
+
+  // Move existing entry to the top, or insert a new one
+  Idx := FRecentFiles.IndexOf(FullPath);
+  if Idx >= 0 then
+    FRecentFiles.Delete(Idx);
+  FRecentFiles.Insert(0, FullPath);
+
+  // Trim the list to the configured limit
+  while FRecentFiles.Count > MAX_RECENT_FILES do
+    FRecentFiles.Delete(FRecentFiles.Count - 1);
+
+  RebuildRecentMenu;
+end;
+
+procedure TformPoBatch.RebuildRecentMenu;
+var
+  Item: TMenuItem;
+  i: integer;
+  DisplayPath: string;
+begin
+  if not Assigned(MenuOpenRecent) then
+    Exit;
+
+  // Drop all previous dynamic entries
+  while MenuOpenRecent.Count > 0 do
+    MenuOpenRecent.Items[0].Free;
+
+  MenuOpenRecent.Enabled := FRecentFiles.Count > 0;
+
+  for i := 0 to FRecentFiles.Count - 1 do
+  begin
+    // Escape ampersands so they are not treated as accelerators
+    DisplayPath := StringReplace(FRecentFiles[i], '&', '&&', [rfReplaceAll]);
+
+    Item := TMenuItem.Create(MenuOpenRecent);
+    if i < 9 then
+      Item.Caption := '&' + IntToStr(i + 1) + ' ' + DisplayPath
+    else
+      Item.Caption := IntToStr(i + 1) + ' ' + DisplayPath;
+    Item.Hint := FRecentFiles[i];
+    Item.Tag := i;
+    Item.OnClick := @OpenRecentFile;
+    MenuOpenRecent.Add(Item);
+  end;
+
+  if FRecentFiles.Count > 0 then
+  begin
+    Item := TMenuItem.Create(MenuOpenRecent);
+    Item.Caption := '-';
+    MenuOpenRecent.Add(Item);
+
+    Item := TMenuItem.Create(MenuOpenRecent);
+    Item.Caption := ropenrecentclear;
+    Item.OnClick := @ClearRecentFiles;
+    MenuOpenRecent.Add(Item);
+  end;
+end;
+
+procedure TformPoBatch.OpenRecentFile(Sender: TObject);
+var
+  Idx: integer;
+  FullPath: string;
+begin
+  if not (Sender is TMenuItem) then
+    Exit;
+
+  Idx := TMenuItem(Sender).Tag;
+  if (Idx < 0) or (Idx >= FRecentFiles.Count) then
+    Exit;
+
+  FullPath := FRecentFiles[Idx];
+  if not FileExists(FullPath) then
+  begin
+    // Silently drop entries whose files no longer exist
+    FRecentFiles.Delete(Idx);
+    RebuildRecentMenu;
+    Exit;
+  end;
+
+  OpenFile(FullPath);
+end;
+
+procedure TformPoBatch.ClearRecentFiles(Sender: TObject);
+begin
+  FRecentFiles.Clear;
+  RebuildRecentMenu;
 end;
 
 {%EndRegion}

@@ -606,6 +606,9 @@ object formPoBatch: TformPoBatch
       object MenuFileOpen: TMenuItem
         Action = AOpen
       end
+      object MenuOpenRecent: TMenuItem
+        Caption = 'Open Recent'
+      end
       object MenuFileSave: TMenuItem
         Action = ASave
       end
