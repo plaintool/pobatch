@@ -99,5 +99,7 @@
 {"hash":114603556,"name":"tformpobatch.amarkasvalid.caption","sourcebytes":[77,97,114,107,32,65,115,32,86,97,108,105,100],"value":"Mark As Valid"},
 {"hash":28791053,"name":"tformpobatch.aeditpluralform.caption","sourcebytes":[69,100,105,116,32,80,108,117,114,97,108,32,70,111,114,109],"value":"Edit Plural Form"},
 {"hash":195953908,"name":"tformpobatch.asyncwithpot.caption","sourcebytes":[83,121,110,99,32,87,105,116,104,32,80,111,116],"value":"Sync With Pot"},
-{"hash":67386889,"name":"tformpobatch.aedittranslationonly.caption","sourcebytes":[69,100,105,116,32,84,114,97,110,115,108,97,116,105,111,110,32,79,110,108,121],"value":"Edit Translation Only"}
+{"hash":67386889,"name":"tformpobatch.aedittranslationonly.caption","sourcebytes":[69,100,105,116,32,84,114,97,110,115,108,97,116,105,111,110,32,79,110,108,121],"value":"Edit Translation Only"},
+{"hash":28787049,"name":"tformpobatch.spellsource.addtodictionarycaption","sourcebytes":[65,100,100,32,84,111,32,68,105,99,116,105,111,110,97,114,121],"value":"Add To Dictionary"},
+{"hash":28787049,"name":"tformpobatch.spelltranslation.addtodictionarycaption","sourcebytes":[65,100,100,32,84,111,32,68,105,99,116,105,111,110,97,114,121],"value":"Add To Dictionary"}
 ]}

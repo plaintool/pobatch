@@ -1845,6 +1845,8 @@ object formPoBatch: TformPoBatch
     Enabled = False
     RealTime = True
     MemoChangeOnReplace = True
+    AllowAddToDictionary = True
+    AddToDictionaryCaption = 'Add To Dictionary'
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
     DicUrl = 'https://raw.githubusercontent.com/plainlib/dictionaries/main/{plaindict}'
@@ -1860,6 +1862,8 @@ object formPoBatch: TformPoBatch
     Enabled = False
     RealTime = True
     MemoChangeOnReplace = True
+    AllowAddToDictionary = True
+    AddToDictionaryCaption = 'Add To Dictionary'
     SubMenuCaption = 'Suggestions'
     Engine = seHunspell
     DicUrl = 'https://raw.githubusercontent.com/plainlib/dictionaries/main/{plaindict}'
