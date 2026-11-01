@@ -178,6 +178,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ConsoleOp"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\potm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PoTM"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

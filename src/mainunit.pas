@@ -40,6 +40,7 @@ uses
   LangCodes,
   PoWrap,
   PoCheck,
+  PoTM,
   Translate,
   ConfigManager;
 
@@ -65,6 +66,12 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    ARememberPath: TAction;
+    ARememberFile: TAction;
+    APathTranslateMissingFromMemory: TAction;
+    ATranslateMissingFromMemory: TAction;
+    ATranslateFromMemory: TAction;
+    APathRemember: TAction;
     AGoTo: TAction;
     ASettings: TAction;
     APathClearAll: TAction;
@@ -142,14 +149,15 @@ type
     MenuAbout: TMenuItem;
     MenuFileNewWindow: TMenuItem;
     MenuAutoCheckUpdates: TMenuItem;
-    MenuCut: TMenuItem;
-    MenuCopy: TMenuItem;
-    MenuCopySourceText: TMenuItem;
-    MenuClearIdentical: TMenuItem;
+    MenuEditCut: TMenuItem;
+    MenuEditCopy: TMenuItem;
+    MenuEditCopySourceText: TMenuItem;
+    MenuEditClearIdentical: TMenuItem;
     MenuEditPluralForm: TMenuItem;
     MenuHelpGNUgettext: TMenuItem;
-    MenuColumnContext: TMenuItem;
-    MenuColumnPlural: TMenuItem;
+    MenuItem1: TMenuItem;
+    MenuViewColumnContext: TMenuItem;
+    MenuViewColumnPlural: TMenuItem;
     MenuCheckPluralCount: TMenuItem;
     MenuCheckCaseFirstChar: TMenuItem;
     MenuCheckCaseAllUpper: TMenuItem;
@@ -160,13 +168,20 @@ type
     MenuCheckSpaceAfterPunct: TMenuItem;
     MenuCheckPunctEnd: TMenuItem;
     MenuCheckPunctBracket: TMenuItem;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
-    MenuItem4: TMenuItem;
-    MenuItem6: TMenuItem;
-    MenuItem7: TMenuItem;
-    MenuOpenRecent: TMenuItem;
+    MenuPathShowFileInExplorer: TMenuItem;
+    MenuTranslateMissingFromMemoryInFiles: TMenuItem;
+    MenuPathTranslateMissingFromMemoryInFiles: TMenuItem;
+    MenuFileRememberFile: TMenuItem;
+    MenuFileRememberPath: TMenuItem;
+    MenuFormatQAEnabled: TMenuItem;
+    MenuTranslateMissingInFiles: TMenuItem;
+    MenuPopupMarkValid: TMenuItem;
+    MenuFileSettings: TMenuItem;
+    MenuEditGoTo: TMenuItem;
+    MenuTranslateFromMemory: TMenuItem;
+    MenuTranslateMissingFromMemory: TMenuItem;
+    MenuRememberTranslations: TMenuItem;
+    MenuFileOpenRecent: TMenuItem;
     MenuPathClearAll: TMenuItem;
     MenuPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
@@ -180,16 +195,16 @@ type
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
-    MenuItem5: TMenuItem;
+    MenuFileNewFromPot: TMenuItem;
     MenuPathNewFilesFromPot: TMenuItem;
     MenuCheckPlaceholderMissing: TMenuItem;
     MenuCheckPlaceholderExtra: TMenuItem;
-    MenuQAChecks: TMenuItem;
+    MenuFormatQAChecks: TMenuItem;
     MenuPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
     MenuPathSelectAll: TMenuItem;
     MenuPathValidFile: TMenuItem;
-    MenuValidFile: TMenuItem;
+    MenuEditValidFile: TMenuItem;
     MenuPathRenameFile: TMenuItem;
     MenuMemoBidiMode: TMenuItem;
     MenuMemoClear: TMenuItem;
@@ -204,7 +219,7 @@ type
     MenuWordWrapTranslatePanel: TMenuItem;
     MenuWordWrapGrid: TMenuItem;
     MenuPopupEditPluralForm: TMenuItem;
-    MenuTranslatePanel: TMenuItem;
+    MenuViewTranslatePanel: TMenuItem;
     MenuPopupCut: TMenuItem;
     MenuPopupCopy: TMenuItem;
     MenuPopupPaste: TMenuItem;
@@ -212,17 +227,17 @@ type
     MenuPopupSelectAll: TMenuItem;
     MenuPopupCopySourceText: TMenuItem;
     MenuPopupClearIdentical: TMenuItem;
-    MenuSelectAll: TMenuItem;
-    MenuPaste: TMenuItem;
-    MenuDelete: TMenuItem;
-    MenuPathClose: TMenuItem;
-    MenuHeaders: TMenuItem;
-    MenuColumnReference: TMenuItem;
+    MenuEditSelectAll: TMenuItem;
+    MenuEditPaste: TMenuItem;
+    MenuEditDelete: TMenuItem;
+    MenuFilePathClose: TMenuItem;
+    MenuViewHeaders: TMenuItem;
+    MenuViewColumnReference: TMenuItem;
     MenuEdit: TMenuItem;
     MenuEditTranslationOnly: TMenuItem;
-    MenuUndoChanges: TMenuItem;
+    MenuEditUndoChanges: TMenuItem;
     MenuView: TMenuItem;
-    MenuPathOpen: TMenuItem;
+    MenuFilePathOpen: TMenuItem;
     Pages: TPageControl;
     PanelQA: TPanel;
     PanelTranslation: TPanel;
@@ -252,6 +267,8 @@ type
     Separator1: TMenuItem;
     Separator20: TMenuItem;
     Separator21: TMenuItem;
+    Separator22: TMenuItem;
+    Separator23: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
@@ -272,6 +289,7 @@ type
     PageComments: TTabSheet;
     Translate: TTranslate;
     { Form Events }
+    procedure ARememberPathExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -285,11 +303,11 @@ type
     procedure ApplicationPropException(Sender: TObject; E: Exception);
     procedure GridMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     { Menu Events }
-    procedure MenuTranslatePanelClick(Sender: TObject);
-    procedure MenuHeadersClick(Sender: TObject);
-    procedure MenuColumnContextClick(Sender: TObject);
-    procedure MenuColumnReferenceClick(Sender: TObject);
-    procedure MenuColumnPluralClick(Sender: TObject);
+    procedure MenuViewTranslatePanelClick(Sender: TObject);
+    procedure MenuViewHeadersClick(Sender: TObject);
+    procedure MenuViewColumnContextClick(Sender: TObject);
+    procedure MenuViewColumnReferenceClick(Sender: TObject);
+    procedure MenuViewColumnPluralClick(Sender: TObject);
     procedure MenuBuyMeACoffeeClick(Sender: TObject);
     procedure MenuCheckForUpdatesClick(Sender: TObject);
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
@@ -346,6 +364,7 @@ type
     procedure ACheckSpaceTrailingExecute(Sender: TObject);
     procedure ASettingsExecute(Sender: TObject);
     procedure AGoToExecute(Sender: TObject);
+    procedure ARememberFileExecute(Sender: TObject);
     { Action Batch Operations }
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
@@ -365,6 +384,10 @@ type
     procedure APathTranslateMissingExecute(Sender: TObject);
     procedure ATranslateMissingExecute(Sender: TObject);
     procedure ATranslateSelectedExecute(Sender: TObject);
+    procedure APathRememberExecute(Sender: TObject);
+    procedure ATranslateFromMemoryExecute(Sender: TObject);
+    procedure ATranslateMissingFromMemoryExecute(Sender: TObject);
+    procedure APathTranslateMissingFromMemoryExecute(Sender: TObject);
     { Grids Universal }
     procedure GridsUniversalKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure GridUniversalColRowInserted(Sender: TObject; IsColumn: boolean; sIndex, tIndex: integer);
@@ -472,6 +495,8 @@ type
     FLanguageCodes: TStringList;
     FPluralForms: TStringList;
     FRecentFiles: TStringList;
+    FTM: TPoTranslationMemory;
+    FTMAutoPopulateOnSave: boolean;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -533,9 +558,16 @@ type
     procedure RebuildRecentMenu;
     procedure OpenRecentFile(Sender: TObject);
     procedure ClearRecentFiles(Sender: TObject);
+
+    // Translation memory
+    procedure RememberCurrentFileIntoMemory;
+    function GetTMEnabled: boolean;
+    procedure SetTMEnabled(Value: boolean);
   public
     function IsCanClose(Fast: boolean = False): boolean;
     procedure AddRecentFile(const AFileName: string);
+    procedure ConfigureTM(const ASourceLang, ATargetLang: string);
+    procedure ReloadTM;
     procedure AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
     procedure SaveGrid;
     procedure FillGrid;
@@ -571,6 +603,9 @@ type
     // Exposed for TBatchOp
     property FileName: string read FFileName write FFileName;
     property PoFile: TPoFile read FPoFile;
+    property TM: TPoTranslationMemory read FTM;
+    property TMEnabled: boolean read GetTMEnabled write SetTMEnabled;
+    property TMAutoPopulateOnSave: boolean read FTMAutoPopulateOnSave write FTMAutoPopulateOnSave;
     property PathIndex: integer read FPathIndex write FPathIndex;
     property LastPathIndex: integer read FLastPathIndex write FLastPathIndex;
     // Settings sizes
@@ -692,6 +727,10 @@ resourcestring
   rnotfoundentry = 'Entry number %s not found.';
 
   ropenrecentclear = 'Clear List';
+
+  rrememberfiletitle = 'Remember file';
+  rrememberfiledone = 'Done. %d translation(s) remembered, %d skipped.';
+  rrememberfilelangnotset = 'File "%s" skipped: target language is not set in the PO header.';
   {%EndRegion}
 
 implementation
@@ -772,6 +811,16 @@ begin
   FPoFile := TPoFile.Create;
   FPoFileBackup := TPoFile.Create;
 
+  // Create the translation memory; the language pair is configured lazily
+  // as soon as a document with a known language is opened or saved
+  FTM := TPoTranslationMemory.Create;
+  FTM.Directory := TOS.GetSettingsDirectory(APP_NAME, 'TranslationMemory');
+  FTM.MaxSourceLength := 100;
+  FTM.SkipMultiline := True;
+  FTM.ContextSensitive := True;
+  FTM.Enabled := True;
+  FTMAutoPopulateOnSave := True;
+
   ConfigManager.AppName := APP_NAME;
 
   // Upper bound for a single row height, so a row cannot grow taller than the visible grid area
@@ -836,7 +885,7 @@ begin
 
   // Load the menu state
   MenuAutoCheckUpdates.Checked := FAutoCheckUpdates;
-  MenuQAChecks.Enabled := ACheckEnabled.Checked;
+  MenuFormatQAChecks.Enabled := ACheckEnabled.Checked;
 
   // Handle command line parameters
   HandleCommandLineParameters;
@@ -854,6 +903,7 @@ begin
   FreeAndNil(FQACheckOptionsByLang);
   FreeAndNil(FLanguageCodes);
   FreeAndNil(FPluralForms);
+  FreeAndNil(FTM);
 end;
 
 procedure TformPoBatch.FormShow(Sender: TObject);
@@ -980,19 +1030,19 @@ end;
 
 {%Region -fold Menu Events}
 
-procedure TformPoBatch.MenuHeadersClick(Sender: TObject);
+procedure TformPoBatch.MenuViewHeadersClick(Sender: TObject);
 begin
-  GridHeaders.Visible := MenuHeaders.Checked;
-  SplitterHeaders.Visible := MenuHeaders.Checked;
+  GridHeaders.Visible := MenuViewHeaders.Checked;
+  SplitterHeaders.Visible := MenuViewHeaders.Checked;
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-procedure TformPoBatch.MenuTranslatePanelClick(Sender: TObject);
+procedure TformPoBatch.MenuViewTranslatePanelClick(Sender: TObject);
 begin
   Grid.EditorMode := False;
-  Pages.Visible := MenuTranslatePanel.Checked;
-  SplitterPages.Visible := MenuTranslatePanel.Checked;
-  if MenuTranslatePanel.Checked then
+  Pages.Visible := MenuViewTranslatePanel.Checked;
+  SplitterPages.Visible := MenuViewTranslatePanel.Checked;
+  if MenuViewTranslatePanel.Checked then
   begin
     UpdateTranslatePanel;
     SpellSource.CheckNow;
@@ -1001,23 +1051,23 @@ begin
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
-procedure TformPoBatch.MenuColumnContextClick(Sender: TObject);
+procedure TformPoBatch.MenuViewColumnContextClick(Sender: TObject);
 begin
-  Grid.Columns[COLUMN_CONTEXT].Visible := MenuColumnContext.Checked;
+  Grid.Columns[COLUMN_CONTEXT].Visible := MenuViewColumnContext.Checked;
   if Grid.Columns[COLUMN_CONTEXT].Visible and (Grid.Columns[COLUMN_CONTEXT].Width = 0) then
     Grid.Columns[COLUMN_CONTEXT].Width := 240;
 end;
 
-procedure TformPoBatch.MenuColumnReferenceClick(Sender: TObject);
+procedure TformPoBatch.MenuViewColumnReferenceClick(Sender: TObject);
 begin
-  Grid.Columns[COLUMN_REFERENCE].Visible := MenuColumnReference.Checked;
+  Grid.Columns[COLUMN_REFERENCE].Visible := MenuViewColumnReference.Checked;
   if Grid.Columns[COLUMN_REFERENCE].Visible and (Grid.Columns[COLUMN_REFERENCE].Width = 0) then
     Grid.Columns[COLUMN_REFERENCE].Width := 240;
 end;
 
-procedure TformPoBatch.MenuColumnPluralClick(Sender: TObject);
+procedure TformPoBatch.MenuViewColumnPluralClick(Sender: TObject);
 begin
-  Grid.Columns[COLUMN_PLURAL].Visible := MenuColumnPlural.Checked;
+  Grid.Columns[COLUMN_PLURAL].Visible := MenuViewColumnPlural.Checked;
   if Grid.Columns[COLUMN_PLURAL].Visible and (Grid.Columns[COLUMN_PLURAL].Width = 0) then
     Grid.Columns[COLUMN_PLURAL].Width := 240;
 end;
@@ -1435,7 +1485,7 @@ begin
 
   // The submenu with individual toggles is only usable when the master
   // switch is on
-  MenuQAChecks.Enabled := ACheckEnabled.Checked;
+  MenuFormatQAChecks.Enabled := ACheckEnabled.Checked;
 
   RecheckAllQA;
 end;
@@ -1716,6 +1766,123 @@ begin
   end;
 end;
 
+procedure TformPoBatch.ARememberFileExecute(Sender: TObject);
+var
+  TempPoFile: TPoFile;
+  AFileName, FileSrc, FileTgt: string;
+  ImportResult: TTMImportResult;
+begin
+  if not Assigned(FTM) then
+    Exit;
+
+  // Do not bother the user with a file dialog when the memory is off
+  if not FTM.Enabled then
+  begin
+    MessageDlg(rerrortitle, rmemorydisabled, mtWarning, [mbOK], 0);
+    Exit;
+  end;
+
+  // Let the user choose a single PO file
+  dialogOpen.FilterIndex := 1;
+  if not dialogOpen.Execute then
+    Exit;
+
+  AFileName := dialogOpen.FileName;
+  if not FileExists(AFileName) then
+  begin
+    MessageDlg(rerrortitle, Format(rerrornotexistine, [AFileName]), mtError, [mbOK], 0);
+    Exit;
+  end;
+
+  TempPoFile := TPoFile.Create;
+  try
+    try
+      TempPoFile.LoadFromFile(AFileName);
+    except
+      on E: Exception do
+      begin
+        MessageDlg(rloaderrortitle, Format(rloaderrormsg, [E.Message]), mtError, [mbOK], 0);
+        Exit;
+      end;
+    end;
+
+    // Resolve the language pair from the file headers
+    FileTgt := Trim(TempPoFile.HeaderValue['Language']);
+    FileSrc := Trim(TempPoFile.HeaderValue['X-Source-Language']);
+    if FileSrc = '' then
+      FileSrc := 'en';
+
+    if FileTgt = '' then
+    begin
+      MessageDlg(rerrortitle, Format(rrememberfilelangnotset, [ExtractFileName(AFileName)]),
+        mtWarning, [mbOK], 0);
+      Exit;
+    end;
+
+    // Switch the memory to this file's language pair and import its entries
+    ConfigureTM(FileSrc, FileTgt);
+    FTM.ImportFromPoObject(TempPoFile, ImportResult);
+
+    // Flush new entries to disk so they survive the next Load
+    if FTM.Dirty then
+      FTM.Save;
+
+    if ShowSuccess then
+      MessageDlg(rrememberfiletitle,
+        Format(rrememberfiledone, [ImportResult.Imported, ImportResult.Skipped]),
+        mtInformation, [mbOK], 0);
+  finally
+    TempPoFile.Free;
+  end;
+end;
+
+procedure TformPoBatch.ARememberPathExecute(Sender: TObject);
+var
+  DefaultDir: string = string.Empty;
+  FileList: TStringList;
+begin
+  if not Assigned(FTM) then
+    Exit;
+
+  // Do not bother the user with a folder dialog when the memory is off
+  if not FTM.Enabled then
+  begin
+    MessageDlg(rerrortitle, rmemorydisabled, mtWarning, [mbOK], 0);
+    Exit;
+  end;
+
+  // Start the folder dialog at the folder of the currently opened file,
+  // falling back to the last opened path when there is no file
+  if FFileName <> string.Empty then
+    DefaultDir := ExtractFilePath(FFileName)
+  else
+    DefaultDir := FPath;
+
+  DefaultDir := ExcludeTrailingPathDelimiter(DefaultDir);
+  if (DefaultDir <> string.Empty) and DirectoryExists(DefaultDir) then
+    dialogPath.InitialDir := DefaultDir;
+
+  if not dialogPath.Execute then
+    Exit;
+
+  // Scan the chosen folder without touching the current path or file list
+  FileList := TStringList.Create;
+  try
+    // Only .po files can contribute translations
+    TOS.FindFilesByMasks(dialogPath.FileName, ['*.po'], FileList);
+    if FileList.Count = 0 then
+    begin
+      ShowMessage(rnopofilesfound);
+      Exit;
+    end;
+
+    // Reuse the existing batch routine, passing the explicit file list
+    TBatchOp.RememberFiles(Self, True, FileList);
+  finally
+    FileList.Free;
+  end;
+end;
+
 {%EndRegion}
 
 {%Region -fold Action Batch Operations}
@@ -1827,6 +1994,27 @@ procedure TformPoBatch.ATranslateMissingExecute(Sender: TObject);
 begin
   // Missing translations are looked up across the whole file, not just selection
   TBatchOp.Translate(Self, True, False);
+end;
+
+procedure TformPoBatch.APathRememberExecute(Sender: TObject);
+begin
+  TBatchOp.RememberFiles(Self);
+end;
+
+procedure TformPoBatch.ATranslateFromMemoryExecute(Sender: TObject);
+begin
+  TBatchOp.TranslateFromMemory(Self, False, True);
+end;
+
+procedure TformPoBatch.ATranslateMissingFromMemoryExecute(Sender: TObject);
+begin
+  // Missing translations are processed in the whole file, not just selection
+  TBatchOp.TranslateFromMemory(Self, True, False);
+end;
+
+procedure TformPoBatch.APathTranslateMissingFromMemoryExecute(Sender: TObject);
+begin
+  TBatchOp.PathTranslateEmptyFromMemory(Self);
 end;
 
 {%EndRegion}
@@ -3297,7 +3485,7 @@ begin
   Enable := FPath <> string.Empty;
   ListPath.Visible := Enable;
   SplitterPath.Visible := Enable;
-  MenuPathClose.Enabled := Enable;
+  MenuFilePathClose.Enabled := Enable;
   if not Enabled then
     FLastPathIndex := -1;
   UpdateCaption;
@@ -3558,6 +3746,14 @@ begin
         Output.SaveToFile(AFileName, TEncoding.UTF8);
         FPoFileBackup.Assign(FPoFile);
 
+        // Push the saved translations into the memory so they become
+        // available for future lookups; failures must not break the save
+        try
+          RememberCurrentFileIntoMemory;
+        except
+          // Ignore TM errors on save
+        end;
+
         AnalizePath(FPathIndex);
         if not Fast then
         begin
@@ -3629,20 +3825,6 @@ begin
   end;
 end;
 
-procedure TformPoBatch.ApplyFont(const AFont: TFont);
-begin
-  Grid.EditorMode := False;
-
-  // Apply the configured font to the main form and all text controls
-  Font.Assign(AFont);
-
-  // Row heights depend on the font metrics, so recalculate every row
-  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight,
-    iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
-
-  UpdateInterface;
-end;
-
 procedure TformPoBatch.AddRecentFile(const AFileName: string);
 var
   FullPath: string;
@@ -3674,21 +3856,21 @@ var
   i: integer;
   DisplayPath: string;
 begin
-  if not Assigned(MenuOpenRecent) then
+  if not Assigned(MenuFileOpenRecent) then
     Exit;
 
   // Drop all previous dynamic entries
-  while MenuOpenRecent.Count > 0 do
-    MenuOpenRecent.Items[0].Free;
+  while MenuFileOpenRecent.Count > 0 do
+    MenuFileOpenRecent.Items[0].Free;
 
-  MenuOpenRecent.Enabled := FRecentFiles.Count > 0;
+  MenuFileOpenRecent.Enabled := FRecentFiles.Count > 0;
 
   for i := 0 to FRecentFiles.Count - 1 do
   begin
     // Escape ampersands so they are not treated as accelerators
     DisplayPath := StringReplace(FRecentFiles[i], '&', '&&', [rfReplaceAll]);
 
-    Item := TMenuItem.Create(MenuOpenRecent);
+    Item := TMenuItem.Create(MenuFileOpenRecent);
     if i < 9 then
       Item.Caption := '&' + IntToStr(i + 1) + ' ' + DisplayPath
     else
@@ -3696,19 +3878,19 @@ begin
     Item.Hint := FRecentFiles[i];
     Item.Tag := i;
     Item.OnClick := @OpenRecentFile;
-    MenuOpenRecent.Add(Item);
+    MenuFileOpenRecent.Add(Item);
   end;
 
   if FRecentFiles.Count > 0 then
   begin
-    Item := TMenuItem.Create(MenuOpenRecent);
+    Item := TMenuItem.Create(MenuFileOpenRecent);
     Item.Caption := '-';
-    MenuOpenRecent.Add(Item);
+    MenuFileOpenRecent.Add(Item);
 
-    Item := TMenuItem.Create(MenuOpenRecent);
+    Item := TMenuItem.Create(MenuFileOpenRecent);
     Item.Caption := ropenrecentclear;
     Item.OnClick := @ClearRecentFiles;
-    MenuOpenRecent.Add(Item);
+    MenuFileOpenRecent.Add(Item);
   end;
 end;
 
@@ -4581,6 +4763,132 @@ begin
     Result := LangCode;
 end;
 
+procedure TformPoBatch.ApplyFont(const AFont: TFont);
+begin
+  Grid.EditorMode := False;
+
+  // Apply the configured font to the main form and all text controls
+  Font.Assign(AFont);
+
+  // Row heights depend on the font metrics, so recalculate every row
+  Grid.UpdateRowHeights(FWordWrap, FMaxRowHeight,
+    iif(Grid.EditorMode, FRichEditor.Lines.Text, ''), FRichEditor.ZoomFactor);
+
+  UpdateInterface;
+end;
+
+procedure TformPoBatch.ConfigureTM(const ASourceLang, ATargetLang: string);
+begin
+  if not Assigned(FTM) then
+    Exit;
+  if (ASourceLang = '') or (ATargetLang = '') then
+    Exit;
+
+  // Skip when the pair is already active
+  if SameText(FTM.SourceLang, ASourceLang) and SameText(FTM.TargetLang, ATargetLang) then
+    Exit;
+
+  // Persist any pending changes before switching to another language pair
+  if FTM.Dirty then
+  begin
+    try
+      FTM.Save;
+    except
+      // Ignore save errors, the pending data stays in memory
+    end;
+  end;
+
+  FTM.SourceLang := ASourceLang;
+  FTM.TargetLang := ATargetLang;
+  try
+    FTM.Load;
+  except
+    // Ignore load errors, memory starts empty
+  end;
+end;
+
+procedure TformPoBatch.RememberCurrentFileIntoMemory;
+var
+  I: integer;
+  Entry: TPOEntry;
+  FileSrc, FileTgt: string;
+  Added: integer;
+begin
+  if not Assigned(FTM) then
+    Exit;
+  if FTM.Directory = '' then
+    Exit;
+  if not FTM.Enabled or not FTMAutoPopulateOnSave then
+    Exit;
+
+  // Determine the language pair from the current document
+  FileSrc := Trim(FPoFile.HeaderValue['X-Source-Language']);
+  if FileSrc = '' then
+    FileSrc := 'en';
+  FileTgt := Trim(FPoFile.HeaderValue['Language']);
+  if FileTgt = '' then
+    Exit;
+
+  ConfigureTM(FileSrc, FileTgt);
+
+  // Walk the in-memory model directly; no need to re-read from disk
+  Added := 0;
+  for I := 0 to FPoFile.Entries.Count - 1 do
+  begin
+    Entry := FPoFile.Entries[I];
+    if Entry.MsgId = '' then
+      Continue;  // header
+    if Entry.Obsolete then
+      Continue;
+    if Entry.IsPlural then
+      Continue;  // plural storage is not supported
+    if Trim(Entry.MsgStrSimple) = '' then
+      Continue;  // untranslated
+    if FTM.Store(Entry.MsgCtxt, Entry.MsgId, Entry.MsgStrSimple, Entry.Reference) then
+      Inc(Added);
+  end;
+
+  if Added > 0 then
+  begin
+    try
+      FTM.Save;
+    except
+      // Ignore save errors
+    end;
+  end;
+end;
+
+function TformPoBatch.GetTMEnabled: boolean;
+begin
+  Result := Assigned(FTM) and FTM.Enabled;
+end;
+
+procedure TformPoBatch.SetTMEnabled(Value: boolean);
+begin
+  if Assigned(FTM) then
+    FTM.Enabled := Value;
+end;
+
+procedure TformPoBatch.ReloadTM;
+begin
+  if not Assigned(FTM) then
+    Exit;
+  // Persist pending changes before reloading so they are not lost
+  if FTM.Dirty then
+  begin
+    try
+      FTM.Save;
+    except
+      // Ignore save errors
+    end;
+  end;
+  try
+    FTM.Load;
+  except
+    // Ignore load errors
+  end;
+end;
+
 {%EndRegion}
 
 {%Region -fold Fill / Save Grids}
@@ -5061,21 +5369,34 @@ begin
   if FLanguage <> string.Empty then
     LangSuffix := Format(' (%s)', [FLanguage])
   else
-    LangSuffix := ' (*)';
-  MenuQAChecks.Caption := rqacheckscaption + LangSuffix;
+    LangSuffix := ' (-)';
+  MenuFormatQAChecks.Caption := rqacheckscaption + LangSuffix;
 
   // The submenu with individual toggles is only usable when the master
   // switch is on
-  MenuQAChecks.Enabled := ACheckEnabled.Checked;
+  MenuFormatQAChecks.Enabled := ACheckEnabled.Checked;
 end;
 
 procedure TformPoBatch.RecheckAllQA;
+var
+  Row: integer;
+  Entry: TPOEntry;
 begin
   if not Assigned(FPoFile) then
     Exit;
   SaveGrid;
   FPoFile.CheckAllQA;
-  FillGrid;
+
+  // Update only the valid flag in place so that sorting and selection stay
+  // untouched; rebuilding the grid would re-sort and could reorder rows
+  for Row := Grid.FixedRows to Grid.RowCount - 1 do
+  begin
+    Entry := RowEntry(Row);
+    if Assigned(Entry) then
+      Grid.Cells[CELL_VALID, Row] := IfThen(Entry.IsValid, '1', '0');
+  end;
+
+  Grid.Invalidate;
   UpdateTranslatePanel;
 end;
 

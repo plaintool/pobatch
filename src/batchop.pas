@@ -21,7 +21,8 @@ uses
   Dialogs,
   Grids,
   FileUtil,
-  MainUnit;
+  MainUnit,
+  PoTM;
 
 type
   TBatchOp = class
@@ -54,6 +55,10 @@ type
     class procedure CopySourceToTranslation(AForm: TformPoBatch);
     class procedure ClearIdenticalTranslations(AForm: TformPoBatch);
     class procedure Translate(AForm: TformPoBatch; ASkipTranslated: boolean = False; AOnlySelected: boolean = True);
+    // Translation memory operations
+    class procedure RememberFiles(AForm: TformPoBatch; AConfirm: boolean = True; AFileList: TStrings = nil);
+    class procedure TranslateFromMemory(AForm: TformPoBatch; ASkipTranslated: boolean = False; AOnlySelected: boolean = True);
+    class procedure PathTranslateEmptyFromMemory(AForm: TformPoBatch; AConfirm: boolean = True);
   end;
 
   {%Region -fold Resource Strings}
@@ -139,6 +144,14 @@ resourcestring
   rtranslationlinecountgrid = 'Translation service returned %d lines instead of %d; single-line entries were skipped.'#13#10#13#10'Response:'#13#10'%s';
   rtranslatedoneskipped = 'Translation complete. %d entries updated, %d skipped.';
   rtranslatedone = 'Translation complete. %d entries updated.';
+
+  rremembertitle = 'Remember translations';
+  rrememberconfirm = 'Remember translations from the following %d file(s) into the memory?'#13#10#13#10'%s';
+  rrememberdone = 'Done. %d translation(s) remembered, %d skipped.';
+  rmemorynotconfigured = 'Translation memory is not configured for the current language pair.';
+  rmemorydisabled = 'Translation memory is disabled. Enable it in the settings.';
+  rmemorytranslatedone = 'Done. %d translation(s) applied from memory.';
+  rmemorytranslatedoneskipped = 'Done. %d translation(s) applied from memory, %d skipped.';
   {%EndRegion}
 
 implementation
@@ -1599,7 +1612,9 @@ begin
     AForm.Grid.EditorMode := False;
     AForm.SaveGrid;
 
-    // Remove the fuzzy flag from the selected translatable entries
+    // Remove the fuzzy flag from the selected translatable entries and
+    // update only the affected cells, so the visual row order and the
+    // current selection survive the action
     MarkedCount := 0;
     for Row := StartRow to EndRow do
     begin
@@ -1614,6 +1629,8 @@ begin
       if Entry.IsFuzzy then
       begin
         Entry.IsFuzzy := False;
+        AForm.Grid.Cells[CELL_FUZZY, Row] := '0';
+        AForm.UpdateValid(Row);
         Inc(MarkedCount);
       end;
     end;
@@ -1626,10 +1643,7 @@ begin
     end;
 
     AForm.Changed := True;
-
-    // Rebuild the grid and update the UI
-    AForm.FillGrid;
-    AForm.FillGridHeaders;
+    AForm.Grid.Invalidate;
     AForm.UpdateTranslatePanel;
 
     // Update the file status in the path list if applicable
@@ -2026,6 +2040,432 @@ begin
   finally
     ResponseLines.Free;
   end;
+end;
+
+class procedure TBatchOp.RememberFiles(AForm: TformPoBatch; AConfirm: boolean = True; AFileList: TStrings = nil);
+var
+  i, selCount: integer;
+  PoFile: TPOFile;
+  FileName, FileSrc, FileTgt, fileList, msg: string;
+  SelectedIndices: array of integer = nil;
+  FilesToProcess: array of string = nil;
+  ImportResult: TTMImportResult;
+  TotalImported, TotalSkipped: integer;
+begin
+  if not Assigned(AForm.TM) then
+    Exit;
+  if not AForm.TM.Enabled then
+  begin
+    ReportMessage(rmemorydisabled, AConfirm);
+    Exit;
+  end;
+
+  if Assigned(AFileList) then
+  begin
+    // Explicit list mode: use the caller-supplied files directly
+    SetLength(FilesToProcess, AFileList.Count);
+    for i := 0 to AFileList.Count - 1 do
+      FilesToProcess[i] := AFileList[i];
+  end
+  else
+  begin
+    // Selection mode: collect indices of selected items in the path list
+    SetLength(SelectedIndices, AForm.ListPath.Items.Count);
+    selCount := 0;
+    for i := 0 to AForm.ListPath.Items.Count - 1 do
+      if AForm.ListPath.Selected[i] then
+      begin
+        SelectedIndices[selCount] := i;
+        Inc(selCount);
+      end;
+    SetLength(SelectedIndices, selCount);
+
+    if selCount = 0 then
+    begin
+      ReportMessage(rnopofilesselected, AConfirm);
+      Exit;
+    end;
+
+    SetLength(FilesToProcess, selCount);
+    for i := 0 to selCount - 1 do
+      FilesToProcess[i] := AForm.PoFiles[SelectedIndices[i]];
+  end;
+
+  if Length(FilesToProcess) = 0 then
+  begin
+    ReportMessage(rnopofilesselected, AConfirm);
+    Exit;
+  end;
+
+  // Build the confirmation message with the affected files
+  fileList := string.Empty;
+  for i := 0 to High(FilesToProcess) do
+  begin
+    if i < 10 then
+      fileList := fileList + FilesToProcess[i] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + Format(rmorefiles, [Length(FilesToProcess) - 10]) + sLineBreak;
+  end;
+
+  msg := Format(rrememberconfirm, [Length(FilesToProcess), fileList]);
+  if AConfirm and (MessageDlg(rremembertitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+    Exit;
+
+  TotalImported := 0;
+  TotalSkipped := 0;
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to High(FilesToProcess) do
+    begin
+      FileName := FilesToProcess[i];
+      if not FileExists(FileName) then
+      begin
+        Screen.Cursor := crDefault;
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip POT files - they contain no translations
+      if SameText(ExtractFileExt(FileName), '.pot') then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        try
+          PoFile.LoadFromFile(FileName);
+
+          // Resolve the language pair from this file
+          FileSrc := Trim(PoFile.HeaderValue['X-Source-Language']);
+          if FileSrc = '' then
+            FileSrc := 'en';
+          FileTgt := Trim(PoFile.HeaderValue['Language']);
+          if FileTgt = '' then
+            Continue;
+
+          // Switch the TM to this file's language pair if needed
+          AForm.ConfigureTM(FileSrc, FileTgt);
+
+          // Import matching entries directly from the loaded object
+          AForm.TM.ImportFromPoObject(PoFile, ImportResult);
+          Inc(TotalImported, ImportResult.Imported);
+          Inc(TotalSkipped, ImportResult.Skipped);
+        except
+          on E: Exception do
+          begin
+            Screen.Cursor := crDefault;
+            ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
+            Screen.Cursor := crHourGlass;
+          end;
+        end;
+      finally
+        PoFile.Free;
+      end;
+    end;
+
+    // Flush any pending changes to disk
+    if AForm.TM.Dirty then
+      AForm.TM.Save;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+
+  ReportSuccessFmt(AForm, rrememberdone, [TotalImported, TotalSkipped], AConfirm);
+end;
+
+class procedure TBatchOp.TranslateFromMemory(AForm: TformPoBatch; ASkipTranslated: boolean = False; AOnlySelected: boolean = True);
+var
+  StartRow, EndRow, Row: integer;
+  EntryIndex, i: integer;
+  Entry: TPOEntry;
+  MsgStr, FileSrc, FileTgt, ConfirmMsg: string;
+  TotalTranslated: integer;
+  SkippedCount: integer;
+  RowsToProcess: array of integer = nil;
+  EntriesToProcess: array of TPOEntry = nil;
+  AppliedCount: integer;
+begin
+  if not Assigned(AForm.TM) then
+    Exit;
+  if not AForm.TM.Enabled then
+  begin
+    ShowMessage(rmemorydisabled);
+    Exit;
+  end;
+  if AForm.TM.Directory = '' then
+  begin
+    ShowMessage(rmemorynotconfigured);
+    Exit;
+  end;
+
+  // Configure TM for the current file's language pair
+  FileSrc := Trim(AForm.PoFile.HeaderValue['X-Source-Language']);
+  if FileSrc = '' then
+    FileSrc := 'en';
+  FileTgt := Trim(AForm.PoFile.HeaderValue['Language']);
+  if FileTgt = '' then
+  begin
+    ShowMessage(rtargetlangnotset);
+    Exit;
+  end;
+  AForm.ConfigureTM(FileSrc, FileTgt);
+
+  // Determine the row range: either the selected rows or the whole file
+  if AOnlySelected then
+  begin
+    if AForm.Grid.Selection.Top = AForm.Grid.Selection.Bottom then
+    begin
+      StartRow := AForm.Grid.Row;
+      EndRow := AForm.Grid.Row;
+    end
+    else
+    begin
+      StartRow := AForm.Grid.Selection.Top;
+      EndRow := AForm.Grid.Selection.Bottom;
+    end;
+  end
+  else
+  begin
+    StartRow := AForm.Grid.FixedRows;
+    EndRow := AForm.Grid.RowCount - 1;
+  end;
+
+  if StartRow < AForm.Grid.FixedRows then
+    StartRow := AForm.Grid.FixedRows;
+  if EndRow >= AForm.Grid.RowCount then
+    EndRow := AForm.Grid.RowCount - 1;
+  if StartRow > EndRow then
+    Exit;
+
+  if AOnlySelected then
+  begin
+    if ASkipTranslated then
+      ConfirmMsg := Format(rtranslatemissingselected, [EndRow - StartRow + 1])
+    else
+      ConfirmMsg := Format(rtranslateselected, [EndRow - StartRow + 1]);
+  end
+  else
+  begin
+    if ASkipTranslated then
+      ConfirmMsg := rtranslateallmissing
+    else
+      ConfirmMsg := rtranslateall;
+  end;
+
+  if MessageDlg(ConfirmMsg, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
+
+  // Ensure the grid data is pushed to the model before processing
+  AForm.Grid.EditorMode := False;
+  AForm.SaveGrid;
+
+  // Collect the entries that need processing
+  SkippedCount := 0;
+  for Row := StartRow to EndRow do
+  begin
+    EntryIndex := StrToIntDef(AForm.Grid.Cells[0, Row], -1);
+    if (EntryIndex < 0) or (EntryIndex >= AForm.PoFile.Entries.Count) then
+      Continue;
+
+    Entry := AForm.PoFile.Entries[EntryIndex];
+    if Entry.MsgId = string.Empty then
+      Continue;
+    if ASkipTranslated and (Trim(Entry.MsgStrSimple) <> string.Empty) then
+    begin
+      Inc(SkippedCount);
+      Continue;
+    end;
+
+    SetLength(EntriesToProcess, Length(EntriesToProcess) + 1);
+    EntriesToProcess[High(EntriesToProcess)] := Entry;
+    SetLength(RowsToProcess, Length(RowsToProcess) + 1);
+    RowsToProcess[High(RowsToProcess)] := Row;
+  end;
+
+  if Length(EntriesToProcess) = 0 then
+  begin
+    if ASkipTranslated and (SkippedCount > 0) then
+      ShowMessage(rnothingtranslatedall)
+    else
+      ShowMessage(rnothingtranslated);
+    Exit;
+  end;
+
+  // Apply translations from memory
+  TotalTranslated := 0;
+  AppliedCount := 0;
+  for i := 0 to High(EntriesToProcess) do
+  begin
+    Entry := EntriesToProcess[i];
+    if AForm.TM.Lookup(Entry.MsgCtxt, Entry.MsgId, Entry.Reference, MsgStr) then
+    begin
+      Entry.MsgStrSimple := MsgStr;
+      Entry.IsFuzzy := True;
+      AForm.Grid.Cells[CELL_TRANSLATION, RowsToProcess[i]] := MsgStr;
+      AForm.Grid.Cells[CELL_FUZZY, RowsToProcess[i]] := '1';
+      AForm.UpdateValid(RowsToProcess[i]);
+      Inc(TotalTranslated);
+    end;
+    Inc(AppliedCount);
+  end;
+
+  if TotalTranslated > 0 then
+  begin
+    AForm.Changed := True;
+    AForm.UpdateTranslatePanel;
+    AForm.Grid.Invalidate;
+  end;
+
+  if AForm.ShowSuccess then
+  begin
+    if ASkipTranslated and (SkippedCount > 0) then
+      ShowMessageFmt(rmemorytranslatedoneskipped, [TotalTranslated, SkippedCount])
+    else
+      ShowMessageFmt(rmemorytranslatedone, [TotalTranslated]);
+  end;
+end;
+
+class procedure TBatchOp.PathTranslateEmptyFromMemory(AForm: TformPoBatch; AConfirm: boolean = True);
+var
+  i, j, selCount, translated: integer;
+  PoFile: TPOFile;
+  Entry: TPOEntry;
+  FileName, FileSrc, FileTgt, fileList, msg, MsgStr: string;
+  SelectedIndices: array of integer = nil;
+  TotalTranslated: integer;
+begin
+  if not Assigned(AForm.TM) then
+    Exit;
+  if not AForm.TM.Enabled then
+  begin
+    ReportMessage(rmemorydisabled, AConfirm);
+    Exit;
+  end;
+
+  // Collect selected indices before processing
+  SetLength(SelectedIndices, AForm.ListPath.Items.Count);
+  selCount := 0;
+  for i := 0 to AForm.ListPath.Items.Count - 1 do
+    if AForm.ListPath.Selected[i] then
+    begin
+      SelectedIndices[selCount] := i;
+      Inc(selCount);
+    end;
+  SetLength(SelectedIndices, selCount);
+
+  if selCount = 0 then
+  begin
+    ReportMessage(rnopofilesselected, AConfirm);
+    Exit;
+  end;
+
+  // Build the confirmation message with the affected files
+  fileList := string.Empty;
+  for i := 0 to selCount - 1 do
+  begin
+    if i < 10 then
+      fileList := fileList + AForm.PoFiles[SelectedIndices[i]] + sLineBreak
+    else if i = 10 then
+      fileList := fileList + Format(rmorefiles, [selCount - 10]) + sLineBreak;
+  end;
+
+  msg := Format(rtranslatemissingconfirm, [selCount, fileList]);
+  if AConfirm and (MessageDlg(rtranslatemissingtitle, msg, mtConfirmation, mbYesNo, 0) <> mrYes) then
+    Exit;
+
+  // Ask to save the current file if modified - abort if user cancels
+  if not AForm.IsCanClose(True) then
+    Exit;
+
+  TotalTranslated := 0;
+  Screen.Cursor := crHourGlass;
+  try
+    for i := 0 to selCount - 1 do
+    begin
+      FileName := AForm.PoFiles[SelectedIndices[i]];
+      if not FileExists(FileName) then
+      begin
+        Screen.Cursor := crDefault;
+        ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
+        Screen.Cursor := crHourGlass;
+        Continue;
+      end;
+
+      // Skip POT files - they contain no translations
+      if SameText(ExtractFileExt(FileName), '.pot') then
+        Continue;
+
+      PoFile := TPOFile.Create;
+      try
+        try
+          PoFile.LoadFromFile(FileName);
+
+          // Resolve the language pair from this file
+          FileSrc := Trim(PoFile.HeaderValue['X-Source-Language']);
+          if FileSrc = '' then
+            FileSrc := 'en';
+          FileTgt := Trim(PoFile.HeaderValue['Language']);
+          if FileTgt = '' then
+          begin
+            Screen.Cursor := crDefault;
+            ReportMessageFmt(rfilelangnotset, [ExtractFileName(FileName)], AConfirm);
+            Screen.Cursor := crHourGlass;
+            Continue;
+          end;
+
+          // Switch TM to this file's language pair if needed
+          AForm.ConfigureTM(FileSrc, FileTgt);
+
+          translated := 0;
+          for j := 0 to PoFile.Entries.Count - 1 do
+          begin
+            Entry := PoFile.Entries[j];
+            if Entry.MsgId = string.Empty then
+              Continue;
+            if Entry.IsPlural then
+              Continue;  // plural storage is not supported
+            if Trim(Entry.MsgStrSimple) <> string.Empty then
+              Continue;
+
+            if AForm.TM.Lookup(Entry.MsgCtxt, Entry.MsgId, Entry.Reference, MsgStr) then
+            begin
+              Entry.MsgStrSimple := MsgStr;
+              Entry.IsFuzzy := True;
+              Inc(translated);
+            end;
+          end;
+
+          if translated > 0 then
+          begin
+            PoFile.SaveToFile(FileName);
+            Inc(TotalTranslated, translated);
+            AForm.AnalizePath(SelectedIndices[i]);
+
+            // Reload the current file if it was the one processed
+            if SameFileName(FileName, AForm.FileName) then
+              AForm.ReloadCurrentFile(AForm.FileName);
+          end;
+        except
+          on E: Exception do
+          begin
+            Screen.Cursor := crDefault;
+            ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
+            Screen.Cursor := crHourGlass;
+          end;
+        end;
+      finally
+        PoFile.Free;
+      end;
+    end;
+
+    // Flush any pending TM changes
+    if AForm.TM.Dirty then
+      AForm.TM.Save;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+
+  ReportSuccessFmt(AForm, rmemorytranslatedone, [TotalTranslated], AConfirm);
 end;
 
 end.

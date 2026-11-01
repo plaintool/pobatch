@@ -90,6 +90,8 @@ const
   CMD_TRANSLATE = 'translate';
   CMD_NEW_FROM_POT = 'new-from-pot';
   CMD_RENAME = 'rename';
+  CMD_REMEMBER = 'remember';
+  CMD_TRANSLATE_MEMORY = 'translate-memory';
 
   LOG_PREFIX = '[PoBatch] ';
 
@@ -103,7 +105,7 @@ function IsKnownCommand(const AValue: string): boolean;
 begin
   Result := (AValue = CMD_COPY_SOURCE) or (AValue = CMD_CLEAR_FUZZY) or (AValue = CMD_CLEAR_ALL) or
     (AValue = CMD_MARK_VALID) or (AValue = CMD_SYNC_POT) or (AValue = CMD_TRANSLATE) or (AValue = CMD_NEW_FROM_POT) or
-    (AValue = CMD_RENAME);
+    (AValue = CMD_RENAME) or (AValue = CMD_REMEMBER) or (AValue = CMD_TRANSLATE_MEMORY);
 end;
 
 function ParseCommandLine: TConsoleParams;
@@ -326,6 +328,8 @@ begin
   WriteLn('  translate           translate empty entries via the configured service');
   WriteLn('  new-from-pot        create new PO files from a POT for the given languages');
   WriteLn('  rename              rename files by base name');
+  WriteLn('  remember            remember translations from the target files into the memory');
+  WriteLn('  translate-memory    translate empty entries via the local memory');
   WriteLn;
   WriteLn('Targets (one is required for most commands):');
   WriteLn('  --file <path>       process a single PO or POT file');
@@ -448,6 +452,18 @@ begin
       begin
         Log('Renaming files to base name "' + Params.NewName + '"...');
         TBatchOp.RenameFiles(AForm, Params.NewName, False);
+      end;
+
+      CMD_REMEMBER:
+      begin
+        Log('Remembering translations from files...');
+        TBatchOp.RememberFiles(AForm, False);
+      end;
+
+      CMD_TRANSLATE_MEMORY:
+      begin
+        Log('Translating empty entries from memory...');
+        TBatchOp.PathTranslateEmptyFromMemory(AForm, False);
       end;
 
       else

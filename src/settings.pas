@@ -164,11 +164,11 @@ begin
     JSONObj.Add('SpellCheckSource', Form.ASpellCheckSource.Checked);
     JSONObj.Add('SpellCheckTranslation', Form.ASpellCheckTranslation.Checked);
 
-    JSONObj.Add('MenuHeadersChecked', Form.MenuHeaders.Checked);
-    JSONObj.Add('MenuTranslatePanelChecked', Form.MenuTranslatePanel.Checked);
-    JSONObj.Add('MenuColumnContextChecked', Form.MenuColumnContext.Checked);
-    JSONObj.Add('MenuColumnReferenceChecked', Form.MenuColumnReference.Checked);
-    JSONObj.Add('MenuColumnPluralChecked', Form.MenuColumnPlural.Checked);
+    JSONObj.Add('MenuHeadersChecked', Form.MenuViewHeaders.Checked);
+    JSONObj.Add('MenuTranslatePanelChecked', Form.MenuViewTranslatePanel.Checked);
+    JSONObj.Add('MenuColumnContextChecked', Form.MenuViewColumnContext.Checked);
+    JSONObj.Add('MenuColumnReferenceChecked', Form.MenuViewColumnReference.Checked);
+    JSONObj.Add('MenuColumnPluralChecked', Form.MenuViewColumnPlural.Checked);
 
     JSONObj.Add('FormConfigLeft', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Left));
     JSONObj.Add('FormConfigTop', Form.ScaleFormTo96(Form.ConfigManager.FormPosition.Top));
@@ -201,6 +201,17 @@ begin
     JSONObj.Add('MemoPluralZoom', Form.MemoPlural.ZoomFactor);
     JSONObj.Add('MemoTranslationZoom', Form.MemoTranslation.ZoomFactor);
     JSONObj.Add('GridEditorZoom', Form.GridEditorZoom);
+
+    // Save translation memory settings
+    JSONObj.Add('TMEnabled', Form.TMEnabled);
+    JSONObj.Add('TMAutoPopulateOnSave', Form.TMAutoPopulateOnSave);
+    if Assigned(Form.TM) then
+    begin
+      JSONObj.Add('TMDirectory', Form.TM.Directory);
+      JSONObj.Add('TMMaxSourceLength', Form.TM.MaxSourceLength);
+      JSONObj.Add('TMSkipMultiline', Form.TM.SkipMultiline);
+      JSONObj.Add('TMContextSensitive', Form.TM.ContextSensitive);
+    end;
 
     // Save recent files list
     arrParams := TJSONArray.Create;
@@ -333,6 +344,7 @@ var
   FileContent: string;
   QAMapObj, LangObj: TJSONObject;
   RecentArray: TJSONArray;
+  TmDirectory: string = '';
   i: integer;
 begin
   Result := False;
@@ -455,33 +467,33 @@ begin
 
       if JSONObj.FindPath('MenuHeadersChecked') <> nil then
       begin
-        Form.MenuHeaders.Checked := JSONObj.FindPath('MenuHeadersChecked').AsBoolean;
-        if Form.MenuHeaders.Checked and Assigned(Form.MenuHeaders.OnClick) then
-          Form.MenuHeaders.OnClick(Form.MenuHeaders);
+        Form.MenuViewHeaders.Checked := JSONObj.FindPath('MenuHeadersChecked').AsBoolean;
+        if Form.MenuViewHeaders.Checked and Assigned(Form.MenuViewHeaders.OnClick) then
+          Form.MenuViewHeaders.OnClick(Form.MenuViewHeaders);
       end;
       if JSONObj.FindPath('MenuTranslatePanelChecked') <> nil then
       begin
-        Form.MenuTranslatePanel.Checked := JSONObj.FindPath('MenuTranslatePanelChecked').AsBoolean;
-        if Form.MenuTranslatePanel.Checked and Assigned(Form.MenuTranslatePanel.OnClick) then
-          Form.MenuTranslatePanel.OnClick(Form.MenuTranslatePanel);
+        Form.MenuViewTranslatePanel.Checked := JSONObj.FindPath('MenuTranslatePanelChecked').AsBoolean;
+        if Form.MenuViewTranslatePanel.Checked and Assigned(Form.MenuViewTranslatePanel.OnClick) then
+          Form.MenuViewTranslatePanel.OnClick(Form.MenuViewTranslatePanel);
       end;
       if JSONObj.FindPath('MenuColumnContextChecked') <> nil then
       begin
-        Form.MenuColumnContext.Checked := JSONObj.FindPath('MenuColumnContextChecked').AsBoolean;
-        if Form.MenuColumnContext.Checked and Assigned(Form.MenuColumnContext.OnClick) then
-          Form.MenuColumnContext.OnClick(Form.MenuColumnContext);
+        Form.MenuViewColumnContext.Checked := JSONObj.FindPath('MenuColumnContextChecked').AsBoolean;
+        if Form.MenuViewColumnContext.Checked and Assigned(Form.MenuViewColumnContext.OnClick) then
+          Form.MenuViewColumnContext.OnClick(Form.MenuViewColumnContext);
       end;
       if JSONObj.FindPath('MenuColumnReferenceChecked') <> nil then
       begin
-        Form.MenuColumnReference.Checked := JSONObj.FindPath('MenuColumnReferenceChecked').AsBoolean;
-        if Form.MenuColumnReference.Checked and Assigned(Form.MenuColumnReference.OnClick) then
-          Form.MenuColumnReference.OnClick(Form.MenuColumnReference);
+        Form.MenuViewColumnReference.Checked := JSONObj.FindPath('MenuColumnReferenceChecked').AsBoolean;
+        if Form.MenuViewColumnReference.Checked and Assigned(Form.MenuViewColumnReference.OnClick) then
+          Form.MenuViewColumnReference.OnClick(Form.MenuViewColumnReference);
       end;
       if JSONObj.FindPath('MenuColumnPluralChecked') <> nil then
       begin
-        Form.MenuColumnPlural.Checked := JSONObj.FindPath('MenuColumnPluralChecked').AsBoolean;
-        if Form.MenuColumnPlural.Checked and Assigned(Form.MenuColumnPlural.OnClick) then
-          Form.MenuColumnPlural.OnClick(Form.MenuColumnPlural);
+        Form.MenuViewColumnPlural.Checked := JSONObj.FindPath('MenuColumnPluralChecked').AsBoolean;
+        if Form.MenuViewColumnPlural.Checked and Assigned(Form.MenuViewColumnPlural.OnClick) then
+          Form.MenuViewColumnPlural.OnClick(Form.MenuViewColumnPlural);
       end;
 
       if JSONObj.FindPath('FormConfigLeft') <> nil then
@@ -582,6 +594,34 @@ begin
         Form.MemoTranslation.ZoomFactor := JSONObj.FindPath('MemoTranslationZoom').AsFloat;
       if JSONObj.FindPath('GridEditorZoom') <> nil then
         Form.GridEditorZoom := JSONObj.FindPath('GridEditorZoom').AsFloat;
+
+      // Load translation memory settings; the TM object is created in
+      // FormCreate before this function runs, so the properties are safe
+      if JSONObj.FindPath('TMEnabled') <> nil then
+        Form.TMEnabled := JSONObj.FindPath('TMEnabled').AsBoolean;
+
+      if JSONObj.FindPath('TMAutoPopulateOnSave') <> nil then
+        Form.TMAutoPopulateOnSave := JSONObj.FindPath('TMAutoPopulateOnSave').AsBoolean;
+
+      if Assigned(Form.TM) then
+      begin
+        if JSONObj.FindPath('TMDirectory') <> nil then
+        begin
+          // Fall back to the default location when the saved path is empty
+          TmDirectory := Trim(JSONObj.FindPath('TMDirectory').AsString);
+          if TmDirectory <> '' then
+            Form.TM.Directory := TmDirectory;
+        end;
+
+        if JSONObj.FindPath('TMMaxSourceLength') <> nil then
+          Form.TM.MaxSourceLength := JSONObj.FindPath('TMMaxSourceLength').AsInteger;
+
+        if JSONObj.FindPath('TMSkipMultiline') <> nil then
+          Form.TM.SkipMultiline := JSONObj.FindPath('TMSkipMultiline').AsBoolean;
+
+        if JSONObj.FindPath('TMContextSensitive') <> nil then
+          Form.TM.ContextSensitive := JSONObj.FindPath('TMContextSensitive').AsBoolean;
+      end;
 
       // Load recent files list
       if Assigned(Form.RecentFiles) and (JSONObj.FindPath('RecentFiles') <> nil) then

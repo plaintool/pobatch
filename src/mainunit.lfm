@@ -600,13 +600,13 @@ object formPoBatch: TformPoBatch
       object MenuFileNewWindow: TMenuItem
         Action = ANewWindow
       end
-      object MenuItem5: TMenuItem
+      object MenuFileNewFromPot: TMenuItem
         Action = ANewFromPot
       end
       object MenuFileOpen: TMenuItem
         Action = AOpen
       end
-      object MenuOpenRecent: TMenuItem
+      object MenuFileOpenRecent: TMenuItem
         Caption = 'Open Recent'
       end
       object MenuFileSave: TMenuItem
@@ -615,19 +615,28 @@ object formPoBatch: TformPoBatch
       object MenuFileSaveAs: TMenuItem
         Action = ASaveAs
       end
+      object Separator23: TMenuItem
+        Caption = '-'
+      end
+      object MenuFilePathOpen: TMenuItem
+        Action = AOpenPath
+      end
+      object MenuFilePathClose: TMenuItem
+        Action = AClosePath
+      end
       object Separator1: TMenuItem
         Caption = '-'
       end
-      object MenuPathOpen: TMenuItem
-        Action = AOpenPath
+      object MenuFileRememberFile: TMenuItem
+        Action = ARememberFile
       end
-      object MenuPathClose: TMenuItem
-        Action = AClosePath
+      object MenuFileRememberPath: TMenuItem
+        Action = ARememberPath
       end
       object Separator18: TMenuItem
         Caption = '-'
       end
-      object MenuItem6: TMenuItem
+      object MenuFileSettings: TMenuItem
         Action = ASettings
       end
       object Separator2: TMenuItem
@@ -639,47 +648,47 @@ object formPoBatch: TformPoBatch
     end
     object MenuEdit: TMenuItem
       Caption = 'Edit'
-      object MenuUndoChanges: TMenuItem
+      object MenuEditUndoChanges: TMenuItem
         Action = AUndoChanges
         ShortCut = 24666
       end
       object Separator4: TMenuItem
         Caption = '-'
       end
-      object MenuCut: TMenuItem
+      object MenuEditCut: TMenuItem
         Action = ACut
       end
-      object MenuCopy: TMenuItem
+      object MenuEditCopy: TMenuItem
         Action = ACopy
       end
-      object MenuPaste: TMenuItem
+      object MenuEditPaste: TMenuItem
         Action = APaste
       end
-      object MenuDelete: TMenuItem
+      object MenuEditDelete: TMenuItem
         Action = ADelete
       end
       object Separator21: TMenuItem
         Caption = '-'
       end
-      object MenuItem7: TMenuItem
+      object MenuEditGoTo: TMenuItem
         Action = AGoTo
       end
       object Separator6: TMenuItem
         Caption = '-'
       end
-      object MenuSelectAll: TMenuItem
+      object MenuEditSelectAll: TMenuItem
         Action = ASelectAll
       end
       object Separator5: TMenuItem
         Caption = '-'
       end
-      object MenuCopySourceText: TMenuItem
+      object MenuEditCopySourceText: TMenuItem
         Action = ACopySourceText
       end
-      object MenuClearIdentical: TMenuItem
+      object MenuEditClearIdentical: TMenuItem
         Action = AClearIdentical
       end
-      object MenuValidFile: TMenuItem
+      object MenuEditValidFile: TMenuItem
         Action = AMarkAsValid
       end
       object MenuEditPluralForm: TMenuItem
@@ -723,11 +732,11 @@ object formPoBatch: TformPoBatch
       object Separator17: TMenuItem
         Caption = '-'
       end
-      object MenuItem2: TMenuItem
+      object MenuFormatQAEnabled: TMenuItem
         Action = ACheckEnabled
         AutoCheck = True
       end
-      object MenuQAChecks: TMenuItem
+      object MenuFormatQAChecks: TMenuItem
         Caption = 'QA Checks'
         object MenuCheckPlaceholderMissing: TMenuItem
           Action = ACheckPlaceholderMissing
@@ -785,38 +794,38 @@ object formPoBatch: TformPoBatch
     end
     object MenuView: TMenuItem
       Caption = 'View'
-      object MenuHeaders: TMenuItem
+      object MenuViewHeaders: TMenuItem
         AutoCheck = True
         Caption = 'Headers'
         ShortCut = 32817
-        OnClick = MenuHeadersClick
+        OnClick = MenuViewHeadersClick
       end
-      object MenuTranslatePanel: TMenuItem
+      object MenuViewTranslatePanel: TMenuItem
         AutoCheck = True
         Caption = 'Translate Panel'
         ShortCut = 32818
-        OnClick = MenuTranslatePanelClick
+        OnClick = MenuViewTranslatePanelClick
       end
       object Separator9: TMenuItem
         Caption = '-'
       end
-      object MenuColumnContext: TMenuItem
+      object MenuViewColumnContext: TMenuItem
         AutoCheck = True
         Caption = 'Column Context'
         ShortCut = 32819
-        OnClick = MenuColumnContextClick
+        OnClick = MenuViewColumnContextClick
       end
-      object MenuColumnPlural: TMenuItem
+      object MenuViewColumnPlural: TMenuItem
         AutoCheck = True
         Caption = 'Column Plural'
         ShortCut = 32820
-        OnClick = MenuColumnPluralClick
+        OnClick = MenuViewColumnPluralClick
       end
-      object MenuColumnReference: TMenuItem
+      object MenuViewColumnReference: TMenuItem
         AutoCheck = True
         Caption = 'Column Reference'
         ShortCut = 32821
-        OnClick = MenuColumnReferenceClick
+        OnClick = MenuViewColumnReferenceClick
       end
     end
     object MenuTranslate: TMenuItem
@@ -833,8 +842,20 @@ object formPoBatch: TformPoBatch
       object MenuTranslateMissing: TMenuItem
         Action = ATranslateMissing
       end
-      object MenuItem3: TMenuItem
+      object MenuTranslateMissingInFiles: TMenuItem
         Action = APathTranslateMissing
+      end
+      object Separator22: TMenuItem
+        Caption = '-'
+      end
+      object MenuTranslateFromMemory: TMenuItem
+        Action = ATranslateFromMemory
+      end
+      object MenuTranslateMissingFromMemory: TMenuItem
+        Action = ATranslateMissingFromMemory
+      end
+      object MenuTranslateMissingFromMemoryInFiles: TMenuItem
+        Action = APathTranslateMissingFromMemory
       end
     end
     object menuHelp: TMenuItem
@@ -1030,17 +1051,6 @@ object formPoBatch: TformPoBatch
       ShortCut = 24659
       OnExecute = ASaveAsExecute
     end
-    object AOpenPath: TAction
-      Category = 'File'
-      Caption = 'Open Path...'
-      ShortCut = 16464
-      OnExecute = AOpenPathExecute
-    end
-    object AClosePath: TAction
-      Category = 'File'
-      Caption = 'Close Path'
-      OnExecute = AClosePathExecute
-    end
     object APathNewFilesFromPot: TAction
       Category = 'Path'
       Caption = 'New File(s) From Pot...'
@@ -1197,16 +1207,6 @@ object formPoBatch: TformPoBatch
       Caption = 'Select All'
       OnExecute = APathSelectAllExecute
     end
-    object ASettings: TAction
-      Category = 'File'
-      Caption = 'Settings...'
-      OnExecute = ASettingsExecute
-    end
-    object AExit: TAction
-      Category = 'File'
-      Caption = 'Exit'
-      OnExecute = AExitExecute
-    end
     object AGoTo: TAction
       Category = 'Edit'
       Caption = 'Go To...'
@@ -1249,6 +1249,58 @@ object formPoBatch: TformPoBatch
       Checked = True
       OnExecute = AEditTranslationOnlyExecute
     end
+    object APathRemember: TAction
+      Category = 'Path'
+      Caption = 'Remember Translations'
+      OnExecute = APathRememberExecute
+    end
+    object ATranslateFromMemory: TAction
+      Category = 'Translate'
+      Caption = 'Translate From Memory'
+      ShortCut = 32845
+      OnExecute = ATranslateFromMemoryExecute
+    end
+    object ATranslateMissingFromMemory: TAction
+      Category = 'Translate'
+      Caption = 'Translate Missing From Memory'
+      OnExecute = ATranslateMissingFromMemoryExecute
+    end
+    object APathTranslateMissingFromMemory: TAction
+      Category = 'Translate'
+      Caption = 'Translate Missing In File(s) From Memory'
+      OnExecute = APathTranslateMissingFromMemoryExecute
+    end
+    object ARememberFile: TAction
+      Category = 'File'
+      Caption = 'Remember File...'
+      OnExecute = ARememberFileExecute
+    end
+    object ARememberPath: TAction
+      Category = 'File'
+      Caption = 'Remember Path...'
+      OnExecute = ARememberPathExecute
+    end
+    object AOpenPath: TAction
+      Category = 'File'
+      Caption = 'Open Path...'
+      ShortCut = 16464
+      OnExecute = AOpenPathExecute
+    end
+    object AClosePath: TAction
+      Category = 'File'
+      Caption = 'Close Path'
+      OnExecute = AClosePathExecute
+    end
+    object ASettings: TAction
+      Category = 'File'
+      Caption = 'Settings...'
+      OnExecute = ASettingsExecute
+    end
+    object AExit: TAction
+      Category = 'File'
+      Caption = 'Exit'
+      OnExecute = AExitExecute
+    end
   end
   object ApplicationProp: TApplicationProperties
     OnActivate = ApplicationPropActivate
@@ -1269,11 +1321,14 @@ object formPoBatch: TformPoBatch
     object MenuPopupEditPluralForm: TMenuItem
       Action = AEditPluralForm
     end
-    object MenuItem4: TMenuItem
+    object MenuPopupMarkValid: TMenuItem
       Action = AMarkAsValid
     end
     object MenuPopupTranslate: TMenuItem
       Action = ATranslateSelected
+    end
+    object MenuItem1: TMenuItem
+      Action = ATranslateFromMemory
     end
     object Separator7: TMenuItem
       Caption = '-'
@@ -1773,6 +1828,9 @@ object formPoBatch: TformPoBatch
     object MenuPathTranslateEmpty: TMenuItem
       Action = APathTranslateMissing
     end
+    object MenuPathTranslateMissingFromMemoryInFiles: TMenuItem
+      Action = APathTranslateMissingFromMemory
+    end
     object MenuPathSyncFilesWithPot: TMenuItem
       Action = APathSyncFilesWithPot
     end
@@ -1788,10 +1846,13 @@ object formPoBatch: TformPoBatch
     object MenuPathClearAll: TMenuItem
       Action = APathClearAll
     end
+    object MenuRememberTranslations: TMenuItem
+      Action = APathRemember
+    end
     object Separator11: TMenuItem
       Caption = '-'
     end
-    object MenuItem1: TMenuItem
+    object MenuPathShowFileInExplorer: TMenuItem
       Action = APathShowFileInExplorer
     end
     object MenuPathRescan: TMenuItem
