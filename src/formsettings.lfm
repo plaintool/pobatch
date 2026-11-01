@@ -1,11 +1,11 @@
 object formSettingsPoBatch: TformSettingsPoBatch
   Left = 318
-  Height = 480
+  Height = 500
   Top = 250
   Width = 640
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Settings'
-  ClientHeight = 480
+  ClientHeight = 500
   ClientWidth = 640
   ShowHint = True
   ShowInTaskBar = stAlways
@@ -17,7 +17,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
   OnShow = FormShow
   object PagesSettings: TPageControl
     Left = 186
-    Height = 435
+    Height = 455
     Top = 5
     Width = 454
     TabStop = False
@@ -29,7 +29,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
     TabOrder = 1
     object PageGeneral: TTabSheet
       Caption = 'General'
-      ClientHeight = 407
+      ClientHeight = 427
       ClientWidth = 446
       object GroupDefaultInformation: TGroupBox
         Left = 5
@@ -46,7 +46,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           Left = 8
           Height = 32
           Top = 8
-          Width = 104
+          Width = 136
           Alignment = taRightJustify
           AutoSize = False
           Caption = 'Name'
@@ -56,28 +56,28 @@ object formSettingsPoBatch: TformSettingsPoBatch
           Left = 8
           Height = 32
           Top = 44
-          Width = 104
+          Width = 136
           Alignment = taRightJustify
           AutoSize = False
           Caption = 'Email'
           WordWrap = True
         end
         object EditTranslatorEmail: TEdit
-          Left = 120
+          Left = 152
           Height = 23
           Hint = 'The translator''s email address will be recorded in the translation file when it is saved.'
           Top = 44
-          Width = 272
+          Width = 257
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 1
           OnChange = SettingChange
         end
         object EditTranslatorName: TEdit
-          Left = 120
+          Left = 152
           Height = 23
           Hint = 'The translator''s name will be recorded in the translation file when it is saved.'
           Top = 8
-          Width = 272
+          Width = 257
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 0
           OnChange = SettingChange
@@ -181,7 +181,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
     end
     object PageTranslationMemory: TTabSheet
       Caption = 'Translation Memory'
-      ClientHeight = 407
+      ClientHeight = 427
       ClientWidth = 446
       object GroupTranslationMemory: TGroupBox
         Left = 5
@@ -218,31 +218,32 @@ object formSettingsPoBatch: TformSettingsPoBatch
         end
       end
       object GroupTmFilters: TGroupBox
-        Left = 0
-        Height = 99
+        Left = 5
+        Height = 107
         Top = 101
-        Width = 446
+        Width = 436
         Align = alTop
+        BorderSpacing.Around = 5
         Caption = 'Filters'
-        ClientHeight = 79
-        ClientWidth = 442
+        ClientHeight = 87
+        ClientWidth = 432
         TabOrder = 1
         object LabelTmMaxSourceLength: TLabel
-          Left = 8
-          Height = 40
+          Left = 5
+          Height = 48
           Top = 8
-          Width = 109
+          Width = 136
           Alignment = taRightJustify
           AutoSize = False
-          Caption = 'Max Source Length (0 = unlimited)'
+          Caption = 'Max Source Length'#13#10'(0 = unlimited)'
           WordWrap = True
         end
         object SpinTmMaxSourceLength: TSpinEdit
-          Left = 125
+          Left = 152
           Height = 23
           Hint = 'Entries with a longer source text are ignored to keep the memory small.'
           Top = 8
-          Width = 280
+          Width = 257
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 0
           Value = 100
@@ -253,7 +254,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           Left = 21
           Height = 19
           Hint = 'Ignore entries whose source text spans multiple lines.'
-          Top = 48
+          Top = 56
           Width = 137
           Caption = 'Skip Multi-Line Strings'
           Checked = True
@@ -262,24 +263,24 @@ object formSettingsPoBatch: TformSettingsPoBatch
         end
       end
       object GroupTmStorage: TGroupBox
-        Left = 3
-        Height = 201
-        Top = 203
-        Width = 440
+        Left = 5
+        Height = 209
+        Top = 213
+        Width = 436
         Align = alClient
-        BorderSpacing.Around = 3
+        BorderSpacing.Around = 5
         Caption = 'Storage (Right-click grid for actions)'
-        ClientHeight = 181
-        ClientWidth = 436
+        ClientHeight = 189
+        ClientWidth = 432
         TabOrder = 2
         object GridTmStorage: TStringGrid
           Left = 5
-          Height = 131
-          Top = 45
-          Width = 426
+          Height = 134
+          Top = 50
+          Width = 422
           Align = alClient
           BorderSpacing.Left = 5
-          BorderSpacing.Top = 45
+          BorderSpacing.Top = 50
           BorderSpacing.Right = 5
           BorderSpacing.Bottom = 5
           Flat = True
@@ -292,21 +293,21 @@ object formSettingsPoBatch: TformSettingsPoBatch
           OnMouseDown = GridTmStorageMouseDown
         end
         object LabelTmStorage: TLabel
-          Left = 10
+          Left = 5
           Height = 32
           Top = 10
-          Width = 104
+          Width = 136
           Alignment = taRightJustify
           AutoSize = False
           Caption = 'Storage Directory'
           WordWrap = True
         end
         object EditButtonTmStorage: TEditButton
-          Left = 122
+          Left = 152
           Height = 23
           Hint = 'Folder where language pair archives are stored as zip files.'
           Top = 10
-          Width = 280
+          Width = 257
           Anchors = [akTop, akLeft, akRight]
           ButtonCaption = '..'
           ButtonWidth = 23
@@ -320,24 +321,24 @@ object formSettingsPoBatch: TformSettingsPoBatch
     end
     object PageNetwork: TTabSheet
       Caption = 'Network'
-      ClientHeight = 407
+      ClientHeight = 427
       ClientWidth = 446
       object ScrollNetwork: TScrollBox
         Left = 0
-        Height = 407
+        Height = 427
         Top = 0
         Width = 446
         HorzScrollBar.Increment = 18
         HorzScrollBar.Page = 182
         HorzScrollBar.Smooth = True
         HorzScrollBar.Tracking = True
-        VertScrollBar.Increment = 40
-        VertScrollBar.Page = 407
+        VertScrollBar.Increment = 42
+        VertScrollBar.Page = 427
         VertScrollBar.Smooth = True
         VertScrollBar.Tracking = True
         Align = alClient
         BorderStyle = bsNone
-        ClientHeight = 407
+        ClientHeight = 427
         ClientWidth = 429
         TabOrder = 0
         object GroupTimeouts: TGroupBox
@@ -594,22 +595,22 @@ object formSettingsPoBatch: TformSettingsPoBatch
     end
     object PageParameters: TTabSheet
       Caption = 'Parameters'
-      ClientHeight = 407
+      ClientHeight = 427
       ClientWidth = 446
       object GroupUserParameters: TGroupBox
         Left = 5
-        Height = 397
+        Height = 417
         Top = 5
         Width = 436
         Align = alClient
         BorderSpacing.Around = 5
         Caption = 'User Parameters'
-        ClientHeight = 377
+        ClientHeight = 397
         ClientWidth = 432
         TabOrder = 0
         object ValueListUserParameters: TValueListEditor
           Left = 5
-          Height = 367
+          Height = 387
           Top = 5
           Width = 422
           Align = alClient
@@ -640,7 +641,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
   end
   object SplitterPages: TSplitter
     Left = 176
-    Height = 445
+    Height = 465
     Top = 0
     Width = 10
     AutoSnap = False
@@ -651,7 +652,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
   object PanelBottom: TPanel
     Left = 0
     Height = 35
-    Top = 445
+    Top = 465
     Width = 640
     Align = alBottom
     BevelOuter = bvNone
@@ -703,7 +704,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
   end
   object PanelPages: TPanel
     Left = 6
-    Height = 433
+    Height = 453
     Top = 6
     Width = 170
     Align = alLeft
@@ -713,12 +714,12 @@ object formSettingsPoBatch: TformSettingsPoBatch
     BevelColor = clActiveBorder
     BevelInner = bvRaised
     BevelOuter = bvNone
-    ClientHeight = 433
+    ClientHeight = 453
     ClientWidth = 170
     TabOrder = 3
     object ListPages: TListBox
       Left = 1
-      Height = 431
+      Height = 451
       Top = 1
       Width = 168
       Align = alClient
