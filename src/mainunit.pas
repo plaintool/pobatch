@@ -497,6 +497,10 @@ type
     FRecentFiles: TStringList;
     FTM: TPoTranslationMemory;
     FTMAutoPopulateOnSave: boolean;
+    FLastFileMTime: TDateTime;
+    FLastFileSize: int64;
+    FHasFileSnapshot: boolean;
+    FCheckingFileChange: boolean;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -519,6 +523,10 @@ type
     procedure SelectPath;
     function LoadFile(AFileName: string): boolean;
     function SaveFile(AFileName: string; Fast: boolean = False): boolean;
+    procedure TakeFileSnapshot(const AFileName: string = '');
+    procedure ClearFileSnapshot;
+    function FileChangedOnDisk: boolean;
+    function AskFileChanged(AIsSave: boolean = True): TModalResult;
     // Methods
     procedure UpdateInterface;
     procedure UpdateFileStatus(const AFileName: string);
@@ -731,6 +739,17 @@ resourcestring
   rrememberfiletitle = 'Remember file';
   rrememberfiledone = 'Done. %d translation(s) remembered, %d skipped.';
   rrememberfilelangnotset = 'File "%s" skipped: target language is not set in the PO header.';
+
+  rfilechangedtitle = 'File changed on disk';
+  rfilechangedmsg = 'The file "%s" has been modified by another application since it was opened.';
+  rfilechangedmsgsave = 'You have unsaved changes. What would you like to do?';
+  rfilechangedmsgactivate = 'You have unsaved changes. Keep them or reload from disk?';
+  rfilechangedoverwrite = 'Overwrite';
+  rfilechangedreload = 'Reload';
+  rfilechangedcancel = 'Cancel';
+  rfilechangedkeepchanges = 'Keep my changes';
+  rfilechangedreloaddisk = 'Reload from disk';
+  rfilereloaded = 'File reloaded from disk';
   {%EndRegion}
 
 implementation
@@ -820,6 +839,12 @@ begin
   FTM.ContextSensitive := True;
   FTM.Enabled := True;
   FTMAutoPopulateOnSave := True;
+
+  // File change detection state; the first snapshot is taken on load/save
+  FHasFileSnapshot := False;
+  FLastFileMTime := 0;
+  FLastFileSize := 0;
+  FCheckingFileChange := False;
 
   ConfigManager.AppName := APP_NAME;
 
@@ -1004,6 +1029,57 @@ end;
 procedure TformPoBatch.ApplicationPropActivate(Sender: TObject);
 begin
   Invalidate;
+
+  // Ignore the very first activation and any nested activation that can be
+  // triggered by our own modal dialogs
+  if not FInitialized or FCheckingFileChange then
+    Exit;
+  if FSaving or Application.Terminated then
+    Exit;
+  if not FHasFileSnapshot or (FFileName = '') then
+    Exit;
+  if not FileChangedOnDisk then
+    Exit;
+
+  FCheckingFileChange := True;
+  try
+    if not Changed then
+    begin
+      // No local edits: reload silently so the editor matches the disk
+      if LoadFile(FFileName) then
+      begin
+        FillGrid;
+        FillGridHeaders;
+        UpdateTranslatePanel;
+        Changed := False;
+        StatusBar.Panels[0].Text := rfilereloaded;
+      end;
+    end
+    else
+    begin
+      // Local edits and the file on disk was modified: ask the user
+      case AskFileChanged(False) of
+        mrYes:
+          // Keep my changes: update the snapshot so the dialog does not
+          // repeat on every activation; the user's version will be written
+          // on the next save
+          TakeFileSnapshot;
+        mrNo:
+          // Reload: discard local changes and pick up the on-disk version
+          if LoadFile(FFileName) then
+          begin
+            FillGrid;
+            FillGridHeaders;
+            UpdateTranslatePanel;
+            Changed := False;
+            StatusBar.Panels[0].Text := rfilereloaded;
+          end;
+        // mrCancel (or any other result): do nothing, ask again next time
+      end;
+    end;
+  finally
+    FCheckingFileChange := False;
+  end;
 end;
 
 procedure TformPoBatch.ApplicationPropDeactivate(Sender: TObject);
@@ -3305,6 +3381,9 @@ begin
     FillGridHeaders;
     UpdateTranslatePanel;
     SyncPath;
+
+    // A new document has no file on disk yet
+    ClearFileSnapshot;
   except
     Result := False;
     raise;
@@ -3652,6 +3731,9 @@ begin
 
       FPoFileBackup.Assign(FPoFile);
 
+      // Remember the on-disk state so SaveFile can detect external changes
+      TakeFileSnapshot(AFileName);
+
       UpdateInterface;
       Result := True;
     except
@@ -3684,6 +3766,32 @@ begin
   begin
     MessageDlg(rerrortitle, rerrorinvalidfilename, mtError, [mbOK], 0);
     Exit;
+  end;
+
+  // Detect the case when the target file was modified by another application
+  // since it was opened; only applies when overwriting the same file
+  if FHasFileSnapshot and FileChangedOnDisk and SameFileName(AFileName, FFileName) then
+  begin
+    case AskFileChanged(True) of
+      mrYes:
+        ; // Overwrite: proceed with the normal save
+      mrNo:
+      begin
+        // Reload: discard local changes and load the on-disk version
+        Result := LoadFile(AFileName);
+        if Result then
+        begin
+          FillGrid;
+          FillGridHeaders;
+          UpdateTranslatePanel;
+          Changed := False;
+        end;
+        Exit;
+      end;
+      else
+        // Cancel (or any other result): leave the file untouched
+        Exit(False);
+    end;
   end;
 
   FSaving := True;
@@ -3746,6 +3854,9 @@ begin
         Output.SaveToFile(AFileName, TEncoding.UTF8);
         FPoFileBackup.Assign(FPoFile);
 
+        // Refresh the snapshot so the next save sees a clean on-disk state
+        TakeFileSnapshot(AFileName);
+
         // Push the saved translations into the memory so they become
         // available for future lookups; failures must not break the save
         try
@@ -3777,6 +3888,85 @@ begin
   finally
     FSaving := False;
   end;
+end;
+
+procedure TformPoBatch.TakeFileSnapshot(const AFileName: string = '');
+var
+  AName: string;
+  CurAge: longint;
+begin
+  AName := AFileName;
+  if AName = '' then
+    AName := FFileName;
+  if (AName = '') or not FileExists(AName) then
+  begin
+    ClearFileSnapshot;
+    Exit;
+  end;
+  CurAge := FileAge(AName);
+  if CurAge <= 0 then
+  begin
+    ClearFileSnapshot;
+    Exit;
+  end;
+  FLastFileMTime := FileDateToDateTime(CurAge);
+  FLastFileSize := FileUtil.FileSize(AName);
+  FHasFileSnapshot := True;
+end;
+
+procedure TformPoBatch.ClearFileSnapshot;
+begin
+  FHasFileSnapshot := False;
+  FLastFileMTime := 0;
+  FLastFileSize := 0;
+end;
+
+function TformPoBatch.FileChangedOnDisk: boolean;
+var
+  CurAge: longint;
+  CurSize: int64;
+  CurMTime: TDateTime;
+begin
+  Result := False;
+  if not FHasFileSnapshot or (FFileName = '') then
+    Exit;
+  if not FileExists(FFileName) then
+    // A deleted file is a bigger change than a modified one
+    Exit(True);
+  CurAge := FileAge(FFileName);
+  if CurAge <= 0 then
+    // Timestamp is unreadable, safer to treat the file as changed
+    Exit(True);
+  CurSize := FileUtil.FileSize(FFileName);
+  CurMTime := FileDateToDateTime(CurAge);
+  Result := (CurSize <> FLastFileSize) or (CurMTime <> FLastFileMTime);
+end;
+
+function TformPoBatch.AskFileChanged(AIsSave: boolean = True): TModalResult;
+var
+  Msg, CapYes, CapNo: string;
+begin
+  // The message and button captions differ depending on the context:
+  // saving means the user explicitly wants to write, activation just
+  // means they returned to the window
+  Msg := Format(rfilechangedmsg, [ExtractFileName(FFileName)]) + #13#10#13#10;
+  if AIsSave then
+  begin
+    Msg := Msg + rfilechangedmsgsave;
+    CapYes := rfilechangedoverwrite;
+    CapNo := rfilechangedreload;
+  end
+  else
+  begin
+    Msg := Msg + rfilechangedmsgactivate;
+    CapYes := rfilechangedkeepchanges;
+    CapNo := rfilechangedreloaddisk;
+  end;
+
+  // QuestionDlg accepts only pairs of ModalResult and Caption.
+  // The first button becomes the default, the button with mrCancel
+  // becomes the cancel button (Esc).
+  Result := QuestionDlg(rfilechangedtitle, Msg, mtConfirmation, [mrYes, CapYes, mrNo, CapNo, mrCancel, rfilechangedcancel], 0);
 end;
 
 function TformPoBatch.CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
