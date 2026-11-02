@@ -121,6 +121,9 @@ type
     AUndoChanges: TAction;
     ActionList: TActionList;
     ConfigManager: TConfigManager;
+    contextMacintoshCR: TMenuItem;
+    contextUnixLF: TMenuItem;
+    contextWindowsCRLF: TMenuItem;
     Filter: TEdit;
     GridHeaders: TStringGrid;
     GridComments: TStringGrid;
@@ -249,6 +252,7 @@ type
     PanelFilter: TPanel;
     dialogSave: TSaveDialog;
     PopupGrid: TPopupMenu;
+    PopupLineEnding: TPopupMenu;
     PopupPath: TPopupMenu;
     PopupMemo: TPopupMenu;
     Separator10: TMenuItem;
@@ -313,6 +317,7 @@ type
     procedure MenuAutoCheckUpdatesClick(Sender: TObject);
     procedure MenuHelpGNUgettextClick(Sender: TObject);
     procedure MenuAboutClick(Sender: TObject);
+    procedure MenuLineEndingClick(Sender: TObject);
     { Action Events }
     procedure ANewExecute(Sender: TObject);
     procedure ANewWindowExecute(Sender: TObject);
@@ -450,6 +455,7 @@ type
     procedure MemoTranslationChange(Sender: TObject);
     procedure MemoPanelKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure SettingsFormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure StatusBarMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure StatusBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     {%EndRegion}
   private
@@ -729,6 +735,10 @@ resourcestring
   rstatusinvalid = 'Invalid: %d (Fuzzy %d, QA %d, Empty %d)';
   rstatustranslatedhint = 'Translation progress: translated entries of the total, percentage, remaining count';
   rstatusinvalidhint = 'Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations';
+  rstatuscrlf = 'Windows (CRLF)';
+  rstatuslf = 'Unix (LF)';
+  rstatuscr = 'Mac (CR)';
+  rstatuslineendinghint = 'Line ending style used when saving the file';
 
   rqacheckscaption = 'QA Checks';
 
@@ -885,6 +895,13 @@ begin
     GridHeaders.Columns[COLUMN_HEADERS_NAME].PickList.Assign(HeaderList);
   finally
     HeaderList.Free;
+  end;
+
+  if Assigned(PopupLineEnding) and (PopupLineEnding.Items.Count >= 3) then
+  begin
+    PopupLineEnding.Items[0].Tag := Ord(pleCRLF);
+    PopupLineEnding.Items[1].Tag := Ord(pleLF);
+    PopupLineEnding.Items[2].Tag := Ord(pleCR);
   end;
 
   // Language codes pick list, switched per-row in GridHeadersSelectCell
@@ -1193,6 +1210,26 @@ end;
 procedure TformPoBatch.MenuAboutClick(Sender: TObject);
 begin
   formAboutPoBatch.ShowModal;
+end;
+
+procedure TformPoBatch.MenuLineEndingClick(Sender: TObject);
+var
+  NewStyle: TPOLineEndingStyle;
+begin
+  if not Assigned(FPoFile) then
+    Exit;
+  if not (Sender is TMenuItem) then
+    Exit;
+
+  NewStyle := TPOLineEndingStyle(TMenuItem(Sender).Tag);
+  if FPoFile.LineEndingStyle = NewStyle then
+    Exit;
+
+  // Only the save-time style changes; the next save must use the new
+  // breaks, so mark the document as modified
+  FPoFile.LineEndingStyle := NewStyle;
+  Changed := True;
+  UpdateStatusBar;
 end;
 
 {%EndRegion}
@@ -3160,6 +3197,38 @@ begin
   end;
 end;
 
+procedure TformPoBatch.StatusBarMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  I, PanelLeft: integer;
+begin
+  if Button <> mbRight then
+    Exit;
+  if not Assigned(FPoFile) then
+    Exit;
+  if not Assigned(PopupLineEnding) then
+    Exit;
+
+  // Only the line ending panel (index 3) opens the style menu
+  PanelLeft := 0;
+  for I := 0 to StatusBar.Panels.Count - 1 do
+  begin
+    if (X >= PanelLeft) and (X < PanelLeft + StatusBar.Panels[I].Width) then
+    begin
+      if (I = 3) and (PopupLineEnding.Items.Count >= 3) then
+      begin
+        // Reflect the current style in the checkmarks
+        PopupLineEnding.Items[0].Checked := FPoFile.LineEndingStyle = pleCRLF;
+        PopupLineEnding.Items[1].Checked := FPoFile.LineEndingStyle = pleLF;
+        PopupLineEnding.Items[2].Checked := FPoFile.LineEndingStyle = pleCR;
+        with StatusBar.ClientToScreen(Point(X, Y)) do
+          PopupLineEnding.PopUp(X, Y);
+      end;
+      Break;
+    end;
+    Inc(PanelLeft, StatusBar.Panels[I].Width);
+  end;
+end;
+
 procedure TformPoBatch.StatusBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
 var
   I, PanelLeft: integer;
@@ -3174,7 +3243,9 @@ begin
       if I = 1 then
         HintText := rstatustranslatedhint
       else if I = 2 then
-        HintText := rstatusinvalidhint;
+        HintText := rstatusinvalidhint
+      else if I = 3 then
+        HintText := rstatuslineendinghint;
       Break;
     end;
     Inc(PanelLeft, StatusBar.Panels[I].Width);
@@ -3911,6 +3982,16 @@ begin
         // Ensure directory exists
         ForceDirectories(ExtractFilePath(AFileName));
 
+        // TStringList.Text assignment above normalizes the line breaks, so
+        // the actual break style must be re-applied before writing to disk;
+        // otherwise SaveToFile falls back to the platform default
+        case FPoFile.LineEndingStyle of
+          pleCRLF: Output.LineBreak := #13#10;
+          pleCR: Output.LineBreak := #13;
+          else
+            Output.LineBreak := #10;
+        end;
+
         // Save file with UTF-8 encoding (without BOM)
         Output.SaveToFile(AFileName, TEncoding.UTF8);
         FPoFileBackup.Assign(FPoFile);
@@ -4542,7 +4623,7 @@ var
   Invalid, Empty, Fuzzy, QA: integer;
   IsEmpty: boolean;
 begin
-  if not Assigned(StatusBar) or (StatusBar.Panels.Count < 2) then
+  if not Assigned(StatusBar) or (StatusBar.Panels.Count < 4) then
     Exit;
 
   Total := 0;
@@ -4598,6 +4679,19 @@ begin
 
   StatusBar.Panels[1].Text := Format(rstatustranslated, [Translated, Total, Percent, Remaining]);
   StatusBar.Panels[2].Text := Format(rstatusinvalid, [Invalid, Fuzzy, QA, Empty]);
+
+  // Line ending style, displayed like Notepad does
+  if Assigned(FPoFile) then
+  begin
+    case FPoFile.LineEndingStyle of
+      pleCRLF: StatusBar.Panels[3].Text := rstatuscrlf;
+      pleCR: StatusBar.Panels[3].Text := rstatuscr;
+      else
+        StatusBar.Panels[3].Text := rstatuslf;
+    end;
+  end
+  else
+    StatusBar.Panels[3].Text := string.Empty;
 end;
 
 procedure TformPoBatch.SwitchCheck;

@@ -1798,7 +1798,35 @@ var
   Line: string;
   CurrentEntry: TPOEntry;
   PendingState: TParseState;
+  SavePos: int64;
+  Buf: TBytes;
+  BytesRead: integer;
+  j: integer;
 begin
+  // Detect the original line ending style from raw bytes. 0D and 0A never
+  // appear inside multibyte UTF-8 sequences, so a byte-level scan is safe
+  Buf := nil;
+  SetLength(Buf, 4096);
+  SavePos := AStream.Position;
+  BytesRead := AStream.Read(Buf[0], Length(Buf));
+  AStream.Position := SavePos;
+  for j := 0 to BytesRead - 1 do
+  begin
+    if Buf[j] = 13 then
+    begin
+      if (j + 1 < BytesRead) and (Buf[j + 1] = 10) then
+        FLineEndingStyle := pleCRLF
+      else
+        FLineEndingStyle := pleCR;
+      Break;
+    end
+    else if Buf[j] = 10 then
+    begin
+      FLineEndingStyle := pleLF;
+      Break;
+    end;
+  end;
+
   FEntries.Clear;
   CurrentEntry := nil;
   PendingState.Field := '';

@@ -587,8 +587,12 @@ object formPoBatch: TformPoBatch
       end    
       item
         Width = 340
+      end    
+      item
+        Width = 200
       end>
     SimplePanel = False
+    OnMouseDown = StatusBarMouseDown
     OnMouseMove = StatusBarMouseMove
   end
   object MainMenu: TMainMenu
@@ -1973,5 +1977,24 @@ object formPoBatch: TformPoBatch
     AutoApplyTranslate = True
     Left = 392
     Top = 409
+  end
+  object PopupLineEnding: TPopupMenu
+    Left = 632
+    Top = 120
+    object contextWindowsCRLF: TMenuItem
+      Caption = 'WindowsCRLF'
+      RadioItem = True
+      OnClick = MenuLineEndingClick
+    end
+    object contextUnixLF: TMenuItem
+      Caption = 'UnixLF'
+      RadioItem = True
+      OnClick = MenuLineEndingClick
+    end
+    object contextMacintoshCR: TMenuItem
+      Caption = 'MacintoshCR'
+      RadioItem = True
+      OnClick = MenuLineEndingClick
+    end
   end
 end

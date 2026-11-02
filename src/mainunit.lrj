@@ -107,5 +107,8 @@
 {"hash":1551550,"name":"tformpobatch.asettings.caption","sourcebytes":[83,101,116,116,105,110,103,115,46,46,46],"value":"Settings..."},
 {"hash":315140,"name":"tformpobatch.aexit.caption","sourcebytes":[69,120,105,116],"value":"Exit"},
 {"hash":28787049,"name":"tformpobatch.spellsource.addtodictionarycaption","sourcebytes":[65,100,100,32,84,111,32,68,105,99,116,105,111,110,97,114,121],"value":"Add To Dictionary"},
-{"hash":28787049,"name":"tformpobatch.spelltranslation.addtodictionarycaption","sourcebytes":[65,100,100,32,84,111,32,68,105,99,116,105,111,110,97,114,121],"value":"Add To Dictionary"}
+{"hash":28787049,"name":"tformpobatch.spelltranslation.addtodictionarycaption","sourcebytes":[65,100,100,32,84,111,32,68,105,99,116,105,111,110,97,114,121],"value":"Add To Dictionary"},
+{"hash":112821174,"name":"tformpobatch.contextwindowscrlf.caption","sourcebytes":[87,105,110,100,111,119,115,67,82,76,70],"value":"WindowsCRLF"},
+{"hash":96800006,"name":"tformpobatch.contextunixlf.caption","sourcebytes":[85,110,105,120,76,70],"value":"UnixLF"},
+{"hash":101049986,"name":"tformpobatch.contextmacintoshcr.caption","sourcebytes":[77,97,99,105,110,116,111,115,104,67,82],"value":"MacintoshCR"}
 ]}
