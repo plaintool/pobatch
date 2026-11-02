@@ -301,6 +301,7 @@ type
     procedure ApplicationPropDeactivate(Sender: TObject);
     procedure ApplicationPropException(Sender: TObject; E: Exception);
     procedure GridMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure ListPathExit(Sender: TObject);
     { Menu Events }
     procedure MenuViewTranslatePanelClick(Sender: TObject);
     procedure MenuViewHeadersClick(Sender: TObject);
@@ -2207,16 +2208,20 @@ begin
     Exit;
   end;
 
-  if gdSelected in aState then
-  begin
-    // Keep the selection color uniform even when the grid loses focus
-    GridAny.Canvas.Brush.Color := clHighlight;
-    GridAny.Canvas.Font.Color := clHighlightText;
-  end
-  else if gdRowHighlight in aState then
+  // Paint row highlight and unfocused selection with the dim color;
+  // focused selection keeps the default clHighlight from TStringGrid.
+  // While a modal dialog is shown the grid loses focus, so paint the
+  // selection explicitly to avoid the default gray "inactive" look
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and
+    (not GridAny.Focused) and (Application.ModalLevel = 0)) then
   begin
     GridAny.Canvas.Brush.Color := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
     GridAny.Canvas.Font.Color := clWindowText;
+  end
+  else if (gdSelected in aState) and (not GridAny.Focused) and (Application.ModalLevel > 0) then
+  begin
+    GridAny.Canvas.Brush.Color := clHighlight;
+    GridAny.Canvas.Font.Color := clHighlightText;
   end;
 end;
 
@@ -2585,16 +2590,20 @@ begin
     Exit;
   end;
 
-  if gdSelected in aState then
-  begin
-    // Keep the selection color uniform even when the grid loses focus
-    Grid.Canvas.Brush.Color := clHighlight;
-    Grid.Canvas.Font.Color := clHighlightText;
-  end
-  else if gdRowHighlight in aState then
+  // Paint row highlight and unfocused selection with the dim color;
+  // focused selection keeps the default clHighlight from TStringGrid.
+  // While a modal dialog is shown the grid loses focus, so paint the
+  // selection explicitly to avoid the default gray "inactive" look
+  if (not (gdSelected in aState) and (gdRowHighlight in aState)) or ((gdSelected in aState) and (not Grid.Focused) and
+    (Application.ModalLevel = 0)) then
   begin
     Grid.Canvas.Brush.Color := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
     Grid.Canvas.Font.Color := clWindowText;
+  end
+  else if (gdSelected in aState) and (not Grid.Focused) and (Application.ModalLevel > 0) then
+  begin
+    Grid.Canvas.Brush.Color := clHighlight;
+    Grid.Canvas.Font.Color := clHighlightText;
   end;
 
   if Grid.Cells[CELL_FUZZY, aRow] = '1' then
@@ -2880,8 +2889,13 @@ procedure TformPoBatch.ListPathDrawItem(Control: TWinControl; Index: integer; AR
 var
   Status: TPoFileStatus;
   BgColor: TColor;
+  BrightSelection: boolean;
 begin
   if (Index < 0) or (Index >= Length(FFileStatuses)) then Exit;
+
+  // Bright selection only while the list has focus or a modal dialog is
+  // shown; a real focus loss uses the dim row highlight like the grids
+  BrightSelection := (Control as TListBox).Focused or (Application.ModalLevel > 0);
 
   with (Control as TListBox).Canvas do
   begin
@@ -2895,17 +2909,23 @@ begin
         BgColor := clWindow;
     end;
 
-    // If the item is selected, use system highlight color
+    // Selected items use the system highlight color when bright and the
+    // dim row highlight when the list has really lost focus
     if odSelected in State then
-      BgColor := clHighlight;
+    begin
+      if BrightSelection then
+        BgColor := clHighlight
+      else
+        BgColor := TDarkUtils.ThemeColor(clRowHighlight, clRowHighlightDark);
+    end;
 
     // Fill background
     Brush.Style := bsSolid;
     Brush.Color := BgColor;
     FillRect(ARect);
 
-    // Set text color: white for selected, black otherwise
-    if odSelected in State then
+    // Set text color: white for a bright selection, black otherwise
+    if (odSelected in State) and BrightSelection then
       Font.Color := clHighlightText
     else
       Font.Color := clWindowText;
@@ -2917,6 +2937,12 @@ begin
     if odFocused in State then
       DrawFocusRect(ARect);
   end;
+end;
+
+procedure TformPoBatch.ListPathExit(Sender: TObject);
+begin
+  // Force a full repaint so every selected item picks up the dim color
+  ListPath.Invalidate;
 end;
 
 procedure TformPoBatch.FilterChange(Sender: TObject);

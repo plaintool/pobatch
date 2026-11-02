@@ -35,6 +35,7 @@ object formPoBatch: TformPoBatch
     Visible = False
     OnClick = ListPathClick
     OnDrawItem = ListPathDrawItem
+    OnExit = ListPathExit
     OnKeyDown = ListPathKeyDown
     OnMouseDown = ListPathMouseDown
   end
