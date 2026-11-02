@@ -616,7 +616,7 @@ object formPoBatch: TformPoBatch
       object MenuFileSaveAs: TMenuItem
         Action = ASaveAs
       end
-      object Separator23: TMenuItem
+      object Separator1: TMenuItem
         Caption = '-'
       end
       object MenuFilePathOpen: TMenuItem
@@ -624,15 +624,6 @@ object formPoBatch: TformPoBatch
       end
       object MenuFilePathClose: TMenuItem
         Action = AClosePath
-      end
-      object Separator1: TMenuItem
-        Caption = '-'
-      end
-      object MenuFileRememberFile: TMenuItem
-        Action = ARememberFile
-      end
-      object MenuFileRememberPath: TMenuItem
-        Action = ARememberPath
       end
       object Separator18: TMenuItem
         Caption = '-'
@@ -857,6 +848,15 @@ object formPoBatch: TformPoBatch
       end
       object MenuTranslateMissingFromMemoryInFiles: TMenuItem
         Action = APathTranslateMissingFromMemory
+      end
+      object Separator23: TMenuItem
+        Caption = '-'
+      end
+      object MenuTranslateRememberFile: TMenuItem
+        Action = ARememberFile
+      end
+      object MenuTranslateRememberPath: TMenuItem
+        Action = ARememberPath
       end
     end
     object menuHelp: TMenuItem

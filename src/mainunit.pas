@@ -156,6 +156,8 @@ type
     MenuEditPluralForm: TMenuItem;
     MenuHelpGNUgettext: TMenuItem;
     MenuItem1: TMenuItem;
+    MenuTranslateRememberFile: TMenuItem;
+    MenuTranslateRememberPath: TMenuItem;
     MenuViewColumnContext: TMenuItem;
     MenuViewColumnPlural: TMenuItem;
     MenuCheckPluralCount: TMenuItem;
@@ -171,8 +173,6 @@ type
     MenuPathShowFileInExplorer: TMenuItem;
     MenuTranslateMissingFromMemoryInFiles: TMenuItem;
     MenuPathTranslateMissingFromMemoryInFiles: TMenuItem;
-    MenuFileRememberFile: TMenuItem;
-    MenuFileRememberPath: TMenuItem;
     MenuFormatQAEnabled: TMenuItem;
     MenuTranslateMissingInFiles: TMenuItem;
     MenuPopupMarkValid: TMenuItem;
