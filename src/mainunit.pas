@@ -289,7 +289,6 @@ type
     PageComments: TTabSheet;
     Translate: TTranslate;
     { Form Events }
-    procedure ARememberPathExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -365,6 +364,7 @@ type
     procedure ASettingsExecute(Sender: TObject);
     procedure AGoToExecute(Sender: TObject);
     procedure ARememberFileExecute(Sender: TObject);
+    procedure ARememberPathExecute(Sender: TObject);
     { Action Batch Operations }
     procedure ACopySourceTextExecute(Sender: TObject);
     procedure AClearIdenticalExecute(Sender: TObject);
@@ -431,6 +431,7 @@ type
     procedure ListPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure ListPathDrawItem(Control: TWinControl; Index: integer; ARect: TRect; State: TOwnerDrawState);
     procedure FilterChange(Sender: TObject);
+    procedure FilterKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure btnFilterClearClick(Sender: TObject);
     procedure ImageSwitchClick(Sender: TObject);
     procedure PanelPageTranslationResize(Sender: TObject);
@@ -950,6 +951,9 @@ begin
     else
       Exit;
 
+    if Grid.Visible and Grid.CanFocus and Grid.CanSetFocus then
+      Grid.SetFocus;
+
     // When a file is passed on the command line, switch the current path to
     // its folder only if a path was already open and the folders differ.
     // A closed path stays closed - the file opens as a standalone document
@@ -1000,6 +1004,19 @@ procedure TformPoBatch.FormKeyDown(Sender: TObject; var Key: word; Shift: TShift
 begin
   // Never treat AltGr-like input as a shortcut
   if TLocalize.IsCharInputModifier(Shift) then Exit;
+
+  // Ctrl+F focuses the filter box and selects its content so typing
+  // immediately replaces the previous query
+  if (Key = Ord('F')) and (Shift = [ssCtrl]) then
+  begin
+    if Filter.CanFocus then
+    begin
+      Filter.SetFocus;
+      Filter.SelectAll;
+    end;
+    Key := 0;
+    Exit;
+  end;
 
   if ActiveControl = PanelSwitch then
   begin
@@ -2922,6 +2939,22 @@ begin
     UpdateTranslatePanel;
   finally
     FFilterUpdating := False;
+  end;
+end;
+
+procedure TformPoBatch.FilterKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  // Down arrow moves focus to the grid, which follows the filter in tab order
+  if Key = VK_DOWN then
+  begin
+    if Grid.CanFocus then
+    begin
+      Grid.SetFocus;
+      // Ensure a data row is selected when the grid receives focus
+      if (Grid.Row < Grid.FixedRows) and (Grid.RowCount > Grid.FixedRows) then
+        Grid.Row := Grid.FixedRows;
+    end;
+    Key := 0; // swallow the key so the filter edit does not scroll
   end;
 end;
 

@@ -31,7 +31,7 @@ object formPoBatch: TformPoBatch
     MultiSelect = True
     PopupMenu = PopupPath
     Style = lbOwnerDrawFixed
-    TabOrder = 1
+    TabOrder = 2
     Visible = False
     OnClick = ListPathClick
     OnDrawItem = ListPathDrawItem
@@ -73,7 +73,7 @@ object formPoBatch: TformPoBatch
       ClientHeight = 20
       ClientWidth = 568
       ParentBackground = False
-      TabOrder = 6
+      TabOrder = 0
       object Filter: TEdit
         Left = 5
         Height = 20
@@ -86,6 +86,7 @@ object formPoBatch: TformPoBatch
         TabOrder = 0
         TextHint = 'Type to filter...'
         OnChange = FilterChange
+        OnKeyDown = FilterKeyDown
       end
       object btnFilterClear: TSpeedButton
         Left = 550
@@ -139,7 +140,7 @@ object formPoBatch: TformPoBatch
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goThumbTracking, goSmoothScroll, goFixedRowNumbering, goHeaderHotTracking, goSelectionActive, goCellHints, goAutoAddRowsSkipContentCheck, goRowHighlight]
       Options2 = [goCopyWithoutTrailingLinebreak]
       RowCount = 1
-      TabOrder = 3
+      TabOrder = 1
       TitleStyle = tsNative
       Visible = False
       OnColRowInserted = GridUniversalColRowInserted
@@ -222,7 +223,7 @@ object formPoBatch: TformPoBatch
       Options2 = [goCopyWithoutTrailingLinebreak]
       PopupMenu = PopupGrid
       RowCount = 1
-      TabOrder = 0
+      TabOrder = 3
       TitleStyle = tsNative
       OnColRowInserted = GridColRowInserted
       OnCompareCells = GridCompareCells
@@ -254,7 +255,7 @@ object formPoBatch: TformPoBatch
       Constraints.MinHeight = 35
       ParentBackground = False
       ParentColor = False
-      TabOrder = 1
+      TabOrder = 4
       object PanelSwitch: TPanel
         Left = 0
         Height = 40
@@ -358,7 +359,7 @@ object formPoBatch: TformPoBatch
       Constraints.MinHeight = 100
       TabHeight = 20
       TabIndex = 0
-      TabOrder = 2
+      TabOrder = 6
       TabPosition = tpBottom
       Visible = False
       object PageTranslate: TTabSheet
