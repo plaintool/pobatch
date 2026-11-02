@@ -500,6 +500,7 @@ type
     FTMAutoPopulateOnSave: boolean;
     FLastFileMTime: TDateTime;
     FLastFileSize: int64;
+    FSnapshotFileName: string;
     FHasFileSnapshot: boolean;
     FCheckingFileChange: boolean;
 
@@ -843,6 +844,7 @@ begin
 
   // File change detection state; the first snapshot is taken on load/save
   FHasFileSnapshot := False;
+  FSnapshotFileName := '';
   FLastFileMTime := 0;
   FLastFileSize := 0;
   FCheckingFileChange := False;
@@ -3944,12 +3946,14 @@ begin
   end;
   FLastFileMTime := FileDateToDateTime(CurAge);
   FLastFileSize := FileUtil.FileSize(AName);
+  FSnapshotFileName := AName;
   FHasFileSnapshot := True;
 end;
 
 procedure TformPoBatch.ClearFileSnapshot;
 begin
   FHasFileSnapshot := False;
+  FSnapshotFileName := '';
   FLastFileMTime := 0;
   FLastFileSize := 0;
 end;
@@ -3963,12 +3967,17 @@ begin
   Result := False;
   if not FHasFileSnapshot or (FFileName = '') then
     Exit;
+
+  // The snapshot belongs to a specific file. If the user has switched the
+  // target file (e.g. during CreatePoFileFromPot), the snapshot is stale
+  // and the check must be skipped
+  if not SameFileName(FSnapshotFileName, FFileName) then
+    Exit;
+
   if not FileExists(FFileName) then
-    // A deleted file is a bigger change than a modified one
     Exit(True);
   CurAge := FileAge(FFileName);
   if CurAge <= 0 then
-    // Timestamp is unreadable, safer to treat the file as changed
     Exit(True);
   CurSize := FileUtil.FileSize(FFileName);
   CurMTime := FileDateToDateTime(CurAge);
