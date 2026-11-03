@@ -1,45 +1,13 @@
-[Registry]
-;Registry data for PoBatch .po association
-Root: HKA; Subkey: "Software\Classes\.po"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\.po\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
-;Registry data for PoBatch .pot association
-Root: HKA; Subkey: "Software\Classes\.pot"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\.pot\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
-Root: HKA; Subkey: "Software\Classes\PoBatch"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PoBatch"; ValueType: string; ValueName: ""; ValueData: "PoBatch PO File"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\pobatch.exe,1"; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\PoBatch\shell"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open\command"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\pobatch.exe"" ""%1"""; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\PoBatch\ShellNew"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open\command"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\pobatch.exe"" ""%1"""; Flags: uninsdeletevalue
-;End of registry data for PoBatch
-
 #define MyAppName      "PoBatch"
 
 // --- Version resolving ---
-#ifndef MyVersion
-  #define FileHandle FileOpen("..\VERSION")
-  #if FileHandle
-    #define MyVersion Trim(FileRead(FileHandle))
-    #expr FileClose(FileHandle)
-  #else
-    #define MyVersion "0.0.0"
-  #endif
-#endif
-
-#define MyAppVersion   MyVersion
-#define MyAppPublisher "Alexander Tverskoy"
-#define MyAppURL       "https://github.com/plaintool/pobatch"
-#define MyAppExeName   "pobatch.exe"
-#define MyAppExeName32   "pobatch32.exe"
-#define CurrentYear    GetDateTimeString('yyyy','','')
+#define MyAppExeName       "pobatch.exe"
+#define MyAppVersion()     GetVersionComponents("..\" + MyAppExeName, Local[0], Local[1], Local[2], Local[3]), str(Local[0]) + "." + str(Local[1]) + "." + str(Local[2])
+#define MyAppPublisher     "Alexander Tverskoy"
+#define MyAppURL           "https://github.com/plaintool/pobatch"
+#define MyAppExeName32     "pobatch32.exe"
+#define CopyrightStartYear "2026"
+#define CurrentYear         GetDateTimeString('yyyy','','')
 
 [Setup]
 AppId={{D1E4B5C2-8F9A-4B6D-AB12-3F7C9E4D8A21}
@@ -51,14 +19,18 @@ VersionInfoDescription={#MyAppName} installer
 VersionInfoProductName={#MyAppName}
 VersionInfoVersion={#MyAppVersion}
 
-AppCopyright={#CurrentYear} {#MyAppPublisher}
+#if CurrentYear == CopyrightStartYear
+  AppCopyright={#CurrentYear} {#MyAppPublisher}
+#else
+  AppCopyright={#CopyrightStartYear}-{#CurrentYear} {#MyAppPublisher}
+#endif
 
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 
-UninstallDisplayName={#MyAppName} {#MyAppVersion}
+UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 RestartApplications=no
@@ -83,6 +55,31 @@ OutputDir=.\
 OutputBaseFilename=pobatch-{#MyAppVersion}-any-x86-x64
 Compression=lzma
 SolidCompression=yes
+
+#include "innosetup_languages.iss"
+
+[Registry]
+;Registry data for PoBatch .po association
+Root: HKA; Subkey: "Software\Classes\.po"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\.po\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
+;Registry data for PoBatch .pot association
+Root: HKA; Subkey: "Software\Classes\.pot"; ValueType: string; ValueName: ""; ValueData: "PoBatch"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\.pot\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
+Root: HKA; Subkey: "Software\Classes\PoBatch"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch"; ValueType: string; ValueName: ""; ValueData: "PoBatch PO File"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\pobatch.exe,1"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open\command"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\PoBatch\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\pobatch.exe"" ""%1"""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\PoBatch\ShellNew"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open\command"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\Applications\pobatch.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\pobatch.exe"" ""%1"""; Flags: uninsdeletevalue
+;End of registry data for PoBatch
 
 [Code]
 
@@ -112,32 +109,6 @@ begin
     KillPoBatch();
 end;
 
-[Languages]
-Name: "arabic";     MessagesFile: "compiler:Languages\Arabic.isl"
-Name: "belarusian"; MessagesFile: "compiler:Languages\Belarusian.isl"
-Name: "chinese";    MessagesFile: "compiler:Languages\ChineseSimplified.isl"
-Name: "czech";      MessagesFile: "compiler:Languages\Czech.isl"
-Name: "danish";     MessagesFile: "compiler:Languages\Danish.isl"
-Name: "dutch";      MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "english";    MessagesFile: "compiler:Default.isl"
-Name: "finnish";    MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "french";     MessagesFile: "compiler:Languages\French.isl"
-Name: "german";     MessagesFile: "compiler:Languages\German.isl"
-Name: "greek";      MessagesFile: "compiler:Languages\Greek.isl"
-Name: "hebrew";     MessagesFile: "compiler:Languages\Hebrew.isl"
-Name: "hindi";      MessagesFile: "compiler:Languages\Hindi.isl"
-Name: "indonesian"; MessagesFile: "compiler:Languages\Indonesian.isl"
-Name: "italian";    MessagesFile: "compiler:Languages\Italian.isl"
-Name: "japanese";   MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "korean";     MessagesFile: "compiler:Languages\Korean.isl"
-Name: "polish";     MessagesFile: "compiler:Languages\Polish.isl"
-Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "romanian";   MessagesFile: "compiler:Languages\Romanian.isl"
-Name: "russian";    MessagesFile: "compiler:Languages\Russian.isl"
-Name: "spanish";    MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "swedish";    MessagesFile: "compiler:Languages\Swedish.isl"
-Name: "turkish";    MessagesFile: "compiler:Languages\Turkish.isl"
-Name: "ukrainian";  MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
