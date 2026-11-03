@@ -1817,6 +1817,8 @@ object formPoBatch: TformPoBatch
     }
   end
   object PopupPath: TPopupMenu
+    OnPopup = PopupPathPopup
+    OnClose = PopupPathClose
     Left = 472
     Top = 120
     object MenuPathNewFilesFromPot: TMenuItem

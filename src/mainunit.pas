@@ -444,6 +444,8 @@ type
     procedure PanelSwitchEnter(Sender: TObject);
     procedure PanelSwitchExit(Sender: TObject);
     procedure PanelSwitchPaint(Sender: TObject);
+    procedure PopupPathClose(Sender: TObject);
+    procedure PopupPathPopup(Sender: TObject);
     procedure SpellSourceSpellCheckComplete(Sender: TObject; ErrorCount: integer);
     procedure SpellTranslationSpellCheckComplete(Sender: TObject; ErrorCount: integer);
     procedure SplitterTranslateMoved(Sender: TObject);
@@ -476,6 +478,7 @@ type
     FFileStatuses: TPOFileStatusArray;
     FSelectPathTimer: TTimer;
     FPathMouseSelecting: boolean;
+    FPathPopupActive: boolean;
     FFilterUpdating: boolean;
     FFilterPending: boolean;
     FAnalizeGeneration: integer;
@@ -810,6 +813,7 @@ begin
   FLastPathIndex := -1;
   FWordWrap := True;
   FPathMouseSelecting := False;
+  FPathPopupActive := False;
   FSaving := False;
   FFilterUpdating := False;
   FFilterPending := False;
@@ -2930,9 +2934,9 @@ var
 begin
   if (Index < 0) or (Index >= Length(FFileStatuses)) then Exit;
 
-  // Bright selection only while the list has focus or a modal dialog is
-  // shown; a real focus loss uses the dim row highlight like the grids
-  BrightSelection := (Control as TListBox).Focused or (Application.ModalLevel > 0);
+  // Bright selection while the list has focus, a modal dialog is shown
+  // or the list popup is open; a real focus loss dims the row highlight
+  BrightSelection := (Control as TListBox).Focused or (Application.ModalLevel > 0) or FPathPopupActive;
 
   with (Control as TListBox).Canvas do
   begin
@@ -3057,6 +3061,18 @@ procedure TformPoBatch.PanelSwitchPaint(Sender: TObject);
 begin
   if FPanelFocused then
     PanelSwitch.Canvas.DrawFocusRect(PanelSwitch.ClientRect);
+end;
+
+procedure TformPoBatch.PopupPathPopup(Sender: TObject);
+begin
+  FPathPopupActive := True;
+  ListPath.Invalidate;
+end;
+
+procedure TformPoBatch.PopupPathClose(Sender: TObject);
+begin
+  FPathPopupActive := False;
+  ListPath.Invalidate;
 end;
 
 procedure TformPoBatch.SplitterTranslateMoved(Sender: TObject);
