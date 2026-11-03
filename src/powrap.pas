@@ -1278,7 +1278,7 @@ var
 
   procedure AddField(const FieldKeyword: string; const Value: string);
   var
-    Normalized, SepStr, SepEscape: string;
+    Normalized: string;
     Parts: TStringArray;
     i: integer;
   begin
@@ -1288,54 +1288,36 @@ var
       Exit;
     end;
 
-    case ALineEndingStyle of
-      pleCRLF: begin
-        SepStr := #13#10;
-        SepEscape := '\r\n';
-      end;
-      pleCR: begin
-        SepStr := #13;
-        SepEscape := '\r';
-      end;
-      else
-      begin
-        SepStr := #10;
-        SepEscape := '\n';
-      end;
-    end;
+    // Escaped line breaks inside msgid/msgstr are always \n regardless of
+    // the file line ending style; normalize CRLF/CR in the value first
+    Normalized := StringReplace(Value, #13#10, #10, [rfReplaceAll]);
+    Normalized := StringReplace(Normalized, #13, #10, [rfReplaceAll]);
 
-    Normalized := StringReplace(Value, #13#10, SepStr, [rfReplaceAll]);
-    if SepStr <> #13 then
-      Normalized := StringReplace(Normalized, #13, SepStr, [rfReplaceAll]);
-    if SepStr <> #10 then
-      Normalized := StringReplace(Normalized, #10, SepStr, [rfReplaceAll]);
-
-    if (Length(Normalized) >= Length(SepStr)) and (Copy(Normalized, Length(Normalized) - Length(SepStr) + 1, Length(SepStr)) =
-      SepStr) then
+    if (Length(Normalized) >= 1) and (Normalized[Length(Normalized)] = #10) then
     begin
-      SetLength(Normalized, Length(Normalized) - Length(SepStr));
-      if Pos(SepStr, Normalized) = 0 then
+      SetLength(Normalized, Length(Normalized) - 1);
+      if Pos(#10, Normalized) = 0 then
       begin
-        Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + SepEscape + '"');
+        Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + '\n"');
         Exit;
       end;
-      Parts := Normalized.Split(SepStr);
+      Parts := Normalized.Split(#10);
       Lines.Add(Prefix + FieldKeyword + ' ""');
       for i := 0 to High(Parts) do
-        Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+        Lines.Add('"' + EscapeString(Parts[i]) + '\n"');
       Exit;
     end
     else
     begin
-      if Pos(SepStr, Normalized) = 0 then
+      if Pos(#10, Normalized) = 0 then
       begin
         Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + '"');
         Exit;
       end;
-      Parts := Normalized.Split(SepStr);
+      Parts := Normalized.Split(#10);
       Lines.Add(Prefix + FieldKeyword + ' ""');
       for i := 0 to High(Parts) - 1 do
-        Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+        Lines.Add('"' + EscapeString(Parts[i]) + '\n"');
       Lines.Add('"' + EscapeString(Parts[High(Parts)]) + '"');
     end;
   end;
@@ -1603,6 +1585,8 @@ begin
     for h := Low(TPOHeader) to High(TPOHeader) do
       DefaultHeaders.Add(POHeaderNames[h] + ': ' + DefaultValues[h]);
 
+    // Keep the in-memory header with LF so the model does not depend on OS
+    DefaultHeaders.LineBreak := #10;
     HeaderEntry.MsgStrSimple := DefaultHeaders.Text;
   finally
     DefaultHeaders.Free;
@@ -1892,8 +1876,6 @@ end;
 procedure TPOFile.AddFieldToStrings(Lines: TStrings; const Prefix, FieldKeyword: string; const Value: string);
 var
   Normalized: string;
-  SepStr: string;   // the line break string according to style
-  SepEscape: string;
   Parts: TStringArray;
   i: integer;
 begin
@@ -1903,60 +1885,43 @@ begin
     Exit;
   end;
 
-  // Determine separator and its escape sequence
-  case FLineEndingStyle of
-    pleCRLF: begin
-      SepStr := #13#10;
-      SepEscape := '\r\n';
-    end;
-    pleCR: begin
-      SepStr := #13;
-      SepEscape := '\r';
-    end;
-    else       // pleLF
-      SepStr := #10;
-      SepEscape := '\n';
-  end;
+  // Normalise any CRLF/CR inside the value to LF first. Escaped line breaks
+  // inside msgid/msgstr are always \n regardless of the file line ending
+  // style; the style only affects the separators between fields
+  Normalized := StringReplace(Value, #13#10, #10, [rfReplaceAll]);
+  Normalized := StringReplace(Normalized, #13, #10, [rfReplaceAll]);
 
-  // Normalise all line breaks to the chosen style
-  Normalized := StringReplace(Value, #13#10, SepStr, [rfReplaceAll]);
-  if SepStr <> #13 then
-    Normalized := StringReplace(Normalized, #13, SepStr, [rfReplaceAll]);
-  if SepStr <> #10 then
-    Normalized := StringReplace(Normalized, #10, SepStr, [rfReplaceAll]);
-
-  // Check if the string ends with the separator
-  if (Length(Normalized) >= Length(SepStr)) and (Copy(Normalized, Length(Normalized) - Length(SepStr) + 1, Length(SepStr)) =
-    SepStr) then
+  // Check if the string ends with a line break
+  if (Length(Normalized) >= 1) and (Normalized[Length(Normalized)] = #10) then
   begin
-    SetLength(Normalized, Length(Normalized) - Length(SepStr));
+    SetLength(Normalized, Length(Normalized) - 1);
     // If the string is a single line (no more separators) and trailing separator was present
-    if Pos(SepStr, Normalized) = 0 then
+    if Pos(#10, Normalized) = 0 then
     begin
-      Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + SepEscape + '"');
+      Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + '\n"');
       Exit;
     end;
     // Multi-line with trailing separator: split, each part + escape
-    Parts := Normalized.Split(SepStr);
+    Parts := Normalized.Split(#10);
     Lines.Add(Prefix + FieldKeyword + ' ""');
     for i := 0 to High(Parts) do
-      Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+      Lines.Add('"' + EscapeString(Parts[i]) + '\n"');
     Exit;
   end
   else
   begin
     // No trailing separator
-    if Pos(SepStr, Normalized) = 0 then
+    if Pos(#10, Normalized) = 0 then
     begin
       // Single line
       Lines.Add(Prefix + FieldKeyword + ' "' + EscapeString(Normalized) + '"');
       Exit;
     end;
     // Multi-line, no trailing separator
-    Parts := Normalized.Split(SepStr);
+    Parts := Normalized.Split(#10);
     Lines.Add(Prefix + FieldKeyword + ' ""');
     for i := 0 to High(Parts) - 1 do
-      Lines.Add('"' + EscapeString(Parts[i]) + SepEscape + '"');
+      Lines.Add('"' + EscapeString(Parts[i]) + '\n"');
     Lines.Add('"' + EscapeString(Parts[High(Parts)]) + '"');
   end;
 end;
@@ -2174,6 +2139,9 @@ begin
       else
         sl.Add(s);
     end;
+    // Store header lines with LF so the in-memory model never contains
+    // platform-specific breaks regardless of the current OS
+    sl.LineBreak := #10;
     Entry.MsgStrSimple := sl.Text;
   finally
     sl.Free;
@@ -2573,13 +2541,13 @@ var
       begin
         k := Copy(s, 1, EqPos - 1);
         v := Copy(s, EqPos + 1, MaxInt);
-        Result := Result + k + ': ' + v + sLineBreak;
+        Result := Result + k + ': ' + v + #10;
       end
       else
-        Result := Result + s + sLineBreak;
+        Result := Result + s + #10;
     end;
     if Result <> '' then
-      SetLength(Result, Length(Result) - Length(sLineBreak));
+      SetLength(Result, Length(Result) - 1);
   end;
 
 begin
