@@ -600,6 +600,7 @@ type
     function CreatePoFileFromPot(const APotFileName, ACode: string; out ANewFileName: string): boolean;
     procedure ReloadCurrentFile(const AFileName: string);
     procedure ApplyFont(const AFont: TFont);
+    procedure ApplyFileHeaders(APoFile: TPOFile; const AFileName: string);
 
     property Changed: boolean read FChanged write SetChanged;
     property Language: string read FLanguage write SetLanguage;
@@ -3901,10 +3902,6 @@ function TformPoBatch.SaveFile(AFileName: string; Fast: boolean = False): boolea
 var
   Output: TStringList;
   Stream: TStringStream;
-  OffsetMinutes: integer = 0;
-  TZSign: char = '+';
-  RevisionDate: string = '';
-  IsNewFile: boolean;
 begin
   Result := False;
   if FSaving then Exit; // already saving
@@ -3946,34 +3943,7 @@ begin
   try
     SaveGrid;
     SaveGridHeaders;
-    FPoFile.HeaderValue['X-Generator'] := AppName + ' ' + GetAppVersion;
-
-    // Overwrite Last-Translator with the configured values when at least one is set
-    if (Trim(FTranslatorName) <> string.Empty) or (Trim(FTranslatorEmail) <> string.Empty) then
-    begin
-      if (Trim(FTranslatorName) <> string.Empty) and (Trim(FTranslatorEmail) <> string.Empty) then
-        FPoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorName) + ' <' + Trim(FTranslatorEmail) + '>'
-      else if Trim(FTranslatorEmail) <> string.Empty then
-        FPoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorEmail)
-      else
-        FPoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorName);
-    end;
-
-    // Only refresh PO-Revision-Date when overwriting an existing file, so a
-    // PO file created from a POT keeps the (usually empty) date from the template
-    IsNewFile := not FileExists(AFileName);
-    if not IsNewFile then
-    begin
-      OffsetMinutes := GetLocalTimeOffset;
-      if OffsetMinutes < 0 then
-      begin
-        TZSign := '-';
-        OffsetMinutes := -OffsetMinutes;
-      end;
-      RevisionDate := FormatDateTime('yyyy-mm-dd hh:nn', Now) + TZSign + Format('%.2d%.2d',
-        [OffsetMinutes div 60, OffsetMinutes mod 60]);
-      FPoFile.HeaderValue['PO-Revision-Date'] := RevisionDate;
-    end;
+    ApplyFileHeaders(FPoFile, AFileName);
 
     if not Fast then FillGridHeaders;
 
@@ -4045,6 +4015,44 @@ begin
     end;
   finally
     FSaving := False;
+  end;
+end;
+
+procedure TformPoBatch.ApplyFileHeaders(APoFile: TPOFile; const AFileName: string);
+var
+  OffsetMinutes: integer = 0;
+  TZSign: char = '+';
+  RevisionDate: string = '';
+begin
+  if not Assigned(APoFile) then
+    Exit;
+
+  APoFile.HeaderValue['X-Generator'] := AppName + ' ' + GetAppVersion;
+
+  // Overwrite Last-Translator with the configured values when at least one is set
+  if (Trim(FTranslatorName) <> string.Empty) or (Trim(FTranslatorEmail) <> string.Empty) then
+  begin
+    if (Trim(FTranslatorName) <> string.Empty) and (Trim(FTranslatorEmail) <> string.Empty) then
+      APoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorName) + ' <' + Trim(FTranslatorEmail) + '>'
+    else if Trim(FTranslatorEmail) <> string.Empty then
+      APoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorEmail)
+    else
+      APoFile.HeaderValue['Last-Translator'] := Trim(FTranslatorName);
+  end;
+
+  // Only refresh PO-Revision-Date when overwriting an existing file, so a
+  // PO file created from a POT keeps the (usually empty) date from the template
+  if FileExists(AFileName) then
+  begin
+    OffsetMinutes := GetLocalTimeOffset;
+    if OffsetMinutes < 0 then
+    begin
+      TZSign := '-';
+      OffsetMinutes := -OffsetMinutes;
+    end;
+    RevisionDate := FormatDateTime('yyyy-mm-dd hh:nn', Now) + TZSign + Format('%.2d%.2d',
+      [OffsetMinutes div 60, OffsetMinutes mod 60]);
+    APoFile.HeaderValue['PO-Revision-Date'] := RevisionDate;
   end;
 end;
 

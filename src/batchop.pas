@@ -362,6 +362,7 @@ begin
 
           if CopiedCount > 0 then
           begin
+            AForm.ApplyFileHeaders(PoFile, FileName);
             PoFile.SaveToFile(FileName);
             Inc(TotalCopied, CopiedCount);
           end;
@@ -502,6 +503,7 @@ begin
 
           if ClearedCount > 0 then
           begin
+            AForm.ApplyFileHeaders(PoFile, FileName);
             PoFile.SaveToFile(FileName);
             Inc(TotalCleared, ClearedCount);
           end;
@@ -610,6 +612,7 @@ begin
               PoFile.Entries[j].IsFuzzy := False;
           end;
 
+          AForm.ApplyFileHeaders(PoFile, FileName);
           PoFile.SaveToFile(FileName);
         except
           on E: Exception do
@@ -717,6 +720,7 @@ begin
         try
           PoFile.LoadFromFile(FileName);
           PoFile.SynchronizeToFile(PotForFile, True);
+          AForm.ApplyFileHeaders(PoFile, FileName);
           PoFile.SaveToFile(FileName);
         except
           on E: Exception do
@@ -1470,6 +1474,7 @@ begin
 
           if TranslatedInFile > 0 then
           begin
+            AForm.ApplyFileHeaders(PoFile, FileName);
             PoFile.SaveToFile(FileName);
             Inc(TotalTranslated, TranslatedInFile);
             Inc(FilesTranslated);
@@ -2437,6 +2442,7 @@ begin
 
           if translated > 0 then
           begin
+            AForm.ApplyFileHeaders(PoFile, FileName);
             PoFile.SaveToFile(FileName);
             Inc(TotalTranslated, translated);
             AForm.AnalizePath(SelectedIndices[i]);
