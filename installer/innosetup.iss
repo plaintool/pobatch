@@ -130,7 +130,7 @@ Source: "..\libssl-1_1.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode; Fl
 ; License
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 ; Config files
-Source: "..\config\deepl.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\deepl-oneshot.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 Source: "..\config\google-get-apis.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 Source: "..\config\google-get-clients5.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 Source: "..\config\google-post.ini"; DestDir: "{app}\config"; Flags: ignoreversion
