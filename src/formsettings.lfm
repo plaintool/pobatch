@@ -633,7 +633,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           )
           ColWidths = (
             200
-            205
+            222
           )
         end
       end

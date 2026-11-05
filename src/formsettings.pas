@@ -232,7 +232,7 @@ resourcestring
 
 implementation
 
-uses MainUnit, DarkUtils, ControlsHelper, StringsHelper, OSUtils, PoTM;
+uses MainUnit, PoTM, DarkUtils, ControlsHelper, StringsHelper, OSUtils, ColorHelper;
 
   {$R *.lfm}
 

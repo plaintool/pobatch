@@ -1968,6 +1968,7 @@ object formPoBatch: TformPoBatch
   object Translate: TTranslate
     SourceLanguage = 'en'
     AllowProxy = True
+    History.MaxItems = 0
     OnGetParameter = TranslateGetParameter
     Left = 312
     Top = 409

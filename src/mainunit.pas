@@ -672,24 +672,6 @@ const
   UNDEFINED = 'undefined';
   LANG_KEY_NONE = '*';
 
-  // Colors
-  clRowHighlight = TColor($FFF0DC);
-  clRowHighlightDark = TColor($5A4037);
-  clInfo = TColor($C0F5FF);
-  clInfoDark = TColor($496269);
-  clLine = TColor($E8E8E8);
-  clLineDark = TColor($484848);
-  clLightGray = TColor($FAFAFA);
-  clLightGrayDark = TColor($181818);
-  clMidGray = TColor($A0A0A0);
-  clMidGrayDark = TColor($404040);
-  clFontBlue = TColor($C85020);
-  clFontBlueDark = TColor($00DD8F84);
-  clSoftBlue = TColor($F0E6D8);
-  clSoftBlueDark = TColor($2B1A10);
-  clSoftGreen = TColor($D1FAD3);
-  clSoftGreenDark = TColor($07410C);
-
   {%EndRegion}
 
 const
