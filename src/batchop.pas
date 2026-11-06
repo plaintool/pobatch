@@ -157,7 +157,7 @@ resourcestring
 implementation
 
 uses
-  LangCodes, StringHelper, Localize, PoWrap;
+  LangCodes, StringHelper, Localize, PoWrap, OsUtils;
 
   { TBatchOp }
 
@@ -179,6 +179,9 @@ end;
 
 class procedure TBatchOp.ReportSuccess(AForm: TformPoBatch; const AMessage: string; AConfirm: boolean);
 begin
+  // Notify the user via taskbar flashing when running in the background
+  if AConfirm then
+    TOS.FlashTaskbar(AForm);
   // Console mode always prints, GUI mode respects the form's success toggle
   if AConfirm and not AForm.ShowSuccess then Exit;
   ReportMessage(AMessage, AConfirm);
@@ -186,6 +189,9 @@ end;
 
 class procedure TBatchOp.ReportSuccessFmt(AForm: TformPoBatch; const AFormat: string; const Args: array of const; AConfirm: boolean);
 begin
+  // Notify the user via taskbar flashing when running in the background
+  if AConfirm then
+    TOS.FlashTaskbar(AForm);
   // Console mode always prints, GUI mode respects the form's success toggle
   if AConfirm and not AForm.ShowSuccess then Exit;
   ReportMessageFmt(AFormat, Args, AConfirm);
@@ -1316,7 +1322,7 @@ begin
   FilesTranslated := 0;
   SkippedFiles := 0;
   ResponseLines := TStringList.Create;
-  Screen.Cursor := crHourGlass;
+  Screen.Cursor := crAppStart;
   try
     for i := 0 to selCount - 1 do
     begin
@@ -1908,7 +1914,7 @@ begin
     end;
 
     TotalTranslated := 0;
-    Screen.Cursor := crHourGlass;
+    Screen.Cursor := crAppStart;
     try
       // Single-line entries go out in chunks bounded by the translator's
       // MaxLength; the response must keep the same line count per chunk,
@@ -1984,7 +1990,7 @@ begin
             if ResponseLines.Count > 20 then
               ResponseSnippet := ResponseSnippet + sLineBreak + Format(rmorelines, [ResponseLines.Count - 20]);
             ShowMessageFmt(rtranslationlinecountgrid, [ResponseLines.Count, ChunkSize, ResponseSnippet]);
-            Screen.Cursor := crHourGlass;
+            Screen.Cursor := crAppStart;
           end;
 
           ChunkStart := ChunkEnd;
