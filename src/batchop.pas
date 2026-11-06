@@ -152,6 +152,8 @@ resourcestring
   rmemorydisabled = 'Translation memory is disabled. Enable it in the settings.';
   rmemorytranslatedone = 'Done. %d translation(s) applied from memory.';
   rmemorytranslatedoneskipped = 'Done. %d translation(s) applied from memory, %d skipped.';
+  rcancelledtranslation = 'Translation cancelled. %d entries updated.';
+  rcancelledpath = 'Translation cancelled. %d translation(s) in %d file(s).';
   {%EndRegion}
 
 implementation
@@ -1322,16 +1324,21 @@ begin
   FilesTranslated := 0;
   SkippedFiles := 0;
   ResponseLines := TStringList.Create;
+  // Enter batch mode so ESC in the main form can request cancellation
+  AForm.BeginBatch;
   Screen.Cursor := crAppStart;
   try
     for i := 0 to selCount - 1 do
     begin
+      // Stop processing files once the user confirmed the cancellation
+      if AForm.CancelRequested then
+        Break;
       FileName := AForm.PoFiles[SelectedIndices[i]];
       if not FileExists(FileName) then
       begin
         Screen.Cursor := crDefault;
         ReportMessageFmt(rfilenotfound, [FileName], AConfirm);
-        Screen.Cursor := crHourGlass;
+        Screen.Cursor := crAppStart;
         Continue;
       end;
 
@@ -1353,7 +1360,7 @@ begin
             Inc(SkippedFiles);
             Screen.Cursor := crDefault;
             ReportMessageFmt(rfilelangnotset, [ExtractFileName(FileName)], AConfirm);
-            Screen.Cursor := crHourGlass;
+            Screen.Cursor := crAppStart;
             Continue;
           end;
 
@@ -1407,6 +1414,9 @@ begin
             ChunkStart := 0;
             while ChunkStart < Length(BatchEntries) do
             begin
+              // Stop translating the current file on cancellation request
+              if AForm.CancelRequested then
+                Break;
               // Collect lines for the next chunk without exceeding the limit
               BatchText := string.Empty;
               ChunkEnd := ChunkStart;
@@ -1456,7 +1466,7 @@ begin
                   ResponseSnippet := ResponseSnippet + sLineBreak + Format(rmorelines, [ResponseLines.Count - 20]);
                 ReportMessageFmt(rtranslationlinecount,
                   [ExtractFileName(FileName), ResponseLines.Count, ChunkSize, ResponseSnippet], AConfirm);
-                Screen.Cursor := crHourGlass;
+                Screen.Cursor := crAppStart;
               end;
 
               ChunkStart := ChunkEnd;
@@ -1468,6 +1478,8 @@ begin
           // internal line structure intact
           for k := 0 to High(MultiEntries) do
           begin
+            if AForm.CancelRequested then
+              Break;
             TranslatedBatch := AForm.Translate.TranslateSync(MultiEntries[k].MsgId);
             if TranslatedBatch <> string.Empty then
             begin
@@ -1497,14 +1509,14 @@ begin
             Inc(SkippedFiles);
             Screen.Cursor := crDefault;
             ReportMessageFmt(rfiletranslationnone, [ExtractFileName(FileName), FileLang], AConfirm);
-            Screen.Cursor := crHourGlass;
+            Screen.Cursor := crAppStart;
           end;
         except
           on E: Exception do
           begin
             Screen.Cursor := crDefault;
             ReportMessageFmt(rerrorprocessingfile, [FileName, E.Message], AConfirm);
-            Screen.Cursor := crHourGlass;
+            Screen.Cursor := crAppStart;
           end;
         end;
       finally
@@ -1517,10 +1529,14 @@ begin
     AForm.Translate.TargetLanguage := OrigTarget;
     ResponseLines.Free;
     Screen.Cursor := crDefault;
+    AForm.EndBatch;
   end;
 
-  ReportSuccessFmt(AForm, rdonetranslationsadded,
-    [TotalTranslated, FilesTranslated, SkippedFiles], AConfirm);
+  if AForm.CancelRequested then
+    ReportMessageFmt(rcancelledpath, [TotalTranslated, FilesTranslated], AConfirm)
+  else
+    ReportSuccessFmt(AForm, rdonetranslationsadded,
+      [TotalTranslated, FilesTranslated, SkippedFiles], AConfirm);
 end;
 
 class procedure TBatchOp.SyncCurrentWithPot(AForm: TformPoBatch; const APotFileName: string = ''; AConfirm: boolean = True);
@@ -1863,8 +1879,10 @@ begin
   AForm.Grid.EditorMode := False;
   AForm.SaveGrid;
 
-  ResponseLines := TStringList.Create;
+  // Enter batch mode so ESC in the main form can request cancellation
+  AForm.BeginBatch;
   try
+    ResponseLines := TStringList.Create;
     SkippedCount := 0;
 
     // Split the range into single-line and multi-line entries
@@ -1928,6 +1946,9 @@ begin
         ChunkStart := 0;
         while ChunkStart < BatchCount do
         begin
+          // Stop translating once the user confirmed the cancellation
+          if AForm.CancelRequested then
+            Break;
           // Collect lines for the next chunk without exceeding the limit
           BatchText := string.Empty;
           ChunkEnd := ChunkStart;
@@ -2002,6 +2023,8 @@ begin
       // internal line structure intact
       for i := 0 to MultiCount - 1 do
       begin
+        if AForm.CancelRequested then
+          Break;
         Entry := MultiEntries[i];
         SourceText := Entry.MsgId;
         if SourceText = string.Empty then
@@ -2040,7 +2063,9 @@ begin
       Screen.Cursor := crDefault;
     end;
 
-    if AForm.ShowSuccess then
+    if AForm.CancelRequested then
+      ShowMessageFmt(rcancelledtranslation, [TotalTranslated])
+    else if AForm.ShowSuccess then
     begin
       if ASkipTranslated and (SkippedCount > 0) then
         ShowMessageFmt(rtranslatedoneskipped,
@@ -2049,7 +2074,8 @@ begin
         ShowMessageFmt(rtranslatedone, [TotalTranslated]);
     end;
   finally
-    ResponseLines.Free;
+    FreeAndNil(ResponseLines);
+    AForm.EndBatch;
   end;
 end;
 

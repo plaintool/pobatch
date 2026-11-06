@@ -513,6 +513,8 @@ type
     FSnapshotFileName: string;
     FHasFileSnapshot: boolean;
     FCheckingFileChange: boolean;
+    FBatchRunning: boolean;
+    FCancelRequested: boolean;
 
     // Properties Methods
     procedure SetChanged(Value: boolean);
@@ -586,6 +588,8 @@ type
   public
     function IsCanClose(Fast: boolean = False): boolean;
     procedure AddRecentFile(const AFileName: string);
+    procedure BeginBatch;
+    procedure EndBatch;
     procedure ConfigureTM(const ASourceLang, ATargetLang: string);
     procedure ReloadTM;
     procedure AnalizePath(AIndex: integer = -1; ADraw: boolean = False);
@@ -635,6 +639,7 @@ type
     property FormSettingsWidth: integer read FFormSettingsWidth write FFormSettingsWidth;
     property FormSettingsHeight: integer read FFormSettingsHeight write FFormSettingsHeight;
     property FormSettingsSplit: integer read FFormSettingsSplit write FFormSettingsSplit;
+    property CancelRequested: boolean read FCancelRequested;
   end;
 
 var
@@ -749,6 +754,8 @@ resourcestring
   rfilechangedkeepchanges = 'Keep my changes';
   rfilechangedreloaddisk = 'Reload from disk';
   rfilereloaded = 'File reloaded from disk';
+  rcancelbatchtitle = 'Cancel operation';
+  rcancelbatchconfirm = 'Do you want to cancel the current batch operation?';
   {%EndRegion}
 
 implementation
@@ -1011,6 +1018,16 @@ procedure TformPoBatch.FormKeyDown(Sender: TObject; var Key: word; Shift: TShift
 begin
   // Never treat AltGr-like input as a shortcut
   if TLocalize.IsCharInputModifier(Shift) then Exit;
+
+  // ESC during a long-running batch operation asks to stop it;
+  // the confirmation is shown only once per batch
+  if FBatchRunning and not FCancelRequested and (Key = VK_ESCAPE) then
+  begin
+    Key := 0;
+    if MessageDlg(rcancelbatchtitle, rcancelbatchconfirm, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      FCancelRequested := True;
+    Exit;
+  end;
 
   // Ctrl+F focuses the filter box and selects its content so typing
   // immediately replaces the previous query
@@ -5247,6 +5264,18 @@ begin
   except
     // Ignore load errors
   end;
+end;
+
+procedure TformPoBatch.BeginBatch;
+begin
+  // Fresh batch state; the flag survives after EndBatch for the caller to read
+  FBatchRunning := True;
+  FCancelRequested := False;
+end;
+
+procedure TformPoBatch.EndBatch;
+begin
+  FBatchRunning := False;
 end;
 
 {%EndRegion}
