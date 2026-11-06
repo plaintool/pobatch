@@ -747,6 +747,12 @@ begin
       Inc(AResult.Skipped);
       Continue;
     end;
+    // Fuzzy entries are unvalidated drafts, so they never enter the memory
+    if Entry.IsFuzzy then
+    begin
+      Inc(AResult.Skipped);
+      Continue;
+    end;
     MsgStr := Entry.MsgStrSimple;
     if MsgStr = '' then
     begin

@@ -5200,6 +5200,8 @@ begin
       Continue;
     if Entry.IsPlural then
       Continue;  // plural storage is not supported
+    if Entry.IsFuzzy then
+      Continue;  // unvalidated fuzzy translations are not stored
     if Trim(Entry.MsgStrSimple) = '' then
       Continue;  // untranslated
     if FTM.Store(Entry.MsgCtxt, Entry.MsgId, Entry.MsgStrSimple, Entry.Reference) then
