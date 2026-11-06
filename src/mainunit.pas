@@ -1060,6 +1060,12 @@ end;
 
 procedure TformPoBatch.FormResize(Sender: TObject);
 begin
+  // Close the active cell editor: cell rects change during a resize
+  // (columns reflow, row heights update) and the editor would be left
+  // outside its cell
+  if Assigned(Grid) and Grid.EditorMode then
+    Grid.EditorMode := False;
+
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 
