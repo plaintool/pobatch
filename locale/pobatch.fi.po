@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "Käännös peruutettu. %d käännös(ä) %d tiedostossa."
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "Käännös peruutettu. %d merkintää päivitetty."
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Tyhjennetään KAIKKI käännökset seuraavista %d tiedostosta?\n"
+"Otsakkeet säilytetään, kaikki msgstr-arvot poistetaan.\n"
+"Tätä toimintoa ei voi kumota sovelluksen sisällä.\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "Tyhjennä kaikki käännökset"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "%d käännöstä tyhjennettiin."
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Tyhjennetäänkö sumeiden merkintöjen käännökset seuraavista %d tiedostosta?\n"
+"Tätä toimintoa ei voi kumota sovelluksen sisällä.\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "Tyhjennetäänkö valituilta riveiltä käännökset, jotka ovat samat kuin lähdeteksti?"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "Tyhjennä virheelliset käännökset"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "Vahvista uudelleennimeäminen"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "Vahvista synkronointi"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "%d käännöstä kopioitiin."
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Kopioidaanko lähdeteksti tyhjiin käännöksiin seuraavissa %d tiedostossa?\n"
+"Tätä toimintoa ei voi kumota sovelluksen sisällä.\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "Kopioi lähde tyhjiin"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "Kopioidaanko lähdeteksti valittujen rivien käännöksiin?"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "Poista tiedostot"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"Haluatko varmasti poistaa seuraavat %d tiedostoa?\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "Haluatko varmasti poistaa valitun tiedoston?"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "Poista tiedosto"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "Valmis. %d virheellistä käännöstä tyhjennetty."
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "Valmis. %d käännöstä lisätty %d tiedostoon. %d tiedostoa ohitettu."
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "Valmis. %d käännöstä tyhjennetty."
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "Valmis. %d käännöstä täytetty lähteestä."
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "Virhe käsiteltäessä tiedostoa \"%s\": %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "Virhe synkronoitaessa tiedostoa: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "Virhe synkronoitaessa tiedostoa \"%s\": %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "Tiedosto \"%s\" ohitettu: kohdekieltä ei ole asetettu PO-otsakkeessa tai tiedostonimessä."
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "Tiedostoa ei löytynyt: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"Seuraavat tiedostot ovat jo olemassa:\n"
+"\n"
+"%s\n"
+"Korvataanko ne?"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "Tiedostot ovat olemassa"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "Tiedosto \"%s\" ohitettu: kielelle \"%s\" ei tuotettu käännöksiä."
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "Virhe: --langs vaaditaan konsolitilassa"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "%d merkintää merkitty kelvollisiksi."
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Mer kitäänkö seuraavat %d tiedostoa kelvollisiksi?\n"
+"Tämä poistaa \"fuzzy\"-lipun kaikista merkinnöistä.\n"
+"Tätä toimintoa ei voi kumota sovelluksen sisällä.\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "Valitut tiedostot on merkitty kelvollisiksi. Kaikki \"fuzzy\"-liput poistettu."
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"Mer kitäänkö %d valittua merkintää kelvollisiksi?\n"
+"Tämä poistaa \"fuzzy\"-lipun valituista merkinnöistä."
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "Merkitse kelvolliseksi"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "Käännösmuisti on poistettu käytöstä. Ota se käyttöön asetuksissa."
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "Käännösmuistia ei ole määritetty nykyiselle kieliparille."
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "Valmis. %d käännöstä sovellettu muistista."
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "Valmis. %d käännöstä sovellettu muistista, %d ohitettu."
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... ja %d muuta tiedostoa"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... ja %d muuta riviä"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "Virhe: --name vaaditaan konsolitilassa"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "Valinnassa ei ole sumeita merkintöjä."
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "Ei valittuja PO-tiedostoja."
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "Vastaavaa POT-tiedostoa ei löytynyt: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "Ei synkronoitavaksi valittuja PO-tiedostoja."
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "Ei käännettävää."
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "Ei käännettävää: kaikilla merkinnöillä on jo käännökset."
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "Virhe: --pot vaaditaan konsolitilassa"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT-tiedostoa ei löytynyt: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"Muistetaanko seuraavien %d tiedoston käännökset muistiin?\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Valmis. %d käännöstä muistettu, %d ohitettu."
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "Muista käännökset"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "Poista fuzzy-lippu"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"Nimetäänkö seuraavat %d tiedostoa uudelleen perusnimellä \"%s\"?\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "Uudelleennimeäminen epäonnistui: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "Anna uusi perusnimi:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "Nimeä tiedostot uudelleen"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "Valitse poistettava tiedosto!"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "Valitse uudelleennimettävät tiedostot!"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Synkronoidaanko seuraavat %d tiedostoa\n"
+"vastaavien POT-tiedostojen kanssa?\n"
+"Tätä toimintoa ei voi kumota sovelluksen sisällä.\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"Synkronoidaanko nykyinen tiedosto\n"
+"  %s\n"
+"viite-POT-tiedoston\n"
+"  %s kanssa?"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "Synkronointi valmis."
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "Synkronointi valmis. %d tiedostoa ohitettu (ei vastaavaa POT-tiedostoa)."
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "Kohdekieltä ei ole asetettu. Määritä Language-otsake PO-tiedostossa."
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "Käännetäänkö kaikki nykyisen tiedoston merkinnät?"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "Käännetäänkö kaikki puuttuvat käännökset nykyisestä tiedostosta?"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "Käännös valmis. %d merkintää päivitetty."
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "Käännös valmis. %d merkintää päivitetty, %d ohitettu."
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Käännetäänkö puuttuvat käännökset seuraavista %d tiedostosta?\n"
+"Tätä toimintoa ei voi kumota sovelluksen sisällä.\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "Käännetäänkö puuttuvat käännökset %d valitusta merkinnästä?"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "Käännä puuttuvat"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "Käännetäänkö %d valittua merkintää?"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "Käännöskokoonpanoa ei ole valittu. Valitse ensin käännöspalvelu."
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "Käännösvirhe: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Tiedosto \"%s\": käännöspalvelu palautti %d riviä %d:n sijaan; yksiriviset merkinnät ohitettiin.\n"
+"\n"
+"Vastaus:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Käännöspalvelu palautti %d riviä %d:n sijaan; yksiriviset merkinnät ohitettiin.\n"
+"\n"
+"Vastaus:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "Haluatko peruuttaa nykyisen erätoiminnon?"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "Peruuta toiminto"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "Haluatko varmasti poistaa tämän monikkomuodon?"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "Poistetaanko monikkomuoto?"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "Haluatko varmasti poistaa valitun rivin?"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "Poistetaanko valitut rivit?"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "Poista rivi"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "Haluatko hylätä kaikki tallentamattomat muutokset?"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "Virheellinen tiedostonimi"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"Tiedostoa ei ole olemassa:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "Tiedostoa ei ole olemassa: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "Virhe"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "Säilytä muutokseni"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "Tiedostoa \"%s\" on muokannut toinen sovellus sen avaamisen jälkeen."
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "Sinulla on tallentamattomia muutoksia. Säilytetäänkö ne vai ladataanko levyltä uudelleen?"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "Sinulla on tallentamattomia muutoksia. Mitä haluat tehdä?"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "Korvaa"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "Lataa uudelleen"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "Lataa uudelleen levyltä"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "Tiedosto muuttunut levyllä"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "Tiedosto ladattu uudelleen levyltä"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "Anna merkinnän numero:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "Siirry merkintään"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "Virheellinen numero: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"Tiedosto on erittäin suuri (%d Mt).\n"
+"Sen avaaminen voi kestää hetken. Jatketaanko?"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "Suuri tiedosto"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"Virhe ladattaessa tiedostoa:\n"
+"%s\n"
+"Tiedosto voi olla vioittunut tai väärässä muodossa."
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "Latausvirhe"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "Valitusta hakemistosta ei löytynyt .po-tiedostoja!"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "Merkintää numero %s ei löytynyt."
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "Avaa tiedosto"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"Tiedostolla \"%s\" on tuntematon tiedostopääte.\n"
+"Haluatko yrittää avata sen silti?"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "Tyhjennä luettelo"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - Nimetön"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "Anna monikkomuoto"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "Monikkomuoto"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT-tiedostoa ei löytynyt: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "QA-tarkistukset"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Valmis. %d käännöstä muistettu, %d ohitettu."
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "Tiedosto \"%s\" ohitettu: kohdekieltä ei ole asetettu PO-otsakkeessa."
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "Muista tiedosto"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "Anna %s"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "Anna vaadittu parametri"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"Asiakirjaa \"%s\" on muokattu.\n"
+"Haluatko tallentaa muutokset?"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "Tallenna muutokset"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"Virhe tallennettaessa tiedostoa:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "Tallennusvirhe"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "Virheelliset: %d (Sumeat %d, QA %d, Tyhjät %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "Virheelliset merkinnät: kokonaismäärä eriteltynä fuzzy-lipun, QA-ongelmien ja tyhjien käännösten mukaan"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "Tiedoston tallennuksessa käytettävä rivinvaihtotyyli"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "Käännetty %d / %d (%d%%) Jäljellä %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "Käännön edistyminen: käännettyjen merkintöjen määrä kokonaismäärästä, prosenttiosuus, jäljellä oleva määrä"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "Nimetön"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "Oletus"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "Haluatko varmasti palauttaa oletusasetukset?"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "Mukautettu välityspalvelin"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "Ei välityspalvelinta"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "Järjestelmän välityspalvelin"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "Poistettu %d kielipari(a)."
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"Poistetaanko valitut %d kieliparia?\n"
+"Tätä toimintoa ei voi kumota."
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "Tyhjennä käännösmuisti"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"Rakennetaanko valitut %d kieliparia uudelleen?\n"
+"Merkinnät, jotka eivät enää vastaa nykyisiä suodattimia (pituus, monirivisyys), poistetaan."
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "Tiivistetty %d kielipari(a)."
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "Tiivistä käännösmuisti"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "Viety %d kielipari(a)."
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "Zip-arkistot (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "Ei valittuja kielipareja."
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "Vie käännösmuisti"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "Tuotu %d kielipari(a)."
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "Tiedostoa ei voi tuoda: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "Käännösmuisti (*.zip;*.txt)|*.zip;*.txt|Zip-arkistot (*.zip)|*.zip|Tekstitiedostot (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "Tuo käännösmuisti"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "Kieliparia ei voi määrittää kohteesta \"%s\". Odotettu muoto: \"xx-yy\"."
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "Arkistoa ei voi lukea: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "Merkinnät"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "Muokattu"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "Koko"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "Lähde"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "Kohde"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "Yhteensä"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "Valitse käännösmuistin kansio"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "Nimi"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "Arvo"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "Kirjainkokoero: lähde alkaa \"%s\", käännös alkaa \"%s\""
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "Kirjainkokoero: lähde on kokonaan isoilla kirjaimilla, käännös ei ole"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "Alussa oleva rivinvaihto ei täsmää"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "Lopussa oleva rivinvaihto ei täsmää"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "Ylimääräinen paikkamerkki käännöksessä: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "Puuttuva paikkamerkki käännöksessä: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "Monikkomuotojen määrä ei täsmää: odotettiin %d, löytyi %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "Sulku ei täsmää: odotettiin \"%s\", löytyi \"%s\""
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "Loppuvälimerkki ei täsmää: lähde päättyy \"%s\", käännös päättyy \"%s\""
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "Välilyönti ennen välimerkkiä: \"%s\""
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "Kaksoisvälilyönti käännöksessä"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "Alussa oleva välilyönti käännöksessä"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "Puuttuva välilyönti välimerkin jälkeen: \"%s\""
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "Lopussa oleva välilyönti käännöksessä"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "Tietoja"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "GNU General Public License, versio 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "Alexander Tverskoyn tekemä, lisensoitu"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "Kysymyksiä tai palautetta varten ota yhteyttä:"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "Versio"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "Tarjoa minulle kahvi"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "Lahjoita pankkikortilla tai PayPalilla"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "Jokainen panos auttaa pitämään projektin aktiivisena ja eteenpäin menevänä. Kiitos tuestasi!"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "Lahjoita kryptovaluutalla"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "Hei! Anna tälle intohimoprojektille pieni kofeiinibuusti! Jokainen lahjoitus auttaa pitämään koodin rullaamassa ja kahvin kiehumassa. Kiitos tuesta työlle ja sen takana olevalle kehittäjälle!"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "Voit tukea kehitystä yhdellä seuraavista tavoista:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "Kirjainkokoero: lähde on kokonaan isoilla kirjaimilla"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "Kirjainkokoero: ensimmäinen merkki"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "QA-tarkistukset käytössä"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "Rivinvaihto ei täsmää (alku / loppu)"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "Ylimääräinen paikkamerkki käännöksessä"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "Puuttuva paikkamerkki käännöksessä"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "Monikkomuotojen määrä ei täsmää"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "Sulku ei täsmää"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "Loppuvälimerkki ei täsmää"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "Puuttuva välilyönti välimerkin jälkeen"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "Välilyönti ennen välimerkkiä"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "Kaksoisvälilyönti käännöksessä"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "Alussa oleva välilyönti käännöksessä"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "Lopussa oleva välilyönti käännöksessä"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "Tyhjennä samat"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "Sulje polku"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "Kopioi"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "Kopioi lähdeteksti"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "Leikkaa"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "Poista"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "Muokkaa monikkomuotoa"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "Muokkaa vain käännöstä"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "Lopeta"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "Siirry..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "Merkitse kelvolliseksi"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "Oikealta vasemmalle -lukujärjestys"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "Tyhjennä"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "Kopioi"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "Leikkaa"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "Oletuszoomaus"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "Liitä"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "Valitse kaikki"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "Kumoa"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "Uusi"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "Uusi POT-tiedostosta..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "Uusi ikkuna"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "Avaa"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "Avaa polku..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "Liitä"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "Tyhjennä kaikki käännökset"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "Tyhjennä sumeat käännökset"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "Kopioi lähde tyhjiin"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "Poista tiedosto(t)"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "Uusi tiedosto(t) POT-tiedostosta..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "Muista käännökset"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "Nimeä tiedosto(t) uudelleen"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "Skannaa polku uudelleen"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "Valitse kaikki"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "Näytä tiedosto Resurssienhallinnassa..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "Synkronoi tiedosto(t) POT-tiedoston kanssa"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "Käännä puuttuvat tiedostosta/ tiedostoista"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "Käännä puuttuvat tiedostosta/ tiedostoista muistista"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "Merkitse tiedosto(t) kelvollisiksi"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "Muista tiedosto..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "Muista polku..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "Tallenna"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "Tallenna nimellä..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "Valitse kaikki"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "Asetukset..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "Tarkista lähteen oikeinkirjoitus"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "Tarkista käännöksen oikeinkirjoitus"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "Synkronoi POT-tiedoston kanssa"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "Käännä muistista"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "Käännä puuttuvat"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "Käännä puuttuvat muistista"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "Käännä valitut"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "Kumoa muutokset"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "Rivitys - Ruudukko"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "Rivitys - Käännöspaneeli"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "Kirjoita suodattaaksesi..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "Kelvollinen"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "Lähdeteksti"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "Käännös"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "Konteksti"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "Monikko"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "Viite"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "Sumea"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "Tyyppi"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "Arvo"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "Nimi"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "Arvo"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "Monikkomuodot"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "Vaatii vahvistuksen"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "Monikkomuoto"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "Tietoja..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "Tarkista päivitykset automaattisesti"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "Tarjoa minulle kahvi..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "Tarkista päivitykset"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "Tiedosto"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "Avaa viimeisimmät"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "Muoto"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "QA-tarkistukset"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "Ohje"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "Käännä"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "Kokoonpano"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "Näytä"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "Sarake Konteksti"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "Sarake Monikko"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "Sarake Viite"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "Otsakkeet"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "Käännöspaneeli"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "Kommentit"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "Käännä"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Lisää sanakirjaan"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Lisää sanakirjaan"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "Käytä"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "Palauta oletukset"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "Fontti..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "Nollaa"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "Asetukset"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "Todennus"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "Ottaa käyttöön kirjautumis- ja salasanatodennuksen välityspalvelinta käytettäessä"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "Muista viimeksi avattu tiedosto"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "Avaa viimeksi avattu käännöstiedosto automaattisesti, kun sovellus käynnistyy."
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "Näytä onnistumisilmoitukset"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "Näytä ilmoitus, kun toiminto suoritetaan onnistuneesti"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "Ohita moniriviset merkkijonot"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "Jätä huomiotta merkinnät, joiden lähdeteksti ulottuu usealle riville."
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "Vaihda käännöstaulukkoon tiedostoa valittaessa"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "Vaihda automaattisesti käännöstaulukkoon, kun tiedosto valitaan. Voit kohdistaa tiedostoluetteloon napsauttamalla jo valittua tiedostoa uudelleen."
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "Täytä automaattisesti tallennettaessa"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "Tallenna nykyisen tiedoston käännökset muistiin joka tallennuksella."
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "Käytössä"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "Ota käännösmuisti kokonaan käyttöön tai poista se käytöstä."
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "Määrittää, miten välityspalvelinta käytetään: ei välityspalvelinta, järjestelmän välityspalvelin tai mukautettu kokoonpano"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "Ei välityspalvelinta"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "Mukautetuissa asetuksissa käytettävä välityspalvelinprotokolla"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "Kansio, johon kieliparien arkistot tallennetaan zip-tiedostoina."
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "Välityspalvelimen osoite (IP tai verkkotunnus)"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "Välityspalvelimen todennuksessa käytettävä käyttäjänimi"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "Välityspalvelimen todennuksessa käytettävä salasana"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "Kääntäjän sähköpostiosoite tallennetaan käännöstiedostoon, kun se tallennetaan."
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "Kääntäjän nimi tallennetaan käännöstiedostoon, kun se tallennetaan."
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "Käyttäytyminen"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "Kääntäjän tiedot"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "Fontti"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "Välityspalvelimen kautta kulkevat kokoonpanot (oletus: kaikki)"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "Välityspalvelin"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "Aikakatkaisu"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "Suodattimet"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "Tallennus (napsauta ruudukkoa hiiren kakkospainikkeella nähdäksesi toiminnot)"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Käännösmuisti"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "Käyttäjän parametrit"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "Yhteys, s"
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "Isäntä"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "Kirjautuminen"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "Salasana"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "Portti"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "Välityspalvelintila"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "Välityspalvelintyyppi"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "Pyyntö, s"
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"Lähteen enimmäispituus\n"
+"(0 = rajoittamaton)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "Tallennushakemisto"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "Sähköposti"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "Nimi"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "Tyhjennä valitut"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "Tiivistä valitut"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "Vie valitut..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "Tuo..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "Valitse kaikki"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "Yleiset"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "Verkko"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "Parametrit"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Käännösmuisti"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "Oletus, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "Yhteyden muodostamiseen kuluva aika. Jos 0, käytetään oletusarvoa 10 sekuntia"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "Verkkoportti, jota välityspalvelin käyttää"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "Vastauksen ja tietojen odotusaika. Jos 0, käytetään oletusarvoa 300 sekuntia"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "Merkinnät, joiden lähdeteksti on pidempi, jätetään huomiotta muistin pitämiseksi pienenä."
+

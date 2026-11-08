@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "Traducere anulată. %d traducere/traduceri în %d fișier/fișiere."
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "Traducere anulată. %d intrări actualizate."
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Ștergeți TOATE traducerile din următoarele %d fișier/fișiere?\n"
+"Anteturile sunt păstrate, toate valorile msgstr sunt eliminate.\n"
+"Această acțiune nu poate fi anulată în cadrul aplicației.\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "Șterge toate traducerile"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "%d traduceri au fost șterse."
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Ștergeți traducerile intrărilor fuzzy din următoarele %d fișier/fișiere?\n"
+"Această acțiune nu poate fi anulată în cadrul aplicației.\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "Ștergeți traducerile identice cu textul sursă din rândul/rândurile selectate?"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "Șterge traducerile invalide"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "Confirmați redenumirea"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "Confirmați sincronizarea"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "%d traduceri au fost copiate."
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Copiați textul sursă în traducerile goale din următoarele %d fișier/fișiere?\n"
+"Această acțiune nu poate fi anulată în cadrul aplicației.\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "Copiază sursa în cele goale"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "Copiați textul sursă în traducerile din rândul/rândurile selectate?"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "Șterge fișierele"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"Sigur doriți să ștergeți următoarele %d fișier/fișiere?\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "Sigur doriți să ștergeți fișierul selectat?"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "Șterge fișierul"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "Finalizat. %d traducere/traduceri invalidă/invalide ștearsă/șterse."
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "Finalizat. %d traducere/traduceri adăugată/adăugate în %d fișier/fișiere. %d fișier/fișiere omis/omise."
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "Finalizat. %d traducere/traduceri ștearsă/șterse."
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "Finalizat. %d traducere/traduceri completată/completate din sursă."
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "Eroare la procesarea fișierului „%s”: %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "Eroare la sincronizarea fișierului: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "Eroare la sincronizarea fișierului „%s”: %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "Fișierul „%s” a fost omis: limba țintă nu este setată în antetul PO sau în numele fișierului."
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "Fișierul nu a fost găsit: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"Următoarele fișiere există deja:\n"
+"\n"
+"%s\n"
+"Le suprascrieți?"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "Fișierele există"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "Fișierul „%s” a fost omis: nu au fost produse traduceri pentru limba „%s”."
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "Eroare: --langs este obligatoriu în modul consolă"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "%d intrări marcate ca valide."
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Marcați următoarele %d fișier/fișiere ca valide?\n"
+"Aceasta va elimina marcajul „fuzzy” din toate intrările.\n"
+"Această acțiune nu poate fi anulată în cadrul aplicației.\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "Fișierele selectate au fost marcate ca valide. Toate marcajele „fuzzy” au fost eliminate."
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"Marcați %d intrări selectate ca valide?\n"
+"Aceasta va elimina marcajul „fuzzy” din intrările selectate."
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "Marchează ca valid"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "Memoria de traducere este dezactivată. Activați-o în setări."
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "Memoria de traducere nu este configurată pentru perechea de limbi curentă."
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "Finalizat. %d traducere/traduceri aplicată/aplicate din memorie."
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "Finalizat. %d traducere/traduceri aplicată/aplicate din memorie, %d omisă/omise."
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... și încă %d fișier/fișiere"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... și încă %d linie/linii"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "Eroare: --name este obligatoriu în modul consolă"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "Nu există intrări fuzzy în selecție."
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "Niciun fișier PO selectat."
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "Nu a fost găsit niciun fișier POT corespunzător pentru: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "Niciun fișier PO selectat pentru sincronizare."
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "Nimic de tradus."
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "Nimic de tradus: toate intrările au deja traduceri."
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "Eroare: --pot este obligatoriu în modul consolă"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "Fișierul POT nu a fost găsit: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"Memorați traducerile din următoarele %d fișier/fișiere în memorie?\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Finalizat. %d traducere/traduceri memorată/memorate, %d omisă/omise."
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "Memorează traducerile"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "Elimină marcajul fuzzy"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"Redenumiți următoarele %d fișier/fișiere folosind numele de bază „%s”?\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "Redenumirea a eșuat: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "Introduceți noul nume de bază:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "Redenumește fișierele"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "Selectați fișierul de șters!"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "Selectați fișierul/fișierele de redenumit!"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Sincronizați următoarele %d fișier/fișiere cu\n"
+"fișierele POT corespunzătoare?\n"
+"Această acțiune nu poate fi anulată în cadrul aplicației.\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"Sincronizați fișierul curent\n"
+"  %s\n"
+"cu POT-ul de referință\n"
+"  %s ?"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "Sincronizare finalizată."
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "Sincronizare finalizată. %d fișier/fișiere omis/omise (niciun POT corespunzător)."
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "Limba țintă nu este setată. Specificați antetul Language în fișierul PO."
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "Traduceți toate intrările din fișierul curent?"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "Traduceți toate traducerile lipsă din fișierul curent?"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "Traducere finalizată. %d intrări actualizate."
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "Traducere finalizată. %d intrări actualizate, %d omise."
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Traduceți traducerile lipsă din următoarele %d fișier/fișiere?\n"
+"Această acțiune nu poate fi anulată în cadrul aplicației.\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "Traduceți traducerile lipsă din %d intrări selectate?"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "Tradu lipsurile"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "Traduceți %d intrări selectate?"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "Configurația de traducere nu este selectată. Alegeți mai întâi un serviciu de traducere."
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "Eroare de traducere: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Fișierul „%s”: serviciul de traducere a returnat %d linii în loc de %d; intrările pe o singură linie au fost omise.\n"
+"\n"
+"Răspuns:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Serviciul de traducere a returnat %d linii în loc de %d; intrările pe o singură linie au fost omise.\n"
+"\n"
+"Răspuns:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "Doriți să anulați operațiunea batch curentă?"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "Anulează operațiunea"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "Sigur doriți să ștergeți această formă de plural?"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "Ștergeți forma de plural?"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "Sigur doriți să ștergeți rândul selectat?"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "Ștergeți rândurile selectate?"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "Șterge rândul"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "Doriți să renunțați la toate modificările nesalvate?"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "Nume de fișier invalid"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"Fișierul nu există:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "Fișierul nu există: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "Eroare"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "Anulează"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "Păstrează modificările mele"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "Fișierul „%s” a fost modificat de o altă aplicație de la deschidere."
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "Aveți modificări nesalvate. Le păstrați sau reîncărcați de pe disc?"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "Aveți modificări nesalvate. Ce doriți să faceți?"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "Suprascrie"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "Reîncarcă"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "Reîncarcă de pe disc"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "Fișier modificat pe disc"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "Fișier reîncărcat de pe disc"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "Introduceți numărul intrării:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "Mergi la intrare"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "Număr invalid: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"Fișierul este foarte mare (%d MB).\n"
+"Deschiderea poate dura. Continuați?"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "Fișier mare"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"Eroare la încărcarea fișierului:\n"
+"%s\n"
+"Fișierul poate fi corupt sau într-un format greșit."
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "Eroare de încărcare"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "Nu au fost găsite fișiere .po în directorul selectat!"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "Intrarea numărul %s nu a fost găsită."
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "Deschide fișierul"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"Fișierul „%s” are o extensie nerecunoscută.\n"
+"Doriți să încercați totuși să-l deschideți?"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "Golește lista"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - Fără titlu"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "Introduceți forma de plural"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "Formă de plural"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "Fișierul POT nu a fost găsit: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "Verificări QA"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Finalizat. %d traducere/traduceri memorată/memorate, %d omisă/omise."
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "Fișierul „%s” a fost omis: limba țintă nu este setată în antetul PO."
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "Memorează fișierul"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "Introduceți %s"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "Introduceți parametrul obligatoriu"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"Documentul „%s” a fost modificat.\n"
+"Doriți să salvați modificările?"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "Salvează modificările"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"Eroare la salvarea fișierului:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "Eroare de salvare"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "Invalide: %d (Fuzzy %d, QA %d, Goale %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "Intrări invalide: număr total cu defalcare pe marcaj fuzzy, probleme QA și traduceri goale"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "Stilul de terminare a liniei folosit la salvarea fișierului"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "Traduse %d din %d (%d%%) Rămase %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "Progresul traducerii: intrări traduse din total, procentaj, număr rămas"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "Fără titlu"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "Implicit"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "Sigur doriți să restaurați setările implicite?"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "Proxy personalizat"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "Fără proxy"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "Proxy de sistem"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "%d pereche/pereche de limbi ștearsă/șterse."
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"Ștergeți %d pereche/pereche de limbi selectată/selectate?\n"
+"Această acțiune nu poate fi anulată."
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "Șterge memoria de traducere"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"Reconstruiți %d pereche/pereche de limbi selectată/selectate?\n"
+"Intrările care nu mai corespund filtrelor curente (lungime, mai multe linii) vor fi eliminate."
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "%d pereche/pereche de limbi compactată/compactate."
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "Compactează memoria de traducere"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "%d pereche/pereche de limbi exportată/exportate."
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "Arhive Zip (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "Nicio pereche de limbi selectată."
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "Exportă memoria de traducere"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "%d pereche/pereche de limbi importată/importate."
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "Nu se poate importa fișierul: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "Memorie de traducere (*.zip;*.txt)|*.zip;*.txt|Arhive Zip (*.zip)|*.zip|Fișiere text (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "Importă memoria de traducere"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "Nu se poate determina perechea de limbi din „%s”. Format așteptat: „xx-yy”."
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "Nu se poate citi arhiva: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "Intrări"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "Modificat"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "Dimensiune"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "Sursă"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "Țintă"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "Total"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "Selectați folderul memoriei de traducere"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "Nume"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "Valoare"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "Diferență de majuscule/minuscule: sursa începe cu „%s”, traducerea începe cu „%s”"
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "Diferență de majuscule/minuscule: sursa este complet cu majuscule, traducerea nu"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "Neconcordanță la linia nouă inițială"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "Neconcordanță la linia nouă finală"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "Substituent suplimentar în traducere: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "Substituent lipsă în traducere: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "Neconcordanță la numărul de forme de plural: așteptat %d, găsit %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "Neconcordanță de paranteză: așteptat „%s”, găsit „%s”"
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "Neconcordanță la punctuația finală: sursa se termină cu „%s”, traducerea se termină cu „%s”"
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "Spațiu înainte de punctuație: „%s”"
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "Spațiu dublu în traducere"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "Spațiu inițial în traducere"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "Spațiu lipsă după punctuație: „%s”"
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "Spațiu final în traducere"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "Despre"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "GNU General Public License, versiunea 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "de Alexander Tverskoy este licențiat sub"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "Pentru întrebări sau feedback, contactați-mă la"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "Versiune"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "Oferă-mi o cafea"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "Donați cu card bancar sau PayPal"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "Fiecare contribuție ajută la menținerea proiectului activ și în mișcare. Vă mulțumim pentru sprijin!"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "Donați cu criptomonedă"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "Salut! Alimentați acest proiect pasional cu un mic impuls de cofeină! Fiecare donație ajută codul să ruleze și cafeaua să fie preparată. Mulțumim pentru sprijinirea muncii și a dezvoltatorului din spatele ei!"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "Puteți sprijini dezvoltarea prin una dintre următoarele opțiuni:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "Diferență de majuscule/minuscule: sursa este complet cu majuscule"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "Diferență de majuscule/minuscule: primul caracter"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "Verificări QA activate"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "Neconcordanță de linie nouă (inițială / finală)"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "Substituent suplimentar în traducere"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "Substituent lipsă în traducere"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "Neconcordanță la numărul de forme de plural"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "Neconcordanță de paranteză"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "Neconcordanță la punctuația finală"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "Spațiu lipsă după punctuație"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "Spațiu înainte de punctuație"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "Spațiu dublu în traducere"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "Spațiu inițial în traducere"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "Spațiu final în traducere"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "Șterge identicele"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "Închide calea"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "Copiază"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "Copiază textul sursă"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "Decupează"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "Șterge"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "Editează forma de plural"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "Editează doar traducerea"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "Ieșire"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "Mergi la..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "Marchează ca valid"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "Ordine de citire de la dreapta la stânga"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "Golește"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "Copiază"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "Decupează"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "Zoom implicit"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "Lipește"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "Selectează tot"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "Anulează"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "Nou"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "Nou din POT..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "Fereastră nouă"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "Deschide"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "Deschide calea..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "Lipește"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "Șterge toate traducerile"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "Șterge traducerile fuzzy"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "Copiază sursa în cele goale"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "Șterge fișierul/fișierele"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "Fișier/fișiere nou/nouă din POT..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "Memorează traducerile"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "Redenumește fișierul/fișierele"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "Rescanează calea"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "Selectează tot"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "Arată fișierul în Explorer..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "Sincronizează fișierul/fișierele cu POT"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "Tradu lipsurile din fișier/fișiere"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "Tradu lipsurile din fișier/fișiere din memorie"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "Marchează fișierul/fișierele ca valide"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "Memorează fișierul..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "Memorează calea..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "Salvează"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "Salvează ca..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "Selectează tot"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "Setări..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "Verifică ortografia sursei"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "Verifică ortografia traducerii"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "Sincronizează cu POT"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "Tradu din memorie"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "Tradu lipsurile"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "Tradu lipsurile din memorie"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "Tradu selectatele"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "Anulează modificările"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "Împărțire pe cuvinte - grilă"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "Împărțire pe cuvinte - panou de traducere"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "Tastați pentru a filtra..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "Valid"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "Text sursă"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "Traducere"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "Context"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "Plural"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "Referință"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "Fuzzy"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "Tip"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "Valoare"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "Nume"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "Valoare"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "Forme de plural"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "Necesită validare"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "Formă de plural"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "Despre..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "Verifică automat actualizările"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "Oferă-mi o cafea..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "Verifică actualizările"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "Editare"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "Fișier"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "Deschide recente"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "Format"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "Verificări QA"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "Ajutor"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "Traducere"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "Configurare"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "Vizualizare"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "Coloana Context"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "Coloana Plural"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "Coloana Referință"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "Anteturi"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "Panou de traducere"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "Comentarii"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "Traducere"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Adaugă în dicționar"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Adaugă în dicționar"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "Aplică"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "Anulează"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "Restaurează valorile implicite"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "Font..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "Resetează"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "Setări"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "Autentificare"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "Activează autentificarea cu utilizator și parolă pentru accesul prin proxy"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "Reține ultimul fișier deschis"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "Redeschide automat ultimul fișier de traducere deschis la pornirea aplicației."
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "Afișează notificările de succes"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "Afișează o notificare când o operațiune se încheie cu succes"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "Omite șirurile pe mai multe linii"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "Ignoră intrările al căror text sursă se întinde pe mai multe linii."
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "Comută la tabelul de traducere la selectarea unui fișier"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "Comută automat la tabelul de traducere când este selectat un fișier. Pentru a focaliza lista de fișiere, faceți din nou clic pe fișierul deja selectat."
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "Completează automat la salvare"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "Stochează traducerile fișierului curent în memorie la fiecare salvare."
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "Activată"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "Activează sau dezactivează complet memoria de traducere."
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "Definește modul de utilizare a proxy-ului: fără proxy, proxy de sistem sau configurare personalizată"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "Fără proxy"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "Tipul de protocol proxy folosit pentru setările personalizate"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "Folderul în care arhivele perechilor de limbi sunt stocate ca fișiere zip."
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "Adresa serverului proxy (IP sau nume de domeniu)"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "Numele de utilizator folosit pentru autentificarea la proxy"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "Parola folosită pentru autentificarea la proxy"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "Adresa de e-mail a traducătorului va fi înregistrată în fișierul de traducere la salvare."
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "Numele traducătorului va fi înregistrat în fișierul de traducere la salvare."
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "Comportament"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "Informații traducător"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "Font"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "Configurații prin proxy (implicit: toate)"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "Proxy"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "Timp de expirare"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "Filtre"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "Stocare (clic dreapta pe grilă pentru acțiuni)"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Memorie de traducere"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "Parametri utilizator"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "Conexiune, sec"
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "Gazdă"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "Autentificare"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "Parolă"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "Port"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "Mod proxy"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "Tip proxy"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "Cerere, sec"
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"Lungime max. sursă\n"
+"(0 = nelimitat)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "Director de stocare"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "E-mail"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "Nume"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "Șterge selectatele"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "Compactează selectatele"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "Exportă selectatele..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "Importă..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "Reîmprospătează"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "Selectează tot"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "General"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "Rețea"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "Parametri"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Memorie de traducere"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "Implicit, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "Timpul pentru stabilirea conexiunii. Dacă este 0, se folosesc 10 secunde implicit"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "Portul de rețea folosit de serverul proxy"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "Timpul de așteptare pentru răspuns și date. Dacă este 0, se folosesc 300 secunde implicit"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "Intrările cu un text sursă mai lung sunt ignorate pentru a menține memoria compactă."
+

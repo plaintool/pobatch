@@ -159,7 +159,7 @@ resourcestring
 implementation
 
 uses
-  LangCodes, StringHelper, Localize, PoWrap, OsUtils;
+  Consts, LangCodes, StringHelper, Localize, PoWrap, OsUtils;
 
   { TBatchOp }
 

@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:45-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "अनुवाद रद्द किया गया। %d फ़ाइलों में %d अनुवाद।"
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "अनुवाद रद्द किया गया। %d प्रविष्टियाँ अद्यतन की गईं।"
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों में सभी अनुवाद साफ़ करें?\n"
+"हेडर सुरक्षित रहते हैं, सभी msgstr मान हटा दिए जाते हैं।\n"
+"इस क्रिया को एप्लिकेशन के भीतर पूर्ववत नहीं किया जा सकता।\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "सभी अनुवाद साफ़ करें"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "%d अनुवाद साफ़ किए गए।"
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों में फ़ज़ी प्रविष्टियों के अनुवाद साफ़ करें?\n"
+"इस क्रिया को एप्लिकेशन के भीतर पूर्ववत नहीं किया जा सकता।\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "चयनित पंक्तियों में स्रोत पाठ के समान अनुवाद साफ़ करें?"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "अमान्य अनुवाद साफ़ करें"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "नाम बदलने की पुष्टि करें"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "सिंक्रोनाइज़ेशन की पुष्टि करें"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "%d अनुवाद कॉपी किए गए।"
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों में खाली अनुवादों में स्रोत पाठ कॉपी करें?\n"
+"इस क्रिया को एप्लिकेशन के भीतर पूर्ववत नहीं किया जा सकता।\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "स्रोत को खाली में कॉपी करें"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "चयनित पंक्तियों के अनुवादों में स्रोत पाठ कॉपी करें?"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "फ़ाइलें हटाएँ"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"क्या आप वाकई निम्नलिखित %d फ़ाइलें हटाना चाहते हैं?\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "क्या आप वाकई चयनित फ़ाइल हटाना चाहते हैं?"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "फ़ाइल हटाएँ"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "पूर्ण। %d अमान्य अनुवाद साफ़ किए गए।"
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "पूर्ण। %d फ़ाइलों में %d अनुवाद जोड़े गए। %d फ़ाइलें छोड़ी गईं।"
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "पूर्ण। %d अनुवाद साफ़ किए गए।"
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "पूर्ण। स्रोत से %d अनुवाद भरे गए।"
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "फ़ाइल \"%s\" को संसाधित करने में त्रुटि: %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "फ़ाइल सिंक्रोनाइज़ करने में त्रुटि: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "फ़ाइल \"%s\" सिंक्रोनाइज़ करने में त्रुटि: %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "फ़ाइल \"%s\" छोड़ी गई: PO हेडर या फ़ाइल नाम में लक्ष्य भाषा सेट नहीं है।"
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "फ़ाइल नहीं मिली: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"निम्नलिखित फ़ाइलें पहले से मौजूद हैं:\n"
+"\n"
+"%s\n"
+"क्या उन्हें अधिलेखित करें?"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "फ़ाइलें मौजूद हैं"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "फ़ाइल \"%s\" छोड़ी गई: भाषा \"%s\" के लिए कोई अनुवाद उत्पन्न नहीं हुआ।"
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "त्रुटि: कंसोल मोड में --langs आवश्यक है"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "%d प्रविष्टियाँ मान्य के रूप में चिह्नित की गईं।"
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों को मान्य के रूप में चिह्नित करें?\n"
+"यह सभी प्रविष्टियों से \"fuzzy\" ध्वज हटा देगा।\n"
+"इस क्रिया को एप्लिकेशन के भीतर पूर्ववत नहीं किया जा सकता।\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "चयनित फ़ाइलें मान्य के रूप में चिह्नित की गई हैं। सभी \"fuzzy\" ध्वज हटा दिए गए।"
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"%d चयनित प्रविष्टियों को मान्य के रूप में चिह्नित करें?\n"
+"यह चयनित प्रविष्टियों से \"fuzzy\" ध्वज हटा देगा।"
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "मान्य के रूप में चिह्नित करें"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "अनुवाद स्मृति अक्षम है। इसे सेटिंग्स में सक्षम करें।"
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "वर्तमान भाषा युग्म के लिए अनुवाद स्मृति कॉन्फ़िगर नहीं है।"
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "पूर्ण। स्मृति से %d अनुवाद लागू किए गए।"
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "पूर्ण। स्मृति से %d अनुवाद लागू किए गए, %d छोड़े गए।"
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... और %d अधिक फ़ाइलें"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... और %d अधिक पंक्तियाँ"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "त्रुटि: कंसोल मोड में --name आवश्यक है"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "चयन में कोई फ़ज़ी प्रविष्टि नहीं है।"
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "कोई PO फ़ाइल चयनित नहीं है।"
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "इसके लिए कोई मेल खाती POT फ़ाइल नहीं मिली: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "सिंक्रोनाइज़ेशन के लिए कोई PO फ़ाइल चयनित नहीं है।"
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "अनुवाद करने के लिए कुछ नहीं है।"
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "अनुवाद करने के लिए कुछ नहीं: सभी प्रविष्टियों में पहले से अनुवाद हैं।"
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "त्रुटि: कंसोल मोड में --pot आवश्यक है"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT फ़ाइल नहीं मिली: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों के अनुवाद स्मृति में याद रखें?\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "पूर्ण। %d अनुवाद याद रखे गए, %d छोड़े गए।"
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "अनुवाद याद रखें"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "फ़ज़ी ध्वज हटाएँ"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों का नाम आधार नाम \"%s\" का उपयोग करके बदलें?\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "नाम बदलने में विफल: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "नया आधार नाम दर्ज करें:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "फ़ाइलों का नाम बदलें"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "हटाने के लिए फ़ाइल चुनें!"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "नाम बदलने के लिए फ़ाइल(ें) चुनें!"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों को उनकी मेल खाती POT फ़ाइलों के साथ\n"
+"सिंक्रोनाइज़ करें?\n"
+"इस क्रिया को एप्लिकेशन के भीतर पूर्ववत नहीं किया जा सकता।\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"वर्तमान फ़ाइल\n"
+"  %s\n"
+"को संदर्भ POT\n"
+"  %s के साथ सिंक्रोनाइज़ करें?"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "सिंक्रोनाइज़ेशन पूर्ण।"
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "सिंक्रोनाइज़ेशन पूर्ण। %d फ़ाइलें छोड़ी गईं (कोई मेल खाती POT नहीं)।"
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "लक्ष्य भाषा सेट नहीं है। कृपया PO फ़ाइल में Language हेडर निर्दिष्ट करें।"
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "वर्तमान फ़ाइल में सभी प्रविष्टियों का अनुवाद करें?"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "वर्तमान फ़ाइल में सभी अनुपलब्ध अनुवादों का अनुवाद करें?"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "अनुवाद पूर्ण। %d प्रविष्टियाँ अद्यतन की गईं।"
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "अनुवाद पूर्ण। %d प्रविष्टियाँ अद्यतन की गईं, %d छोड़ी गईं।"
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"निम्नलिखित %d फ़ाइलों में अनुपलब्ध अनुवादों का अनुवाद करें?\n"
+"इस क्रिया को एप्लिकेशन के भीतर पूर्ववत नहीं किया जा सकता।\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "%d चयनित प्रविष्टियों में अनुपलब्ध अनुवादों का अनुवाद करें?"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "अनुपलब्ध का अनुवाद करें"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "%d चयनित प्रविष्टियों का अनुवाद करें?"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "अनुवाद कॉन्फ़िगरेशन चयनित नहीं है। कृपया पहले एक अनुवाद सेवा चुनें।"
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "अनुवाद त्रुटि: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"फ़ाइल \"%s\": अनुवाद सेवा ने %d पंक्तियाँ लौटाईं %d के बजाय; एकल-पंक्ति प्रविष्टियाँ छोड़ी गईं।\n"
+"\n"
+"प्रतिक्रिया:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"अनुवाद सेवा ने %d पंक्तियाँ लौटाईं %d के बजाय; एकल-पंक्ति प्रविष्टियाँ छोड़ी गईं।\n"
+"\n"
+"प्रतिक्रिया:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "क्या आप वर्तमान बैच ऑपरेशन रद्द करना चाहते हैं?"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "ऑपरेशन रद्द करें"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "क्या आप वाकई यह बहुवचन रूप हटाना चाहते हैं?"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "बहुवचन रूप हटाएँ?"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "क्या आप वाकई चयनित पंक्ति हटाना चाहते हैं?"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "चयनित पंक्तियाँ हटाएँ?"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "पंक्ति हटाएँ"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "क्या आप सभी सहेजे न गए परिवर्तनों को त्यागना चाहते हैं?"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "अमान्य फ़ाइल नाम"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"फ़ाइल मौजूद नहीं है:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "फ़ाइल मौजूद नहीं है: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "त्रुटि"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "मेरे परिवर्तन रखें"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "फ़ाइल \"%s\" को खोले जाने के बाद से किसी अन्य एप्लिकेशन द्वारा संशोधित किया गया है।"
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "आपके पास सहेजे न गए परिवर्तन हैं। उन्हें रखें या डिस्क से पुनः लोड करें?"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "आपके पास सहेजे न गए परिवर्तन हैं। आप क्या करना चाहेंगे?"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "अधिलेखित करें"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "पुनः लोड करें"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "डिस्क से पुनः लोड करें"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "डिस्क पर फ़ाइल बदली गई"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "फ़ाइल डिस्क से पुनः लोड की गई"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "प्रविष्टि संख्या दर्ज करें:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "प्रविष्टि पर जाएँ"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "अमान्य संख्या: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"फ़ाइल बहुत बड़ी है (%d MB)।\n"
+"इसे खोलने में कुछ समय लग सकता है। जारी रखें?"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "बड़ी फ़ाइल"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"फ़ाइल लोड करने में त्रुटि:\n"
+"%s\n"
+"फ़ाइल दूषित या गलत प्रारूप में हो सकती है।"
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "लोड त्रुटि"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "चयनित निर्देशिका में कोई .po फ़ाइल नहीं मिली!"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "प्रविष्टि संख्या %s नहीं मिली।"
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "फ़ाइल खोलें"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"फ़ाइल \"%s\" का एक्सटेंशन अपरिचित है।\n"
+"क्या आप फिर भी इसे खोलने का प्रयास करना चाहते हैं?"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "सूची साफ़ करें"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - बिना शीर्षक"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "बहुवचन रूप दर्ज करें"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "बहुवचन रूप"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT फ़ाइल नहीं मिली: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "QA जाँचें"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "पूर्ण। %d अनुवाद याद रखे गए, %d छोड़े गए।"
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "फ़ाइल \"%s\" छोड़ी गई: PO हेडर में लक्ष्य भाषा सेट नहीं है।"
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "फ़ाइल याद रखें"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "%s दर्ज करें"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "आवश्यक पैरामीटर दर्ज करें"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"दस्तावेज़ \"%s\" संशोधित किया गया है।\n"
+"क्या आप अपने परिवर्तन सहेजना चाहते हैं?"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "परिवर्तन सहेजें"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"फ़ाइल सहेजने में त्रुटि:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "सहेजने में त्रुटि"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "अमान्य: %d (फ़ज़ी %d, QA %d, खाली %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "अमान्य प्रविष्टियाँ: कुल संख्या, फ़ज़ी ध्वज, QA समस्याओं और खाली अनुवादों के विभाजन के साथ"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "फ़ाइल सहेजते समय उपयोग की जाने वाली पंक्ति अंत शैली"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "%d में से %d अनुवादित (%d%%) शेष %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "अनुवाद प्रगति: कुल में से अनुवादित प्रविष्टियाँ, प्रतिशत, शेष संख्या"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "बिना शीर्षक"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "डिफ़ॉल्ट"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "क्या आप वाकई डिफ़ॉल्ट सेटिंग्स पुनर्स्थापित करना चाहते हैं?"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "कस्टम प्रॉक्सी"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "कोई प्रॉक्सी नहीं"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "सिस्टम प्रॉक्सी"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "%d भाषा युग्म हटाए गए।"
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"चयनित %d भाषा युग्म हटाएँ?\n"
+"इस क्रिया को पूर्ववत नहीं किया जा सकता।"
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "अनुवाद स्मृति साफ़ करें"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"चयनित %d भाषा युग्म पुनर्निर्मित करें?\n"
+"वे प्रविष्टियाँ जो अब वर्तमान फ़िल्टर (लंबाई, बहु-पंक्ति) से मेल नहीं खातीं, हटा दी जाएंगी।"
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "%d भाषा युग्म संक्षिप्त किए गए।"
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "अनुवाद स्मृति संक्षिप्त करें"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "%d भाषा युग्म निर्यात किए गए।"
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "ज़िप संग्रह (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "कोई भाषा युग्म चयनित नहीं है।"
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "अनुवाद स्मृति निर्यात करें"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "%d भाषा युग्म आयात किए गए।"
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "फ़ाइल आयात नहीं कर सकते: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "अनुवाद स्मृति (*.zip;*.txt)|*.zip;*.txt|ज़िप संग्रह (*.zip)|*.zip|पाठ फ़ाइलें (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "अनुवाद स्मृति आयात करें"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "\"%s\" से भाषा युग्म निर्धारित नहीं कर सकते। अपेक्षित प्रारूप: \"xx-yy\"।"
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "संग्रह पढ़ नहीं सकते: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "प्रविष्टियाँ"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "संशोधित"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "आकार"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "स्रोत"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "लक्ष्य"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "कुल"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "अनुवाद स्मृति फ़ोल्डर चुनें"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "नाम"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "मान"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "केस बेमेल: स्रोत \"%s\" से शुरू होता है, अनुवाद \"%s\" से शुरू होता है"
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "केस बेमेल: स्रोत पूर्णतः अपरकेस है, अनुवाद नहीं है"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "अग्रणी नई पंक्ति बेमेल"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "पिछली नई पंक्ति बेमेल"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "अनुवाद में अतिरिक्त प्लेसहोल्डर: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "अनुवाद में अनुपलब्ध प्लेसहोल्डर: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "बहुवचन रूपों की संख्या बेमेल: अपेक्षित %d, मिले %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "कोष्ठक बेमेल: अपेक्षित \"%s\", मिला \"%s\""
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "अंत विराम चिह्न बेमेल: स्रोत \"%s\" पर समाप्त होता है, अनुवाद \"%s\" पर समाप्त होता है"
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "विराम चिह्न से पहले स्थान: \"%s\""
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "अनुवाद में दोहरा स्थान"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "अनुवाद में अग्रणी स्थान"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "विराम चिह्न के बाद अनुपलब्ध स्थान: \"%s\""
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "अनुवाद में पिछला स्थान"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "ठीक है"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "के बारे में"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "GNU General Public License, संस्करण 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "Alexander Tverskoy द्वारा के अंतर्गत लाइसेंस प्राप्त"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "प्रश्नों या प्रतिक्रिया के लिए, मुझसे संपर्क करें"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "संस्करण"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "ठीक है"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "मुझे एक कॉफ़ी खरीदें"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "बैंक कार्ड या PayPal से दान करें"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "प्रत्येक योगदान परियोजना को सक्रिय और आगे बढ़ाते रहने में मदद करता है। आपके समर्थन के लिए धन्यवाद!"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "क्रिप्टोकरेंसी से दान करें"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "नमस्ते! इस जुनूनी परियोजना को थोड़ी कैफ़ीन बूस्ट के साथ ईंधन दें! प्रत्येक दान कोड को चलते रहने और कॉफ़ी बनती रहने में मदद करता है। काम और इसके पीछे के डेवलपर का समर्थन करने के लिए धन्यवाद!"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "आप निम्नलिखित में से किसी एक विकल्प के माध्यम से विकास का समर्थन कर सकते हैं:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "केस बेमेल: स्रोत पूर्णतः अपरकेस है"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "केस बेमेल: पहला अक्षर"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "QA जाँचें सक्षम"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "नई पंक्ति बेमेल (अग्रणी / पिछली)"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "अनुवाद में अतिरिक्त प्लेसहोल्डर"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "अनुवाद में अनुपलब्ध प्लेसहोल्डर"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "बहुवचन रूपों की संख्या बेमेल"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "कोष्ठक बेमेल"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "अंत विराम चिह्न बेमेल"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "विराम चिह्न के बाद अनुपलब्ध स्थान"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "विराम चिह्न से पहले स्थान"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "अनुवाद में दोहरा स्थान"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "अनुवाद में अग्रणी स्थान"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "अनुवाद में पिछला स्थान"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "समान साफ़ करें"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "पथ बंद करें"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "कॉपी करें"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "स्रोत पाठ कॉपी करें"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "कट करें"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "हटाएँ"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "बहुवचन रूप संपादित करें"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "केवल अनुवाद संपादित करें"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "बाहर निकलें"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "पर जाएँ..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "मान्य के रूप में चिह्नित करें"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "दाएँ-से-बाएँ पठन क्रम"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "साफ़ करें"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "कॉपी करें"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "कट करें"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "डिफ़ॉल्ट ज़ूम"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "पेस्ट करें"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "सभी चुनें"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "पूर्ववत करें"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "नया"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "POT से नया..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "नई विंडो"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "खोलें"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "पथ खोलें..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "पेस्ट करें"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "सभी अनुवाद साफ़ करें"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "फ़ज़ी अनुवाद साफ़ करें"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "स्रोत को खाली में कॉपी करें"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "फ़ाइल(ें) हटाएँ"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "POT से नई फ़ाइल(ें)..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "अनुवाद याद रखें"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "फ़ाइल(ों) का नाम बदलें"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "पथ पुनः स्कैन करें"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "सभी चुनें"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "एक्सप्लोरर में फ़ाइल दिखाएँ..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "फ़ाइल(ों) को POT के साथ सिंक करें"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "फ़ाइल(ों) में अनुपलब्ध का अनुवाद करें"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "स्मृति से फ़ाइल(ों) में अनुपलब्ध का अनुवाद करें"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "फ़ाइल(ों) को मान्य के रूप में चिह्नित करें"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "फ़ाइल याद रखें..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "पथ याद रखें..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "सहेजें"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "इस रूप में सहेजें..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "सभी चुनें"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "सेटिंग्स..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "स्रोत की वर्तनी जाँचें"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "अनुवाद की वर्तनी जाँचें"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "POT के साथ सिंक करें"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "स्मृति से अनुवाद करें"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "अनुपलब्ध का अनुवाद करें"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "स्मृति से अनुपलब्ध का अनुवाद करें"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "चयनित का अनुवाद करें"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "परिवर्तन पूर्ववत करें"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "शब्द रैप - ग्रिड"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "शब्द रैप - अनुवाद पैनल"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "फ़िल्टर करने के लिए टाइप करें..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "मान्य"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "स्रोत पाठ"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "अनुवाद"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "संदर्भ"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "बहुवचन"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "संदर्भ"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "फ़ज़ी"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "प्रकार"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "मान"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "नाम"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "मान"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "बहुवचन रूप"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "सत्यापन आवश्यक"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "बहुवचन रूप"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "के बारे में..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "स्वतः अपडेट जाँचें"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "मुझे एक कॉफ़ी खरीदें..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "अपडेट जाँचें"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "संपादित करें"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "फ़ाइल"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "हाल का खोलें"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "प्रारूप"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "QA जाँचें"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "सहायता"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "अनुवाद करें"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "कॉन्फ़िग"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "देखें"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "कॉलम संदर्भ"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "कॉलम बहुवचन"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "कॉलम संदर्भ"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "हेडर"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "अनुवाद पैनल"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "टिप्पणियाँ"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "अनुवाद करें"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "शब्दकोश में जोड़ें"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "शब्दकोश में जोड़ें"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "लागू करें"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "डिफ़ॉल्ट पुनर्स्थापित करें"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "फ़ॉन्ट..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "ठीक है"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "रीसेट करें"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "सेटिंग्स"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "प्रमाणीकरण"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "प्रॉक्सी पहुँच के लिए लॉगिन और पासवर्ड प्रमाणीकरण सक्षम करता है"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "अंतिम खोली गई फ़ाइल याद रखें"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "एप्लिकेशन शुरू होने पर अंतिम खोली गई अनुवाद फ़ाइल को स्वचालित रूप से फिर से खोलें।"
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "सफलता सूचनाएँ दिखाएँ"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "जब कोई ऑपरेशन सफलतापूर्वक पूरा हो तो सूचना प्रदर्शित करें"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "बहु-पंक्ति स्ट्रिंग्स छोड़ें"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "उन प्रविष्टियों को अनदेखा करें जिनका स्रोत पाठ कई पंक्तियों में फैला है।"
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "फ़ाइल चयन पर अनुवाद तालिका पर स्विच करें"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "जब कोई फ़ाइल चयनित हो तो स्वचालित रूप से अनुवाद तालिका पर स्विच करें। इसके बजाय फ़ाइल सूची पर ध्यान केंद्रित करने के लिए, पहले से चयनित फ़ाइल पर फिर से क्लिक करें।"
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "सहेजने पर स्वतः भरें"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "प्रत्येक बार सहेजने पर वर्तमान फ़ाइल के अनुवादों को स्मृति में संग्रहीत करें।"
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "सक्षम"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "अनुवाद स्मृति को पूरी तरह से सक्षम या अक्षम करें।"
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "परिभाषित करता है कि प्रॉक्सी का उपयोग कैसे किया जाता है: कोई प्रॉक्सी नहीं, सिस्टम प्रॉक्सी या कस्टम कॉन्फ़िगरेशन"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "कोई प्रॉक्सी नहीं"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "कस्टम सेटिंग्स के लिए उपयोग किया जाने वाला प्रॉक्सी प्रोटोकॉल प्रकार"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "वह फ़ोल्डर जहाँ भाषा युग्म संग्रह ज़िप फ़ाइलों के रूप में संग्रहीत होते हैं।"
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "प्रॉक्सी सर्वर का पता (IP या डोमेन नाम)"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "प्रॉक्सी प्रमाणीकरण के लिए उपयोग किया जाने वाला उपयोगकर्ता नाम"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "प्रॉक्सी प्रमाणीकरण के लिए उपयोग किया जाने वाला पासवर्ड"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "अनुवादक का ईमेल पता सहेजे जाने पर अनुवाद फ़ाइल में दर्ज किया जाएगा।"
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "अनुवादक का नाम सहेजे जाने पर अनुवाद फ़ाइल में दर्ज किया जाएगा।"
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "व्यवहार"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "अनुवादक जानकारी"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "फ़ॉन्ट"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "प्रॉक्सी कॉन्फ़िग (डिफ़ॉल्ट: सभी)"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "प्रॉक्सी"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "टाइमआउट"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "फ़िल्टर"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "संग्रहण (क्रियाओं के लिए ग्रिड पर राइट-क्लिक करें)"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "अनुवाद स्मृति"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "उपयोगकर्ता पैरामीटर"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "कनेक्शन, सेकंड"
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "होस्ट"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "लॉगिन"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "पासवर्ड"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "पोर्ट"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "प्रॉक्सी मोड"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "प्रॉक्सी प्रकार"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "अनुरोध, सेकंड"
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"अधिकतम स्रोत लंबाई\n"
+"(0 = असीमित)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "संग्रहण निर्देशिका"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "ईमेल"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "नाम"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "चयनित साफ़ करें"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "चयनित संक्षिप्त करें"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "चयनित निर्यात करें..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "आयात करें..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "रीफ़्रेश करें"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "सभी चुनें"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "सामान्य"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "नेटवर्क"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "पैरामीटर"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "अनुवाद स्मृति"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "डिफ़ॉल्ट, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "कनेक्शन स्थापित करने का समय। यदि 0 है तो डिफ़ॉल्ट 10 सेकंड का उपयोग किया जाता है"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "प्रॉक्सी सर्वर द्वारा उपयोग किया जाने वाला नेटवर्क पोर्ट"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "प्रतिक्रिया और डेटा की प्रतीक्षा करने का समय। यदि 0 है तो डिफ़ॉल्ट 300 सेकंड का उपयोग किया जाता है"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "स्मृति को छोटा रखने के लिए लंबे स्रोत पाठ वाली प्रविष्टियों को अनदेखा किया जाता है।"
+

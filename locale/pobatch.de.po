@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "Übersetzung abgebrochen. %d Übersetzungen in %d Datei(en)."
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "Übersetzung abgebrochen. %d Einträge aktualisiert."
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Alle Übersetzungen in den folgenden %d Datei(en) wirklich löschen?\n"
+"Headers bleiben erhalten, alle msgstr-Werte werden entfernt.\n"
+"Diese Aktion kann innerhalb der Anwendung nicht rueckgaengig gemacht werden.\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "Alle Übersetzungen löschen"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "%d Übersetzungen wurden geloescht."
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Übersetzungen von Fuzzy-Einträgen in den folgenden %d Datei(en) löschen?\n"
+"Die Aktion kann innerhalb der Anwendung nicht rueckgaengig gemacht werden.\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "Übersetzungen entfernen, die mit dem Queltext in den ausgewählten Zeilen identisch sind?"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "Ungültige Übersetzungen löschen"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "Umsetzung bestätigen"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "Synchronisierung bestätigen"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "%d Übersetzungen wurden kopiert."
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Queltext in leere Übersetzungen in den folgenden %d Datei(en) übernehmen?\n"
+"Die Aktion kann innerhalb der Anwendung nicht rueckgaengig gemacht werden.\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "Queltext in leere übernehmen"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "Queltext in Übersetzungen in den ausgewählten Zeilen übernehmen?"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "Dateien löschen"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"Sicher, die folgenden %d Datei(en) löschen?\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "Sicher, die ausgewählte Datei löschen?"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "Datei löschen"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "Fertig. %d ungültige Übersetzungen geloescht."
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "Fertig. %d Übersetzungen in %d Datei(en) hinzugefuegt. %d Datei(en) übersprungen."
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "Fertig. %d Übersetzungen geloescht."
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "Fertig. %d Übersetzungen aus dem Queltext ausgefüllt."
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "Fehler bei der Verarbeitung der Datei \"%s\": %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "Fehler bei der Synchronisierung der Datei: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "Fehler bei der Synchronisierung der Datei \"%s\": %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "Datei \"%s\" übersprungen: Zielsprache ist weder in dem PO-Header noch im Dateinamen gesetzt."
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "Datei nicht gefunden: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"Die folgenden Dateien existieren bereits:\n"
+"\n"
+"%s\n"
+"Überschreiben?"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "Dateien existieren"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "Datei \"%s\" übersprungen: Es wurden keine Übersetzungen für Sprache \"%s\" erstellt."
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "Fehler: --langs ist im Konsolenmodus erforderlich"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "%d Einträge als gültig markiert."
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Die folgenden %d Datei(en) wirklich als gültig markieren?\n"
+"Der \"fuzzy\"-Flag aller Einträge wird entfernt.\n"
+"Die Aktion kann innerhalb der Anwendung nicht rueckgaengig gemacht werden.\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "Die ausgewählten Dateien wurden als gültig markiert. Alle \"fuzzy\"-Flags wurden entfernt."
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"Die %d ausgewählten Einträge wirklich als gültig markieren?\n"
+"Der \"fuzzy\"-Flag der ausgewählten Einträge wird entfernt."
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "Als gültig markieren"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "Die Übersetzungsdatenbank ist deaktiviert. Aktivieren Sie dies in den Einstellungen."
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "Die Übersetzungsdatenbank ist für das aktuelle Sprachpaar nicht konfiguriert."
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "Fertig. %d Übersetzungen wurden aus der Datenbank angewendet."
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "Fertig. %d Übersetzungen wurden aus der Datenbank angewendet, %d übersprungen."
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... und %d weitere Datei(en)"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... und %d weitere Zeile(n)"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "Fehler: --name ist im Konsolenmodus erforderlich"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "Keine Fuzzy-Einträge in der Auswahl."
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "Keine PO-Dateien ausgewählt."
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "Keine passende POT-Datei gefunden für: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "Keine PO-Dateien für die Synchronisierung ausgewählt."
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "Nichts zu übersetzen."
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "Nichts zu übersetzen: alle Einträge haben bereits Übersetzungen."
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "Fehler: --pot ist im Konsolenmodus erforderlich"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT-Datei nicht gefunden: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"Übersetzungen aus den folgenden %d Datei(en) in die Datenbank merken?\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Fertig. %d Übersetzungen gespeichert, %d übersprungen."
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "Übersetzungen merken"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "Fuzzy-Flag entfernen"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"Die folgenden %d Datei(en) anhand des Basisnamens \"%s\" umbenennen?\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "Umbenennen fehlgeschlagen: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "Neuen Basisnamen eingeben:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "Dateien umbenennen"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "Datei zum Löschen auswaehlen!"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "Datei(en) zum Umbenennen auswaehlen!"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Synchronisiere die folgenden %d Datei(en) mit\n"
+"ihren passenden POT-Dateien?\n"
+"Die Aktion kann innerhalb der Anwendung nicht rueckgaengig gemacht werden.\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"Synchronisiere die aktuelle Datei\n"
+"  %s\n"
+"mit der Referenz-POT\n"
+"  %s ?"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "Synchronisierung abgeschlossen."
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "Synchronisierung abgeschlossen. %d Datei(en) übersprungen (keine passende POT)."
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "Die Zielsprache ist nicht gesetzt. Bitte geben Sie den Sprachkopf in der PO-Datei an."
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "Alle Einträge in der aktuellen Datei wirklich übersetzen?"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "Alle fehlenden Übersetzungen in der aktuellen Datei wirklich übersetzen?"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "Übersetzung abgeschlossen. %d Einträge aktualisiert."
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "Übersetzung abgeschlossen. %d Einträge aktualisiert, %d übersprungen."
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Fehlende Übersetzungen in den folgenden %d Datei(en) wirklich übersetzen?\n"
+"Die Aktion kann innerhalb der Anwendung nicht rueckgaengig gemacht werden.\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "Fehlende Übersetzungen in %d ausgewählten Einträge wirklich übersetzen?"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "Fehlende übersetzen"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "Über %d ausgewählte Einträge wirklich übersetzen?"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "Die Übersetzungsdaemmung ist nicht ausgewählt. Bitte waehlen Sie zuerst einen Übersetzungsdienst."
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "Übersetzungsfehler: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Datei \"%s\": Der Übersetzungsdienst hat %d Zeilen statt %d zurückgegeben; einzeilige Einträge wurden übersprungen.\n"
+"\n"
+"Antwort:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Der Übersetzungsdienst hat %d Zeilen statt %d zurückgegeben; einzeilige Einträge wurden übersprungen.\n"
+"\n"
+"Antwort:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "Moennten Sie die aktuelle Stapeloperation abbrechen?"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "Vorgang abbrechen"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "Sicher, diese Pluralform löschen?"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "Pluralform löschen?"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "Sicher, diese ausgewählte Zeile löschen?"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "Ausgewaehlte Zeilen löschen?"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "Zeile löschen"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "Moennten Sie alle ungespeicherten Aenderungen verwerfen?"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "Ungültiger Dateiname"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"Datei existiert nicht:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "Datei existiert nicht: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "Fehler"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "Meine Aenderungen behalten"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "Die Datei \"%s\" wurde seit dem Offenlegen von einer anderen Anwendung geaendert."
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "Sie haben ungespeicherte Aenderungen. Diese behalten oder von der Festplatte neu laden?"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "Sie haben ungespeicherte Aenderungen. Was moechten Sie tun?"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "Überschreiben"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "Neu laden"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "Von der Festplatte neu laden"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "Datei auf der Festplatte geaendert"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "Datei von der Festplatte neu geladen"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "Eintragsnummer eingeben:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "Zu Eintrag springen"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "Ungültige Nummer: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"Die Datei ist sehr gross (%d MB).\n"
+"Das Offnen kann eine Weile dauern. Fortfahren?"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "Grosse Datei"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"Fehler beim Laden der Datei:\n"
+"%s\n"
+"Die Datei ist moeglicherweise beschaedigt oder falsch formatiert."
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "Ladevorgang fehlgeschlagen"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "Keine .po-Dateien im ausgewählten Verzeichnis gefunden!"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "Eintragsnummer %s nicht gefunden."
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "Datei offenlegen"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"Die Datei \"%s\" hat eine nicht bekannte Endung.\n"
+"Moennten Sie dennoch versuchen, sie zu offnen?"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "Liste leeren"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - Unbenannt"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "Pluralform eingeben"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "Pluralform"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT-Datei nicht gefunden: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "QA-Pruefungen"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Fertig. %d Übersetzungen gespeichert, %d übersprungen."
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "Datei \"%s\" übersprungen: Zielsprache ist nicht im PO-Header gesetzt."
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "Datei merken"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "Geben Sie %s ein"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "Den erforderlichen Parameter eingeben"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"Dokument \"%s\" wurde geaendert.\n"
+"Moennten Sie Ihre Aenderungen speichern?"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "Aenderungen speichern"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"Fehler beim Speichern der Datei:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "Speicherfehler"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "Ungültig: %d (Fuzzy %d, QA %d, Leer %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "Ungültige Einträge: Gesamtanzahl mit Aufschlüsselung nach Fuzzy-Flag, QA-Problemen und leeren Übersetzungen"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "Zeilenenden-Stil, der beim Speichern der Datei verwendet wird"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "Übersetzt %d von %d (%d%%) verbleibend %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "Übersetzungsfortschritt: Übersetzte Einträge in Gesamtanzahl, Prozent, verbleibende Anzahl"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "Unbenannt"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "Standard"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "Sicher, die Standardeinstellungen wiederherzustellen?"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "Eigener Proxy"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "Kein Proxy"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "Systemproxy"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "%d Sprachpaare geloescht."
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"Die ausgewählten %d Sprachpaare löschen?\n"
+"Die Aktion kann nicht rueckgaengig gemacht werden."
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "Übersetzungsdatenbank leeren"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"Die ausgewählten %d Sprachpaare wirklich neu aufbauen?\n"
+"Einträge, die die aktuellen Filter (Länge, mehrzeilig) nicht mehr erfuellen, werden entfernt."
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "%d Sprachpaare zusammengefasst."
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "Übersetzungsdatenbank zusammenfassen"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "%d Sprachpaare exportiert."
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "Zip-Archive (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "Keine Sprachpaare ausgewählt."
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "Übersetzungsdatenbank exportieren"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "%d Sprachpaare importiert."
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "Datei kann nicht importiert werden: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "Übersetzungsdatenbank (*.zip;*.txt)|*.zip;*.txt|Zip-Archive (*.zip)|*.zip|Textdateien (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "Übersetzungsdatenbank importieren"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "Kann das Sprachpaar nicht aus \"%s\" bestimmen. Erwartetes Format: \"xx-yy\"."
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "Kann Archiv nicht lesen: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "Einträge"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "Geaendert"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "Groesse"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "Quelle"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "Ziel"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "Gesamt"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "Ordner für die Übersetzungsdatenbank auswaehlen"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "Name"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "Wert"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "Schreibweise ungeeignet: Queltext beginnt mit \"%s\", Übersetzung beginnt mit \"%s\""
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "Schreibweise ungeeignet: Queltext ist komplett in Großbuchstaben, Übersetzung nicht"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "Fehler am Anfang der Zeile: führende neue Zeile"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "Fehler am Ende der Zeile: nachfolgende neue Zeile"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "Zusatz-Platzhalter in der Übersetzung: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "Fehlender Platzhalter in der Übersetzung: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "Abweichung der Pluralformen: erwartet %d, gefunden %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "Abweichung der Klammer: erwartet \"%s\", gefunden \"%s\""
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "Abweichung am Satzzeichen: Queltext endet mit \"%s\", Übersetzung endet mit \"%s\""
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "Leerzeichen vor Satzzeichen: \"%s\""
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "Doppelter Leerzeichen in der Übersetzung"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "Führendes Leerzeichen in der Übersetzung"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "Fehlendes Leerzeichen nach Satzzeichen: \"%s\""
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "Nachfolgendes Leerzeichen in der Übersetzung"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "Info"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "die GNU General Public License, Version 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "die von Alexander Tverskoy unter"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "Bei Fragen oder Feedback kontaktieren Sie mich unter"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "Version"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "Kaufen Sie mir einen Kaffee"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "Mit Bankkarte oder PayPal spenden"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "Jeder Beitrag hilft, das Projekt aktiv und weiter voranzubringen. Vielen Dank für Ihr Support!"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "Mit Kryptowährung spenden"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "Hey! Führen Sie dieses Passion-Projekt mit einem kleinen Koffein-Schub an! Jeder Spende hilft, den Code laeuft und der Kaffee braut. Danke für die Unterstuetzung der Arbeit und des Entwicklers dahinter!"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "Sie koennen die Entwicklung durch eine der folgenden Optionen unterstuetzen:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "Schreibweise ungeeignet: Queltext ist komplett in Großbuchstaben"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "Schreibweise ungeeignet: erstes Zeichen"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "QA-Pruefungen aktiviert"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "Zeilenwechsel ungeeignet (führend / nachfolgend)"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "Zusatz-Platzhalter in der Übersetzung"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "Fehlender Platzhalter in der Übersetzung"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "Abweichung der Pluralformen"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "Abweichung der Klammer"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "Abweichung am Satzzeichen"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "Fehlendes Leerzeichen nach Satzzeichen"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "Leerzeichen vor Satzzeichen"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "Doppelter Leerzeichen in der Übersetzung"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "Führendes Leerzeichen in der Übersetzung"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "Nachfolgendes Leerzeichen in der Übersetzung"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "Identische entfernen"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "Pfad schliessen"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "Kopieren"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "Queltext kopieren"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "Ausschneiden"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "Löschen"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "Pluralform bearbeiten"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "Nur Übersetzung bearbeiten"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "Beenden"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "Gehen zu..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "Als gültig markieren"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "Lesereihenfolge von rechts nach links"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "Löschen"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "Kopieren"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "Ausschneiden"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "Standardzoom"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "Einfuegen"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "Alle auswaehlen"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "Rueckgaengig"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "Neu"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "Neu aus POT..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "Neues Fenster"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "Offenlegen"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "Pfad offenlegen..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "Einfuegen"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "Alle Übersetzungen löschen"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "Fuzzy-Übersetzungen löschen"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "Queltext in leere übernehmen"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "Datei(en) löschen"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "Neue Datei(en) aus POT..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "Übersetzungen merken"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "Datei(en) umbenennen"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "Pfad erneut scannen"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "Alle auswaehlen"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "Datei im Explorer anzeigen..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "Datei(en) mit POT synchronisieren"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "Fehlende in Datei(en) übersetzen"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "Fehlende in Datei(en) aus Datenbank übersetzen"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "Datei(en) als gültig markieren"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "Datei merken..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "Pfad merken..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "Speichern"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "Speichern als..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "Alle auswaehlen"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "Einstellungen..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "Quelltext auf Rechtschreibung pruefen"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "Übersetzung auf Rechtschreibung pruefen"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "Mit POT synchronisieren"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "Aus Datenbank übersetzen"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "Fehlende übersetzen"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "Fehlende aus Datenbank übersetzen"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "Ausgewaehlte übersetzen"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "Aenderungen rueckgaengig"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "Zeilenwechsel - Tabelle"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "Zeilenwechsel - Übersetzungsbereich"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "Zum Filtern eingeben..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "Gueltig"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "Queltext"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "Übersetzung"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "Kontext"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "Plural"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "Referenz"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "Unsicher"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "Typ"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "Wert"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "Name"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "Wert"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "Pluralformen"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "Benoetigt Validierung"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "Pluralform"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "Info..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "Automatisch pruefen"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "Kaufen Sie mir einen Kaffee..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "Auf Updates pruefen"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "Datei"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "Zuletzt geoffnet"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "Format"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "QA-Pruefungen"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "Hilfe"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "Übersetzen"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "Konfiguration"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "Ansicht"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "Spaltenkontext"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "Spalten-Plural"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "Spaltenreferenz"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "Header"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "Übersetzungsbereich"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "Kommentare"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "Übersetzen"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Zum Worterbuch hinzufuegen"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Zum Worterbuch hinzufuegen"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "Anwenden"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "Standardeinstellungen wiederherstellen"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "Schriftart..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "Zuruecksetzen"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "Authentifizierung"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "Aktiviert Anmeldedaten und Passwortauthentifizierung für den Proxyzugriff"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "Zuletzt geoffnete Datei merken"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "Stellt beim Start der Anwendung die zuletzt geoffnete Übersetzungsdatei automatisch wieder her."
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "Erfolgsbenachrichtigungen anzeigen"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "Zeigt eine Benachrichtigung an, wenn eine Operation erfolgreich abgeschlossen wird"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "Mehrzeilige Zeichenfolgen überspringen"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "Ignoriert Einträge, deren Queltext mehrere Zeilen umfasst."
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "Bei Dateiauswahl in die Übersetzungstabelle wechseln"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "Wechselt automatisch zur Übersetzungstabelle, wenn eine Datei ausgewählt wird. Um stattdessen die Dateiliste zu fokussieren, klicken Sie erneut auf die bereits ausgewählte Datei."
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "Automatisch beim Speichern fuellen"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "Speichert die Übersetzungen der aktuellen Datei bei jedem Speichern in der Datenbank."
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "Aktiviert oder deaktiviert die Übersetzungsdatenbank vollständig."
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "Definiert, wie der Proxy verwendet wird: kein Proxy, Systemproxy oder benutzerdefinierte Konfiguration"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "Kein Proxy"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "Typ des Proxyprotokolls fur benutzerdefinierte Einstellungen"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "Ordner, in dem Sprachpaar-Archive als Zip-Dateien gespeichert werden."
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "Adresse des Proxyservers: IP oder Domainname"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "Benutzername für die Proxyauthentifizierung"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "Passwort für die Proxyauthentifizierung"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "Die E-Mail-Adresse des Übersetzers wird beim Speichern in die Übersetzungsdatei aufgenommen."
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "Der Name des Übersetzers wird beim Speichern in die Übersetzungsdatei aufgenommen."
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "Verhalten"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "Übersetzungsangaben"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "Schriftart"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "Geprüfte Konfigurationen (Standard: Alle)"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "Proxy"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "Zeitlimit"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "Filter"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "Speicher (Sammelmenü für Aktionen)"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Übersetzungsdatenbank"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "Benutzerparameter"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "Verbindung, Sek."
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "Host"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "Anmeldung"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "Passwort"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "Port"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "Proxymodus"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "Proxytyp"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "Anforderung, Sek."
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"Maximale Quelzlänge\n"
+"(0 = unbegrenzt)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "Speicherordner"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "E-Mail"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "Name"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "Ausgewaehlt löschen"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "Ausgewaehlt zusammenfassen"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "Ausgewaehlt exportieren..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "Importieren..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "Alle auswaehlen"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "Allgemein"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "Netzwerk"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "Parameter"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Übersetzungsdatenbank"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "Standard, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "Verbindungsaufbau: Wenn 0, Standard 10 Sekunden"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "Netzwerkport, der vom Proxyserver verwendet wird"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "Wartezeit auf Antwort und Daten: Wenn 0, Standard 300 Sekunden"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "Einträge mit laengerem Queltext werden ignoriert, um den Speicher klein zu halten."
+

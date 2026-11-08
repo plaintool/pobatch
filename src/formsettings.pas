@@ -232,7 +232,7 @@ resourcestring
 
 implementation
 
-uses MainUnit, PoTM, DarkUtils, ControlsHelper, StringsHelper, OSUtils, ColorHelper;
+uses MainUnit, Consts, PoTM, DarkUtils, ControlsHelper, StringsHelper, OSUtils, ColorHelper, Localize;
 
   {$R *.lfm}
 
@@ -242,6 +242,8 @@ uses MainUnit, PoTM, DarkUtils, ControlsHelper, StringsHelper, OSUtils, ColorHel
 
 procedure TformSettingsPoBatch.FormCreate(Sender: TObject);
 begin
+  TLocalize.ApplicationTranslate(APP_NAME, language, self, TLocalize.LoadCustomPoFile(Localize.CustomPoFile));
+
   PanelPages.BevelColor := TDarkUtils.ThemeColor(ColorBevel, ColorBevelDark);
   PagesSettings.PageIndex := 0;
   BtnCancel.Cancel := True;

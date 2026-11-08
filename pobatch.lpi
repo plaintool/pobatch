@@ -15,8 +15,36 @@
         <TextDesc Value="PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file."/>
       </XPManifest>
       <Icon Value="0"/>
-      <Resources Count="1">
+      <Resources Count="29">
         <Resource_0 FileName="podoc.ico" Type="ICON" ResourceName="PODOC"/>
+        <Resource_1 FileName="locale\pobatch.ar.po" Type="RCDATA" ResourceName="POBATCH.AR"/>
+        <Resource_2 FileName="locale\pobatch.be.po" Type="RCDATA" ResourceName="POBATCH.BE"/>
+        <Resource_3 FileName="locale\pobatch.bg.po" Type="RCDATA" ResourceName="POBATCH.BG"/>
+        <Resource_4 FileName="locale\pobatch.cs.po" Type="RCDATA" ResourceName="POBATCH.CS"/>
+        <Resource_5 FileName="locale\pobatch.da.po" Type="RCDATA" ResourceName="POBATCH.DA"/>
+        <Resource_6 FileName="locale\pobatch.de.po" Type="RCDATA" ResourceName="POBATCH.DE"/>
+        <Resource_7 FileName="locale\pobatch.el.po" Type="RCDATA" ResourceName="POBATCH.EL"/>
+        <Resource_8 FileName="locale\pobatch.en.po" Type="RCDATA" ResourceName="POBATCH.EN"/>
+        <Resource_9 FileName="locale\pobatch.es.po" Type="RCDATA" ResourceName="POBATCH.ES"/>
+        <Resource_10 FileName="locale\pobatch.fi.po" Type="RCDATA" ResourceName="POBATCH.FI"/>
+        <Resource_11 FileName="locale\pobatch.fr.po" Type="RCDATA" ResourceName="POBATCH.FR"/>
+        <Resource_12 FileName="locale\pobatch.he.po" Type="RCDATA" ResourceName="POBATCH.HE"/>
+        <Resource_13 FileName="locale\pobatch.hi.po" Type="RCDATA" ResourceName="POBATCH.HI"/>
+        <Resource_14 FileName="locale\pobatch.id.po" Type="RCDATA" ResourceName="POBATCH.ID"/>
+        <Resource_15 FileName="locale\pobatch.it.po" Type="RCDATA" ResourceName="POBATCH.IT"/>
+        <Resource_16 FileName="locale\pobatch.ja.po" Type="RCDATA" ResourceName="POBATCH.JA"/>
+        <Resource_17 FileName="locale\pobatch.ko.po" Type="RCDATA" ResourceName="POBATCH.KO"/>
+        <Resource_18 FileName="locale\pobatch.nl.po" Type="RCDATA" ResourceName="POBATCH.NL"/>
+        <Resource_19 FileName="locale\pobatch.pl.po" Type="RCDATA" ResourceName="POBATCH.PL"/>
+        <Resource_20 FileName="locale\pobatch.pt.po" Type="RCDATA" ResourceName="POBATCH.PT"/>
+        <Resource_21 FileName="locale\pobatch.pt-BR.po" Type="RCDATA" ResourceName="POBATCH.PT-BR"/>
+        <Resource_22 FileName="locale\pobatch.ro.po" Type="RCDATA" ResourceName="POBATCH.RO"/>
+        <Resource_23 FileName="locale\pobatch.ru.po" Type="RCDATA" ResourceName="POBATCH.RU"/>
+        <Resource_24 FileName="locale\pobatch.sv.po" Type="RCDATA" ResourceName="POBATCH.SV"/>
+        <Resource_25 FileName="locale\pobatch.tr.po" Type="RCDATA" ResourceName="POBATCH.TR"/>
+        <Resource_26 FileName="locale\pobatch.uk.po" Type="RCDATA" ResourceName="POBATCH.UK"/>
+        <Resource_27 FileName="locale\pobatch.vi.po" Type="RCDATA" ResourceName="POBATCH.VI"/>
+        <Resource_28 FileName="locale\pobatch.zh.po" Type="RCDATA" ResourceName="POBATCH.ZH"/>
       </Resources>
     </General>
     <i18n>
@@ -182,6 +210,11 @@
         <Filename Value="src\potm.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PoTM"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\consts.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Consts"/>
       </Unit>
     </Units>
   </ProjectOptions>

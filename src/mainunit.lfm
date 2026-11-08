@@ -874,6 +874,99 @@ object formPoBatch: TformPoBatch
       object Separator10: TMenuItem
         Caption = '-'
       end
+      object MenuLanguage: TMenuItem
+        Caption = 'Language'
+        object MenuArabic: TMenuItem
+          Action = ALangArabic
+        end
+        object MenuBelarusian: TMenuItem
+          Action = ALangBelarusian
+        end
+        object MenuBulgarian: TMenuItem
+          Action = ALangBulgarian
+        end
+        object MenuChinese: TMenuItem
+          Action = ALangChinese
+        end
+        object MenuCzech: TMenuItem
+          Action = ALangCzech
+        end
+        object MenuDanish: TMenuItem
+          Action = ALangDanish
+        end
+        object MenuDutch: TMenuItem
+          Action = ALangDutch
+        end
+        object MenuEnglish: TMenuItem
+          Action = ALangEnglish
+        end
+        object MenuFinnish: TMenuItem
+          Action = ALangFinnish
+        end
+        object MenuFrench: TMenuItem
+          Action = ALangFrench
+        end
+        object MenuGerman: TMenuItem
+          Action = ALangGerman
+        end
+        object MenuGreek: TMenuItem
+          Action = ALangGreek
+        end
+        object MenuHebrew: TMenuItem
+          Action = ALangHebrew
+        end
+        object MenuHindi: TMenuItem
+          Action = ALangHindi
+        end
+        object MenuIndonesian: TMenuItem
+          Action = ALangIndonesian
+        end
+        object MenuItalian: TMenuItem
+          Action = ALangItalian
+        end
+        object MenuJapanese: TMenuItem
+          Action = ALangJapanese
+        end
+        object MenuKorean: TMenuItem
+          Action = ALangKorean
+        end
+        object MenuPolish: TMenuItem
+          Action = ALangPolish
+        end
+        object MenuPortuguese: TMenuItem
+          Action = ALangPortuguese
+        end
+        object MenuPortugueseBrazil: TMenuItem
+          Action = ALangPortugueseBrazil
+        end
+        object MenuRomanian: TMenuItem
+          Action = ALangRomanian
+        end
+        object MenuRussian: TMenuItem
+          Action = ALangRussian
+        end
+        object MenuSpanish: TMenuItem
+          Action = ALangSpanish
+        end
+        object MenuSwedish: TMenuItem
+          Action = ALangSwedish
+        end
+        object MenuTurkish: TMenuItem
+          Action = ALangTurkish
+        end
+        object MenuUkrainian: TMenuItem
+          Action = ALangUkrainian
+        end
+        object MenuVietnamese: TMenuItem
+          Action = ALangVietnamese
+        end
+        object MenuCustom: TMenuItem
+          Action = ALangCustom
+        end
+      end
+      object Separator24: TMenuItem
+        Caption = '-'
+      end
       object MenuBuyMeACoffee: TMenuItem
         Caption = 'Buy Me a Coffee...'
         OnClick = MenuBuyMeACoffeeClick
@@ -1306,6 +1399,151 @@ object formPoBatch: TformPoBatch
       Category = 'File'
       Caption = 'Exit'
       OnExecute = AExitExecute
+    end
+    object ALangArabic: TAction
+      Category = 'Language'
+      Caption = 'Arabic'
+      OnExecute = ALangArabicExecute
+    end
+    object ALangBelarusian: TAction
+      Category = 'Language'
+      Caption = 'Belarusian'
+      OnExecute = ALangBelarusianExecute
+    end
+    object ALangBulgarian: TAction
+      Category = 'Language'
+      Caption = 'Bulgarian'
+      OnExecute = ALangBulgarianExecute
+    end
+    object ALangChinese: TAction
+      Category = 'Language'
+      Caption = 'Chinese'
+      OnExecute = ALangChineseExecute
+    end
+    object ALangCzech: TAction
+      Category = 'Language'
+      Caption = 'Czech'
+      OnExecute = ALangCzechExecute
+    end
+    object ALangDanish: TAction
+      Category = 'Language'
+      Caption = 'Danish'
+      OnExecute = ALangDanishExecute
+    end
+    object ALangDutch: TAction
+      Category = 'Language'
+      Caption = 'Dutch'
+      OnExecute = ALangDutchExecute
+    end
+    object ALangEnglish: TAction
+      Category = 'Language'
+      Caption = 'English'
+      OnExecute = ALangEnglishExecute
+    end
+    object ALangFinnish: TAction
+      Category = 'Language'
+      Caption = 'Finnish'
+      OnExecute = ALangFinnishExecute
+    end
+    object ALangFrench: TAction
+      Category = 'Language'
+      Caption = 'French'
+      OnExecute = ALangFrenchExecute
+    end
+    object ALangGerman: TAction
+      Category = 'Language'
+      Caption = 'German'
+      OnExecute = ALangGermanExecute
+    end
+    object ALangGreek: TAction
+      Category = 'Language'
+      Caption = 'Greek'
+      OnExecute = ALangGreekExecute
+    end
+    object ALangHebrew: TAction
+      Category = 'Language'
+      Caption = 'Hebrew'
+      OnExecute = ALangHebrewExecute
+    end
+    object ALangHindi: TAction
+      Category = 'Language'
+      Caption = 'Hindi'
+      OnExecute = ALangHindiExecute
+    end
+    object ALangIndonesian: TAction
+      Category = 'Language'
+      Caption = 'Indonesian'
+      OnExecute = ALangIndonesianExecute
+    end
+    object ALangItalian: TAction
+      Category = 'Language'
+      Caption = 'Italian'
+      OnExecute = ALangItalianExecute
+    end
+    object ALangJapanese: TAction
+      Category = 'Language'
+      Caption = 'Japanese'
+      OnExecute = ALangJapaneseExecute
+    end
+    object ALangKorean: TAction
+      Category = 'Language'
+      Caption = 'Korean'
+      OnExecute = ALangKoreanExecute
+    end
+    object ALangPolish: TAction
+      Category = 'Language'
+      Caption = 'Polish'
+      OnExecute = ALangPolishExecute
+    end
+    object ALangPortuguese: TAction
+      Category = 'Language'
+      Caption = 'Portuguese'
+      OnExecute = ALangPortugueseExecute
+    end
+    object ALangPortugueseBrazil: TAction
+      Category = 'Language'
+      Caption = 'Portuguese (Brazil)'
+      OnExecute = ALangPortugueseBrazilExecute
+    end
+    object ALangRomanian: TAction
+      Category = 'Language'
+      Caption = 'Romanian'
+      OnExecute = ALangRomanianExecute
+    end
+    object ALangRussian: TAction
+      Category = 'Language'
+      Caption = 'Russian'
+      OnExecute = ALangRussianExecute
+    end
+    object ALangSpanish: TAction
+      Category = 'Language'
+      Caption = 'Spanish'
+      OnExecute = ALangSpanishExecute
+    end
+    object ALangSwedish: TAction
+      Category = 'Language'
+      Caption = 'Swedish'
+      OnExecute = ALangSwedishExecute
+    end
+    object ALangTurkish: TAction
+      Category = 'Language'
+      Caption = 'Turkish'
+      OnExecute = ALangTurkishExecute
+    end
+    object ALangUkrainian: TAction
+      Category = 'Language'
+      Caption = 'Ukrainian'
+      OnExecute = ALangUkrainianExecute
+    end
+    object ALangVietnamese: TAction
+      Category = 'Language'
+      Caption = 'Vietnamese'
+      OnExecute = ALangVietnameseExecute
+    end
+    object ALangCustom: TAction
+      Category = 'Language'
+      Caption = 'Custom File...'
+      OnExecute = ALangCustomExecute
     end
   end
   object ApplicationProp: TApplicationProperties

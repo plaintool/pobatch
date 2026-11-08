@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "Η μετάφραση ακυρώθηκε. %d μετάφραση(-εις) σε %d αρχείο(-α)."
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "Η μετάφραση ακυρώθηκε. %d καταχωρίσεις ενημερώθηκαν."
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Να διαγραφούν ΟΛΕΣ οι μεταφράσεις στα ακόλουθα %d αρχείο(-α);\n"
+"Οι κεφαλίδες διατηρούνται, όλες οι τιμές msgstr αφαιρούνται.\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί εντός της εφαρμογής.\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "Διαγραφή όλων των μεταφράσεων"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "Διαγράφηκαν %d μεταφράσεις."
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Να διαγραφούν οι μεταφράσεις των fuzzy καταχωρίσεων στα ακόλουθα %d αρχείο(-α);\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί εντός της εφαρμογής.\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "Να διαγραφούν οι μεταφράσεις που είναι ίδιες με το κείμενο πηγής στις επιλεγμένες γραμμές;"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "Διαγραφή μη έγκυρων μεταφράσεων"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "Επιβεβαίωση μετονομασίας"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "Επιβεβαίωση συγχρονισμού"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "Αντιγράφηκαν %d μεταφράσεις."
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Να αντιγραφεί το κείμενο πηγής σε κενές μεταφράσεις στα ακόλουθα %d αρχείο(-α);\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί εντός της εφαρμογής.\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "Αντιγραφή πηγής σε κενά"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "Να αντιγραφεί το κείμενο πηγής στις μεταφράσεις των επιλεγμένων γραμμών;"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "Διαγραφή αρχείων"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να διαγράψετε τα ακόλουθα %d αρχείο(-α);\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το επιλεγμένο αρχείο;"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "Διαγραφή αρχείου"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "Ολοκληρώθηκε. Διαγράφηκαν %d μη έγκυρες μεταφράσεις."
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "Ολοκληρώθηκε. Προστέθηκαν %d μεταφράσεις σε %d αρχείο(-α). Παραλείφθηκαν %d αρχείο(-α)."
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "Ολοκληρώθηκε. Διαγράφηκαν %d μεταφράσεις."
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "Ολοκληρώθηκε. Συμπληρώθηκαν %d μεταφράσεις από την πηγή."
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "Σφάλμα κατά την επεξεργασία του αρχείου \"%s\": %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "Σφάλμα κατά τον συγχρονισμό αρχείου: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "Σφάλμα κατά τον συγχρονισμό του αρχείου \"%s\": %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "Το αρχείο \"%s\" παραλείφθηκε: η γλώσσα-στόχος δεν έχει οριστεί στην κεφαλίδα PO ή στο όνομα αρχείου."
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "Το αρχείο δεν βρέθηκε: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"Τα ακόλουθα αρχεία υπάρχουν ήδη:\n"
+"\n"
+"%s\n"
+"Να αντικατασταθούν;"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "Τα αρχεία υπάρχουν"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "Το αρχείο \"%s\" παραλείφθηκε: δεν παρήχθησαν μεταφράσεις για τη γλώσσα \"%s\"."
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "Σφάλμα: απαιτείται --langs στη λειτουργία κονσόλας"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "Επισημάνθηκαν %d καταχωρίσεις ως έγκυρες."
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Να επισημανθούν τα ακόλουθα %d αρχείο(-α) ως έγκυρα;\n"
+"Αυτό θα αφαιρέσει τη σημαία \"fuzzy\" από όλες τις καταχωρίσεις.\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί εντός της εφαρμογής.\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "Τα επιλεγμένα αρχεία επισημάνθηκαν ως έγκυρα. Όλες οι σημαίες \"fuzzy\" αφαιρέθηκαν."
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"Να επισημανθούν %d επιλεγμένες καταχωρίσεις ως έγκυρες;\n"
+"Αυτό θα αφαιρέσει τη σημαία \"fuzzy\" από τις επιλεγμένες καταχωρίσεις."
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "Επισήμανση ως έγκυρο"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "Η μνήμη μετάφρασης είναι απενεργοποιημένη. Ενεργοποιήστε την στις ρυθμίσεις."
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "Η μνήμη μετάφρασης δεν έχει ρυθμιστεί για το τρέχον ζεύγος γλωσσών."
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "Ολοκληρώθηκε. Εφαρμόστηκαν %d μεταφράσεις από τη μνήμη."
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "Ολοκληρώθηκε. Εφαρμόστηκαν %d μεταφράσεις από τη μνήμη, παραλείφθηκαν %d."
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... και %d ακόμη αρχείο(-α)"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... και %d ακόμη γραμμή(-ές)"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "Σφάλμα: απαιτείται --name στη λειτουργία κονσόλας"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "Δεν υπάρχουν fuzzy καταχωρίσεις στην επιλογή."
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "Δεν έχουν επιλεγεί αρχεία PO."
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "Δεν βρέθηκε αντίστοιχο αρχείο POT για: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "Δεν έχουν επιλεγεί αρχεία PO για συγχρονισμό."
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "Δεν υπάρχει τίποτα για μετάφραση."
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "Δεν υπάρχει τίποτα για μετάφραση: όλες οι καταχωρίσεις έχουν ήδη μεταφράσεις."
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "Σφάλμα: απαιτείται --pot στη λειτουργία κονσόλας"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "Το αρχείο POT δεν βρέθηκε: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"Να απομνημονευτούν οι μεταφράσεις από τα ακόλουθα %d αρχείο(-α) στη μνήμη;\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Ολοκληρώθηκε. Απομνημονεύτηκαν %d μεταφράσεις, παραλείφθηκαν %d."
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "Απομνημόνευση μεταφράσεων"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "Αφαίρεση σημαίας fuzzy"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"Να μετονομαστούν τα ακόλουθα %d αρχείο(-α) χρησιμοποιώντας βασικό όνομα \"%s\";\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "Η μετονομασία απέτυχε: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "Εισαγάγετε νέο βασικό όνομα:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "Μετονομασία αρχείων"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "Επιλέξτε αρχείο για διαγραφή!"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "Επιλέξτε αρχείο(-α) για μετονομασία!"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Να συγχρονιστούν τα ακόλουθα %d αρχείο(-α) με\n"
+"τα αντίστοιχα αρχεία POT τους;\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί εντός της εφαρμογής.\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"Να συγχρονιστεί το τρέχον αρχείο\n"
+"  %s\n"
+"με το αρχείο αναφοράς POT\n"
+"  %s ;"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "Ο συγχρονισμός ολοκληρώθηκε."
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "Ο συγχρονισμός ολοκληρώθηκε. Παραλείφθηκαν %d αρχείο(-α) (δεν βρέθηκε αντίστοιχο POT)."
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "Η γλώσσα-στόχος δεν έχει οριστεί. Καθορίστε την κεφαλίδα Language στο αρχείο PO."
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "Να μεταφραστούν όλες οι καταχωρίσεις στο τρέχον αρχείο;"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "Να μεταφραστούν όλες οι ελλείπουσες μεταφράσεις στο τρέχον αρχείο;"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "Η μετάφραση ολοκληρώθηκε. Ενημερώθηκαν %d καταχωρίσεις."
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "Η μετάφραση ολοκληρώθηκε. Ενημερώθηκαν %d καταχωρίσεις, παραλείφθηκαν %d."
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"Να μεταφραστούν οι ελλείπουσες μεταφράσεις στα ακόλουθα %d αρχείο(-α);\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί εντός της εφαρμογής.\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "Να μεταφραστούν οι ελλείπουσες μεταφράσεις σε %d επιλεγμένες καταχωρίσεις;"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "Μετάφραση ελλειπόντων"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "Να μεταφραστούν %d επιλεγμένες καταχωρίσεις;"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "Η διαμόρφωση μετάφρασης δεν έχει επιλεγεί. Επιλέξτε πρώτα μια υπηρεσία μετάφρασης."
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "Σφάλμα μετάφρασης: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Αρχείο \"%s\": η υπηρεσία μετάφρασης επέστρεψε %d γραμμές αντί για %d· οι καταχωρίσεις μονής γραμμής παραλείφθηκαν.\n"
+"\n"
+"Απόκριση:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"Η υπηρεσία μετάφρασης επέστρεψε %d γραμμές αντί για %d· οι καταχωρίσεις μονής γραμμής παραλείφθηκαν.\n"
+"\n"
+"Απόκριση:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "Θέλετε να ακυρώσετε την τρέχουσα μαζική λειτουργία;"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "Ακύρωση λειτουργίας"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτή τη μορφή πληθυντικού;"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "Διαγραφή μορφής πληθυντικού;"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε την επιλεγμένη γραμμή;"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "Διαγραφή επιλεγμένων γραμμών;"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "Διαγραφή γραμμής"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "Θέλετε να απορρίψετε όλες τις μη αποθηκευμένες αλλαγές;"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "Μη έγκυρο όνομα αρχείου"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"Το αρχείο δεν υπάρχει:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "Το αρχείο δεν υπάρχει: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "Διατήρηση των αλλαγών μου"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "Το αρχείο \"%s\" έχει τροποποιηθεί από άλλη εφαρμογή από τότε που άνοιξε."
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "Έχετε μη αποθηκευμένες αλλαγές. Να διατηρηθούν ή να γίνει επαναφόρτωση από τον δίσκο;"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "Έχετε μη αποθηκευμένες αλλαγές. Τι θέλετε να κάνετε;"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "Αντικατάσταση"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "Επαναφόρτωση"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "Επαναφόρτωση από τον δίσκο"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "Το αρχείο άλλαξε στον δίσκο"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "Το αρχείο επαναφορτώθηκε από τον δίσκο"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "Εισαγάγετε αριθμό καταχώρισης:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "Μετάβαση σε καταχώριση"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "Μη έγκυρος αριθμός: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"Το αρχείο είναι πολύ μεγάλο (%d MB).\n"
+"Το άνοιγμά του μπορεί να διαρκέσει. Συνέχεια;"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "Μεγάλο αρχείο"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"Σφάλμα φόρτωσης αρχείου:\n"
+"%s\n"
+"Το αρχείο μπορεί να είναι κατεστραμμένο ή σε λάθος μορφή."
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "Σφάλμα φόρτωσης"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "Δεν βρέθηκαν αρχεία .po στον επιλεγμένο φάκελο!"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "Η καταχώριση αριθμός %s δεν βρέθηκε."
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "Άνοιγμα αρχείου"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"Το αρχείο \"%s\" έχει μη αναγνωρισμένη επέκταση.\n"
+"Θέλετε να δοκιμάσετε να το ανοίξετε ούτως ή άλλως;"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "Εκκαθάριση λίστας"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - Χωρίς τίτλο"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "Εισαγάγετε μορφή πληθυντικού"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "Μορφή πληθυντικού"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "Το αρχείο POT δεν βρέθηκε: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "Έλεγχοι QA"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "Ολοκληρώθηκε. Απομνημονεύτηκαν %d μεταφράσεις, παραλείφθηκαν %d."
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "Το αρχείο \"%s\" παραλείφθηκε: η γλώσσα-στόχος δεν έχει οριστεί στην κεφαλίδα PO."
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "Απομνημόνευση αρχείου"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "Εισαγάγετε %s"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "Εισαγάγετε την απαιτούμενη παράμετρο"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"Το έγγραφο \"%s\" έχει τροποποιηθεί.\n"
+"Θέλετε να αποθηκεύσετε τις αλλαγές σας;"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "Αποθήκευση αλλαγών"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"Σφάλμα αποθήκευσης αρχείου:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "Σφάλμα αποθήκευσης"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "Μη έγκυρα: %d (Fuzzy %d, QA %d, Κενά %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "Μη έγκυρες καταχωρίσεις: συνολικός αριθμός με ανάλυση κατά σημαία fuzzy, ζητήματα QA και κενές μεταφράσεις"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "Στυλ αλλαγής γραμμής που χρησιμοποιείται κατά την αποθήκευση του αρχείου"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "Μεταφρασμένα %d από %d (%d%%) Υπόλοιπο %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "Πρόοδος μετάφρασης: μεταφρασμένες καταχωρίσεις από το σύνολο, ποσοστό, υπόλοιπο"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "Χωρίς τίτλο"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "Προεπιλογή"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "Είστε βέβαιοι ότι θέλετε να επαναφέρετε τις προεπιλεγμένες ρυθμίσεις;"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "Προσαρμοσμένο proxy"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "Χωρίς proxy"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "Proxy συστήματος"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "Διαγράφηκαν %d ζεύγη γλωσσών."
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"Να διαγραφούν τα επιλεγμένα %d ζεύγη γλωσσών;\n"
+"Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "Εκκαθάριση μνήμης μετάφρασης"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"Να ανακατασκευαστούν τα επιλεγμένα %d ζεύγη γλωσσών;\n"
+"Οι καταχωρίσεις που δεν ταιριάζουν πλέον με τα τρέχοντα φίλτρα (μήκος, πολλές γραμμές) θα αφαιρεθούν."
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "Συμπιέστηκαν %d ζεύγη γλωσσών."
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "Συμπίεση μνήμης μετάφρασης"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "Εξήχθησαν %d ζεύγη γλωσσών."
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "Αρχεία Zip (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "Δεν έχουν επιλεγεί ζεύγη γλωσσών."
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "Εξαγωγή μνήμης μετάφρασης"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "Εισήχθησαν %d ζεύγη γλωσσών."
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "Δεν είναι δυνατή η εισαγωγή αρχείου: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "Μνήμη μετάφρασης (*.zip;*.txt)|*.zip;*.txt|Αρχεία Zip (*.zip)|*.zip|Αρχεία κειμένου (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "Εισαγωγή μνήμης μετάφρασης"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "Δεν είναι δυνατός ο προσδιορισμός ζεύγους γλωσσών από το \"%s\". Αναμενόμενη μορφή: \"xx-yy\"."
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "Δεν είναι δυνατή η ανάγνωση του αρχείου: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "Καταχωρίσεις"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "Τροποποιήθηκε"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "Πηγή"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "Στόχος"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "Σύνολο"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "Επιλέξτε φάκελο μνήμης μετάφρασης"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "Όνομα"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "Τιμή"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "Ασυμφωνία πεζών/κεφαλαίων: η πηγή ξεκινά με \"%s\", η μετάφραση ξεκινά με \"%s\""
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "Ασυμφωνία πεζών/κεφαλαίων: η πηγή είναι όλη κεφαλαία, η μετάφραση όχι"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "Ασυμφωνία αρχικής αλλαγής γραμμής"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "Ασυμφωνία τελικής αλλαγής γραμμής"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "Επιπλέον placeholder στη μετάφραση: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "Λείπει placeholder από τη μετάφραση: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "Ασυμφωνία αριθμού μορφών πληθυντικού: αναμένονταν %d, βρέθηκαν %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "Ασυμφωνία αγκύλης: αναμένονταν \"%s\", βρέθηκαν \"%s\""
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "Ασυμφωνία τελικής στίξης: η πηγή τελειώνει με \"%s\", η μετάφραση τελειώνει με \"%s\""
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "Κενό πριν από στίξη: \"%s\""
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "Διπλό κενό στη μετάφραση"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "Αρχικό κενό στη μετάφραση"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "Λείπει κενό μετά από στίξη: \"%s\""
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "Τελικό κενό στη μετάφραση"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "Σχετικά"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "η GNU General Public License, Έκδοση 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "από τον Alexander Tverskoy διατίθεται υπό την"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "Για ερωτήσεις ή σχόλια, επικοινωνήστε μαζί μου στο"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "Έκδοση"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "Κεράστε με έναν καφέ"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "Δωρεά με κάρτα τράπεζας ή PayPal"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "Κάθε συνεισφορά βοηθά να παραμένει το έργο ενεργό και να προχωρά μπροστά. Ευχαριστούμε για την υποστήριξή σας!"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "Δωρεά με κρυπτονόμισμα"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "Γεια σας! Τροφοδοτήστε αυτό το έργο πάθους με μια μικρή δόση καφεΐνης! Κάθε δωρεά βοηθά να συνεχίζεται ο κώδικας και ο καφές. Ευχαριστούμε για την υποστήριξη της εργασίας και του προγραμματιστή πίσω από αυτήν!"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "Μπορείτε να υποστηρίξετε την ανάπτυξη μέσω μίας από τις ακόλουθες επιλογές:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "Ασυμφωνία πεζών/κεφαλαίων: η πηγή είναι όλη κεφαλαία"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "Ασυμφωνία πεζών/κεφαλαίων: πρώτος χαρακτήρας"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "Οι έλεγχοι QA είναι ενεργοποιημένοι"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "Ασυμφωνία αλλαγής γραμμής (αρχική / τελική)"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "Επιπλέον placeholder στη μετάφραση"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "Λείπει placeholder από τη μετάφραση"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "Ασυμφωνία αριθμού μορφών πληθυντικού"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "Ασυμφωνία αγκύλης"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "Ασυμφωνία τελικής στίξης"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "Λείπει κενό μετά από στίξη"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "Κενό πριν από στίξη"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "Διπλό κενό στη μετάφραση"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "Αρχικό κενό στη μετάφραση"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "Τελικό κενό στη μετάφραση"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "Εκκαθάριση πανομοιότυπων"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "Κλείσιμο διαδρομής"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "Αντιγραφή"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "Αντιγραφή κειμένου πηγής"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "Αποκοπή"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "Επεξεργασία μορφής πληθυντικού"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "Επεξεργασία μόνο μετάφρασης"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "Έξοδος"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "Μετάβαση σε..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "Επισήμανση ως έγκυρο"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "Σειρά ανάγνωσης από δεξιά προς αριστερά"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "Εκκαθάριση"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "Αντιγραφή"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "Αποκοπή"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "Προεπιλεγμένο ζουμ"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "Επικόλληση"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "Επιλογή όλων"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "Αναίρεση"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "Νέο"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "Νέο από POT..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "Νέο παράθυρο"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "Άνοιγμα"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "Άνοιγμα διαδρομής..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "Επικόλληση"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "Εκκαθάριση όλων των μεταφράσεων"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "Εκκαθάριση fuzzy μεταφράσεων"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "Αντιγραφή πηγής σε κενά"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "Διαγραφή αρχείου(-ων)"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "Νέα αρχεία από POT..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "Απομνημόνευση μεταφράσεων"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "Μετονομασία αρχείου(-ων)"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "Επανάσαρωση διαδρομής"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "Επιλογή όλων"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "Εμφάνιση αρχείου στην Εξερεύνηση..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "Συγχρονισμός αρχείου(-ων) με POT"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "Μετάφραση ελλειπόντων σε αρχείο(-α)"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "Μετάφραση ελλειπόντων σε αρχείο(-α) από μνήμη"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "Επισήμανση αρχείου(-ων) ως έγκυρων"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "Απομνημόνευση αρχείου..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "Απομνημόνευση διαδρομής..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "Αποθήκευση ως..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "Επιλογή όλων"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "Ρυθμίσεις..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "Ορθογραφικός έλεγχος πηγής"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "Ορθογραφικός έλεγχος μετάφρασης"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "Συγχρονισμός με POT"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "Μετάφραση από μνήμη"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "Μετάφραση ελλειπόντων"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "Μετάφραση ελλειπόντων από μνήμη"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "Μετάφραση επιλεγμένων"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "Αναίρεση αλλαγών"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "Αναδίπλωση λέξεων - Πλέγμα"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "Αναδίπλωση λέξεων - Πίνακας μετάφρασης"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "Πληκτρολογήστε για φιλτράρισμα..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "Έγκυρο"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "Κείμενο πηγής"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "Μετάφραση"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "Πλαίσιο"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "Πληθυντικός"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "Αναφορά"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "Fuzzy"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "Τύπος"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "Τιμή"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "Όνομα"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "Τιμή"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "Μορφές πληθυντικού"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "Χρειάζεται επικύρωση"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "Μορφή πληθυντικού"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "Σχετικά..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "Αυτόματος έλεγχος ενημερώσεων"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "Κεράστε με έναν καφέ..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "Έλεγχος για ενημερώσεις"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "Αρχείο"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "Άνοιγμα πρόσφατων"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "Μορφή"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "Έλεγχοι QA"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "Μετάφραση"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "Διαμόρφωση"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "Προβολή"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "Στήλη πλαισίου"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "Στήλη πληθυντικού"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "Στήλη αναφοράς"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "Κεφαλίδες"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "Πίνακας μετάφρασης"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "Σχόλια"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "Μετάφραση"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Προσθήκη στο λεξικό"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "Προσθήκη στο λεξικό"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "Γραμματοσειρά..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "Επαναφορά"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "Έλεγχος ταυτότητας"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "Ενεργοποιεί έλεγχο ταυτότητας με όνομα χρήστη και κωδικό πρόσβασης για πρόσβαση μέσω proxy"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "Απομνημόνευση τελευταίου ανοιγμένου αρχείου"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "Αυτόματο άνοιγμα του τελευταίου ανοιγμένου αρχείου μετάφρασης κατά την εκκίνηση της εφαρμογής."
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "Εμφάνιση ειδοποιήσεων επιτυχίας"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "Εμφάνιση ειδοποίησης όταν μια λειτουργία ολοκληρώνεται με επιτυχία"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "Παράλειψη συμβολοσειρών πολλών γραμμών"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "Αγνόηση καταχωρίσεων των οποίων το κείμενο πηγής εκτείνεται σε πολλές γραμμές."
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "Μετάβαση στον πίνακα μετάφρασης κατά την επιλογή αρχείου"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "Αυτόματη μετάβαση στον πίνακα μετάφρασης όταν επιλέγεται αρχείο. Για εστίαση στη λίστα αρχείων, κάντε ξανά κλικ στο ήδη επιλεγμένο αρχείο."
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "Αυτόματη συμπλήρωση κατά την αποθήκευση"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "Αποθήκευση των μεταφράσεων του τρέχοντος αρχείου στη μνήμη σε κάθε αποθήκευση."
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "Ενεργοποιημένη"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "Ενεργοποίηση ή απενεργοποίηση της μνήμης μετάφρασης συνολικά."
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "Καθορίζει πώς χρησιμοποιείται το proxy: χωρίς proxy, proxy συστήματος ή προσαρμοσμένη διαμόρφωση"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "Χωρίς proxy"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "Τύπος πρωτοκόλλου proxy που χρησιμοποιείται για προσαρμοσμένες ρυθμίσεις"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "Φάκελος όπου αποθηκεύονται τα αρχεία ζευγών γλωσσών ως αρχεία zip."
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "Διεύθυνση του διακομιστή proxy (IP ή όνομα τομέα)"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "Όνομα χρήστη για έλεγχο ταυτότητας proxy"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "Κωδικός πρόσβασης για έλεγχο ταυτότητας proxy"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "Η διεύθυνση email του μεταφραστή θα καταγράφεται στο αρχείο μετάφρασης κατά την αποθήκευσή του."
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "Το όνομα του μεταφραστή θα καταγράφεται στο αρχείο μετάφρασης κατά την αποθήκευσή του."
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "Συμπεριφορά"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "Πληροφορίες μεταφραστή"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "Γραμματοσειρά"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "Διαμορφώσεις proxy (Προεπιλογή: Όλες)"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "Proxy"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "Χρονικό όριο"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "Φίλτρα"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "Αποθήκευση (Κάντε δεξί κλικ στο πλέγμα για ενέργειες)"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Μνήμη μετάφρασης"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "Παράμετροι χρήστη"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "Σύνδεση, δευτ."
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "Διακομιστής"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "Όνομα χρήστη"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "Κωδικός πρόσβασης"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "Θύρα"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "Λειτουργία proxy"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "Τύπος proxy"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "Αίτημα, δευτ."
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"Μέγιστο μήκος πηγής\n"
+"(0 = χωρίς όριο)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "Κατάλογος αποθήκευσης"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "Email"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "Όνομα"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "Εκκαθάριση επιλεγμένων"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "Συμπίεση επιλεγμένων"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "Εξαγωγή επιλεγμένων..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "Εισαγωγή..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "Επιλογή όλων"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "Γενικά"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "Δίκτυο"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "Παράμετροι"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "Μνήμη μετάφρασης"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "Προεπιλογή, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "Χρόνος για τη δημιουργία σύνδεσης. Αν είναι 0, χρησιμοποιούνται 10 δευτερόλεπτα ως προεπιλογή"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "Θύρα δικτύου που χρησιμοποιεί ο διακομιστής proxy"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "Χρόνος αναμονής για απόκριση και δεδομένα. Αν είναι 0, χρησιμοποιούνται 300 δευτερόλεπτα ως προεπιλογή"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "Οι καταχωρίσεις με μεγαλύτερο κείμενο πηγής αγνοούνται για να διατηρείται μικρή η μνήμη."
+

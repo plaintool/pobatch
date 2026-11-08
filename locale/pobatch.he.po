@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "התרגום בוטל. %d תרגומים ב-%d קבצים."
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "התרגום בוטל. %d רשומות עודכנו."
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"לנקות את כל התרגומים ב-%d הקבצים הבאים?\n"
+"הכותרות נשמרות, כל ערכי msgstr מוסרים.\n"
+"לא ניתן לבטל פעולה זו בתוך היישום.\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "נקה את כל התרגומים"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "נקו %d תרגומים."
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"לנקות תרגומים של רשומות מטושטשות ב-%d הקבצים הבאים?\n"
+"לא ניתן לבטל פעולה זו בתוך היישום.\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "לנקות תרגומים זהים לטקסט המקור בשורות הנבחרות?"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "נקה תרגומים לא חוקיים"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "אשר שינוי שם"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "אשר סנכרון"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "הועתקו %d תרגומים."
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"להעתיק את טקסט המקור לתרגומים ריקים ב-%d הקבצים הבאים?\n"
+"לא ניתן לבטל פעולה זו בתוך היישום.\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "העתק מקור לריקים"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "להעתיק את טקסט המקור לתרגומים בשורות הנבחרות?"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "מחק קבצים"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"האם אתה בטוח שברצונך למחוק את %d הקבצים הבאים?\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "האם אתה בטוח שברצונך למחוק את הקובץ הנבחר?"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "מחק קובץ"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "בוצע. נוקו %d תרגומים לא חוקיים."
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "בוצע. נוספו %d תרגומים ב-%d קבצים. %d קבצים דולגו."
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "בוצע. נוקו %d תרגומים."
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "בוצע. מולאו %d תרגומים מהמקור."
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "שגיאה בעיבוד הקובץ \"%s\": %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "שגיאה בסנכרון הקובץ: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "שגיאה בסנכרון הקובץ \"%s\": %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "הקובץ \"%s\" דולג: שפת היעד אינה מוגדרת בכותרת ה-PO או בשם הקובץ."
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "הקובץ לא נמצא: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"הקבצים הבאים כבר קיימים:\n"
+"\n"
+"%s\n"
+"להחליפם?"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "קבצים קיימים"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "הקובץ \"%s\" דולג: לא נוצרו תרגומים עבור השפה \"%s\"."
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "שגיאה: --langs נדרש במצב קונסולה"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "%d רשומות סומנו כחוקיות."
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"לסמן את %d הקבצים הבאים כחוקיים?\n"
+"זה יסיר את דגל \"fuzzy\" מכל הרשומות.\n"
+"לא ניתן לבטל פעולה זו בתוך היישום.\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "הקבצים הנבחרים סומנו כחוקיים. כל דגלי \"fuzzy\" הוסרו."
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"לסמן %d רשומות נבחרות כחוקיות?\n"
+"זה יסיר את דגל \"fuzzy\" מהרשומות הנבחרות."
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "סמן כחוקי"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "זיכרון התרגום מושבת. הפעל אותו בהגדרות."
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "זיכרון התרגום אינו מוגדר עבור צמד השפות הנוכחי."
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "בוצע. הוחלו %d תרגומים מהזיכרון."
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "בוצע. הוחלו %d תרגומים מהזיכרון, %d דולגו."
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... ועוד %d קבצים"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... ועוד %d שורות"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "שגיאה: --name נדרש במצב קונסולה"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "אין רשומות מטושטשות בבחירה."
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "לא נבחרו קובצי PO."
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "לא נמצא קובץ POT מתאים עבור: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "לא נבחרו קובצי PO לסנכרון."
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "אין מה לתרגם."
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "אין מה לתרגם: לכל הרשומות כבר יש תרגומים."
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "שגיאה: --pot נדרש במצב קונסולה"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "קובץ POT לא נמצא: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"לזכור תרגומים מ-%d הקבצים הבאים לזיכרון?\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "בוצע. %d תרגומים נזכרו, %d דולגו."
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "זכור תרגומים"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "הסר דגל fuzzy"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"לשנות את שמם של %d הקבצים הבאים באמצעות שם בסיס \"%s\"?\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "שינוי השם נכשל: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "הזן שם בסיס חדש:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "שנה שמות קבצים"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "בחר קובץ למחיקה!"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "בחר קבצים לשינוי שם!"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"לסנכרן את %d הקבצים הבאים עם\n"
+"קובצי ה-POT המתאימים שלהם?\n"
+"לא ניתן לבטל פעולה זו בתוך היישום.\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"לסנכרן את הקובץ הנוכחי\n"
+"  %s\n"
+"עם POT הייחוס\n"
+"  %s ?"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "הסנכרון הושלם."
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "הסנכרון הושלם. %d קבצים דולגו (אין POT מתאים)."
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "שפת היעד אינה מוגדרת. אנא ציין את כותרת Language בקובץ ה-PO."
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "לתרגם את כל הרשומות בקובץ הנוכחי?"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "לתרגם את כל התרגומים החסרים בקובץ הנוכחי?"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "התרגום הושלם. %d רשומות עודכנו."
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "התרגום הושלם. %d רשומות עודכנו, %d דולגו."
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"לתרגם תרגומים חסרים ב-%d הקבצים הבאים?\n"
+"לא ניתן לבטל פעולה זו בתוך היישום.\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "לתרגם תרגומים חסרים ב-%d רשומות נבחרות?"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "תרגם חסרים"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "לתרגם %d רשומות נבחרות?"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "תצורת תרגום לא נבחרה. אנא בחר שירות תרגום תחילה."
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "שגיאת תרגום: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"קובץ \"%s\": שירות התרגום החזיר %d שורות במקום %d; רשומות חד-שורתיות דולגו.\n"
+"\n"
+"תגובה:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"שירות התרגום החזיר %d שורות במקום %d; רשומות חד-שורתיות דולגו.\n"
+"\n"
+"תגובה:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "האם ברצונך לבטל את פעולת האצווה הנוכחית?"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "בטל פעולה"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "האם אתה בטוח שברצונך למחוק צורת רבים זו?"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "למחוק צורת רבים?"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "האם אתה בטוח שברצונך למחוק את השורה הנבחרת?"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "למחוק את השורות הנבחרות?"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "מחק שורה"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "האם ברצונך להשליך את כל השינויים שלא נשמרו?"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "שם קובץ לא חוקי"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"הקובץ אינו קיים:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "הקובץ אינו קיים: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "שגיאה"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "ביטול"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "שמור על השינויים שלי"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "הקובץ \"%s\" שונה על ידי יישום אחר מאז שנפתח."
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "יש לך שינויים שלא נשמרו. לשמור אותם או לטעון מחדש מהדיסק?"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "יש לך שינויים שלא נשמרו. מה ברצונך לעשות?"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "החלף"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "טען מחדש"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "טען מחדש מהדיסק"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "הקובץ השתנה בדיסק"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "הקובץ נטען מחדש מהדיסק"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "הזן מספר רשומה:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "עבור לרשומה"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "מספר לא חוקי: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"הקובץ גדול מאוד (%d MB).\n"
+"פתיחתו עשויה לקחת זמן. להמשיך?"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "קובץ גדול"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"שגיאה בטעינת הקובץ:\n"
+"%s\n"
+"הקובץ עשוי להיות פגום או בפורמט שגוי."
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "שגיאת טעינה"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "לא נמצאו קובצי .po בתיקייה הנבחרת!"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "רשומה מספר %s לא נמצאה."
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "פתח קובץ"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"לקובץ \"%s\" יש סיומת לא מזוהה.\n"
+"האם לנסות לפתוח אותו בכל זאת?"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "נקה רשימה"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - ללא שם"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "הזן צורת רבים"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "צורת רבים"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "קובץ POT לא נמצא: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "בדיקות QA"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "בוצע. %d תרגומים נזכרו, %d דולגו."
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "הקובץ \"%s\" דולג: שפת היעד אינה מוגדרת בכותרת ה-PO."
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "זכור קובץ"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "הזן %s"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "הזן את הפרמטר הנדרש"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"המסמך \"%s\" שונה.\n"
+"האם ברצונך לשמור את השינויים?"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "שמור שינויים"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"שגיאה בשמירת הקובץ:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "שגיאת שמירה"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "לא חוקיים: %d (מטושטשים %d, QA %d, ריקים %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "רשומות לא חוקיות: ספירה כוללת עם פירוט לפי דגל fuzzy, בעיות QA ותרגומים ריקים"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "סגנון סוף השורה המשמש בעת שמירת הקובץ"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "תורגמו %d מתוך %d (%d%%) נותרו %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "התקדמות התרגום: רשומות מתורגמות מתוך הסה\"כ, אחוז, מספר נותר"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "ללא שם"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "ברירת מחדל"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "האם אתה בטוח שברצונך לשחזר את הגדרות ברירת המחדל?"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "פרוקסי מותאם אישית"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "ללא פרוקסי"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "פרוקסי מערכת"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "נמחקו %d צמדי שפות."
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"למחוק את %d צמדי השפות הנבחרים?\n"
+"לא ניתן לבטל פעולה זו."
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "נקה זיכרון תרגום"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"לבנות מחדש את %d צמדי השפות הנבחרים?\n"
+"רשומות שאינן תואמות עוד את המסננים הנוכחיים (אורך, ריבוי שורות) יוסרו."
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "כווצו %d צמדי שפות."
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "כווץ זיכרון תרגום"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "יוצאו %d צמדי שפות."
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "ארכיוני Zip (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "לא נבחרו צמדי שפות."
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "ייצא זיכרון תרגום"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "יובאו %d צמדי שפות."
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "לא ניתן לייבא קובץ: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "זיכרון תרגום (*.zip;*.txt)|*.zip;*.txt|ארכיוני Zip (*.zip)|*.zip|קובצי טקסט (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "ייבא זיכרון תרגום"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "לא ניתן לקבוע צמד שפות מ-\"%s\". פורמט צפוי: \"xx-yy\"."
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "לא ניתן לקרוא את הארכיון: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "רשומות"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "שונה"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "גודל"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "מקור"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "יעד"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "סה\"כ"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "בחר תיקיית זיכרון תרגום"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "שם"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "ערך"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "אי התאמה ברישיות: המקור מתחיל ב-\"%s\", התרגום מתחיל ב-\"%s\""
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "אי התאמה ברישיות: המקור כולו באותיות גדולות, התרגום לא"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "אי התאמה בשורת פתיחה חדשה"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "אי התאמה בשורת סיום חדשה"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "מציין מקום מיותר בתרגום: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "מציין מקום חסר בתרגום: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "אי התאמה במספר צורות הרבים: צפוי %d, נמצא %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "אי התאמה בסוגריים: צפוי \"%s\", נמצא \"%s\""
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "אי התאמה בפיסוק הסיום: המקור מסתיים ב-\"%s\", התרגום מסתיים ב-\"%s\""
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "רווח לפני פיסוק: \"%s\""
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "רווח כפול בתרגום"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "רווח מוביל בתרגום"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "חסר רווח אחרי פיסוק: \"%s\""
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "רווח נגרר בתרגום"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "אישור"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "אודות"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "ה-GNU General Public License, גרסה 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "מאת Alexander Tverskoy ברישיון"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "לשאלות או משוב, צור קשר בכתובת"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "גרסה"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "אישור"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "קנה לי קפה"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "תרום בכרטיס אשראי או PayPal"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "כל תרומה עוזרת לשמור על הפרויקט פעיל ולקדם אותו. תודה על התמיכה!"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "תרום במטבע קריפטוגרפי"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "היי! תדלק את פרויקט התשוקה הזה עם קצת קפאין! כל תרומה עוזרת לקוד להמשיך לזרום ולקפה להתבשל. תודה על התמיכה בעבודה ובמפתח שמאחוריה!"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "אתה יכול לתמוך בפיתוח באמצעות אחת מהאפשרויות הבאות:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "אי התאמה ברישיות: המקור כולו באותיות גדולות"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "אי התאמה ברישיות: תו ראשון"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "בדיקות QA מופעלות"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "אי התאמה בשורה חדשה (מובילה / נגררת)"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "מציין מקום מיותר בתרגום"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "מציין מקום חסר בתרגום"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "אי התאמה במספר צורות הרבים"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "אי התאמה בסוגריים"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "אי התאמה בפיסוק הסיום"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "חסר רווח אחרי פיסוק"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "רווח לפני פיסוק"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "רווח כפול בתרגום"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "רווח מוביל בתרגום"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "רווח נגרר בתרגום"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "נקה זהים"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "סגור נתיב"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "העתק"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "העתק טקסט מקור"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "גזור"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "מחק"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "ערוך צורת רבים"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "ערוך תרגום בלבד"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "יציאה"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "עבור אל..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "סמן כחוקי"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "סדר קריאה מימין לשמאל"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "נקה"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "העתק"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "גזור"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "זום ברירת מחדל"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "הדבק"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "בחר הכל"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "בטל"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "חדש"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "חדש מ-POT..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "חלון חדש"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "פתח"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "פתח נתיב..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "הדבק"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "נקה את כל התרגומים"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "נקה תרגומים מטושטשים"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "העתק מקור לריקים"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "מחק קובץ(ים)"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "קובץ(ים) חדש(ים) מ-POT..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "זכור תרגומים"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "שנה שמות קבצים"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "סרוק נתיב מחדש"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "בחר הכל"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "הצג קובץ בסייר..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "סנכרן קובץ(ים) עם POT"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "תרגם חסרים בקובץ(ים)"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "תרגם חסרים בקובץ(ים) מהזיכרון"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "סמן קובץ(ים) כחוקיים"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "זכור קובץ..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "זכור נתיב..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "שמור"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "שמור בשם..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "בחר הכל"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "הגדרות..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "בדוק איות במקור"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "בדוק איות בתרגום"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "סנכרן עם POT"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "תרגם מהזיכרון"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "תרגם חסרים"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "תרגם חסרים מהזיכרון"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "תרגם נבחרים"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "בטל שינויים"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "גלישת מילים - טבלה"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "גלישת מילים - פאנל תרגום"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "הקלד לסינון..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "חוקי"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "טקסט מקור"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "תרגום"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "הקשר"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "רבים"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "הפניה"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "מטושטש"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "סוג"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "ערך"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "שם"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "ערך"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "צורות רבים"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "דורש אימות"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "צורת רבים"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "אודות..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "בדוק עדכונים אוטומטית"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "קנה לי קפה..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "בדוק עדכונים"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "עריכה"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "קובץ"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "פתח אחרונים"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "עיצוב"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "בדיקות QA"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "עזרה"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "תרגם"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "תצורה"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "תצוגה"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "עמודת הקשר"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "עמודת רבים"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "עמודת הפניה"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "כותרות"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "פאנל תרגום"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "הערות"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "תרגם"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "הוסף למילון"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "הוסף למילון"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "החל"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "ביטול"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "שחזר ברירות מחדל"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "גופן..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "אישור"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "אפס"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "הגדרות"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "אימות"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "מאפשר אימות שם משתמש וסיסמה לגישה לפרוקסי"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "זכור קובץ אחרון שנפתח"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "פתח מחדש אוטומטית את קובץ התרגום האחרון שנפתח בעת הפעלת היישום."
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "הצג התראות הצלחה"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "הצג התראה כאשר פעולה מסתיימת בהצלחה"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "דלג על מחרוזות מרובות שורות"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "התעלם מרשומות שטקסט המקור שלהן משתרע על פני מספר שורות."
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "עבור לטבלת תרגום בעת בחירת קובץ"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "עבור אוטומטית לטבלת התרגום כאשר נבחר קובץ. כדי למקד את רשימת הקבצים, לחץ שוב על הקובץ הנבחר."
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "מלא אוטומטית בשמירה"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "אחסן את תרגומי הקובץ הנוכחי בזיכרון בכל שמירה."
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "מופעל"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "הפעל או השבת את זיכרון התרגום לחלוטין."
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "מגדיר כיצד נעשה שימוש בפרוקסי: ללא פרוקסי, פרוקסי מערכת או תצורה מותאמת אישית"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "ללא פרוקסי"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "סוג פרוטוקול הפרוקסי המשמש להגדרות מותאמות אישית"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "תיקייה שבה נשמרים ארכיוני צמדי השפות כקובצי zip."
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "כתובת שרת הפרוקסי (IP או שם תחום)"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "שם משתמש המשמש לאימות פרוקסי"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "סיסמה המשמשת לאימות פרוקסי"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "כתובת הדוא\"ל של המתרגם תירשם בקובץ התרגום בעת שמירתו."
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "שם המתרגם יירשם בקובץ התרגום בעת שמירתו."
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "התנהגות"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "פרטי מתרגם"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "גופן"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "תצורות דרך פרוקסי (ברירת מחדל: הכל)"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "פרוקסי"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "פסק זמן"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "מסננים"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "אחסון (לחץ ימני על הטבלה לפעולות)"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "זיכרון תרגום"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "פרמטרי משתמש"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "חיבור, שניות"
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "מארח"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "התחברות"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "סיסמה"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "יציאה"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "מצב פרוקסי"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "סוג פרוקסי"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "בקשה, שניות"
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"אורך מקור מקסימלי\n"
+"(0 = ללא הגבלה)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "תיקיית אחסון"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "דוא\"ל"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "שם"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "נקה נבחרים"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "כווץ נבחרים"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "ייצא נבחרים..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "ייבא..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "רענן"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "בחר הכל"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "כללי"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "רשת"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "פרמטרים"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "זיכרון תרגום"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "ברירת מחדל, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "זמן ליצירת חיבור. אם 0, משתמשים בברירת מחדל של 10 שניות"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "יציאת רשת המשמשת את שרת הפרוקסי"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "זמן המתנה לתגובה ולנתונים. אם 0, משתמשים בברירת מחדל של 300 שניות"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "רשומות עם טקסט מקור ארוך יותר מתעלמים מהן כדי לשמור על זיכרון קטן."
+

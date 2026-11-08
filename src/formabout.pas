@@ -48,7 +48,7 @@ var
 
 implementation
 
-uses CheckUpdates, DarkUtils;
+uses Consts, CheckUpdates, DarkUtils, Localize;
 
   {$R *.lfm}
 
@@ -58,6 +58,8 @@ procedure TformAboutPoBatch.FormCreate(Sender: TObject);
 var
   Arch: string;
 begin
+  TLocalize.ApplicationTranslate(APP_NAME, language, self, TLocalize.LoadCustomPoFile(Localize.CustomPoFile));
+
   {$IFDEF CPU64}
     Arch := 'x64';
   {$ELSE}

@@ -28,7 +28,7 @@ function LoadFormSettings(Form: TformPoBatch): boolean;
 
 implementation
 
-uses PoWrap, PoCheck, ObjectDictionary, Translate, Network, OSUtils;
+uses Consts, PoWrap, PoCheck, ObjectDictionary, Translate, Network, OSUtils;
 
 function QACheckOptionsToJSON(const AOpt: TQACheckOptions): TJSONObject;
 var
@@ -187,6 +187,7 @@ begin
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
     JSONObj.Add('TranslatorName', Form.TranslatorName);
     JSONObj.Add('TranslatorEmail', Form.TranslatorEmail);
+    JSONObj.Add('Language', Form.Language);
 
     // Save main font
     JSONObj.Add('FontName', Form.Font.Name);
@@ -646,6 +647,10 @@ begin
 
       if JSONObj.FindPath('LastFile') <> nil then
         Form.LastFile := JSONObj.FindPath('LastFile').AsString;
+
+      // Restore the language setting
+      if JSONObj.FindPath('Language') <> nil then
+        Form.Language := JSONObj.FindPath('Language').AsString;
 
       // Restore the master QA switch
       if JSONObj.FindPath('QAChecksEnabled') <> nil then

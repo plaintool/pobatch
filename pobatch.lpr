@@ -27,9 +27,10 @@ uses
   uWin32WidgetSetDark,
   {$ENDIF}
   MainUnit,
+  Localize,
   FormAbout,
   FormDonate,
-  ConsoleOp;
+  ConsoleOp, Consts;
 
   {$R *.res}
 
@@ -104,6 +105,7 @@ begin
 
   // Normal GUI mode
   RequireDerivedFormResource := True;
+  Language := TLocalize.GetOSLanguage;
   Application.Title := 'PoBatch';
   Application.Scaled := True;
   {$PUSH}
@@ -117,5 +119,7 @@ begin
   Application.CreateForm(TformPoBatch, formPoBatch);
   Application.CreateForm(TformAboutPoBatch, formAboutPoBatch);
   Application.CreateForm(TformDonatePoBatch, formDonatePoBatch);
+  TLocalize.ApplicationTranslate(APP_NAME, Language, nil, TLocalize.LoadCustomPoFile(Localize.CustomPoFile));
+  TLocalize.UpdatePackageTranslations(APP_NAME, 'checkupdates', Language, ['CheckUpdates']);
   Application.Run;
 end.

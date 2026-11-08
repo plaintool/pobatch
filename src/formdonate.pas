@@ -46,7 +46,7 @@ var
 
 implementation
 
-uses DarkUtils;
+uses Consts, DarkUtils, Localize;
 
   {$R *.lfm}
 
@@ -54,6 +54,8 @@ uses DarkUtils;
 
 procedure TformDonatePoBatch.FormCreate(Sender: TObject);
 begin
+  TLocalize.ApplicationTranslate(APP_NAME, language, self, TLocalize.LoadCustomPoFile(Localize.CustomPoFile));
+
   labelBank.Font.Color := TDarkUtils.ThemeColor(clBlue, clSkyBlue);
   //labelCrypto.Font.Color := TDarkUtils.ThemeColor(clBlue, clSkyBlue);
   labelCrypto.Font.Color := TDarkUtils.ThemeColor(clBlue, clSkyBlue);

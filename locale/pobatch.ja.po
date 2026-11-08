@@ -1,0 +1,1980 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: PoBatch 1.0.0\n"
+
+#: batchop.rcancelledpath
+#, object-pascal-format
+msgid "Translation cancelled. %d translation(s) in %d file(s)."
+msgstr "翻訳はキャンセルされました。%d 件の翻訳（%d ファイル）。"
+
+#: batchop.rcancelledtranslation
+#, object-pascal-format
+msgid "Translation cancelled. %d entries updated."
+msgstr "翻訳はキャンセルされました。%d 件のエントリが更新されました。"
+
+#: batchop.rclearallconfirm
+#, object-pascal-format
+msgid ""
+"Clear ALL translations in the following %d file(s)?\n"
+"Headers are preserved, all msgstr values are removed.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルのすべての翻訳をクリアしますか？\n"
+"ヘッダは保持され、すべての msgstr 値が削除されます。\n"
+"この操作はアプリケーション内で元に戻せません。\n"
+"\n"
+"%s"
+
+#: batchop.rclearalltitle
+msgid "Clear all translations"
+msgstr "すべての翻訳をクリア"
+
+#: batchop.rclearedtranslationscount
+#, object-pascal-format
+msgid "%d translations were cleared."
+msgstr "%d 件の翻訳がクリアされました。"
+
+#: batchop.rclearfuzzyconfirm
+#, object-pascal-format
+msgid ""
+"Clear translations of fuzzy entries in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルのファジーエントリの翻訳をクリアしますか？\n"
+"この操作はアプリケーション内で元に戻せません。\n"
+"\n"
+"%s"
+
+#: batchop.rclearidenticalconfirm
+msgid "Clear translations that are identical to the source text in the selected row(s)?"
+msgstr "選択した行のソーステキストと同一の翻訳をクリアしますか？"
+
+#: batchop.rclearinvalidtitle
+msgid "Clear invalid translations"
+msgstr "無効な翻訳をクリア"
+
+#: batchop.rconfirmrenametitle
+msgid "Confirm rename"
+msgstr "名前変更の確認"
+
+#: batchop.rconfirmsynctitle
+msgid "Confirm synchronization"
+msgstr "同期の確認"
+
+#: batchop.rcopiedtranslationscount
+#, object-pascal-format
+msgid "%d translations were copied."
+msgstr "%d 件の翻訳がコピーされました。"
+
+#: batchop.rcopysourceemptyconfirm
+#, object-pascal-format
+msgid ""
+"Copy source text to empty translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルの空の翻訳にソーステキストをコピーしますか？\n"
+"この操作はアプリケーション内で元に戻せません。\n"
+"\n"
+"%s"
+
+#: batchop.rcopysourceemptytitle
+msgid "Copy source to empty"
+msgstr "ソースを空の翻訳にコピー"
+
+#: batchop.rcopysourcetotranslationconfirm
+msgid "Copy source text to translations in the selected row(s)?"
+msgstr "選択した行の翻訳にソーステキストをコピーしますか？"
+
+#: batchop.rdeletefilestitle
+msgid "Delete files"
+msgstr "ファイルを削除"
+
+#: batchop.rdeletemultipleconfirm
+#, object-pascal-format
+msgid ""
+"Are you sure you want to delete the following %d file(s)?\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルを削除してもよろしいですか？\n"
+"\n"
+"%s"
+
+#: batchop.rdeletesingleconfirm
+msgid "Are you sure you want to delete the selected file?"
+msgstr "選択したファイルを削除してもよろしいですか？"
+
+#: batchop.rdeletetitle
+msgid "Delete file"
+msgstr "ファイルを削除"
+
+#: batchop.rdoneinvalidcleared
+#, object-pascal-format
+msgid "Done. %d invalid translation(s) cleared."
+msgstr "完了。%d 件の無効な翻訳がクリアされました。"
+
+#: batchop.rdonetranslationsadded
+#, object-pascal-format
+msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
+msgstr "完了。%d 件の翻訳が %d ファイルに追加されました。%d ファイルがスキップされました。"
+
+#: batchop.rdonetranslationscleared
+#, object-pascal-format
+msgid "Done. %d translation(s) cleared."
+msgstr "完了。%d 件の翻訳がクリアされました。"
+
+#: batchop.rdonetranslationsfilled
+#, object-pascal-format
+msgid "Done. %d translation(s) filled from source."
+msgstr "完了。%d 件の翻訳がソースから入力されました。"
+
+#: batchop.rerrorprocessingfile
+#, object-pascal-format
+msgid "Error processing file \"%s\": %s"
+msgstr "ファイル \"%s\" の処理中にエラーが発生しました: %s"
+
+#: batchop.rerrorsynccurrent
+#, object-pascal-format
+msgid "Error synchronizing file: %s"
+msgstr "ファイルの同期中にエラーが発生しました: %s"
+
+#: batchop.rerrorsyncfile
+#, object-pascal-format
+msgid "Error synchronizing file \"%s\": %s"
+msgstr "ファイル \"%s\" の同期中にエラーが発生しました: %s"
+
+#: batchop.rfilelangnotset
+#, object-pascal-format
+msgid "File \"%s\" skipped: target language is not set in the PO header or file name."
+msgstr "ファイル \"%s\" はスキップされました: PO ヘッダまたはファイル名にターゲット言語が設定されていません。"
+
+#: batchop.rfilenotfound
+#, object-pascal-format
+msgid "File not found: %s"
+msgstr "ファイルが見つかりません: %s"
+
+#: batchop.rfilesexistconfirm
+#, object-pascal-format
+msgid ""
+"The following files already exist:\n"
+"\n"
+"%s\n"
+"Overwrite them?"
+msgstr ""
+"以下のファイルは既に存在します:\n"
+"\n"
+"%s\n"
+"上書きしますか？"
+
+#: batchop.rfilesexisttitle
+msgid "Files exist"
+msgstr "ファイルが存在します"
+
+#: batchop.rfiletranslationnone
+#, object-pascal-format
+msgid "File \"%s\" skipped: no translations were produced for language \"%s\"."
+msgstr "ファイル \"%s\" はスキップされました: 言語 \"%s\" の翻訳が生成されませんでした。"
+
+#: batchop.rlangsconsoleerror
+msgid "Error: --langs is required in console mode"
+msgstr "エラー: コンソールモードでは --langs が必要です"
+
+#: batchop.rmarkedvalidcount
+#, object-pascal-format
+msgid "%d entries marked as valid."
+msgstr "%d 件のエントリが有効としてマークされました。"
+
+#: batchop.rmarkvalidconfirm
+#, object-pascal-format
+msgid ""
+"Mark the following %d file(s) as valid?\n"
+"This will remove the \"fuzzy\" flag from all entries.\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルを有効としてマークしますか？\n"
+"これにより、すべてのエントリから \"fuzzy\" フラグが削除されます。\n"
+"この操作はアプリケーション内で元に戻せません。\n"
+"\n"
+"%s"
+
+#: batchop.rmarkvaliddone
+msgid "Selected files have been marked as valid. All \"fuzzy\" flags were removed."
+msgstr "選択したファイルは有効としてマークされました。すべての \"fuzzy\" フラグが削除されました。"
+
+#: batchop.rmarkvalidgridconfirm
+#, object-pascal-format
+msgid ""
+"Mark %d selected entries as valid?\n"
+"This will remove the \"fuzzy\" flag from the selected entries."
+msgstr ""
+"選択した %d 件のエントリを有効としてマークしますか？\n"
+"これにより、選択したエントリから \"fuzzy\" フラグが削除されます。"
+
+#: batchop.rmarkvalidgridtitle
+msgid "Mark as Valid"
+msgstr "有効としてマーク"
+
+#: batchop.rmemorydisabled
+msgid "Translation memory is disabled. Enable it in the settings."
+msgstr "翻訳メモリは無効です。設定で有効にしてください。"
+
+#: batchop.rmemorynotconfigured
+msgid "Translation memory is not configured for the current language pair."
+msgstr "現在の言語ペアに対して翻訳メモリが設定されていません。"
+
+#: batchop.rmemorytranslatedone
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory."
+msgstr "完了。%d 件の翻訳がメモリから適用されました。"
+
+#: batchop.rmemorytranslatedoneskipped
+#, object-pascal-format
+msgid "Done. %d translation(s) applied from memory, %d skipped."
+msgstr "完了。%d 件の翻訳がメモリから適用され、%d 件がスキップされました。"
+
+#: batchop.rmorefiles
+#, object-pascal-format
+msgid "... and %d more file(s)"
+msgstr "... 他 %d ファイル"
+
+#: batchop.rmorelines
+#, object-pascal-format
+msgid "... and %d more line(s)"
+msgstr "... 他 %d 行"
+
+#: batchop.rnameconsoleerror
+msgid "Error: --name is required in console mode"
+msgstr "エラー: コンソールモードでは --name が必要です"
+
+#: batchop.rnofuzzyentries
+msgid "No fuzzy entries in the selection."
+msgstr "選択範囲にファジーエントリはありません。"
+
+#: batchop.rnopofilesselected
+msgid "No PO files selected."
+msgstr "PO ファイルが選択されていません。"
+
+#: batchop.rnopotforfile
+#, object-pascal-format
+msgid "No matching POT file found for: %s"
+msgstr "一致する POT ファイルが見つかりません: %s"
+
+#: batchop.rnosyncselected
+msgid "No PO files selected for synchronization."
+msgstr "同期する PO ファイルが選択されていません。"
+
+#: batchop.rnothingtranslated
+msgid "Nothing to translate."
+msgstr "翻訳するものがありません。"
+
+#: batchop.rnothingtranslatedall
+msgid "Nothing to translate: all entries already have translations."
+msgstr "翻訳するものがありません: すべてのエントリに既に翻訳があります。"
+
+#: batchop.rpotconsoleerror
+msgid "Error: --pot is required in console mode"
+msgstr "エラー: コンソールモードでは --pot が必要です"
+
+#: batchop.rpotnotfound
+#, object-pascal-format
+msgctxt "batchop.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT ファイルが見つかりません: %s"
+
+#: batchop.rrememberconfirm
+#, object-pascal-format
+msgid ""
+"Remember translations from the following %d file(s) into the memory?\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルの翻訳をメモリに記憶しますか？\n"
+"\n"
+"%s"
+
+#: batchop.rrememberdone
+#, object-pascal-format
+msgctxt "batchop.rrememberdone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "完了。%d 件の翻訳が記憶され、%d 件がスキップされました。"
+
+#: batchop.rremembertitle
+msgid "Remember translations"
+msgstr "翻訳を記憶"
+
+#: batchop.rremovefuzzytitle
+msgid "Remove fuzzy flag"
+msgstr "ファジーフラグを削除"
+
+#: batchop.rrenameconfirm
+#, object-pascal-format
+msgid ""
+"Rename the following %d file(s) using base name \"%s\"?\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルをベース名 \"%s\" で名前変更しますか？\n"
+"\n"
+"%s"
+
+#: batchop.rrenamefailed
+#, object-pascal-format
+msgid "Failed to rename: %s"
+msgstr "名前変更に失敗しました: %s"
+
+#: batchop.rrenameprompt
+msgid "Enter new base name:"
+msgstr "新しいベース名を入力:"
+
+#: batchop.rrenametitle
+msgid "Rename files"
+msgstr "ファイルの名前変更"
+
+#: batchop.rselectdeletemessage
+msgid "Select file to delete!"
+msgstr "削除するファイルを選択してください！"
+
+#: batchop.rselectrenamemessage
+msgid "Select file(s) to rename!"
+msgstr "名前変更するファイルを選択してください！"
+
+#: batchop.rsyncconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize the following %d file(s) with\n"
+"their matching POT files?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルを対応する POT ファイルと\n"
+"同期しますか？\n"
+"この操作はアプリケーション内で元に戻せません。\n"
+"\n"
+"%s"
+
+#: batchop.rsynccurrentconfirm
+#, object-pascal-format
+msgid ""
+"Synchronize current file\n"
+"  %s\n"
+"with reference POT\n"
+"  %s ?"
+msgstr ""
+"現在のファイル\n"
+"  %s\n"
+"を参照 POT\n"
+"  %s と同期しますか？"
+
+#: batchop.rsyncdone
+msgid "Synchronization complete."
+msgstr "同期が完了しました。"
+
+#: batchop.rsyncdoneskipped
+#, object-pascal-format
+msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
+msgstr "同期が完了しました。%d ファイルがスキップされました（一致する POT なし）。"
+
+#: batchop.rtargetlangnotset
+msgid "Target language is not set. Please specify the Language header in the PO file."
+msgstr "ターゲット言語が設定されていません。PO ファイルの Language ヘッダを指定してください。"
+
+#: batchop.rtranslateall
+msgid "Translate all entries in the current file?"
+msgstr "現在のファイルのすべてのエントリを翻訳しますか？"
+
+#: batchop.rtranslateallmissing
+msgid "Translate all missing translations in the current file?"
+msgstr "現在のファイルのすべての未翻訳を翻訳しますか？"
+
+#: batchop.rtranslatedone
+#, object-pascal-format
+msgid "Translation complete. %d entries updated."
+msgstr "翻訳が完了しました。%d 件のエントリが更新されました。"
+
+#: batchop.rtranslatedoneskipped
+#, object-pascal-format
+msgid "Translation complete. %d entries updated, %d skipped."
+msgstr "翻訳が完了しました。%d 件のエントリが更新され、%d 件がスキップされました。"
+
+#: batchop.rtranslatemissingconfirm
+#, object-pascal-format
+msgid ""
+"Translate missing translations in the following %d file(s)?\n"
+"This action cannot be undone within the application.\n"
+"\n"
+"%s"
+msgstr ""
+"以下の %d ファイルの未翻訳を翻訳しますか？\n"
+"この操作はアプリケーション内で元に戻せません。\n"
+"\n"
+"%s"
+
+#: batchop.rtranslatemissingselected
+#, object-pascal-format
+msgid "Translate missing translations in %d selected entries?"
+msgstr "選択した %d 件のエントリの未翻訳を翻訳しますか？"
+
+#: batchop.rtranslatemissingtitle
+msgid "Translate missing"
+msgstr "未翻訳を翻訳"
+
+#: batchop.rtranslateselected
+#, object-pascal-format
+msgid "Translate %d selected entries?"
+msgstr "選択した %d 件のエントリを翻訳しますか？"
+
+#: batchop.rtranslationconfignotselected
+msgid "Translation configuration is not selected. Please choose a translation service first."
+msgstr "翻訳設定が選択されていません。まず翻訳サービスを選択してください。"
+
+#: batchop.rtranslationerror
+#, object-pascal-format
+msgid "Translation error: %s"
+msgstr "翻訳エラー: %s"
+
+#: batchop.rtranslationlinecount
+#, object-pascal-format
+msgid ""
+"File \"%s\": translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"ファイル \"%s\": 翻訳サービスが %d 行を返しました（%d 行であるべきところ）。単一行エントリはスキップされました。\n"
+"\n"
+"応答:\n"
+"%s"
+
+#: batchop.rtranslationlinecountgrid
+#, object-pascal-format
+msgid ""
+"Translation service returned %d lines instead of %d; single-line entries were skipped.\n"
+"\n"
+"Response:\n"
+"%s"
+msgstr ""
+"翻訳サービスが %d 行を返しました（%d 行であるべきところ）。単一行エントリはスキップされました。\n"
+"\n"
+"応答:\n"
+"%s"
+
+#: consts.rcancelbatchconfirm
+msgctxt "consts.rcancelbatchconfirm"
+msgid "Do you want to cancel the current batch operation?"
+msgstr "現在のバッチ操作をキャンセルしますか？"
+
+#: consts.rcancelbatchtitle
+msgctxt "consts.rcancelbatchtitle"
+msgid "Cancel operation"
+msgstr "操作をキャンセル"
+
+#: consts.rdeletepluralconfirm
+msgctxt "consts.rdeletepluralconfirm"
+msgid "Are you sure you want to delete this plural form?"
+msgstr "この複数形を削除してもよろしいですか？"
+
+#: consts.rdeletepluraltitle
+msgctxt "consts.rdeletepluraltitle"
+msgid "Delete plural form?"
+msgstr "複数形を削除しますか？"
+
+#: consts.rdeleterowconfirm
+msgctxt "consts.rdeleterowconfirm"
+msgid "Are you sure you want to delete the selected row?"
+msgstr "選択した行を削除してもよろしいですか？"
+
+#: consts.rdeleterowsconfirm
+msgctxt "consts.rdeleterowsconfirm"
+msgid "Delete selected rows?"
+msgstr "選択した行を削除しますか？"
+
+#: consts.rdeleterowtitle
+msgctxt "consts.rdeleterowtitle"
+msgid "Delete row"
+msgstr "行を削除"
+
+#: consts.rdiscardchanges
+msgctxt "consts.rdiscardchanges"
+msgid "Do you want to discard all unsaved changes?"
+msgstr "保存されていないすべての変更を破棄しますか？"
+
+#: consts.rerrorinvalidfilename
+msgctxt "consts.rerrorinvalidfilename"
+msgid "Invalid file name"
+msgstr "無効なファイル名"
+
+#: consts.rerrornotexist
+#, object-pascal-format
+msgctxt "consts.rerrornotexist"
+msgid ""
+"File does not exist:\n"
+"%s"
+msgstr ""
+"ファイルが存在しません:\n"
+"%s"
+
+#: consts.rerrornotexistine
+#, object-pascal-format
+msgctxt "consts.rerrornotexistine"
+msgid "File does not exist: %s"
+msgstr "ファイルが存在しません: %s"
+
+#: consts.rerrortitle
+msgctxt "consts.rerrortitle"
+msgid "Error"
+msgstr "エラー"
+
+#: consts.rfilechangedcancel
+msgctxt "consts.rfilechangedcancel"
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: consts.rfilechangedkeepchanges
+msgctxt "consts.rfilechangedkeepchanges"
+msgid "Keep my changes"
+msgstr "変更を保持"
+
+#: consts.rfilechangedmsg
+#, object-pascal-format
+msgctxt "consts.rfilechangedmsg"
+msgid "The file \"%s\" has been modified by another application since it was opened."
+msgstr "ファイル \"%s\" は開かれてから別のアプリケーションによって変更されています。"
+
+#: consts.rfilechangedmsgactivate
+msgctxt "consts.rfilechangedmsgactivate"
+msgid "You have unsaved changes. Keep them or reload from disk?"
+msgstr "保存されていない変更があります。保持しますか、それともディスクから再読み込みしますか？"
+
+#: consts.rfilechangedmsgsave
+msgctxt "consts.rfilechangedmsgsave"
+msgid "You have unsaved changes. What would you like to do?"
+msgstr "保存されていない変更があります。どうしますか？"
+
+#: consts.rfilechangedoverwrite
+msgctxt "consts.rfilechangedoverwrite"
+msgid "Overwrite"
+msgstr "上書き"
+
+#: consts.rfilechangedreload
+msgctxt "consts.rfilechangedreload"
+msgid "Reload"
+msgstr "再読み込み"
+
+#: consts.rfilechangedreloaddisk
+msgctxt "consts.rfilechangedreloaddisk"
+msgid "Reload from disk"
+msgstr "ディスクから再読み込み"
+
+#: consts.rfilechangedtitle
+msgctxt "consts.rfilechangedtitle"
+msgid "File changed on disk"
+msgstr "ディスク上のファイルが変更されました"
+
+#: consts.rfilereloaded
+msgctxt "consts.rfilereloaded"
+msgid "File reloaded from disk"
+msgstr "ファイルがディスクから再読み込みされました"
+
+#: consts.rgotoentryprompt
+msgctxt "consts.rgotoentryprompt"
+msgid "Enter entry number:"
+msgstr "エントリ番号を入力:"
+
+#: consts.rgotoentrytitle
+msgctxt "consts.rgotoentrytitle"
+msgid "Go to entry"
+msgstr "エントリへ移動"
+
+#: consts.rinvalidnumber
+#, object-pascal-format
+msgctxt "consts.rinvalidnumber"
+msgid "Invalid number: %s"
+msgstr "無効な数値: %s"
+
+#: consts.rlargefileconfirm
+#, object-pascal-format
+msgctxt "consts.rlargefileconfirm"
+msgid ""
+"The file is very large (%d MB).\n"
+"Opening it may take a while. Continue?"
+msgstr ""
+"ファイルが非常に大きいです (%d MB)。\n"
+"開くのに時間がかかる場合があります。続行しますか？"
+
+#: consts.rlargefiletitle
+msgctxt "consts.rlargefiletitle"
+msgid "Large File"
+msgstr "大きなファイル"
+
+#: consts.rloaderrormsg
+#, object-pascal-format
+msgctxt "consts.rloaderrormsg"
+msgid ""
+"Error loading file:\n"
+"%s\n"
+"File may be corrupted or in wrong format."
+msgstr ""
+"ファイルの読み込みエラー:\n"
+"%s\n"
+"ファイルが破損しているか、形式が正しくない可能性があります。"
+
+#: consts.rloaderrortitle
+msgctxt "consts.rloaderrortitle"
+msgid "Load Error"
+msgstr "読み込みエラー"
+
+#: consts.rnopofilesfound
+msgctxt "consts.rnopofilesfound"
+msgid "No .po files found in the selected directory!"
+msgstr "選択したディレクトリに .po ファイルが見つかりません！"
+
+#: consts.rnotfoundentry
+#, object-pascal-format
+msgctxt "consts.rnotfoundentry"
+msgid "Entry number %s not found."
+msgstr "エントリ番号 %s が見つかりません。"
+
+#: consts.ropenfiletitle
+msgctxt "consts.ropenfiletitle"
+msgid "Open File"
+msgstr "ファイルを開く"
+
+#: consts.ropenfileunknown
+#, object-pascal-format
+msgctxt "consts.ropenfileunknown"
+msgid ""
+"The file \"%s\" has an unrecognized extension.\n"
+"Do you want to try opening it anyway?"
+msgstr ""
+"ファイル \"%s\" の拡張子は認識されません。\n"
+"それでも開いてみますか？"
+
+#: consts.ropenrecentclear
+msgctxt "consts.ropenrecentclear"
+msgid "Clear List"
+msgstr "リストをクリア"
+
+#: consts.rpathuntitled
+#, object-pascal-format
+msgctxt "consts.rpathuntitled"
+msgid "%s - Untitled"
+msgstr "%s - 無題"
+
+#: consts.rpluralformenter
+msgctxt "consts.rpluralformenter"
+msgid "Enter plural form"
+msgstr "複数形を入力"
+
+#: consts.rpluralformtitle
+msgctxt "consts.rpluralformtitle"
+msgid "Plural form"
+msgstr "複数形"
+
+#: consts.rpotnotfound
+#, object-pascal-format
+msgctxt "consts.rpotnotfound"
+msgid "POT file not found: %s"
+msgstr "POT ファイルが見つかりません: %s"
+
+#: consts.rqacheckscaption
+msgctxt "consts.rqacheckscaption"
+msgid "QA Checks"
+msgstr "QA チェック"
+
+#: consts.rrememberfiledone
+#, object-pascal-format
+msgctxt "consts.rrememberfiledone"
+msgid "Done. %d translation(s) remembered, %d skipped."
+msgstr "完了。%d 件の翻訳が記憶され、%d 件がスキップされました。"
+
+#: consts.rrememberfilelangnotset
+#, object-pascal-format
+msgctxt "consts.rrememberfilelangnotset"
+msgid "File \"%s\" skipped: target language is not set in the PO header."
+msgstr "ファイル \"%s\" はスキップされました: PO ヘッダにターゲット言語が設定されていません。"
+
+#: consts.rrememberfiletitle
+msgctxt "consts.rrememberfiletitle"
+msgid "Remember file"
+msgstr "ファイルを記憶"
+
+#: consts.rrequiredparamprompt
+#, object-pascal-format
+msgctxt "consts.rrequiredparamprompt"
+msgid "Enter %s"
+msgstr "%s を入力"
+
+#: consts.rrequiredparamtitle
+msgctxt "consts.rrequiredparamtitle"
+msgid "Enter the required parameter"
+msgstr "必須パラメータを入力"
+
+#: consts.rsavechangesmsg
+#, object-pascal-format
+msgctxt "consts.rsavechangesmsg"
+msgid ""
+"The document \"%s\" has been modified.\n"
+"Do you want to save your changes?"
+msgstr ""
+"ドキュメント \"%s\" は変更されています。\n"
+"変更を保存しますか？"
+
+#: consts.rsavechangestitle
+msgctxt "consts.rsavechangestitle"
+msgid "Save Changes"
+msgstr "変更を保存"
+
+#: consts.rsaveerrormsg
+#, object-pascal-format
+msgctxt "consts.rsaveerrormsg"
+msgid ""
+"Error saving file:\n"
+"%s"
+msgstr ""
+"ファイルの保存エラー:\n"
+"%s"
+
+#: consts.rsaveerrortitle
+msgctxt "consts.rsaveerrortitle"
+msgid "Save Error"
+msgstr "保存エラー"
+
+#: consts.rstatuscr
+msgctxt "consts.rstatuscr"
+msgid "Mac (CR)"
+msgstr "Mac (CR)"
+
+#: consts.rstatuscrlf
+msgctxt "consts.rstatuscrlf"
+msgid "Windows (CRLF)"
+msgstr "Windows (CRLF)"
+
+#: consts.rstatusinvalid
+#, object-pascal-format
+msgctxt "consts.rstatusinvalid"
+msgid "Invalid: %d (Fuzzy %d, QA %d, Empty %d)"
+msgstr "無効: %d (ファジー %d, QA %d, 空 %d)"
+
+#: consts.rstatusinvalidhint
+msgctxt "consts.rstatusinvalidhint"
+msgid "Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations"
+msgstr "無効なエントリ: 合計数と、ファジーフラグ、QA 問題、空の翻訳による内訳"
+
+#: consts.rstatuslf
+msgctxt "consts.rstatuslf"
+msgid "Unix (LF)"
+msgstr "Unix (LF)"
+
+#: consts.rstatuslineendinghint
+msgctxt "consts.rstatuslineendinghint"
+msgid "Line ending style used when saving the file"
+msgstr "ファイル保存時に使用される改行スタイル"
+
+#: consts.rstatustranslated
+#, object-pascal-format
+msgctxt "consts.rstatustranslated"
+msgid "Translated %d of %d (%d%%) Remaining %d"
+msgstr "%d / %d 翻訳済み (%d%%) 残り %d"
+
+#: consts.rstatustranslatedhint
+msgctxt "consts.rstatustranslatedhint"
+msgid "Translation progress: translated entries of the total, percentage, remaining count"
+msgstr "翻訳の進捗: 合計に対する翻訳済みエントリ、パーセンテージ、残り数"
+
+#: consts.runtitled
+msgctxt "consts.runtitled"
+msgid "Untitled"
+msgstr "無題"
+
+#: formsettings.rdefaultfont
+msgid "Default"
+msgstr "デフォルト"
+
+#: formsettings.rdefaultsettings
+msgid "Are you sure you want to restore default settings?"
+msgstr "デフォルト設定に戻してもよろしいですか？"
+
+#: formsettings.rproxymodecustomproxy
+msgid "Custom Proxy"
+msgstr "カスタムプロキシ"
+
+#: formsettings.rproxymodenoproxy
+msgctxt "formsettings.rproxymodenoproxy"
+msgid "No Proxy"
+msgstr "プロキシなし"
+
+#: formsettings.rproxymodesystemproxy
+msgid "System Proxy"
+msgstr "システムプロキシ"
+
+#: formsettings.rtmclearalldone
+#, object-pascal-format
+msgid "Deleted %d language pair(s)."
+msgstr "%d 件の言語ペアが削除されました。"
+
+#: formsettings.rtmclearconfirm
+#, object-pascal-format
+msgid ""
+"Delete the selected %d language pair(s)?\n"
+"This action cannot be undone."
+msgstr ""
+"選択した %d 件の言語ペアを削除しますか？\n"
+"この操作は元に戻せません。"
+
+#: formsettings.rtmcleartitle
+msgid "Clear translation memory"
+msgstr "翻訳メモリをクリア"
+
+#: formsettings.rtmcompactconfirm
+#, object-pascal-format
+msgid ""
+"Rebuild the selected %d language pair(s)?\n"
+"Entries that no longer match the current filters (length, multi-line) will be removed."
+msgstr ""
+"選択した %d 件の言語ペアを再構築しますか？\n"
+"現在のフィルタ（長さ、複数行）に一致しなくなったエントリは削除されます。"
+
+#: formsettings.rtmcompactdone
+#, object-pascal-format
+msgid "Compacted %d language pair(s)."
+msgstr "%d 件の言語ペアがコンパクト化されました。"
+
+#: formsettings.rtmcompacttitle
+msgid "Compact translation memory"
+msgstr "翻訳メモリをコンパクト化"
+
+#: formsettings.rtmexportdone
+#, object-pascal-format
+msgid "Exported %d language pair(s)."
+msgstr "%d 件の言語ペアがエクスポートされました。"
+
+#: formsettings.rtmexportfilter
+msgid "Zip archives (*.zip)|*.zip"
+msgstr "ZIP アーカイブ (*.zip)|*.zip"
+
+#: formsettings.rtmexportnothing
+msgid "No language pairs selected."
+msgstr "言語ペアが選択されていません。"
+
+#: formsettings.rtmexporttitle
+msgid "Export translation memory"
+msgstr "翻訳メモリをエクスポート"
+
+#: formsettings.rtmimportdone
+#, object-pascal-format
+msgid "Imported %d language pair(s)."
+msgstr "%d 件の言語ペアがインポートされました。"
+
+#: formsettings.rtmimporterror
+#, object-pascal-format
+msgid "Cannot import file: %s"
+msgstr "ファイルをインポートできません: %s"
+
+#: formsettings.rtmimportfilter
+msgid "Translation memory (*.zip;*.txt)|*.zip;*.txt|Zip archives (*.zip)|*.zip|Text files (*.txt)|*.txt"
+msgstr "翻訳メモリ (*.zip;*.txt)|*.zip;*.txt|ZIP アーカイブ (*.zip)|*.zip|テキストファイル (*.txt)|*.txt"
+
+#: formsettings.rtmimporttitle
+msgid "Import translation memory"
+msgstr "翻訳メモリをインポート"
+
+#: formsettings.rtminvalidpair
+#, object-pascal-format
+msgid "Cannot determine language pair from \"%s\". Expected format: \"xx-yy\"."
+msgstr "\"%s\" から言語ペアを特定できません。期待される形式: \"xx-yy\"。"
+
+#: formsettings.rtmreaderror
+#, object-pascal-format
+msgid "Cannot read archive: %s"
+msgstr "アーカイブを読み取れません: %s"
+
+#: formsettings.rtmstatsentries
+msgid "Entries"
+msgstr "エントリ"
+
+#: formsettings.rtmstatsmodified
+msgid "Modified"
+msgstr "変更日時"
+
+#: formsettings.rtmstatssize
+msgid "Size"
+msgstr "サイズ"
+
+#: formsettings.rtmstatssource
+msgid "Source"
+msgstr "ソース"
+
+#: formsettings.rtmstatstarget
+msgid "Target"
+msgstr "ターゲット"
+
+#: formsettings.rtmstatstotal
+msgid "Total"
+msgstr "合計"
+
+#: formsettings.rtmstoragetitle
+msgid "Select translation memory folder"
+msgstr "翻訳メモリのフォルダを選択"
+
+#: formsettings.ruserparameterkey
+msgctxt "formsettings.ruserparameterkey"
+msgid "Name"
+msgstr "名前"
+
+#: formsettings.ruserparametervalue
+msgctxt "formsettings.ruserparametervalue"
+msgid "Value"
+msgstr "値"
+
+#: pocheck.rsqacasemismatch
+#, object-pascal-format
+msgid "Case mismatch: source starts with \"%s\", translation starts with \"%s\""
+msgstr "大文字/小文字の不一致: ソースは \"%s\" で始まり、翻訳は \"%s\" で始まります"
+
+#: pocheck.rsqacasemismatchupper
+msgid "Case mismatch: source is all uppercase, translation is not"
+msgstr "大文字/小文字の不一致: ソースはすべて大文字ですが、翻訳はそうではありません"
+
+#: pocheck.rsqanewlineleadingmismatch
+msgid "Leading newline mismatch"
+msgstr "先頭の改行の不一致"
+
+#: pocheck.rsqanewlinetrailingmismatch
+msgid "Trailing newline mismatch"
+msgstr "末尾の改行の不一致"
+
+#: pocheck.rsqaplaceholderextra
+#, object-pascal-format
+msgid "Extra placeholder in translation: %s"
+msgstr "翻訳に余分なプレースホルダがあります: %s"
+
+#: pocheck.rsqaplaceholdermissing
+#, object-pascal-format
+msgid "Missing placeholder in translation: %s"
+msgstr "翻訳にプレースホルダがありません: %s"
+
+#: pocheck.rsqapluralformsmismatch
+#, object-pascal-format
+msgid "Plural forms count mismatch: expected %d, found %d"
+msgstr "複数形の数の不一致: 期待値 %d、検出値 %d"
+
+#: pocheck.rsqapunctuationbracketmismatch
+#, object-pascal-format
+msgid "Bracket mismatch: expected \"%s\", found \"%s\""
+msgstr "括弧の不一致: 期待値 \"%s\"、検出値 \"%s\""
+
+#: pocheck.rsqapunctuationendmismatch
+#, object-pascal-format
+msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
+msgstr "末尾の句読点の不一致: ソースは \"%s\" で終わり、翻訳は \"%s\" で終わります"
+
+#: pocheck.rsqaspacebeforepunctuation
+#, object-pascal-format
+msgid "Space before punctuation: \"%s\""
+msgstr "句読点の前のスペース: \"%s\""
+
+#: pocheck.rsqaspacedouble
+msgctxt "pocheck.rsqaspacedouble"
+msgid "Double space in translation"
+msgstr "翻訳に二重スペース"
+
+#: pocheck.rsqaspaceleading
+msgctxt "pocheck.rsqaspaceleading"
+msgid "Leading space in translation"
+msgstr "翻訳の先頭のスペース"
+
+#: pocheck.rsqaspacemissingafterpunctuation
+#, object-pascal-format
+msgid "Missing space after punctuation: \"%s\""
+msgstr "句読点の後のスペースがありません: \"%s\""
+
+#: pocheck.rsqaspacetrailing
+msgctxt "pocheck.rsqaspacetrailing"
+msgid "Trailing space in translation"
+msgstr "翻訳の末尾のスペース"
+
+#: tformaboutpobatch.buttonok.caption
+msgctxt "tformaboutpobatch.buttonok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformaboutpobatch.caption
+msgid "About"
+msgstr "バージョン情報"
+
+#: tformaboutpobatch.label1.caption
+msgid "the GNU General Public License, Version 3"
+msgstr "GNU General Public License、バージョン 3"
+
+#: tformaboutpobatch.labelby.caption
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "Alexander Tverskoy による作品は以下でライセンスされています"
+
+#: tformaboutpobatch.labellic.caption
+msgid "For questions or feedback, contact me at"
+msgstr "質問やフィードバックはこちらまで"
+
+#: tformaboutpobatch.labellicurl.caption
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformaboutpobatch.labellicurl.hint
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformaboutpobatch.labelname.caption
+msgid "PoBatch © 2026"
+msgstr "PoBatch © 2026"
+
+#: tformaboutpobatch.labelurlgithub.caption
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformaboutpobatch.labelurlgithub.hint
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformaboutpobatch.labelversion.caption
+msgid "Version"
+msgstr "バージョン"
+
+#: tformdonatepobatch.btnok.caption
+msgctxt "tformdonatepobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformdonatepobatch.caption
+msgid "Buy me a coffee"
+msgstr "コーヒーをおごる"
+
+#: tformdonatepobatch.labelbank.caption
+msgid "Donate with Bank Card or PayPal"
+msgstr "銀行カードまたは PayPal で寄付"
+
+#: tformdonatepobatch.labelbank.hint
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformdonatepobatch.labelcontribution.caption
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "すべての貢献がプロジェクトを活性化し、前進させるのに役立ちます。ご支援ありがとうございます！"
+
+#: tformdonatepobatch.labelcrypto.caption
+msgid "Donate with Cryptocurrency"
+msgstr "暗号通貨で寄付"
+
+#: tformdonatepobatch.labelcrypto.hint
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformdonatepobatch.labeldonate.caption
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "こんにちは！この情熱的なプロジェクトに少しのカフェインを！すべての寄付がコードを動かし、コーヒーを淹れ続けるのに役立ちます。作品とその背後にいる開発者を支援していただきありがとうございます！"
+
+#: tformdonatepobatch.labelsupport.caption
+msgid "You can support development through one of the following options:"
+msgstr "以下のいずれかの方法で開発を支援できます:"
+
+#: tformpobatch.acheckcaseallupper.caption
+msgid "Case mismatch: source is all uppercase"
+msgstr "大文字/小文字の不一致: ソースはすべて大文字"
+
+#: tformpobatch.acheckcasefirstchar.caption
+msgid "Case mismatch: first character"
+msgstr "大文字/小文字の不一致: 最初の文字"
+
+#: tformpobatch.acheckenabled.caption
+msgid "QA Checks Enabled"
+msgstr "QA チェックが有効"
+
+#: tformpobatch.achecknewlines.caption
+msgid "Newline mismatch (leading / trailing)"
+msgstr "改行の不一致（先頭 / 末尾）"
+
+#: tformpobatch.acheckplaceholderextra.caption
+msgid "Extra placeholder in translation"
+msgstr "翻訳に余分なプレースホルダ"
+
+#: tformpobatch.acheckplaceholdermissing.caption
+msgid "Missing placeholder in translation"
+msgstr "翻訳にプレースホルダがありません"
+
+#: tformpobatch.acheckpluralcount.caption
+msgid "Plural forms count mismatch"
+msgstr "複数形の数の不一致"
+
+#: tformpobatch.acheckpunctbracket.caption
+msgid "Bracket mismatch"
+msgstr "括弧の不一致"
+
+#: tformpobatch.acheckpunctend.caption
+msgid "End punctuation mismatch"
+msgstr "末尾の句読点の不一致"
+
+#: tformpobatch.acheckspaceafterpunct.caption
+msgid "Missing space after punctuation"
+msgstr "句読点の後のスペースがありません"
+
+#: tformpobatch.acheckspacebeforepunct.caption
+msgid "Space before punctuation"
+msgstr "句読点の前のスペース"
+
+#: tformpobatch.acheckspacedouble.caption
+msgctxt "tformpobatch.acheckspacedouble.caption"
+msgid "Double space in translation"
+msgstr "翻訳に二重スペース"
+
+#: tformpobatch.acheckspaceleading.caption
+msgctxt "tformpobatch.acheckspaceleading.caption"
+msgid "Leading space in translation"
+msgstr "翻訳の先頭のスペース"
+
+#: tformpobatch.acheckspacetrailing.caption
+msgctxt "tformpobatch.acheckspacetrailing.caption"
+msgid "Trailing space in translation"
+msgstr "翻訳の末尾のスペース"
+
+#: tformpobatch.aclearidentical.caption
+msgid "Clear Identical"
+msgstr "同一のものをクリア"
+
+#: tformpobatch.aclosepath.caption
+msgid "Close Path"
+msgstr "パスを閉じる"
+
+#: tformpobatch.acopy.caption
+msgctxt "tformpobatch.acopy.caption"
+msgid "Copy"
+msgstr "コピー"
+
+#: tformpobatch.acopysourcetext.caption
+msgid "Copy Source Text"
+msgstr "ソーステキストをコピー"
+
+#: tformpobatch.acut.caption
+msgctxt "tformpobatch.acut.caption"
+msgid "Cut"
+msgstr "切り取り"
+
+#: tformpobatch.adelete.caption
+msgid "Delete"
+msgstr "削除"
+
+#: tformpobatch.aeditpluralform.caption
+msgid "Edit Plural Form"
+msgstr "複数形を編集"
+
+#: tformpobatch.aedittranslationonly.caption
+msgid "Edit Translation Only"
+msgstr "翻訳のみ編集"
+
+#: tformpobatch.aexit.caption
+msgid "Exit"
+msgstr "終了"
+
+#: tformpobatch.agoto.caption
+msgid "Go To..."
+msgstr "移動..."
+
+#: tformpobatch.alangarabic.caption
+msgid "Arabic"
+msgstr "العربية"
+
+#: tformpobatch.alangbelarusian.caption
+msgid "Belarusian"
+msgstr "Беларуская"
+
+#: tformpobatch.alangbulgarian.caption
+msgid "Bulgarian"
+msgstr "Български"
+
+#: tformpobatch.alangchinese.caption
+msgid "Chinese"
+msgstr "中文"
+
+#: tformpobatch.alangcustom.caption
+msgid "Custom File..."
+msgstr "Custom File..."
+
+#: tformpobatch.alangczech.caption
+msgid "Czech"
+msgstr "Čeština"
+
+#: tformpobatch.alangdanish.caption
+msgid "Danish"
+msgstr "Dansk"
+
+#: tformpobatch.alangdutch.caption
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: tformpobatch.alangenglish.caption
+msgid "English"
+msgstr "English"
+
+#: tformpobatch.alangfinnish.caption
+msgid "Finnish"
+msgstr "Suomi"
+
+#: tformpobatch.alangfrench.caption
+msgid "French"
+msgstr "Français"
+
+#: tformpobatch.alanggerman.caption
+msgid "German"
+msgstr "Deutsch"
+
+#: tformpobatch.alanggreek.caption
+msgid "Greek"
+msgstr "Ελληνικά"
+
+#: tformpobatch.alanghebrew.caption
+msgid "Hebrew"
+msgstr "עברית"
+
+#: tformpobatch.alanghindi.caption
+msgid "Hindi"
+msgstr "हिन्दी"
+
+#: tformpobatch.alangindonesian.caption
+msgid "Indonesian"
+msgstr "Bahasa Indonesia"
+
+#: tformpobatch.alangitalian.caption
+msgid "Italian"
+msgstr "Italiano"
+
+#: tformpobatch.alangjapanese.caption
+msgid "Japanese"
+msgstr "日本語"
+
+#: tformpobatch.alangkorean.caption
+msgid "Korean"
+msgstr "한국어"
+
+#: tformpobatch.alangpolish.caption
+msgid "Polish"
+msgstr "Polski"
+
+#: tformpobatch.alangportuguese.caption
+msgid "Portuguese"
+msgstr "Português"
+
+#: tformpobatch.alangportuguesebrazil.caption
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: tformpobatch.alangromanian.caption
+msgid "Romanian"
+msgstr "Română"
+
+#: tformpobatch.alangrussian.caption
+msgid "Russian"
+msgstr "Русский"
+
+#: tformpobatch.alangspanish.caption
+msgid "Spanish"
+msgstr "Español"
+
+#: tformpobatch.alangswedish.caption
+msgid "Swedish"
+msgstr "Svenska"
+
+#: tformpobatch.alangturkish.caption
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: tformpobatch.alangukrainian.caption
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: tformpobatch.alangvietnamese.caption
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+#: tformpobatch.amarkasvalid.caption
+msgid "Mark As Valid"
+msgstr "有効としてマーク"
+
+#: tformpobatch.amemobidirighttoleft.caption
+msgid "Right-To-Left Reading Order"
+msgstr "右から左への読み順"
+
+#: tformpobatch.amemoclear.caption
+msgid "Clear"
+msgstr "クリア"
+
+#: tformpobatch.amemocopy.caption
+msgctxt "tformpobatch.amemocopy.caption"
+msgid "Copy"
+msgstr "コピー"
+
+#: tformpobatch.amemocut.caption
+msgctxt "tformpobatch.amemocut.caption"
+msgid "Cut"
+msgstr "切り取り"
+
+#: tformpobatch.amemodefaultzoom.caption
+msgid "Default Zoom"
+msgstr "デフォルトのズーム"
+
+#: tformpobatch.amemopaste.caption
+msgctxt "tformpobatch.amemopaste.caption"
+msgid "Paste"
+msgstr "貼り付け"
+
+#: tformpobatch.amemoselectall.caption
+msgctxt "tformpobatch.amemoselectall.caption"
+msgid "Select All"
+msgstr "すべて選択"
+
+#: tformpobatch.amemoundo.caption
+msgid "Undo"
+msgstr "元に戻す"
+
+#: tformpobatch.anew.caption
+msgid "New"
+msgstr "新規"
+
+#: tformpobatch.anewfrompot.caption
+msgid "New From Pot..."
+msgstr "POT から新規作成..."
+
+#: tformpobatch.anewwindow.caption
+msgid "New Window"
+msgstr "新しいウィンドウ"
+
+#: tformpobatch.aopen.caption
+msgid "Open"
+msgstr "開く"
+
+#: tformpobatch.aopenpath.caption
+msgid "Open Path..."
+msgstr "パスを開く..."
+
+#: tformpobatch.apaste.caption
+msgctxt "tformpobatch.apaste.caption"
+msgid "Paste"
+msgstr "貼り付け"
+
+#: tformpobatch.apathclearall.caption
+msgid "Clear All Translations"
+msgstr "すべての翻訳をクリア"
+
+#: tformpobatch.apathclearfuzzy.caption
+msgid "Clear Fuzzy Translations"
+msgstr "ファジー翻訳をクリア"
+
+#: tformpobatch.apathcopysource.caption
+msgid "Copy Source To Empty"
+msgstr "ソースを空の翻訳にコピー"
+
+#: tformpobatch.apathdeletefiles.caption
+msgid "Delete File(s)"
+msgstr "ファイルを削除"
+
+#: tformpobatch.apathnewfilesfrompot.caption
+msgid "New File(s) From Pot..."
+msgstr "POT から新規ファイル..."
+
+#: tformpobatch.apathremember.caption
+msgid "Remember Translations"
+msgstr "翻訳を記憶"
+
+#: tformpobatch.apathrenamefiles.caption
+msgid "Rename File(s)"
+msgstr "ファイルの名前変更"
+
+#: tformpobatch.apathrescan.caption
+msgid "Rescan Path"
+msgstr "パスを再スキャン"
+
+#: tformpobatch.apathselectall.caption
+msgctxt "tformpobatch.apathselectall.caption"
+msgid "Select All"
+msgstr "すべて選択"
+
+#: tformpobatch.apathshowfileinexplorer.caption
+msgid "Show File In Explorer..."
+msgstr "エクスプローラでファイルを表示..."
+
+#: tformpobatch.apathsyncfileswithpot.caption
+msgid "Sync File(s) With Pot"
+msgstr "ファイルを POT と同期"
+
+#: tformpobatch.apathtranslatemissing.caption
+msgid "Translate Missing In File(s)"
+msgstr "ファイル内の未翻訳を翻訳"
+
+#: tformpobatch.apathtranslatemissingfrommemory.caption
+msgid "Translate Missing In File(s) From Memory"
+msgstr "メモリからファイル内の未翻訳を翻訳"
+
+#: tformpobatch.apathvalidfiles.caption
+msgid "Mark File(s) As Valid"
+msgstr "ファイルを有効としてマーク"
+
+#: tformpobatch.arememberfile.caption
+msgid "Remember File..."
+msgstr "ファイルを記憶..."
+
+#: tformpobatch.arememberpath.caption
+msgid "Remember Path..."
+msgstr "パスを記憶..."
+
+#: tformpobatch.asave.caption
+msgid "Save"
+msgstr "保存"
+
+#: tformpobatch.asaveas.caption
+msgid "Save As..."
+msgstr "名前を付けて保存..."
+
+#: tformpobatch.aselectall.caption
+msgctxt "tformpobatch.aselectall.caption"
+msgid "Select All"
+msgstr "すべて選択"
+
+#: tformpobatch.asettings.caption
+msgid "Settings..."
+msgstr "設定..."
+
+#: tformpobatch.aspellchecksource.caption
+msgid "Spell Check Source"
+msgstr "ソースのスペルチェック"
+
+#: tformpobatch.aspellchecktranslation.caption
+msgid "Spell Check Translation"
+msgstr "翻訳のスペルチェック"
+
+#: tformpobatch.asyncwithpot.caption
+msgid "Sync With Pot"
+msgstr "POT と同期"
+
+#: tformpobatch.atranslatefrommemory.caption
+msgid "Translate From Memory"
+msgstr "メモリから翻訳"
+
+#: tformpobatch.atranslatemissing.caption
+msgid "Translate Missing"
+msgstr "未翻訳を翻訳"
+
+#: tformpobatch.atranslatemissingfrommemory.caption
+msgid "Translate Missing From Memory"
+msgstr "メモリから未翻訳を翻訳"
+
+#: tformpobatch.atranslateselected.caption
+msgid "Translate Selected"
+msgstr "選択項目を翻訳"
+
+#: tformpobatch.aundochanges.caption
+msgid "Undo Changes"
+msgstr "変更を元に戻す"
+
+#: tformpobatch.awordwrapgrid.caption
+msgid "Word Wrap - Grid"
+msgstr "折り返し - グリッド"
+
+#: tformpobatch.awordwraptranslatepanel.caption
+msgid "Word Wrap - Translate Panel"
+msgstr "折り返し - 翻訳パネル"
+
+#: tformpobatch.caption
+msgid "formPoBatch"
+msgstr "formPoBatch"
+
+#: tformpobatch.contextmacintoshcr.caption
+msgid "MacintoshCR"
+msgstr "MacintoshCR"
+
+#: tformpobatch.contextunixlf.caption
+msgid "UnixLF"
+msgstr "UnixLF"
+
+#: tformpobatch.contextwindowscrlf.caption
+msgid "WindowsCRLF"
+msgstr "WindowsCRLF"
+
+#: tformpobatch.filter.texthint
+msgid "Type to filter..."
+msgstr "入力してフィルタ..."
+
+#: tformpobatch.grid.columns[0].title.caption
+msgid "Valid"
+msgstr "有効"
+
+#: tformpobatch.grid.columns[1].title.caption
+msgid "Source Text"
+msgstr "ソーステキスト"
+
+#: tformpobatch.grid.columns[2].title.caption
+msgid "Translation"
+msgstr "翻訳"
+
+#: tformpobatch.grid.columns[3].title.caption
+msgid "Context"
+msgstr "コンテキスト"
+
+#: tformpobatch.grid.columns[4].title.caption
+msgid "Plural"
+msgstr "複数形"
+
+#: tformpobatch.grid.columns[5].title.caption
+msgid "Reference"
+msgstr "参照"
+
+#: tformpobatch.grid.columns[6].title.caption
+msgid "Fuzzy"
+msgstr "ファジー"
+
+#: tformpobatch.gridcomments.columns[0].title.caption
+msgid "Type"
+msgstr "タイプ"
+
+#: tformpobatch.gridcomments.columns[1].title.caption
+msgctxt "tformpobatch.gridcomments.columns[1].title.caption"
+msgid "Value"
+msgstr "値"
+
+#: tformpobatch.gridheaders.columns[0].title.caption
+msgctxt "tformpobatch.gridheaders.columns[0].title.caption"
+msgid "Name"
+msgstr "名前"
+
+#: tformpobatch.gridheaders.columns[1].title.caption
+msgctxt "tformpobatch.gridheaders.columns[1].title.caption"
+msgid "Value"
+msgstr "値"
+
+#: tformpobatch.gridplural.columns[0].title.caption
+msgid "Plural Forms"
+msgstr "複数形"
+
+#: tformpobatch.labelswitch.caption
+msgid "Needs Validation"
+msgstr "検証が必要"
+
+#: tformpobatch.memoplural.hint
+msgctxt "tformpobatch.memoplural.hint"
+msgid "Plural form"
+msgstr "複数形"
+
+#: tformpobatch.menuabout.caption
+msgid "About..."
+msgstr "バージョン情報..."
+
+#: tformpobatch.menuautocheckupdates.caption
+msgid "Auto Check Updates"
+msgstr "アップデートを自動チェック"
+
+#: tformpobatch.menubuymeacoffee.caption
+msgid "Buy Me a Coffee..."
+msgstr "コーヒーをおごる..."
+
+#: tformpobatch.menucheckforupdates.caption
+msgid "Check For Updates"
+msgstr "アップデートをチェック"
+
+#: tformpobatch.menuedit.caption
+msgid "Edit"
+msgstr "編集"
+
+#: tformpobatch.menufile.caption
+msgid "File"
+msgstr "ファイル"
+
+#: tformpobatch.menufileopenrecent.caption
+msgctxt "tformpobatch.menufileopenrecent.caption"
+msgid "Open Recent"
+msgstr "最近使ったファイルを開く"
+
+#: tformpobatch.menuformat.caption
+msgid "Format"
+msgstr "書式"
+
+#: tformpobatch.menuformatqachecks.caption
+msgctxt "tformpobatch.menuformatqachecks.caption"
+msgid "QA Checks"
+msgstr "QA チェック"
+
+#: tformpobatch.menuhelp.caption
+msgid "Help"
+msgstr "ヘルプ"
+
+#: tformpobatch.menuhelpgnugettext.caption
+msgid "GNU gettext"
+msgstr "GNU gettext"
+
+#: tformpobatch.menuhelpgnugettext.hint
+msgid "https://www.gnu.org/software/gettext/manual"
+msgstr "https://www.gnu.org/software/gettext/manual"
+
+#: tformpobatch.menulanguage.caption
+msgid "Language"
+msgstr "Language"
+
+#: tformpobatch.menutranslate.caption
+msgctxt "tformpobatch.menutranslate.caption"
+msgid "Translate"
+msgstr "翻訳"
+
+#: tformpobatch.menutranslateconfig.caption
+msgid "Config"
+msgstr "設定"
+
+#: tformpobatch.menuview.caption
+msgid "View"
+msgstr "表示"
+
+#: tformpobatch.menuviewcolumncontext.caption
+msgctxt "tformpobatch.menuviewcolumncontext.caption"
+msgid "Column Context"
+msgstr "コンテキスト列"
+
+#: tformpobatch.menuviewcolumnplural.caption
+msgctxt "tformpobatch.menuviewcolumnplural.caption"
+msgid "Column Plural"
+msgstr "複数形列"
+
+#: tformpobatch.menuviewcolumnreference.caption
+msgctxt "tformpobatch.menuviewcolumnreference.caption"
+msgid "Column Reference"
+msgstr "参照列"
+
+#: tformpobatch.menuviewheaders.caption
+msgctxt "tformpobatch.menuviewheaders.caption"
+msgid "Headers"
+msgstr "ヘッダ"
+
+#: tformpobatch.menuviewtranslatepanel.caption
+msgctxt "tformpobatch.menuviewtranslatepanel.caption"
+msgid "Translate Panel"
+msgstr "翻訳パネル"
+
+#: tformpobatch.pagecomments.caption
+msgid "Comments"
+msgstr "コメント"
+
+#: tformpobatch.pagetranslate.caption
+msgctxt "tformpobatch.pagetranslate.caption"
+msgid "Translate"
+msgstr "翻訳"
+
+#: tformpobatch.spellsource.addtodictionarycaption
+msgctxt "tformpobatch.spellsource.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "辞書に追加"
+
+#: tformpobatch.spelltranslation.addtodictionarycaption
+msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
+msgid "Add To Dictionary"
+msgstr "辞書に追加"
+
+#: tformsettingspobatch.btnapply.caption
+msgid "Apply"
+msgstr "適用"
+
+#: tformsettingspobatch.btncancel.caption
+msgctxt "tformsettingspobatch.btncancel.caption"
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: tformsettingspobatch.btndefault.caption
+msgid "Restore Defaults"
+msgstr "デフォルトに戻す"
+
+#: tformsettingspobatch.btnfont.caption
+msgid "Font..."
+msgstr "フォント..."
+
+#: tformsettingspobatch.btnok.caption
+msgctxt "tformsettingspobatch.btnok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tformsettingspobatch.btnreset.caption
+msgid "Reset"
+msgstr "リセット"
+
+#: tformsettingspobatch.caption
+msgid "Settings"
+msgstr "設定"
+
+#: tformsettingspobatch.checkproxyauthentication.caption
+msgid "Authentication"
+msgstr "認証"
+
+#: tformsettingspobatch.checkproxyauthentication.hint
+msgid "Enables login and password authentication for proxy access"
+msgstr "プロキシアクセスのログインとパスワード認証を有効にします"
+
+#: tformsettingspobatch.checkrememberlastfile.caption
+msgid "Remember Last Opened File"
+msgstr "最後に開いたファイルを記憶"
+
+#: tformsettingspobatch.checkrememberlastfile.hint
+msgid "Automatically reopen the last opened translation file when the application starts."
+msgstr "アプリケーション起動時に最後に開いた翻訳ファイルを自動的に再度開きます。"
+
+#: tformsettingspobatch.checkshowsuccess.caption
+msgid "Show Success Notifications"
+msgstr "成功通知を表示"
+
+#: tformsettingspobatch.checkshowsuccess.hint
+msgid "Display a notification when an operation completes successfully"
+msgstr "操作が正常に完了したときに通知を表示します"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.caption
+msgid "Skip Multi-Line Strings"
+msgstr "複数行文字列をスキップ"
+
+#: tformsettingspobatch.checkskiptmmultilinestrings.hint
+msgid "Ignore entries whose source text spans multiple lines."
+msgstr "ソーステキストが複数行にわたるエントリを無視します。"
+
+#: tformsettingspobatch.checkswitchtotable.caption
+msgid "Switch To Translation Table On File Selection"
+msgstr "ファイル選択時に翻訳テーブルに切り替え"
+
+#: tformsettingspobatch.checkswitchtotable.hint
+msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
+msgstr "ファイルが選択されたときに自動的に翻訳テーブルに切り替えます。代わりにファイルリストにフォーカスするには、既に選択されているファイルをもう一度クリックします。"
+
+#: tformsettingspobatch.checktmautopopulateonsave.caption
+msgid "Auto Populate On Save"
+msgstr "保存時に自動入力"
+
+#: tformsettingspobatch.checktmautopopulateonsave.hint
+msgid "Store current file translations into the memory on every save."
+msgstr "保存するたびに現在のファイルの翻訳をメモリに保存します。"
+
+#: tformsettingspobatch.checktmenabled.caption
+msgid "Enabled"
+msgstr "有効"
+
+#: tformsettingspobatch.checktmenabled.hint
+msgid "Enable or disable the translation memory entirely."
+msgstr "翻訳メモリを完全に有効または無効にします。"
+
+#: tformsettingspobatch.comboproxymode.hint
+msgid "Defines how proxy is used no proxy system proxy or custom configuration"
+msgstr "プロキシの使用方法を定義します: プロキシなし、システムプロキシ、またはカスタム設定"
+
+#: tformsettingspobatch.comboproxymode.text
+msgctxt "tformsettingspobatch.comboproxymode.text"
+msgid "No Proxy"
+msgstr "プロキシなし"
+
+#: tformsettingspobatch.comboproxytype.hint
+msgid "Type of proxy protocol used for custom settings"
+msgstr "カスタム設定で使用されるプロキシプロトコルの種類"
+
+#: tformsettingspobatch.comboproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tformsettingspobatch.editbuttontmstorage.buttoncaption
+msgid ".."
+msgstr ".."
+
+#: tformsettingspobatch.editbuttontmstorage.hint
+msgid "Folder where language pair archives are stored as zip files."
+msgstr "言語ペアのアーカイブが zip ファイルとして保存されるフォルダ。"
+
+#: tformsettingspobatch.editproxyhost.hint
+msgid "Address of the proxy server IP or domain name"
+msgstr "プロキシサーバーのアドレス（IP またはドメイン名）"
+
+#: tformsettingspobatch.editproxylogin.hint
+msgid "Username used for proxy authentication"
+msgstr "プロキシ認証に使用されるユーザー名"
+
+#: tformsettingspobatch.editproxypassword.hint
+msgid "Password used for proxy authentication"
+msgstr "プロキシ認証に使用されるパスワード"
+
+#: tformsettingspobatch.edittranslatoremail.hint
+msgid "The translator's email address will be recorded in the translation file when it is saved."
+msgstr "翻訳者のメールアドレスは、保存時に翻訳ファイルに記録されます。"
+
+#: tformsettingspobatch.edittranslatorname.hint
+msgid "The translator's name will be recorded in the translation file when it is saved."
+msgstr "翻訳者の名前は、保存時に翻訳ファイルに記録されます。"
+
+#: tformsettingspobatch.groupbehavior.caption
+msgid "Behavior"
+msgstr "動作"
+
+#: tformsettingspobatch.groupdefaultinformation.caption
+msgid "Translator Information"
+msgstr "翻訳者情報"
+
+#: tformsettingspobatch.groupfont.caption
+msgid "Font"
+msgstr "フォント"
+
+#: tformsettingspobatch.groupproxiedconfigs.caption
+msgid "Proxied Configs (Default: All)"
+msgstr "プロキシ設定（デフォルト: すべて）"
+
+#: tformsettingspobatch.groupproxy.caption
+msgid "Proxy"
+msgstr "プロキシ"
+
+#: tformsettingspobatch.grouptimeouts.caption
+msgid "Timeout"
+msgstr "タイムアウト"
+
+#: tformsettingspobatch.grouptmfilters.caption
+msgid "Filters"
+msgstr "フィルタ"
+
+#: tformsettingspobatch.grouptmstorage.caption
+msgctxt "tformsettingspobatch.grouptmstorage.caption"
+msgid "Storage (Right-click grid for actions)"
+msgstr "ストレージ（操作するにはグリッドを右クリック）"
+
+#: tformsettingspobatch.grouptranslationmemory.caption
+msgctxt "tformsettingspobatch.grouptranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "翻訳メモリ"
+
+#: tformsettingspobatch.groupuserparameters.caption
+msgid "User Parameters"
+msgstr "ユーザーパラメータ"
+
+#: tformsettingspobatch.labelconnecttimeout.caption
+msgid "Connection, sec"
+msgstr "接続、秒"
+
+#: tformsettingspobatch.labelhost.caption
+msgid "Host"
+msgstr "ホスト"
+
+#: tformsettingspobatch.labellogin.caption
+msgid "Login"
+msgstr "ログイン"
+
+#: tformsettingspobatch.labelpassword.caption
+msgid "Password"
+msgstr "パスワード"
+
+#: tformsettingspobatch.labelport.caption
+msgid "Port"
+msgstr "ポート"
+
+#: tformsettingspobatch.labelproxymode.caption
+msgid "Proxy Mode"
+msgstr "プロキシモード"
+
+#: tformsettingspobatch.labelproxytype.caption
+msgid "Proxy Type"
+msgstr "プロキシタイプ"
+
+#: tformsettingspobatch.labelrequesttimeout.caption
+msgid "Request, sec"
+msgstr "リクエスト、秒"
+
+#: tformsettingspobatch.labeltmmaxsourcelength.caption
+msgid ""
+"Max Source Length\n"
+"(0 = unlimited)"
+msgstr ""
+"最大ソース長\n"
+"(0 = 無制限)"
+
+#: tformsettingspobatch.labeltmstorage.caption
+msgid "Storage Directory"
+msgstr "ストレージディレクトリ"
+
+#: tformsettingspobatch.labeltranslatoremail.caption
+msgid "Email"
+msgstr "メール"
+
+#: tformsettingspobatch.labeltranslatorname.caption
+msgctxt "tformsettingspobatch.labeltranslatorname.caption"
+msgid "Name"
+msgstr "名前"
+
+#: tformsettingspobatch.menutmclearselected.caption
+msgid "Clear Selected"
+msgstr "選択項目をクリア"
+
+#: tformsettingspobatch.menutmcompactselected.caption
+msgid "Compact Selected"
+msgstr "選択項目をコンパクト化"
+
+#: tformsettingspobatch.menutmexportselected.caption
+msgid "Export Selected..."
+msgstr "選択項目をエクスポート..."
+
+#: tformsettingspobatch.menutmimport.caption
+msgid "Import..."
+msgstr "インポート..."
+
+#: tformsettingspobatch.menutmrefresh.caption
+msgid "Refresh"
+msgstr "更新"
+
+#: tformsettingspobatch.menutmselectall.caption
+msgctxt "tformsettingspobatch.menutmselectall.caption"
+msgid "Select All"
+msgstr "すべて選択"
+
+#: tformsettingspobatch.pagegeneral.caption
+msgid "General"
+msgstr "一般"
+
+#: tformsettingspobatch.pagenetwork.caption
+msgid "Network"
+msgstr "ネットワーク"
+
+#: tformsettingspobatch.pageparameters.caption
+msgid "Parameters"
+msgstr "パラメータ"
+
+#: tformsettingspobatch.pagetranslationmemory.caption
+msgctxt "tformsettingspobatch.pagetranslationmemory.caption"
+msgid "Translation Memory"
+msgstr "翻訳メモリ"
+
+#: tformsettingspobatch.panelfont.caption
+msgid "Default, 0"
+msgstr "デフォルト, 0"
+
+#: tformsettingspobatch.spinconnecttimeout.hint
+msgid "Time to establish connection If 0 default 10 seconds is used"
+msgstr "接続を確立するまでの時間。0 の場合、デフォルトの 10 秒が使用されます"
+
+#: tformsettingspobatch.spinproxyport.hint
+msgid "Network port used by the proxy server"
+msgstr "プロキシサーバーが使用するネットワークポート"
+
+#: tformsettingspobatch.spinrequesttimeout.hint
+msgid "Time to wait for response and data If 0 default 300 seconds is used"
+msgstr "応答とデータを待つ時間。0 の場合、デフォルトの 300 秒が使用されます"
+
+#: tformsettingspobatch.spintmmaxsourcelength.hint
+msgid "Entries with a longer source text are ignored to keep the memory small."
+msgstr "メモリを小さく保つため、より長いソーステキストを持つエントリは無視されます。"
+

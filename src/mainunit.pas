@@ -119,6 +119,36 @@ type
     ADelete: TAction;
     AEditTranslationOnly: TAction;
     AUndoChanges: TAction;
+    // Action Languages
+    ALangArabic: TAction;
+    ALangBelarusian: TAction;
+    ALangBulgarian: TAction;
+    ALangChinese: TAction;
+    ALangCzech: TAction;
+    ALangDanish: TAction;
+    ALangDutch: TAction;
+    ALangEnglish: TAction;
+    ALangFinnish: TAction;
+    ALangFrench: TAction;
+    ALangGerman: TAction;
+    ALangGreek: TAction;
+    ALangHebrew: TAction;
+    ALangHindi: TAction;
+    ALangIndonesian: TAction;
+    ALangItalian: TAction;
+    ALangJapanese: TAction;
+    ALangKorean: TAction;
+    ALangPolish: TAction;
+    ALangPortuguese: TAction;
+    ALangPortugueseBrazil: TAction;
+    ALangRomanian: TAction;
+    ALangRussian: TAction;
+    ALangSpanish: TAction;
+    ALangSwedish: TAction;
+    ALangTurkish: TAction;
+    ALangUkrainian: TAction;
+    ALangVietnamese: TAction;
+    ALangCustom: TAction;
     ActionList: TActionList;
     ConfigManager: TConfigManager;
     contextMacintoshCR: TMenuItem;
@@ -241,6 +271,36 @@ type
     MenuEditUndoChanges: TMenuItem;
     MenuView: TMenuItem;
     MenuFilePathOpen: TMenuItem;
+    MenuLanguage: TMenuItem;
+    MenuArabic: TMenuItem;
+    MenuBelarusian: TMenuItem;
+    MenuBulgarian: TMenuItem;
+    MenuChinese: TMenuItem;
+    MenuCzech: TMenuItem;
+    MenuDanish: TMenuItem;
+    MenuDutch: TMenuItem;
+    MenuEnglish: TMenuItem;
+    MenuFinnish: TMenuItem;
+    MenuFrench: TMenuItem;
+    MenuGerman: TMenuItem;
+    MenuGreek: TMenuItem;
+    MenuHebrew: TMenuItem;
+    MenuHindi: TMenuItem;
+    MenuIndonesian: TMenuItem;
+    MenuItalian: TMenuItem;
+    MenuJapanese: TMenuItem;
+    MenuKorean: TMenuItem;
+    MenuPolish: TMenuItem;
+    MenuPortuguese: TMenuItem;
+    MenuPortugueseBrazil: TMenuItem;
+    MenuRomanian: TMenuItem;
+    MenuRussian: TMenuItem;
+    MenuSpanish: TMenuItem;
+    MenuSwedish: TMenuItem;
+    MenuTurkish: TMenuItem;
+    MenuUkrainian: TMenuItem;
+    MenuVietnamese: TMenuItem;
+    MenuCustom: TMenuItem;
     Pages: TPageControl;
     PanelQA: TPanel;
     PanelTranslation: TPanel;
@@ -459,6 +519,37 @@ type
     procedure SettingsFormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure StatusBarMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure StatusBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    // Action Languages
+    procedure SetInterfaceLanguage(ALangCode: string = string.Empty);
+    procedure ALangCustomExecute(Sender: TObject);
+    procedure ALangArabicExecute(Sender: TObject);
+    procedure ALangBelarusianExecute(Sender: TObject);
+    procedure ALangBulgarianExecute(Sender: TObject);
+    procedure ALangChineseExecute(Sender: TObject);
+    procedure ALangCzechExecute(Sender: TObject);
+    procedure ALangDanishExecute(Sender: TObject);
+    procedure ALangDutchExecute(Sender: TObject);
+    procedure ALangEnglishExecute(Sender: TObject);
+    procedure ALangFinnishExecute(Sender: TObject);
+    procedure ALangFrenchExecute(Sender: TObject);
+    procedure ALangGermanExecute(Sender: TObject);
+    procedure ALangGreekExecute(Sender: TObject);
+    procedure ALangHebrewExecute(Sender: TObject);
+    procedure ALangHindiExecute(Sender: TObject);
+    procedure ALangIndonesianExecute(Sender: TObject);
+    procedure ALangItalianExecute(Sender: TObject);
+    procedure ALangJapaneseExecute(Sender: TObject);
+    procedure ALangKoreanExecute(Sender: TObject);
+    procedure ALangPolishExecute(Sender: TObject);
+    procedure ALangPortugueseExecute(Sender: TObject);
+    procedure ALangPortugueseBrazilExecute(Sender: TObject);
+    procedure ALangRomanianExecute(Sender: TObject);
+    procedure ALangRussianExecute(Sender: TObject);
+    procedure ALangSpanishExecute(Sender: TObject);
+    procedure ALangSwedishExecute(Sender: TObject);
+    procedure ALangTurkishExecute(Sender: TObject);
+    procedure ALangUkrainianExecute(Sender: TObject);
+    procedure ALangVietnameseExecute(Sender: TObject);
     {%EndRegion}
   private
     FRichEditor: TRichMemoCellEditor;
@@ -645,122 +736,9 @@ type
 var
   formPoBatch: TformPoBatch;
 
-  {%Region -fold Const}
-
-const
-  COLUMN_HEADERS_NAME = 0;
-  COLUMN_HEADERS_VALUE = 1;
-  CELL_HEADERS_NAME = 1;
-  CELL_HEADERS_VALUE = 2;
-  COLUMN_COMMENTS_TYPE = 0;
-  COLUMN_COMMENTS_VALUE = 1;
-  CELL_COMMENTS_TYPE = 1;
-  CELL_COMMENTS_VALUE = 2;
-  COLUMN_PLURAL_PLURAL = 0;
-  CELL_PLURAL_PLURAL = 1;
-
-  COLUMN_VALID = 0;
-  COLUMN_TEXT = 1;
-  COLUMN_TRANSLATION = 2;
-  COLUMN_CONTEXT = 3;
-  COLUMN_PLURAL = 4;
-  COLUMN_REFERENCE = 5;
-  COLUMN_FUZZY = 6;
-  CELL_VALID = 1;
-  CELL_TEXT = 2;
-  CELL_TRANSLATION = 3;
-  CELL_CONTEXT = 4;
-  CELL_PLURAL = 5;
-  CELL_REFERENCE = 6;
-  CELL_FUZZY = 7;
-
-  UNDEFINED = 'undefined';
-  LANG_KEY_NONE = '*';
-
-  {%EndRegion}
-
-const
-  REPO = 'plaintool/pobatch';
-  APP_NAME = 'pobatch';
-  AppName = 'PoBatch';
-  MAX_RECENT_FILES = 10;
-
-  {%Region -fold Resource Strings}
-resourcestring
-  rpotnotfound = 'POT file not found: %s';
-  rnopofilesfound = 'No .po files found in the selected directory!';
-
-  rdiscardchanges = 'Do you want to discard all unsaved changes?';
-
-  rpluralformtitle = 'Plural form';
-  rpluralformenter = 'Enter plural form';
-  rdeletepluraltitle = 'Delete plural form?';
-  rdeletepluralconfirm = 'Are you sure you want to delete this plural form?';
-
-  rdeleterowtitle = 'Delete row';
-  rdeleterowconfirm = 'Are you sure you want to delete the selected row?';
-  rdeleterowsconfirm = 'Delete selected rows?';
-
-  rsavechangestitle = 'Save Changes';
-  rsavechangesmsg = 'The document "%s" has been modified.'#13#10'Do you want to save your changes?';
-  runtitled = 'Untitled';
-  rpathuntitled = '%s - Untitled';
-
-  rerrortitle = 'Error';
-  rerrornotexist = 'File does not exist:'#13#10'%s';
-  rerrornotexistine = 'File does not exist: %s';
-  ropenfiletitle = 'Open File';
-  ropenfileunknown = 'The file "%s" has an unrecognized extension.'#13#10'Do you want to try opening it anyway?';
-  rlargefiletitle = 'Large File';
-  rlargefileconfirm = 'The file is very large (%d MB).'#13#10'Opening it may take a while. Continue?';
-  rloaderrortitle = 'Load Error';
-  rloaderrormsg = 'Error loading file:'#13#10'%s'#13#10'File may be corrupted or in wrong format.';
-  rerrorinvalidfilename = 'Invalid file name';
-  rsaveerrortitle = 'Save Error';
-  rsaveerrormsg = 'Error saving file:'#13#10'%s';
-
-  rrequiredparamtitle = 'Enter the required parameter';
-  rrequiredparamprompt = 'Enter %s';
-
-  rstatustranslated = 'Translated %d of %d (%d%%) Remaining %d';
-  rstatusinvalid = 'Invalid: %d (Fuzzy %d, QA %d, Empty %d)';
-  rstatustranslatedhint = 'Translation progress: translated entries of the total, percentage, remaining count';
-  rstatusinvalidhint = 'Invalid entries: total count with a breakdown by fuzzy flag, QA issues and empty translations';
-  rstatuscrlf = 'Windows (CRLF)';
-  rstatuslf = 'Unix (LF)';
-  rstatuscr = 'Mac (CR)';
-  rstatuslineendinghint = 'Line ending style used when saving the file';
-
-  rqacheckscaption = 'QA Checks';
-
-  rgotoentrytitle = 'Go to entry';
-  rgotoentryprompt = 'Enter entry number:';
-  rinvalidnumber = 'Invalid number: %s';
-  rnotfoundentry = 'Entry number %s not found.';
-
-  ropenrecentclear = 'Clear List';
-
-  rrememberfiletitle = 'Remember file';
-  rrememberfiledone = 'Done. %d translation(s) remembered, %d skipped.';
-  rrememberfilelangnotset = 'File "%s" skipped: target language is not set in the PO header.';
-
-  rfilechangedtitle = 'File changed on disk';
-  rfilechangedmsg = 'The file "%s" has been modified by another application since it was opened.';
-  rfilechangedmsgsave = 'You have unsaved changes. What would you like to do?';
-  rfilechangedmsgactivate = 'You have unsaved changes. Keep them or reload from disk?';
-  rfilechangedoverwrite = 'Overwrite';
-  rfilechangedreload = 'Reload';
-  rfilechangedcancel = 'Cancel';
-  rfilechangedkeepchanges = 'Keep my changes';
-  rfilechangedreloaddisk = 'Reload from disk';
-  rfilereloaded = 'File reloaded from disk';
-  rcancelbatchtitle = 'Cancel operation';
-  rcancelbatchconfirm = 'Do you want to cancel the current batch operation?';
-  {%EndRegion}
-
 implementation
 
-uses FormSettings, FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper,
+uses Consts, FormSettings, FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper,
   DarkUtils, CheckUpdates, OSUtils,
   RichMemoHelper, Localize, PascalUtils, BatchOp;
 
@@ -929,6 +907,9 @@ begin
 
   // Handle command line parameters
   HandleCommandLineParameters;
+
+  // Set language
+  SetInterfaceLanguage(Localize.Language);
 end;
 
 procedure TformPoBatch.FormDestroy(Sender: TObject);
@@ -2024,6 +2005,292 @@ begin
   finally
     FileList.Free;
   end;
+end;
+
+{%EndRegion}
+
+{%Region -fold Action Languages}
+
+procedure TformPoBatch.SetInterfaceLanguage(ALangCode: string = string.Empty);
+var
+  LangCode: string;
+  PoText: string;
+begin
+  LangCode := ALangCode;
+  PoText := string.Empty;
+
+  ALangArabic.Checked := False;
+  ALangBelarusian.Checked := False;
+  ALangBulgarian.Checked := False;
+  ALangChinese.Checked := False;
+  ALangCzech.Checked := False;
+  ALangDanish.Checked := False;
+  ALangDutch.Checked := False;
+  ALangEnglish.Checked := False;
+  ALangFinnish.Checked := False;
+  ALangFrench.Checked := False;
+  ALangGerman.Checked := False;
+  ALangGreek.Checked := False;
+  ALangHebrew.Checked := False;
+  ALangHindi.Checked := False;
+  ALangIndonesian.Checked := False;
+  ALangItalian.Checked := False;
+  ALangJapanese.Checked := False;
+  ALangKorean.Checked := False;
+  ALangPolish.Checked := False;
+  ALangPortuguese.Checked := False;
+  ALangPortugueseBrazil.Checked := False;
+  ALangRomanian.Checked := False;
+  ALangRussian.Checked := False;
+  ALangSpanish.Checked := False;
+  ALangSwedish.Checked := False;
+  ALangTurkish.Checked := False;
+  ALangUkrainian.Checked := False;
+  ALangVietnamese.Checked := False;
+  ALangCustom.Checked := False;
+
+  if Localize.CustomPoFile <> string.Empty then
+  begin
+    PoText := TLocalize.LoadCustomPoFile(Localize.CustomPoFile);
+    if PoText = string.Empty then
+    begin
+      Localize.CustomPoFile := string.Empty;
+      LangCode := TLocalize.GetOSLanguage;
+    end
+    else
+      LangCode := TLocalize.GetLangCodeFromPoFile(Localize.CustomPoFile);
+  end;
+
+  if (LangCode <> string.Empty) then
+  begin
+    Localize.Language := LangCode;
+    TLocalize.ApplicationTranslate(APP_NAME, TLocalize.DEFAULT_LANG);
+    if not TLocalize.ApplicationTranslate(APP_NAME, Localize.Language, nil, PoText) then
+      Localize.Language := TLocalize.DEFAULT_LANG;
+
+    TLocalize.UpdatePackageTranslations(APP_NAME, 'checkupdates', Localize.Language, ['CheckUpdates']);
+
+    ConfigManager.RelocalizeConfigEditor;
+    Translate.RelocalizeSearchForm;
+
+    // Update form text
+    UpdateInterface;
+  end;
+
+  if Localize.CustomPoFile = string.Empty then
+  begin
+    case Localize.Language of
+      'ar': ALangArabic.Checked := True;
+      'be': ALangBelarusian.Checked := True;
+      'bg': ALangBulgarian.Checked := True;
+      'zh': ALangChinese.Checked := True;
+      'cs': ALangCzech.Checked := True;
+      'da': ALangDanish.Checked := True;
+      'nl': ALangDutch.Checked := True;
+      'en': ALangEnglish.Checked := True;
+      'fi': ALangFinnish.Checked := True;
+      'fr': ALangFrench.Checked := True;
+      'de': ALangGerman.Checked := True;
+      'el': ALangGreek.Checked := True;
+      'he': ALangHebrew.Checked := True;
+      'hi': ALangHindi.Checked := True;
+      'id': ALangIndonesian.Checked := True;
+      'it': ALangItalian.Checked := True;
+      'ja': ALangJapanese.Checked := True;
+      'ko': ALangKorean.Checked := True;
+      'pl': ALangPolish.Checked := True;
+      'pt': ALangPortuguese.Checked := True;
+      'pt-BR': ALangPortugueseBrazil.Checked := True;
+      'ro': ALangRomanian.Checked := True;
+      'ru': ALangRussian.Checked := True;
+      'es': ALangSpanish.Checked := True;
+      'sv': ALangSwedish.Checked := True;
+      'tr': ALangTurkish.Checked := True;
+      'uk': ALangUkrainian.Checked := True;
+      'vi': ALangVietnamese.Checked := True;
+      else
+      // nolang
+    end;
+  end
+  else
+    ALangCustom.Checked := True;
+end;
+
+procedure TformPoBatch.ALangCustomExecute(Sender: TObject);
+begin
+  if not dialogOpen.Execute then
+    Exit;
+
+  Localize.CustomPoFile := dialogOpen.FileName;
+  SetInterfaceLanguage;
+end;
+
+procedure TformPoBatch.ALangArabicExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('ar');
+end;
+
+procedure TformPoBatch.ALangBelarusianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('be');
+end;
+
+procedure TformPoBatch.ALangBulgarianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('bg');
+end;
+
+procedure TformPoBatch.ALangChineseExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('zh');
+end;
+
+procedure TformPoBatch.ALangCzechExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('cs');
+end;
+
+procedure TformPoBatch.ALangDanishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('da');
+end;
+
+procedure TformPoBatch.ALangDutchExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('nl');
+end;
+
+procedure TformPoBatch.ALangEnglishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('en');
+end;
+
+procedure TformPoBatch.ALangFinnishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('fi');
+end;
+
+procedure TformPoBatch.ALangFrenchExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('fr');
+end;
+
+procedure TformPoBatch.ALangGermanExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('de');
+end;
+
+procedure TformPoBatch.ALangGreekExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('el');
+end;
+
+procedure TformPoBatch.ALangHebrewExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('he');
+end;
+
+procedure TformPoBatch.ALangHindiExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('hi');
+end;
+
+procedure TformPoBatch.ALangIndonesianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('id');
+end;
+
+procedure TformPoBatch.ALangItalianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('it');
+end;
+
+procedure TformPoBatch.ALangJapaneseExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('ja');
+end;
+
+procedure TformPoBatch.ALangKoreanExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('ko');
+end;
+
+procedure TformPoBatch.ALangPolishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('pl');
+end;
+
+procedure TformPoBatch.ALangPortugueseExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('pt');
+end;
+
+procedure TformPoBatch.ALangPortugueseBrazilExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('pt-BR');
+end;
+
+procedure TformPoBatch.ALangRomanianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('ro');
+end;
+
+procedure TformPoBatch.ALangRussianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('ru');
+end;
+
+procedure TformPoBatch.ALangSpanishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('es');
+end;
+
+procedure TformPoBatch.ALangSwedishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('sv');
+end;
+
+procedure TformPoBatch.ALangTurkishExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('tr');
+end;
+
+procedure TformPoBatch.ALangUkrainianExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('uk');
+end;
+
+procedure TformPoBatch.ALangVietnameseExecute(Sender: TObject);
+begin
+  Localize.CustomPoFile := string.Empty;
+  SetInterfaceLanguage('vi');
 end;
 
 {%EndRegion}
