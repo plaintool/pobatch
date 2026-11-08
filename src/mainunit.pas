@@ -2722,7 +2722,9 @@ begin
   if Index = 0 then
   begin
     FSortColumn := -1;
-    Grid.ApplySort(FSortColumn, FSortOrder);
+    FSortOrder := soAscending;
+    // Pass 0 instead of -1 to force the helper to sort by column 0
+    Grid.ApplySort(0, FSortOrder);
     Exit;
   end;
 
@@ -2730,7 +2732,9 @@ begin
   if GetKeyState(VK_CONTROL) and $8000 <> 0 then
   begin
     FSortColumn := -1;
-    Grid.ApplySort(FSortColumn, FSortOrder);
+    FSortOrder := soAscending;
+    // Pass 0 instead of -1 to force the helper to sort by column 0
+    Grid.ApplySort(0, FSortOrder);
     Exit;
   end;
 
