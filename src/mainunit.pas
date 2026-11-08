@@ -914,7 +914,16 @@ end;
 
 procedure TformPoBatch.FormDestroy(Sender: TObject);
 begin
-  SaveFormSettings(Self);
+  // Stop any pending timer callback that references this form
+  if Assigned(FSelectPathTimer) then
+    ClearTimeout(FSelectPathTimer);
+
+  // A failed settings save must never abort the cleanup below
+  try
+    SaveFormSettings(Self);
+  except
+    // Swallow; leaves the next run without the last layout, but no leaks
+  end;
 
   FreeAndNil(FPoFile);
   FreeAndNil(FPoFileBackup);
@@ -992,6 +1001,11 @@ end;
 
 procedure TformPoBatch.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
+  // Stop the path timer before any user prompt so it cannot fire
+  // during destruction (e.g. while the save dialog is up)
+  if Assigned(FSelectPathTimer) then
+    ClearTimeout(FSelectPathTimer);
+
   CanClose := IsCanClose;
 end;
 
@@ -3204,14 +3218,20 @@ var
   Status: TPoFileStatus;
   BgColor: TColor;
   BrightSelection: boolean;
+  ListBox: TListBox;
 begin
   if (Index < 0) or (Index >= Length(FFileStatuses)) then Exit;
 
+  // Guard against a race between Items and FFileStatuses: an Index that
+  // is valid for the status array must still exist in the list itself
+  ListBox := Control as TListBox;
+  if (not Assigned(ListBox)) or (Index >= ListBox.Items.Count) then Exit;
+
   // Bright selection while the list has focus, a modal dialog is shown
   // or the list popup is open; a real focus loss dims the row highlight
-  BrightSelection := (Control as TListBox).Focused or (Application.ModalLevel > 0) or FPathPopupActive;
+  BrightSelection := ListBox.Focused or (Application.ModalLevel > 0) or FPathPopupActive;
 
-  with (Control as TListBox).Canvas do
+  with ListBox.Canvas do
   begin
     // Determine background color based on file status
     Status := FFileStatuses[Index];
@@ -3245,7 +3265,7 @@ begin
       Font.Color := clWindowText;
 
     // Draw the text with a small offset
-    TextOut(ARect.Left + 4, ARect.Top + 2, (Control as TListBox).Items[Index]);
+    TextOut(ARect.Left + 4, ARect.Top + 2, ListBox.Items[Index]);
 
     // Draw focus rectangle if the control is focused and item is selected
     if odFocused in State then
