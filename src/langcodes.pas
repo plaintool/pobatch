@@ -15,6 +15,9 @@ uses
   Classes, SysUtils, StringHelper;
 
 type
+  // Text direction enumeration
+  TLangDirection = (ldLTR, ldRTL);
+
   // Record to hold a single language entry
   TLanguageInfo = record
     Code: string;
@@ -34,6 +37,9 @@ function GetLanguageCodeByName(const AName: string): string;
 // Returns the gettext Plural-Forms expression for the given code,
 // or an empty string when the code is unknown
 function GetLanguagePluralForms(const ACode: string): string;
+
+// Returns the text direction for the given language code
+function GetLanguageDirection(const ACode: string): TLangDirection;
 
 // Fills AList with every distinct Plural-Forms expression found in the
 // language table, in the order of first occurrence
@@ -425,6 +431,20 @@ begin
       Result := Languages[I].PluralForms;
       Break;
     end;
+end;
+
+function GetLanguageDirection(const ACode: string): TLangDirection;
+var
+  TargetCode: string = '';
+begin
+  Result := ldLTR;
+  TargetCode := LowerCase(Trim(ACode));
+
+  // Check if the language code belongs to a known RTL language
+  if (TargetCode = 'ar') or (Pos('ar-', TargetCode) = 1) or (TargetCode = 'dv') or (TargetCode = 'fa') or
+    (Pos('fa-', TargetCode) = 1) or (TargetCode = 'he') or (TargetCode = 'ps') or (TargetCode = 'sd') or
+    (TargetCode = 'ug') or (TargetCode = 'ur') or (TargetCode = 'yi') then
+    Result := ldRTL;
 end;
 
 procedure GetAllPluralForms(AList: TStrings);

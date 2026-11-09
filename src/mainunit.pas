@@ -504,6 +504,7 @@ type
     procedure PanelSwitchEnter(Sender: TObject);
     procedure PanelSwitchExit(Sender: TObject);
     procedure PanelSwitchPaint(Sender: TObject);
+    procedure PopupMemoPopup(Sender: TObject);
     procedure PopupPathClose(Sender: TObject);
     procedure PopupPathPopup(Sender: TObject);
     procedure SpellSourceSpellCheckComplete(Sender: TObject; ErrorCount: integer);
@@ -1562,12 +1563,16 @@ end;
 
 procedure TformPoBatch.AMemoBidiRightToLeftExecute(Sender: TObject);
 var
-  AMemo: TRichMemo;
+  AMemo: TRichMemo = nil;
 begin
-  if Self.ActiveControl is TRichMemo then
-  begin
-    AMemo := Self.ActiveControl as TRichMemo;
+  // Use PopupComponent if the action was triggered from the context menu
+  if PopupMemo.PopupComponent is TRichMemo then
+    AMemo := TRichMemo(PopupMemo.PopupComponent)
+  else if Self.ActiveControl is TRichMemo then
+    AMemo := TRichMemo(Self.ActiveControl);
 
+  if Assigned(AMemo) then
+  begin
     if AMemoBidiRightToLeft.Checked then
       AMemo.BiDiMode := bdRightToLeft
     else
@@ -2912,6 +2917,19 @@ begin
   TS := Grid.Canvas.TextStyle;
   TS.Wordbreak := FWordWrap;
   TS.SingleLine := False;
+
+  // Align text to the right and set RTL base direction for the translation column
+  if (aCol = CELL_TRANSLATION) and (GetLanguageDirection(FLanguage) = ldRTL) then
+  begin
+    TS.Alignment := taRightJustify;
+    TS.RightToLeft := True;
+  end
+  else
+  begin
+    TS.Alignment := taLeftJustify;
+    TS.RightToLeft := False;
+  end;
+
   Grid.Canvas.TextStyle := TS;
 
   // Color Cells
@@ -2991,7 +3009,7 @@ begin
     MsgCtxt,
     FWordWrap,
     True,
-    False
+    (aCol = CELL_TRANSLATION) and (GetLanguageDirection(FLanguage) = ldRTL)
     );
 end;
 
@@ -3000,6 +3018,12 @@ begin
   if (aCol in [CELL_TEXT, CELL_TRANSLATION, CELL_CONTEXT, CELL_PLURAL, CELL_REFERENCE]) then
   begin
     Editor := FRichEditor;
+
+    // The translation column inherits the language direction, others stay LTR
+    if (aCol = CELL_TRANSLATION) and (GetLanguageDirection(FLanguage) = ldRTL) then
+      FRichEditor.BiDiMode := bdRightToLeft
+    else
+      FRichEditor.BiDiMode := bdLeftToRight;
 
     FRichEditor.OnEnter := @MemoEnter;
     FRichEditor.OnExit := @MemoExit;
@@ -3024,6 +3048,7 @@ end;
 
 procedure TformPoBatch.MemoEnter(Sender: TObject);
 begin
+  FRichEditor.ApplyBidiMode;
   FRichEditor.ClearUndoHistory;
 
   FRichEditor.Color := clWindow;
@@ -3450,6 +3475,23 @@ begin
     PanelSwitch.Canvas.DrawFocusRect(PanelSwitch.ClientRect);
 end;
 
+procedure TformPoBatch.PopupMemoPopup(Sender: TObject);
+var
+  AMemo: TRichMemo = nil;
+begin
+  // Determine which memo triggered the popup
+  if PopupMemo.PopupComponent is TRichMemo then
+    AMemo := TRichMemo(PopupMemo.PopupComponent)
+  else if Self.ActiveControl is TRichMemo then
+    AMemo := TRichMemo(Self.ActiveControl);
+
+  // Sync the action checked state with the memo's current BidiMode
+  if Assigned(AMemo) then
+    AMemoBidiRightToLeft.Checked := AMemo.BiDiMode = bdRightToLeft
+  else
+    AMemoBidiRightToLeft.Checked := False;
+end;
+
 procedure TformPoBatch.PopupPathPopup(Sender: TObject);
 begin
   FPathPopupActive := True;
@@ -3670,9 +3712,32 @@ end;
 procedure TformPoBatch.SetLanguage(const Value: string);
 var
   SrcLang: string = 'en';
+  SavedOnChange: TNotifyEvent = nil;
 begin
   if FLanguage = Value then Exit;
   FLanguage := Value;
+
+  // Reapplying the direction can fire OnChange while the memo still holds
+  // the previous document's text; suppress it so the stale text cannot
+  // leak into the freshly loaded model via MemoTranslationChange
+  SavedOnChange := MemoTranslation.OnChange;
+  MemoTranslation.OnChange := nil;
+  try
+    // Update text direction for translation controls based on the new language
+    if GetLanguageDirection(Value) = ldRTL then
+    begin
+      MemoTranslation.BiDiMode := bdRightToLeft;
+      Grid.Columns[COLUMN_TRANSLATION].Alignment := taRightJustify;
+    end
+    else
+    begin
+      MemoTranslation.BiDiMode := bdLeftToRight;
+      Grid.Columns[COLUMN_TRANSLATION].Alignment := taLeftJustify;
+    end;
+    MemoTranslation.ApplyBidiMode;
+  finally
+    MemoTranslation.OnChange := SavedOnChange;
+  end;
 
   // Keep spell checker dictionary in sync with the document language
   if Assigned(SpellTranslation) then

@@ -2109,6 +2109,7 @@ object formPoBatch: TformPoBatch
     end
   end
   object PopupMemo: TPopupMenu
+    OnPopup = PopupMemoPopup
     Left = 552
     Top = 120
     object MenuMemoUndo: TMenuItem
