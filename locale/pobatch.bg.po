@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"PO-Revision-Date: 2026-11-09 12:26-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: bg\n"
@@ -16,12 +16,12 @@ msgstr ""
 #: batchop.rcancelledpath
 #, object-pascal-format
 msgid "Translation cancelled. %d translation(s) in %d file(s)."
-msgstr "Преводът е отхванут. %d превода бяха изчити в %d файл."
+msgstr "Преводът е отменен. %d превод(а) в %d файл(ове)."
 
 #: batchop.rcancelledtranslation
 #, object-pascal-format
 msgid "Translation cancelled. %d entries updated."
-msgstr "Преводът е отхванут. %d записа бяха обновени."
+msgstr "Преводът е отменен. %d записа са обновени."
 
 #: batchop.rclearallconfirm
 #, object-pascal-format
@@ -40,12 +40,12 @@ msgstr ""
 
 #: batchop.rclearalltitle
 msgid "Clear all translations"
-msgstr "Изчистване на всички преводи"
+msgstr "Изчисти всички преводи"
 
 #: batchop.rclearedtranslationscount
 #, object-pascal-format
 msgid "%d translations were cleared."
-msgstr "%d превода бяха изчистени."
+msgstr "%d превода са изчистени."
 
 #: batchop.rclearfuzzyconfirm
 #, object-pascal-format
@@ -62,11 +62,11 @@ msgstr ""
 
 #: batchop.rclearidenticalconfirm
 msgid "Clear translations that are identical to the source text in the selected row(s)?"
-msgstr "Сигурни ли сте, че искате да изчистите преводите, които са идентични с изходния текст на избраните редове?"
+msgstr "Сигурни ли сте, че искате да изчистите преводите, които са идентични с изходния текст на избрания ред(ове)?"
 
 #: batchop.rclearinvalidtitle
 msgid "Clear invalid translations"
-msgstr "Изчистване на невалидните преводи"
+msgstr "Изчисти невалидните преводи"
 
 #: batchop.rconfirmrenametitle
 msgid "Confirm rename"
@@ -100,7 +100,7 @@ msgstr "Копиране на изходен текст в празни"
 
 #: batchop.rcopysourcetotranslationconfirm
 msgid "Copy source text to translations in the selected row(s)?"
-msgstr "Сигурни ли сте, че искате да копирате изходния текст в преводите на избраните редове?"
+msgstr "Сигурни ли сте, че искате да копирате изходния текст в преводите на избрания ред(ове)?"
 
 #: batchop.rdeletefilestitle
 msgid "Delete files"
@@ -128,22 +128,22 @@ msgstr "Изтриване на файл"
 #: batchop.rdoneinvalidcleared
 #, object-pascal-format
 msgid "Done. %d invalid translation(s) cleared."
-msgstr "Готово. %d невалидни превода бяха изчистени."
+msgstr "Готово. %d невалидни превод(а) са изчистени."
 
 #: batchop.rdonetranslationsadded
 #, object-pascal-format
 msgid "Done. %d translation(s) added in %d file(s). %d file(s) skipped."
-msgstr "Готово. %d превода бяха добавени в %d файл(a). %d файл беше пропуснат."
+msgstr "Готово. %d превод(а) са добавени в %d файл(a). %d файл(а) са пропуснати."
 
 #: batchop.rdonetranslationscleared
 #, object-pascal-format
 msgid "Done. %d translation(s) cleared."
-msgstr "Готово. %d превода бяха изчистени."
+msgstr "Готово. %d превод(а) са изчистени."
 
 #: batchop.rdonetranslationsfilled
 #, object-pascal-format
 msgid "Done. %d translation(s) filled from source."
-msgstr "Готово. %d превода бяха попълнени от изходния текст."
+msgstr "Готово. %d превод(а) са попълнени от изходния текст."
 
 #: batchop.rerrorprocessingfile
 #, object-pascal-format
@@ -244,12 +244,12 @@ msgstr "Паметът за преводи не е конфигуриран за
 #: batchop.rmemorytranslatedone
 #, object-pascal-format
 msgid "Done. %d translation(s) applied from memory."
-msgstr "Готово. %d превода бяха приложени от паметта."
+msgstr "Готово. %d превод(а) са приложени от паметта."
 
 #: batchop.rmemorytranslatedoneskipped
 #, object-pascal-format
 msgid "Done. %d translation(s) applied from memory, %d skipped."
-msgstr "Готово. %d превода бяха приложени от паметта, %d бяха пропуснати."
+msgstr "Готово. %d превод(а) са приложени от паметта, %d са пропуснати."
 
 #: batchop.rmorefiles
 #, object-pascal-format
@@ -259,7 +259,7 @@ msgstr "... и още %d файл(a)"
 #: batchop.rmorelines
 #, object-pascal-format
 msgid "... and %d more line(s)"
-msgstr "... и още %d ред."
+msgstr "... и още %d ред(а)"
 
 #: batchop.rnameconsoleerror
 msgid "Error: --name is required in console mode"
@@ -315,7 +315,7 @@ msgstr ""
 #, object-pascal-format
 msgctxt "batchop.rrememberdone"
 msgid "Done. %d translation(s) remembered, %d skipped."
-msgstr "Готово. %d превода бяха запомнати, %d бяха пропуснати."
+msgstr "Готово. %d превод(а) са запомнени, %d са пропуснати."
 
 #: batchop.rremembertitle
 msgid "Remember translations"
@@ -355,7 +355,7 @@ msgstr "Изберете файл за изтриване!"
 
 #: batchop.rselectrenamemessage
 msgid "Select file(s) to rename!"
-msgstr "Изберете файл(и) за преименуване!"
+msgstr "Изберете файл(ове) за преименуване!"
 
 #: batchop.rsyncconfirm
 #, object-pascal-format
@@ -392,7 +392,7 @@ msgstr "Синхронизацията е завършена."
 #: batchop.rsyncdoneskipped
 #, object-pascal-format
 msgid "Synchronization complete. %d file(s) skipped (no matching POT)."
-msgstr "Синхронизацията е завършена. %d файл беше пропуснат (не съответстващ POT)."
+msgstr "Синхронизацията завърши. %d файл(а) са пропуснат (несъответстващ POT)."
 
 #: batchop.rtargetlangnotset
 msgid "Target language is not set. Please specify the Language header in the PO file."
@@ -436,7 +436,7 @@ msgstr "Искате ли да превеждате отсъстващите п�
 
 #: batchop.rtranslatemissingtitle
 msgid "Translate missing"
-msgstr "Превод на отсъстващи"
+msgstr "Превод на липсващи"
 
 #: batchop.rtranslateselected
 #, object-pascal-format
@@ -603,7 +603,7 @@ msgstr "Въведете номера на записа:"
 #: consts.rgotoentrytitle
 msgctxt "consts.rgotoentrytitle"
 msgid "Go to entry"
-msgstr "Отидете до записа"
+msgstr "Отиди до записа"
 
 #: consts.rinvalidnumber
 #, object-pascal-format
@@ -672,7 +672,7 @@ msgstr ""
 #: consts.ropenrecentclear
 msgctxt "consts.ropenrecentclear"
 msgid "Clear List"
-msgstr "Изчистване на списък"
+msgstr "Изчисти списъка"
 
 #: consts.rpathuntitled
 #, object-pascal-format
@@ -705,7 +705,7 @@ msgstr "QA проверки"
 #, object-pascal-format
 msgctxt "consts.rrememberfiledone"
 msgid "Done. %d translation(s) remembered, %d skipped."
-msgstr "Готово. %d превода бяха запомнати, %d бяха пропуснати."
+msgstr "Готово. %d превод(а) са запомнени, %d са пропуснати."
 
 #: consts.rrememberfilelangnotset
 #, object-pascal-format
@@ -812,7 +812,7 @@ msgstr "Подразбиран"
 
 #: formsettings.rdefaultsettings
 msgid "Are you sure you want to restore default settings?"
-msgstr "Сигурни ли сте, че искате да възстановите стандартните настройки?"
+msgstr "Сигурни ли сте, че искате да възстанови настройки по подразбиране?"
 
 #: formsettings.rproxymodecustomproxy
 msgid "Custom Proxy"
@@ -830,7 +830,7 @@ msgstr "Системен Proxy"
 #: formsettings.rtmclearalldone
 #, object-pascal-format
 msgid "Deleted %d language pair(s)."
-msgstr "%d езикови пара бяха изтрити."
+msgstr "%d езикова двойка(и) са изтрити."
 
 #: formsettings.rtmclearconfirm
 #, object-pascal-format
@@ -838,12 +838,12 @@ msgid ""
 "Delete the selected %d language pair(s)?\n"
 "This action cannot be undone."
 msgstr ""
-"Сигурни ли сте, че искате да изтриете избраните %d езикови пара?\n"
+"Сигурни ли сте, че искате да изтриете избраните %d езикова двойка(и)?\n"
 "Това действие не може да бъде отменено."
 
 #: formsettings.rtmcleartitle
 msgid "Clear translation memory"
-msgstr "Изчистване на памет за преводи"
+msgstr "Изчисти паметта за преводи"
 
 #: formsettings.rtmcompactconfirm
 #, object-pascal-format
@@ -851,13 +851,13 @@ msgid ""
 "Rebuild the selected %d language pair(s)?\n"
 "Entries that no longer match the current filters (length, multi-line) will be removed."
 msgstr ""
-"Искате ли да възстановите избраните %d езикови пара?\n"
-"Записите, че вече не отговарят на настоящите филтри (дължина, многоредки) ще бъдат изчистени."
+"Искате ли да възстанови избраните %d езикова двойка(и)?\n"
+"Записите, не съответстващи на настоящите филтри (дълги, многоредови) ще бъдат изчистени."
 
 #: formsettings.rtmcompactdone
 #, object-pascal-format
 msgid "Compacted %d language pair(s)."
-msgstr "%d езикови пара бяха обединени."
+msgstr "Обединени %d езикова двойка(и)."
 
 #: formsettings.rtmcompacttitle
 msgid "Compact translation memory"
@@ -866,7 +866,7 @@ msgstr "Обединяване на памет за преводи"
 #: formsettings.rtmexportdone
 #, object-pascal-format
 msgid "Exported %d language pair(s)."
-msgstr "%d езикови пара бяха изэкспортирани."
+msgstr "Експортирани %d езикова двойка(и)."
 
 #: formsettings.rtmexportfilter
 msgid "Zip archives (*.zip)|*.zip"
@@ -883,7 +883,7 @@ msgstr "Експортиране на памет за преводи"
 #: formsettings.rtmimportdone
 #, object-pascal-format
 msgid "Imported %d language pair(s)."
-msgstr "%d езикови пара бяха импортирани."
+msgstr "Импортирани %d езикова двойка(и)."
 
 #: formsettings.rtmimporterror
 #, object-pascal-format
@@ -953,40 +953,40 @@ msgstr "Несъответствие на регистъра: изходният
 
 #: pocheck.rsqacasemismatchupper
 msgid "Case mismatch: source is all uppercase, translation is not"
-msgstr "Несъответствие на регистъра: изходният текст е с главни букви, а преводът не."
+msgstr "Несъответствие в регистъра: изходният текст е с главни букви, а преводът не"
 
 #: pocheck.rsqanewlineleadingmismatch
 msgid "Leading newline mismatch"
-msgstr "Несъответствие на воден ред"
+msgstr "Несъответствие за нов ред"
 
 #: pocheck.rsqanewlinetrailingmismatch
 msgid "Trailing newline mismatch"
-msgstr "Несъответствие на закантуван ред"
+msgstr "Несъответствие за край на нов ред"
 
 #: pocheck.rsqaplaceholderextra
 #, object-pascal-format
 msgid "Extra placeholder in translation: %s"
-msgstr "Допълнителен запъхващ се знак в превода: %s"
+msgstr "Допълнителен заместващ знак в превода: %s"
 
 #: pocheck.rsqaplaceholdermissing
 #, object-pascal-format
 msgid "Missing placeholder in translation: %s"
-msgstr "Липса на запъхващ знак в превода: %s"
+msgstr "Липса на заместващ знак в превода: %s"
 
 #: pocheck.rsqapluralformsmismatch
 #, object-pascal-format
 msgid "Plural forms count mismatch: expected %d, found %d"
-msgstr "Несъответствие в броя на формите на множествените: очакван %d, намерен %d"
+msgstr "Несъответствие в броя на множествени форми: очаквано %d, намерено %d"
 
 #: pocheck.rsqapunctuationbracketmismatch
 #, object-pascal-format
 msgid "Bracket mismatch: expected \"%s\", found \"%s\""
-msgstr "Несъответствие на дупки: очакван \"%s\", намерен \"%s\""
+msgstr "Несъответствие скоби: очаквано \"%s\", намерено \"%s\""
 
 #: pocheck.rsqapunctuationendmismatch
 #, object-pascal-format
 msgid "End punctuation mismatch: source ends with \"%s\", translation ends with \"%s\""
-msgstr "Несъответствие на прекъсването на изречението: изходният текст завършва със \" %s\", а преводът със \" %s\""
+msgstr "Несъответствие за пунктоация: изходният текст завършва със \" %s\", а преводът със \" %s\""
 
 #: pocheck.rsqaspacebeforepunctuation
 #, object-pascal-format
@@ -996,7 +996,7 @@ msgstr "Пробел пред знака: \"%s\""
 #: pocheck.rsqaspacedouble
 msgctxt "pocheck.rsqaspacedouble"
 msgid "Double space in translation"
-msgstr "Двойн пробел в превода"
+msgstr "Двоен пробел в превода"
 
 #: pocheck.rsqaspaceleading
 msgctxt "pocheck.rsqaspaceleading"
@@ -1011,7 +1011,7 @@ msgstr "Липса на пробел след знака: \"%s\""
 #: pocheck.rsqaspacetrailing
 msgctxt "pocheck.rsqaspacetrailing"
 msgid "Trailing space in translation"
-msgstr "Крайен пробел в превода"
+msgstr "Краен пробел в превода"
 
 #: tformaboutpobatch.buttonok.caption
 msgctxt "tformaboutpobatch.buttonok.caption"
@@ -1020,7 +1020,7 @@ msgstr "OK"
 
 #: tformaboutpobatch.caption
 msgid "About"
-msgstr "За програмото"
+msgstr "Относно"
 
 #: tformaboutpobatch.label1.caption
 msgid "the GNU General Public License, Version 3"
@@ -1028,11 +1028,11 @@ msgstr "the GNU General Public License, Version 3"
 
 #: tformaboutpobatch.labelby.caption
 msgid "by Alexander Tverskoy is licensed under"
-msgstr "by Alexander Tverskoy is licensed under"
+msgstr "от Александър Тверской е лицензиран под"
 
 #: tformaboutpobatch.labellic.caption
 msgid "For questions or feedback, contact me at"
-msgstr "For questions or feedback, contact me at"
+msgstr "За въпроси или обратна връзка, се свържете с мен"
 
 #: tformaboutpobatch.labellicurl.caption
 msgid "astverskoy@gmail.com"
@@ -1056,7 +1056,7 @@ msgstr "https://github.com/plaintool/pobatch"
 
 #: tformaboutpobatch.labelversion.caption
 msgid "Version"
-msgstr "Version"
+msgstr "Версия"
 
 #: tformdonatepobatch.btnok.caption
 msgctxt "tformdonatepobatch.btnok.caption"
@@ -1065,7 +1065,7 @@ msgstr "OK"
 
 #: tformdonatepobatch.caption
 msgid "Buy me a coffee"
-msgstr "Купете ми кока"
+msgstr "Купи ми кафе"
 
 #: tformdonatepobatch.labelbank.caption
 msgid "Donate with Bank Card or PayPal"
@@ -1077,7 +1077,7 @@ msgstr "https://app.lava.top/astverskoy?tabId=about&currency=EUR"
 
 #: tformdonatepobatch.labelcontribution.caption
 msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
-msgstr "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "Всеки принос помага за поддържането на активността на проекта и неговото развитие. Благодаря за подкрепата!"
 
 #: tformdonatepobatch.labelcrypto.caption
 msgid "Donate with Cryptocurrency"
@@ -1089,11 +1089,11 @@ msgstr "https://nowpayments.io/donation/astverskoy"
 
 #: tformdonatepobatch.labeldonate.caption
 msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
-msgstr "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "Здравейте! Подхранете този страстен проект с малко кофеин! Всяко дарение помага кодът да се развива и кафето да се свари. Благодаря ви, че подкрепяте работата и разработчика, който стои зад нея!"
 
 #: tformdonatepobatch.labelsupport.caption
 msgid "You can support development through one of the following options:"
-msgstr "You can support development through one of the following options:"
+msgstr "Можете да подкрепите развитието чрез една от следните опции:"
 
 #: tformpobatch.acheckcaseallupper.caption
 msgid "Case mismatch: source is all uppercase"
@@ -1109,7 +1109,7 @@ msgstr "QA проверки включени"
 
 #: tformpobatch.achecknewlines.caption
 msgid "Newline mismatch (leading / trailing)"
-msgstr "Несъответствие на воден ред (начален / крайен)"
+msgstr "ННесъответствие за нов ред (водещ / последващ)"
 
 #: tformpobatch.acheckplaceholderextra.caption
 msgid "Extra placeholder in translation"
@@ -1121,15 +1121,15 @@ msgstr "Липса на знак в превода"
 
 #: tformpobatch.acheckpluralcount.caption
 msgid "Plural forms count mismatch"
-msgstr "Несъответствие в броя на формите на множествените"
+msgstr "Несъответствие в броя на множествените форми"
 
 #: tformpobatch.acheckpunctbracket.caption
 msgid "Bracket mismatch"
-msgstr "Несъответствие на дупки"
+msgstr "Несъответствие скоби"
 
 #: tformpobatch.acheckpunctend.caption
 msgid "End punctuation mismatch"
-msgstr "Несъответствие на прекъсването на изречението"
+msgstr "Несъответствие за прекъсване на изречението"
 
 #: tformpobatch.acheckspaceafterpunct.caption
 msgid "Missing space after punctuation"
@@ -1152,37 +1152,37 @@ msgstr "Начален пробел в превода"
 #: tformpobatch.acheckspacetrailing.caption
 msgctxt "tformpobatch.acheckspacetrailing.caption"
 msgid "Trailing space in translation"
-msgstr "Крайен пробел в превода"
+msgstr "Краен пробел в превода"
 
 #: tformpobatch.aclearidentical.caption
 msgid "Clear Identical"
-msgstr "Изчистване на идентичните"
+msgstr "Изчисти идентичните"
 
 #: tformpobatch.aclosepath.caption
 msgid "Close Path"
-msgstr "Закриване на пътя"
+msgstr "Затвори пътя"
 
 #: tformpobatch.acopy.caption
 msgctxt "tformpobatch.acopy.caption"
 msgid "Copy"
-msgstr "Копиране"
+msgstr "Копирай"
 
 #: tformpobatch.acopysourcetext.caption
 msgid "Copy Source Text"
-msgstr "Копиране на изходния текст"
+msgstr "Копирай изходния текст"
 
 #: tformpobatch.acut.caption
 msgctxt "tformpobatch.acut.caption"
 msgid "Cut"
-msgstr "Изрязване"
+msgstr "Изрежи"
 
 #: tformpobatch.adelete.caption
 msgid "Delete"
-msgstr "Изтриване"
+msgstr "Изтрий"
 
 #: tformpobatch.aeditpluralform.caption
 msgid "Edit Plural Form"
-msgstr "Редактиране на формата на множествените"
+msgstr "Редактиране на множествените форми"
 
 #: tformpobatch.aedittranslationonly.caption
 msgid "Edit Translation Only"
@@ -1194,7 +1194,7 @@ msgstr "Изход"
 
 #: tformpobatch.agoto.caption
 msgid "Go To..."
-msgstr "Отидете до..."
+msgstr "Отиди до..."
 
 #: tformpobatch.alangarabic.caption
 msgid "Arabic"
@@ -1314,7 +1314,7 @@ msgstr "Tiếng Việt"
 
 #: tformpobatch.amarkasvalid.caption
 msgid "Mark As Valid"
-msgstr "Отбелязване като валиден"
+msgstr "Отбележи като валиден"
 
 #: tformpobatch.amemobidirighttoleft.caption
 msgid "Right-To-Left Reading Order"
@@ -1322,17 +1322,17 @@ msgstr "Порядък на четене от дясно наляво"
 
 #: tformpobatch.amemoclear.caption
 msgid "Clear"
-msgstr "Изчистване"
+msgstr "Изчисти"
 
 #: tformpobatch.amemocopy.caption
 msgctxt "tformpobatch.amemocopy.caption"
 msgid "Copy"
-msgstr "Копиране"
+msgstr "Копирай"
 
 #: tformpobatch.amemocut.caption
 msgctxt "tformpobatch.amemocut.caption"
 msgid "Cut"
-msgstr "Изрязване"
+msgstr "Изрежи"
 
 #: tformpobatch.amemodefaultzoom.caption
 msgid "Default Zoom"
@@ -1341,16 +1341,16 @@ msgstr "Zoom по подразбиране"
 #: tformpobatch.amemopaste.caption
 msgctxt "tformpobatch.amemopaste.caption"
 msgid "Paste"
-msgstr "Встапване"
+msgstr "Вмъкни"
 
 #: tformpobatch.amemoselectall.caption
 msgctxt "tformpobatch.amemoselectall.caption"
 msgid "Select All"
-msgstr "Избиране на всички"
+msgstr "Избери всички"
 
 #: tformpobatch.amemoundo.caption
 msgid "Undo"
-msgstr "Отмянане"
+msgstr "Отмяна"
 
 #: tformpobatch.anew.caption
 msgid "New"
@@ -1362,28 +1362,28 @@ msgstr "Нов от POT..."
 
 #: tformpobatch.anewwindow.caption
 msgid "New Window"
-msgstr "Ново прозорце"
+msgstr "Нов прозорец"
 
 #: tformpobatch.aopen.caption
 msgid "Open"
-msgstr "Отваряне"
+msgstr "Отвори"
 
 #: tformpobatch.aopenpath.caption
 msgid "Open Path..."
-msgstr "Отваряне на пътя..."
+msgstr "Отвори пътя..."
 
 #: tformpobatch.apaste.caption
 msgctxt "tformpobatch.apaste.caption"
 msgid "Paste"
-msgstr "Встапване"
+msgstr "Вмъкни"
 
 #: tformpobatch.apathclearall.caption
 msgid "Clear All Translations"
-msgstr "Изчистване на всички преводи"
+msgstr "Изчисти всички преводи"
 
 #: tformpobatch.apathclearfuzzy.caption
 msgid "Clear Fuzzy Translations"
-msgstr "Изчистване на fuzzy преводи"
+msgstr "Изчисти fuzzy преводи"
 
 #: tformpobatch.apathcopysource.caption
 msgid "Copy Source To Empty"
@@ -1391,52 +1391,52 @@ msgstr "Копиране на изходен текст в празен"
 
 #: tformpobatch.apathdeletefiles.caption
 msgid "Delete File(s)"
-msgstr "Изтриване на файл(и)"
+msgstr "Изтрий файл(ове)"
 
 #: tformpobatch.apathnewfilesfrompot.caption
 msgid "New File(s) From Pot..."
-msgstr "Нов файл(и) от POT..."
+msgstr "Нов файл(ове) от POT..."
 
 #: tformpobatch.apathremember.caption
 msgid "Remember Translations"
-msgstr "Запомняне на преводи"
+msgstr "Запомни преводите"
 
 #: tformpobatch.apathrenamefiles.caption
 msgid "Rename File(s)"
-msgstr "Преименуване на файл(и)"
+msgstr "Преименувай файл(ове)"
 
 #: tformpobatch.apathrescan.caption
 msgid "Rescan Path"
-msgstr "Прескануване на пътя"
+msgstr "Пресканирай пътя"
 
 #: tformpobatch.apathselectall.caption
 msgctxt "tformpobatch.apathselectall.caption"
 msgid "Select All"
-msgstr "Избиране на всички"
+msgstr "Избери всички"
 
 #: tformpobatch.apathshowfileinexplorer.caption
 msgid "Show File In Explorer..."
-msgstr "Показване на файл в Explorer..."
+msgstr "Покажи файла в Explorer..."
 
 #: tformpobatch.apathsyncfileswithpot.caption
 msgid "Sync File(s) With Pot"
-msgstr "Синхронизиране на файл(и) с POT"
+msgstr "Синхронизирай файл(ове) с POT"
 
 #: tformpobatch.apathtranslatemissing.caption
 msgid "Translate Missing In File(s)"
-msgstr "Превод на отсъстващи в файл(и)"
+msgstr "Превод на липсващи в файл(ове)"
 
 #: tformpobatch.apathtranslatemissingfrommemory.caption
 msgid "Translate Missing In File(s) From Memory"
-msgstr "Превод на отсъстващи в файл(и) от памет"
+msgstr "Превод на липсващи в файл(ове) от паметта"
 
 #: tformpobatch.apathvalidfiles.caption
 msgid "Mark File(s) As Valid"
-msgstr "Отбелязване на файл(и) като валиден"
+msgstr "Отбележи файл(ове) като валиден"
 
 #: tformpobatch.arememberfile.caption
 msgid "Remember File..."
-msgstr "Запомняне на файл..."
+msgstr "Запомняне на файла..."
 
 #: tformpobatch.arememberpath.caption
 msgid "Remember Path..."
@@ -1444,7 +1444,7 @@ msgstr "Запомняне на пътя..."
 
 #: tformpobatch.asave.caption
 msgid "Save"
-msgstr "Запазване"
+msgstr "Запази"
 
 #: tformpobatch.asaveas.caption
 msgid "Save As..."
@@ -1453,7 +1453,7 @@ msgstr "Запазване като..."
 #: tformpobatch.aselectall.caption
 msgctxt "tformpobatch.aselectall.caption"
 msgid "Select All"
-msgstr "Избиране на всички"
+msgstr "Избери всички"
 
 #: tformpobatch.asettings.caption
 msgid "Settings..."
@@ -1461,11 +1461,11 @@ msgstr "Настройки..."
 
 #: tformpobatch.aspellchecksource.caption
 msgid "Spell Check Source"
-msgstr "Проверка на правописа изходния текст"
+msgstr "Правописна проверка на изходния текст"
 
 #: tformpobatch.aspellchecktranslation.caption
 msgid "Spell Check Translation"
-msgstr "Проверка на правописа превода"
+msgstr "Правописна проверка на превода"
 
 #: tformpobatch.asyncwithpot.caption
 msgid "Sync With Pot"
@@ -1473,19 +1473,19 @@ msgstr "Синхронизация с POT"
 
 #: tformpobatch.atranslatefrommemory.caption
 msgid "Translate From Memory"
-msgstr "Превод от памет"
+msgstr "Превод от паметта"
 
 #: tformpobatch.atranslatemissing.caption
 msgid "Translate Missing"
-msgstr "Превод на отсъстващи"
+msgstr "Превод на липсващи"
 
 #: tformpobatch.atranslatemissingfrommemory.caption
 msgid "Translate Missing From Memory"
-msgstr "Превод на отсъстващи от памет"
+msgstr "Превод на липсващ от паметта"
 
 #: tformpobatch.atranslateselected.caption
 msgid "Translate Selected"
-msgstr "Превод на избрани"
+msgstr "Превод на избраните"
 
 #: tformpobatch.aundochanges.caption
 msgid "Undo Changes"
@@ -1517,7 +1517,7 @@ msgstr "WindowsCRLF"
 
 #: tformpobatch.filter.texthint
 msgid "Type to filter..."
-msgstr "Въведете текст за филтър..."
+msgstr "Въведете текст за филтъра..."
 
 #: tformpobatch.grid.columns[0].title.caption
 msgid "Valid"
@@ -1568,7 +1568,7 @@ msgstr "Стойност"
 
 #: tformpobatch.gridplural.columns[0].title.caption
 msgid "Plural Forms"
-msgstr "Форми на множните"
+msgstr "Множествени Форми"
 
 #: tformpobatch.labelswitch.caption
 msgid "Needs Validation"
@@ -1577,23 +1577,23 @@ msgstr "Изисква валидация"
 #: tformpobatch.memoplural.hint
 msgctxt "tformpobatch.memoplural.hint"
 msgid "Plural form"
-msgstr "Форма на множните"
+msgstr "Множествена Форма"
 
 #: tformpobatch.menuabout.caption
 msgid "About..."
-msgstr "За програмото..."
+msgstr "Относно..."
 
 #: tformpobatch.menuautocheckupdates.caption
 msgid "Auto Check Updates"
-msgstr "Автоматична проверка на обновявания"
+msgstr "Автопроверка за обновявания"
 
 #: tformpobatch.menubuymeacoffee.caption
 msgid "Buy Me a Coffee..."
-msgstr "Купете ми кока..."
+msgstr "Купи ми кафе..."
 
 #: tformpobatch.menucheckforupdates.caption
 msgid "Check For Updates"
-msgstr "Проверка на обновявания"
+msgstr "Провери за обновявания"
 
 #: tformpobatch.menuedit.caption
 msgid "Edit"
@@ -1606,7 +1606,7 @@ msgstr "Файл"
 #: tformpobatch.menufileopenrecent.caption
 msgctxt "tformpobatch.menufileopenrecent.caption"
 msgid "Open Recent"
-msgstr "Отваряне на последния"
+msgstr "Отвори последния"
 
 #: tformpobatch.menuformat.caption
 msgid "Format"
@@ -1615,7 +1615,7 @@ msgstr "Формат"
 #: tformpobatch.menuformatqachecks.caption
 msgctxt "tformpobatch.menuformatqachecks.caption"
 msgid "QA Checks"
-msgstr "QA проверки"
+msgstr "QA Checks"
 
 #: tformpobatch.menuhelp.caption
 msgid "Help"
@@ -1631,14 +1631,14 @@ msgstr "https://www.gnu.org/software/gettext/manual"
 
 #: tformpobatch.menulanguage.caption
 msgid "Language"
-msgstr "Language"
+msgstr "Език"
 
 #: tformpobatch.menutranslate.caption
+#: tformpobatch.menutranslateconfig.caption
 msgctxt "tformpobatch.menutranslate.caption"
 msgid "Translate"
 msgstr "Превод"
 
-#: tformpobatch.menutranslateconfig.caption
 msgid "Config"
 msgstr "Конфиг"
 
@@ -1654,12 +1654,12 @@ msgstr "Контекст на колоната"
 #: tformpobatch.menuviewcolumnplural.caption
 msgctxt "tformpobatch.menuviewcolumnplural.caption"
 msgid "Column Plural"
-msgstr "Колоната на множните"
+msgstr "Множествена колона"
 
 #: tformpobatch.menuviewcolumnreference.caption
 msgctxt "tformpobatch.menuviewcolumnreference.caption"
 msgid "Column Reference"
-msgstr "Справка на колоната"
+msgstr "Препратка към колоната"
 
 #: tformpobatch.menuviewheaders.caption
 msgctxt "tformpobatch.menuviewheaders.caption"
@@ -1683,16 +1683,16 @@ msgstr "Превод"
 #: tformpobatch.spellsource.addtodictionarycaption
 msgctxt "tformpobatch.spellsource.addtodictionarycaption"
 msgid "Add To Dictionary"
-msgstr "Добавяне в речника"
+msgstr "Добави към речника"
 
 #: tformpobatch.spelltranslation.addtodictionarycaption
 msgctxt "tformpobatch.spelltranslation.addtodictionarycaption"
 msgid "Add To Dictionary"
-msgstr "Добавяне в речника"
+msgstr "Добави към речника"
 
 #: tformsettingspobatch.btnapply.caption
 msgid "Apply"
-msgstr "Прилагане"
+msgstr "Приложи"
 
 #: tformsettingspobatch.btncancel.caption
 msgctxt "tformsettingspobatch.btncancel.caption"
@@ -1701,7 +1701,7 @@ msgstr "Отмяна"
 
 #: tformsettingspobatch.btndefault.caption
 msgid "Restore Defaults"
-msgstr "Възстановяване на стандартните"
+msgstr "Възстанови подразбиране"
 
 #: tformsettingspobatch.btnfont.caption
 msgid "Font..."
@@ -1714,7 +1714,7 @@ msgstr "OK"
 
 #: tformsettingspobatch.btnreset.caption
 msgid "Reset"
-msgstr "Скриване"
+msgstr "Ресет"
 
 #: tformsettingspobatch.caption
 msgid "Settings"
@@ -1730,15 +1730,15 @@ msgstr "Позволява влизане и проверка на парола 
 
 #: tformsettingspobatch.checkrememberlastfile.caption
 msgid "Remember Last Opened File"
-msgstr "Запомняне на последния отворен файл"
+msgstr "Запомни последния отворен файл"
 
 #: tformsettingspobatch.checkrememberlastfile.hint
 msgid "Automatically reopen the last opened translation file when the application starts."
-msgstr "Автоматично отваря последния отворен преводен файл, когато приложението се стартира."
+msgstr "Автоматично отвари последния отворян преводен файл, когато приложението стартира."
 
 #: tformsettingspobatch.checkshowsuccess.caption
 msgid "Show Success Notifications"
-msgstr "Показване на съобщения за успеха"
+msgstr "Показвай съобщения за успех"
 
 #: tformsettingspobatch.checkshowsuccess.hint
 msgid "Display a notification when an operation completes successfully"
@@ -1746,19 +1746,19 @@ msgstr "Показване на съобщение, когато операци�
 
 #: tformsettingspobatch.checkskiptmmultilinestrings.caption
 msgid "Skip Multi-Line Strings"
-msgstr "Пропускане на многредки низове"
+msgstr "ППропусни многоредови низове"
 
 #: tformsettingspobatch.checkskiptmmultilinestrings.hint
 msgid "Ignore entries whose source text spans multiple lines."
-msgstr "Игнорване на записи, чието изходно текст се разпространява на няколко редове."
+msgstr "Игнорай записи, чийто изходен текст е на няколко реда."
 
 #: tformsettingspobatch.checkswitchtotable.caption
 msgid "Switch To Translation Table On File Selection"
-msgstr "Прехвърляне към таблица с преводи при избиране на файл"
+msgstr "Превключи към таблица с преводи при избиране на файл"
 
 #: tformsettingspobatch.checkswitchtotable.hint
 msgid "Automatically switch to the translation table when a file is selected. To focus the file list instead, click the already selected file again."
-msgstr "Автоматично се превръща в таблицата с преводи, когато е избран файл. За да се фокусира в списък с файлове, кликнете върху вече избрания файл отново."
+msgstr "Автоматично превърни в таблицата с преводи, когато е избран файл. За да се фокусира в списък с файлове, кликнете върху вече избрания файл отново."
 
 #: tformsettingspobatch.checktmautopopulateonsave.caption
 msgid "Auto Populate On Save"
@@ -1766,7 +1766,7 @@ msgstr "Автоматично попълване при запис"
 
 #: tformsettingspobatch.checktmautopopulateonsave.hint
 msgid "Store current file translations into the memory on every save."
-msgstr "Запазвайте преводите на текущия файл в паметта при всяко записване."
+msgstr "Запазвай преводите на текущия файл в паметта при всеки запис."
 
 #: tformsettingspobatch.checktmenabled.caption
 msgid "Enabled"
@@ -1774,11 +1774,11 @@ msgstr "Включено"
 
 #: tformsettingspobatch.checktmenabled.hint
 msgid "Enable or disable the translation memory entirely."
-msgstr "Позволете или забранете паметта за преводи напълно."
+msgstr "Активирай или деактивирай преводната памет изцяло."
 
 #: tformsettingspobatch.comboproxymode.hint
 msgid "Defines how proxy is used no proxy system proxy or custom configuration"
-msgstr "Дефинира как се използва Proxy: без Proxy, системен Proxy или потребителска конфигурация"
+msgstr "Определя как се използва прокси сървърът, без прокси система, прокси сървър или потреб. настройка"
 
 #: tformsettingspobatch.comboproxymode.text
 msgctxt "tformsettingspobatch.comboproxymode.text"
@@ -1815,7 +1815,7 @@ msgstr "Парола, използвана за аутентикация с пр
 
 #: tformsettingspobatch.edittranslatoremail.hint
 msgid "The translator's email address will be recorded in the translation file when it is saved."
-msgstr "Адресът на имейла на превода ще се записва в превода при запис."
+msgstr "Адресът на имейла за превода ще се записва в превода при запис."
 
 #: tformsettingspobatch.edittranslatorname.hint
 msgid "The translator's name will be recorded in the translation file when it is saved."
@@ -1889,7 +1889,7 @@ msgstr "Режим на прокси"
 
 #: tformsettingspobatch.labelproxytype.caption
 msgid "Proxy Type"
-msgstr "Вид на прокси"
+msgstr "Вид прокси"
 
 #: tformsettingspobatch.labelrequesttimeout.caption
 msgid "Request, sec"
@@ -1901,11 +1901,11 @@ msgid ""
 "(0 = unlimited)"
 msgstr ""
 "Максимална дължина на изхода\n"
-"(0 = без граница)"
+"(0 = неограничен)"
 
 #: tformsettingspobatch.labeltmstorage.caption
 msgid "Storage Directory"
-msgstr "Директория за съхранение"
+msgstr "Директория за запазване"
 
 #: tformsettingspobatch.labeltranslatoremail.caption
 msgid "Email"
@@ -1918,11 +1918,11 @@ msgstr "Име"
 
 #: tformsettingspobatch.menutmclearselected.caption
 msgid "Clear Selected"
-msgstr "Изчистване на избраното"
+msgstr "Изчисти избраното"
 
 #: tformsettingspobatch.menutmcompactselected.caption
 msgid "Compact Selected"
-msgstr "Обединяване на избраното"
+msgstr "Обедини избраното"
 
 #: tformsettingspobatch.menutmexportselected.caption
 msgid "Export Selected..."
@@ -1934,12 +1934,12 @@ msgstr "Импортиране..."
 
 #: tformsettingspobatch.menutmrefresh.caption
 msgid "Refresh"
-msgstr "Обновяване"
+msgstr "Опресни"
 
 #: tformsettingspobatch.menutmselectall.caption
 msgctxt "tformsettingspobatch.menutmselectall.caption"
 msgid "Select All"
-msgstr "Избиране на всички"
+msgstr "Избери всички"
 
 #: tformsettingspobatch.pagegeneral.caption
 msgid "General"
@@ -1964,7 +1964,7 @@ msgstr "По подразбиране, 0"
 
 #: tformsettingspobatch.spinconnecttimeout.hint
 msgid "Time to establish connection If 0 default 10 seconds is used"
-msgstr "Време за установяване на връзка. Ако е 0, се използва стандартно 10 секунди."
+msgstr "Време за установяване на връзка. Ако е 0, се използва по подразбиране 10 секунди"
 
 #: tformsettingspobatch.spinproxyport.hint
 msgid "Network port used by the proxy server"
@@ -1972,9 +1972,8 @@ msgstr "Мрежов порт, използван от сървъра-прокс
 
 #: tformsettingspobatch.spinrequesttimeout.hint
 msgid "Time to wait for response and data If 0 default 300 seconds is used"
-msgstr "Време за изчакване на отговорка и данни. Ако е 0, се използва стандартно 300 секунди."
+msgstr "Време за изчакване на отговор и данни ако е 0 използва подразб. 300 секунди"
 
 #: tformsettingspobatch.spintmmaxsourcelength.hint
 msgid "Entries with a longer source text are ignored to keep the memory small."
-msgstr "Записите с по-дълг изходен текст се игнорират, за да се запази малката памет."
-
+msgstr "Записите с по-дълг изходен текст се игнорират, за да запази малкото памет."
