@@ -3221,8 +3221,67 @@ procedure TformPoBatch.ListPathDrawItem(Control: TWinControl; Index: integer; AR
 var
   Status: TPoFileStatus;
   BgColor: TColor;
+  MarkerColor: TColor;
   BrightSelection: boolean;
   ListBox: TListBox;
+  ItemText: string;
+  TextLeft, TextW, MarkerLeft, MarkerSize, CY: integer;
+
+  function IsModifiedListItem(AIndex: integer): boolean;
+  begin
+    // Marks the list entry that holds the currently opened document while it
+    // has unsaved changes
+    Result := False;
+    if not Changed then Exit;
+    if FFileName = string.Empty then Exit;
+    if (AIndex < 0) or (AIndex >= FPoFiles.Count) then Exit;
+    if FPoFiles.IndexOf(FFileName) = AIndex then
+      Result := True;
+  end;
+
+  function IsCurrentListItem(AIndex: integer): boolean;
+  begin
+    // Marks the list entry that holds the currently opened document
+    Result := False;
+    if FFileName = string.Empty then Exit;
+    if (AIndex < 0) or (AIndex >= FPoFiles.Count) then Exit;
+    Result := FPoFiles.IndexOf(FFileName) = AIndex;
+  end;
+
+  // Draws a simple left-pointing right isosceles triangle (90 degree tip)
+  // using standard GDI Polygon; the 45-degree edges get an extra silver
+  // line offset by 1 px, which visually antialiases the staircase gaps
+  procedure DrawTriangle(ATipX, ATipY, ASize: integer; AFill, ABorder: TColor);
+  var
+    Points: array[0..2] of TPoint;
+    HalfSize: integer;
+  begin
+    HalfSize := ASize div 2;
+    Points[0] := Point(ATipX, ATipY);
+    Points[1] := Point(ATipX + HalfSize, ATipY - HalfSize);
+    Points[2] := Point(ATipX + HalfSize, ATipY + HalfSize);
+
+    // Fill the triangle and draw the normal 1 px border
+    ListBox.Canvas.Brush.Style := bsSolid;
+    ListBox.Canvas.Brush.Color := AFill;
+    ListBox.Canvas.Pen.Style := psSolid;
+    ListBox.Canvas.Pen.Color := ABorder;
+    ListBox.Canvas.Pen.Width := 1;
+    ListBox.Canvas.Polygon(Points);
+
+    // Soften the 45-degree edges: draw a second 1 px line shifted outward
+    // using a silver tone, which fills the staircase gaps left by GDI
+    ListBox.Canvas.Pen.Color := clGray;
+
+    // Upper edge: shift up by 1 px
+    ListBox.Canvas.MoveTo(Points[0].X, Points[0].Y - 1);
+    ListBox.Canvas.LineTo(Points[1].X, Points[1].Y - 1);
+
+    // Lower edge: shift down by 1 px
+    ListBox.Canvas.MoveTo(Points[0].X, Points[0].Y + 1);
+    ListBox.Canvas.LineTo(Points[2].X, Points[2].Y + 1);
+  end;
+
 begin
   if (Index < 0) or (Index >= Length(FFileStatuses)) then Exit;
 
@@ -3268,8 +3327,39 @@ begin
     else
       Font.Color := clWindowText;
 
-    // Draw the text with a small offset
-    TextOut(ARect.Left + 4, ARect.Top + 2, ListBox.Items[Index]);
+    // Draw the filename first; the modified marker is part of the text,
+    // and the status triangle goes after it for the currently opened file
+    ItemText := ListBox.Items[Index];
+    if IsModifiedListItem(Index) then
+      ItemText := ItemText + '*';
+    TextLeft := ARect.Left + 4;
+    TextOut(TextLeft, ARect.Top + 2, ItemText);
+
+    // Draw a small arrowhead after the name of the currently opened file
+    if IsCurrentListItem(Index) then
+    begin
+      TextW := TextWidth(ItemText);
+      // Slightly larger size for better visibility
+      MarkerSize := TextHeight('M') * 3 div 4;
+      if MarkerSize < 9 then
+        MarkerSize := 9;
+
+      MarkerLeft := TextLeft + TextW + 4;
+      // Vertically center the tip on the text line; the +1 nudges it
+      // down to match the visual center of the capital letters
+      CY := ARect.Top + 2 + TextHeight('M') div 2 + 1;
+
+      // The triangle fill mirrors the status; the default clWindow for an
+      // untranslated file is replaced with a neutral gray so it stays
+      // visible on the blue selection background
+      case Status of
+        psCorrect: MarkerColor := TDarkUtils.ThemeColor(clSoftGreen, clSoftGreenDark);
+        psFuzzy: MarkerColor := TDarkUtils.ThemeColor(clInfo, clInfoDark);
+        else
+          MarkerColor := ListPath.Color;
+      end;
+      DrawTriangle(MarkerLeft, CY, MarkerSize, MarkerColor, clWindowText);
+    end;
 
     // Draw focus rectangle if the control is focused and item is selected
     if odFocused in State then
@@ -4632,6 +4722,7 @@ procedure TformPoBatch.UpdateInterface;
 begin
   UpdateCaption;
   ListPath.ItemHeight := Self.Canvas.TextHeight('Hg') + 4;
+  ListPath.Invalidate;   // repaint the list (e.g. modified marker)
   Application.QueueAsyncCall(@FixSplitters, 0);
 end;
 

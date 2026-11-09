@@ -633,7 +633,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
           )
           ColWidths = (
             200
-            222
+            205
           )
         end
       end
@@ -695,7 +695,7 @@ object formSettingsPoBatch: TformSettingsPoBatch
       Left = 5
       Height = 25
       Top = 3
-      Width = 150
+      Width = 170
       Anchors = [akLeft, akBottom]
       Caption = 'Restore Defaults'
       TabOrder = 0
