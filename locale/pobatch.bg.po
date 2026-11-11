@@ -1634,13 +1634,13 @@ msgid "Language"
 msgstr "Език"
 
 #: tformpobatch.menutranslate.caption
-#: tformpobatch.menutranslateconfig.caption
 msgctxt "tformpobatch.menutranslate.caption"
 msgid "Translate"
 msgstr "Превод"
 
+#: tformpobatch.menutranslateconfig.caption
 msgid "Config"
-msgstr "Конфиг"
+msgstr "Конфигурация"
 
 #: tformpobatch.menuview.caption
 msgid "View"
