@@ -20,6 +20,7 @@ uses
   fpjson,
   Graphics,
   Math,
+  Localize,
   MainUnit;
 
 procedure SaveFormSettings(Form: TformPoBatch);
@@ -187,7 +188,10 @@ begin
     JSONObj.Add('AutoCheckUpdates', Form.AutoCheckUpdates);
     JSONObj.Add('TranslatorName', Form.TranslatorName);
     JSONObj.Add('TranslatorEmail', Form.TranslatorEmail);
-    JSONObj.Add('Language', Form.Language);
+
+    // Persist the interface language
+    JSONObj.Add('Language', Localize.Language);
+    JSONObj.Add('CustomPoFile', Localize.CustomPoFile);
 
     // Save main font
     JSONObj.Add('FontName', Form.Font.Name);
@@ -648,9 +652,13 @@ begin
       if JSONObj.FindPath('LastFile') <> nil then
         Form.LastFile := JSONObj.FindPath('LastFile').AsString;
 
-      // Restore the language setting
+      // Restore the interface language so SetInterfaceLanguage in FormCreate
+      // applies the saved choice instead of falling back to the OS locale
+      if JSONObj.FindPath('CustomPoFile') <> nil then
+        Localize.CustomPoFile := JSONObj.FindPath('CustomPoFile').AsString;
+
       if JSONObj.FindPath('Language') <> nil then
-        Form.Language := JSONObj.FindPath('Language').AsString;
+        Localize.Language := JSONObj.FindPath('Language').AsString;
 
       // Restore the master QA switch
       if JSONObj.FindPath('QAChecksEnabled') <> nil then
