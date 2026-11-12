@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-09 19:31-0300\n"
+"PO-Revision-Date: 2026-11-12 22:23-0300\n"
 "Last-Translator: plaintool <astverskoy@gmail.com>\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -24,7 +24,7 @@ msgid "Translation cancelled. %d entries updated."
 msgstr "تم إلغاء الترجمة. تم تحديث %d مدخلة."
 
 #: batchop.rclearallconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Clear ALL translations in the following %d file(s)?\n"
 "Headers are preserved, all msgstr values are removed.\n"
@@ -48,7 +48,7 @@ msgid "%d translations were cleared."
 msgstr "تم مسح %d ترجمة."
 
 #: batchop.rclearfuzzyconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Clear translations of fuzzy entries in the following %d file(s)?\n"
 "This action cannot be undone within the application.\n"
@@ -82,7 +82,7 @@ msgid "%d translations were copied."
 msgstr "تم نسخ %d ترجمة."
 
 #: batchop.rcopysourceemptyconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Copy source text to empty translations in the following %d file(s)?\n"
 "This action cannot be undone within the application.\n"
@@ -107,7 +107,7 @@ msgid "Delete files"
 msgstr "حذف الملفات"
 
 #: batchop.rdeletemultipleconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Are you sure you want to delete the following %d file(s)?\n"
 "\n"
@@ -202,7 +202,7 @@ msgid "%d entries marked as valid."
 msgstr "تم تعليم %d مدخلة كصالحة."
 
 #: batchop.rmarkvalidconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Mark the following %d file(s) as valid?\n"
 "This will remove the \"fuzzy\" flag from all entries.\n"
@@ -301,7 +301,7 @@ msgid "POT file not found: %s"
 msgstr "ملف POT غير موجود: %s"
 
 #: batchop.rrememberconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Remember translations from the following %d file(s) into the memory?\n"
 "\n"
@@ -326,7 +326,7 @@ msgid "Remove fuzzy flag"
 msgstr "إزالة علامة fuzzy"
 
 #: batchop.rrenameconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Rename the following %d file(s) using base name \"%s\"?\n"
 "\n"
@@ -358,7 +358,7 @@ msgid "Select file(s) to rename!"
 msgstr "حدد الملف أو الملفات المراد إعادة تسميتها!"
 
 #: batchop.rsyncconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Synchronize the following %d file(s) with\n"
 "their matching POT files?\n"
@@ -417,7 +417,7 @@ msgid "Translation complete. %d entries updated, %d skipped."
 msgstr "اكتملت الترجمة. تم تحديث %d مدخلة، وتم تخطي %d."
 
 #: batchop.rtranslatemissingconfirm
-#, object-pascal-format, badformat
+#, object-pascal-format
 msgid ""
 "Translate missing translations in the following %d file(s)?\n"
 "This action cannot be undone within the application.\n"
@@ -1013,88 +1013,6 @@ msgctxt "pocheck.rsqaspacetrailing"
 msgid "Trailing space in translation"
 msgstr "مسافة ختامية في الترجمة"
 
-#: tformaboutpobatch.buttonok.caption
-msgctxt "tformaboutpobatch.buttonok.caption"
-msgid "OK"
-msgstr "موافق"
-
-#: tformaboutpobatch.caption
-msgid "About"
-msgstr "حول"
-
-#: tformaboutpobatch.label1.caption
-msgid "the GNU General Public License, Version 3"
-msgstr "رخصة GNU العامة، الإصدار 3"
-
-#: tformaboutpobatch.labelby.caption
-msgid "by Alexander Tverskoy is licensed under"
-msgstr "من إعداد Alexander Tverskoy ومرخص بموجب"
-
-#: tformaboutpobatch.labellic.caption
-msgid "For questions or feedback, contact me at"
-msgstr "للأسئلة أو الملاحظات، تواصل معي على"
-
-#: tformaboutpobatch.labellicurl.caption
-msgid "astverskoy@gmail.com"
-msgstr "astverskoy@gmail.com"
-
-#: tformaboutpobatch.labellicurl.hint
-msgid "mailto:astverskoy@gmail.com"
-msgstr "mailto:astverskoy@gmail.com"
-
-#: tformaboutpobatch.labelname.caption
-msgid "PoBatch © 2026"
-msgstr "PoBatch © 2026"
-
-#: tformaboutpobatch.labelurlgithub.caption
-msgid "github: plaintool/pobatch"
-msgstr "github: plaintool/pobatch"
-
-#: tformaboutpobatch.labelurlgithub.hint
-msgid "https://github.com/plaintool/pobatch"
-msgstr "https://github.com/plaintool/pobatch"
-
-#: tformaboutpobatch.labelversion.caption
-msgid "Version"
-msgstr "الإصدار"
-
-#: tformdonatepobatch.btnok.caption
-msgctxt "tformdonatepobatch.btnok.caption"
-msgid "OK"
-msgstr "موافق"
-
-#: tformdonatepobatch.caption
-msgid "Buy me a coffee"
-msgstr "اشترِ لي قهوة"
-
-#: tformdonatepobatch.labelbank.caption
-msgid "Donate with Bank Card or PayPal"
-msgstr "تبرع ببطاقة مصرفية أو PayPal"
-
-#: tformdonatepobatch.labelbank.hint
-msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
-msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
-
-#: tformdonatepobatch.labelcontribution.caption
-msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
-msgstr "كل مساهمة تساعد في إبقاء المشروع نشطًا ومتقدمًا. شكرًا لدعمك!"
-
-#: tformdonatepobatch.labelcrypto.caption
-msgid "Donate with Cryptocurrency"
-msgstr "تبرع بالعملات الرقمية"
-
-#: tformdonatepobatch.labelcrypto.hint
-msgid "https://nowpayments.io/donation/astverskoy"
-msgstr "https://nowpayments.io/donation/astverskoy"
-
-#: tformdonatepobatch.labeldonate.caption
-msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
-msgstr "مرحبًا! ادعم هذا المشروع الشغوف بجرعة كافيين صغيرة! كل تبرع يساعد في استمرار الكود وتحضير القهوة. شكرًا لدعمك للعمل والمطور الذي يقف خلفه!"
-
-#: tformdonatepobatch.labelsupport.caption
-msgid "You can support development through one of the following options:"
-msgstr "يمكنك دعم التطوير من خلال أحد الخيارات التالية:"
-
 #: tformpobatch.acheckcaseallupper.caption
 msgid "Case mismatch: source is all uppercase"
 msgstr "عدم تطابق حالة الأحرف: المصدر كله بأحرف كبيرة"
@@ -1433,6 +1351,113 @@ msgstr "ترجمة المفقود في الملف أو الملفات من ال�
 #: tformpobatch.apathvalidfiles.caption
 msgid "Mark File(s) As Valid"
 msgstr "تعليم الملف أو الملفات كصالحة"
+
+#: tformpobatch.appdialogs.aboutdialog.abouttext
+msgid "PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file."
+msgstr "PoBatch هو محرر ملفات PO سهل الاستخدام لعمليات الترجمة والتدويل. يعرض النصوص الأصلية والترجمات في جدول، مما يسمح بتحديد الأعمدة أو الصفوف وإجراء عمليات النسخ واللصق المجمعة. هذا يُسهّل تحديث الترجمات داخل ملف PO بسرعة."
+
+#: tformpobatch.appdialogs.aboutdialog.appname
+msgid "PoBatch"
+msgstr "PoBatch"
+
+#: tformpobatch.appdialogs.aboutdialog.caption
+msgctxt "tformpobatch.appdialogs.aboutdialog.caption"
+msgid "About"
+msgstr "حول"
+
+#: tformpobatch.appdialogs.aboutdialog.contactline
+msgctxt "tformpobatch.appdialogs.aboutdialog.contactline"
+msgid "For questions or feedback, contact me at"
+msgstr "للأسئلة أو الملاحظات، تواصل معي على"
+
+#: tformpobatch.appdialogs.aboutdialog.copyright
+msgid "© 2026"
+msgstr "© 2026"
+
+#: tformpobatch.appdialogs.aboutdialog.emailcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.emailcaption"
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformpobatch.appdialogs.aboutdialog.emailurl
+msgctxt "tformpobatch.appdialogs.aboutdialog.emailurl"
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformpobatch.appdialogs.aboutdialog.githubcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.githubcaption"
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformpobatch.appdialogs.aboutdialog.githuburl
+msgctxt "tformpobatch.appdialogs.aboutdialog.githuburl"
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformpobatch.appdialogs.aboutdialog.licenseline1
+msgctxt "tformpobatch.appdialogs.aboutdialog.licenseline1"
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "من إعداد Alexander Tverskoy ومرخص بموجب"
+
+#: tformpobatch.appdialogs.aboutdialog.licenseline2
+msgctxt "tformpobatch.appdialogs.aboutdialog.licenseline2"
+msgid "the GNU General Public License, Version 3"
+msgstr "رخصة GNU العامة، الإصدار 3"
+
+#: tformpobatch.appdialogs.aboutdialog.okcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.okcaption"
+msgid "OK"
+msgstr "موافق"
+
+#: tformpobatch.appdialogs.aboutdialog.version
+msgctxt "tformpobatch.appdialogs.aboutdialog.version"
+msgid "Version"
+msgstr "الإصدار"
+
+#: tformpobatch.appdialogs.donatedialog.bankcaption
+msgctxt "tformpobatch.appdialogs.donatedialog.bankcaption"
+msgid "Donate with Bank Card or PayPal"
+msgstr "تبرع ببطاقة مصرفية أو PayPal"
+
+#: tformpobatch.appdialogs.donatedialog.bankurl
+msgctxt "tformpobatch.appdialogs.donatedialog.bankurl"
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformpobatch.appdialogs.donatedialog.caption
+msgctxt "tformpobatch.appdialogs.donatedialog.caption"
+msgid "Buy me a coffee"
+msgstr "اشترِ لي قهوة"
+
+#: tformpobatch.appdialogs.donatedialog.contribution
+msgctxt "tformpobatch.appdialogs.donatedialog.contribution"
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "كل مساهمة تساعد في إبقاء المشروع نشطًا ومتقدمًا. شكرًا لدعمك!"
+
+#: tformpobatch.appdialogs.donatedialog.cryptocaption
+msgctxt "tformpobatch.appdialogs.donatedialog.cryptocaption"
+msgid "Donate with Cryptocurrency"
+msgstr "تبرع بالعملات الرقمية"
+
+#: tformpobatch.appdialogs.donatedialog.cryptourl
+msgctxt "tformpobatch.appdialogs.donatedialog.cryptourl"
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformpobatch.appdialogs.donatedialog.header
+msgctxt "tformpobatch.appdialogs.donatedialog.header"
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "مرحبًا! ادعم هذا المشروع الشغوف بجرعة كافيين صغيرة! كل تبرع يساعد في استمرار الكود وتحضير القهوة. شكرًا لدعمك للعمل والمطور الذي يقف خلفه!"
+
+#: tformpobatch.appdialogs.donatedialog.okcaption
+msgctxt "tformpobatch.appdialogs.donatedialog.okcaption"
+msgid "OK"
+msgstr "موافق"
+
+#: tformpobatch.appdialogs.donatedialog.supportline
+msgctxt "tformpobatch.appdialogs.donatedialog.supportline"
+msgid "You can support development through one of the following options:"
+msgstr "يمكنك دعم التطوير من خلال أحد الخيارات التالية:"
 
 #: tformpobatch.arememberfile.caption
 msgid "Remember File..."
@@ -1977,3 +2002,4 @@ msgstr "وقت انتظار الاستجابة والبيانات. إذا كان
 #: tformsettingspobatch.spintmmaxsourcelength.hint
 msgid "Entries with a longer source text are ignored to keep the memory small."
 msgstr "يتم تجاهل المدخلات ذات النص المصدر الأطول للحفاظ على صغر حجم الذاكرة."
+

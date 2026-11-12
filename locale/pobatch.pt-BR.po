@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"PO-Revision-Date: 2026-11-12 22:23-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt-BR\n"
@@ -1013,88 +1013,6 @@ msgctxt "pocheck.rsqaspacetrailing"
 msgid "Trailing space in translation"
 msgstr "Espaço final na tradução"
 
-#: tformaboutpobatch.buttonok.caption
-msgctxt "tformaboutpobatch.buttonok.caption"
-msgid "OK"
-msgstr "OK"
-
-#: tformaboutpobatch.caption
-msgid "About"
-msgstr "Sobre"
-
-#: tformaboutpobatch.label1.caption
-msgid "the GNU General Public License, Version 3"
-msgstr "a GNU General Public License, Versão 3"
-
-#: tformaboutpobatch.labelby.caption
-msgid "by Alexander Tverskoy is licensed under"
-msgstr "por Alexander Tverskoy está licenciado sob"
-
-#: tformaboutpobatch.labellic.caption
-msgid "For questions or feedback, contact me at"
-msgstr "Para perguntas ou feedback, entre em contato em"
-
-#: tformaboutpobatch.labellicurl.caption
-msgid "astverskoy@gmail.com"
-msgstr "astverskoy@gmail.com"
-
-#: tformaboutpobatch.labellicurl.hint
-msgid "mailto:astverskoy@gmail.com"
-msgstr "mailto:astverskoy@gmail.com"
-
-#: tformaboutpobatch.labelname.caption
-msgid "PoBatch © 2026"
-msgstr "PoBatch © 2026"
-
-#: tformaboutpobatch.labelurlgithub.caption
-msgid "github: plaintool/pobatch"
-msgstr "github: plaintool/pobatch"
-
-#: tformaboutpobatch.labelurlgithub.hint
-msgid "https://github.com/plaintool/pobatch"
-msgstr "https://github.com/plaintool/pobatch"
-
-#: tformaboutpobatch.labelversion.caption
-msgid "Version"
-msgstr "Versão"
-
-#: tformdonatepobatch.btnok.caption
-msgctxt "tformdonatepobatch.btnok.caption"
-msgid "OK"
-msgstr "OK"
-
-#: tformdonatepobatch.caption
-msgid "Buy me a coffee"
-msgstr "Pague-me um café"
-
-#: tformdonatepobatch.labelbank.caption
-msgid "Donate with Bank Card or PayPal"
-msgstr "Doar com cartão bancário ou PayPal"
-
-#: tformdonatepobatch.labelbank.hint
-msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
-msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
-
-#: tformdonatepobatch.labelcontribution.caption
-msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
-msgstr "Cada contribuição ajuda a manter o projeto ativo e avançando. Obrigado pelo seu apoio!"
-
-#: tformdonatepobatch.labelcrypto.caption
-msgid "Donate with Cryptocurrency"
-msgstr "Doar com criptomoeda"
-
-#: tformdonatepobatch.labelcrypto.hint
-msgid "https://nowpayments.io/donation/astverskoy"
-msgstr "https://nowpayments.io/donation/astverskoy"
-
-#: tformdonatepobatch.labeldonate.caption
-msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
-msgstr "Olá! Alimente este projeto de paixão com um pequeno impulso de cafeína! Cada doação ajuda a manter o código rodando e o café passando. Obrigado por apoiar o trabalho e o desenvolvedor por trás dele!"
-
-#: tformdonatepobatch.labelsupport.caption
-msgid "You can support development through one of the following options:"
-msgstr "Você pode apoiar o desenvolvimento através de uma das seguintes opções:"
-
 #: tformpobatch.acheckcaseallupper.caption
 msgid "Case mismatch: source is all uppercase"
 msgstr "Diferença de maiúsculas/minúsculas: a origem está toda em maiúsculas"
@@ -1433,6 +1351,113 @@ msgstr "Traduzir ausentes no(s) arquivo(s) a partir da memória"
 #: tformpobatch.apathvalidfiles.caption
 msgid "Mark File(s) As Valid"
 msgstr "Marcar arquivo(s) como válidos"
+
+#: tformpobatch.appdialogs.aboutdialog.abouttext
+msgid "PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file."
+msgstr "O PoBatch é um editor de arquivos PO fácil de usar para fluxos de trabalho de localização (l10n). Ele exibe as strings de origem e as traduções em uma grade, permitindo a seleção de colunas ou linhas e operações de copiar e colar em massa. Isso facilita a atualização rápida de traduções em um arquivo PO."
+
+#: tformpobatch.appdialogs.aboutdialog.appname
+msgid "PoBatch"
+msgstr "PoBatch"
+
+#: tformpobatch.appdialogs.aboutdialog.caption
+msgctxt "tformpobatch.appdialogs.aboutdialog.caption"
+msgid "About"
+msgstr "Sobre"
+
+#: tformpobatch.appdialogs.aboutdialog.contactline
+msgctxt "tformpobatch.appdialogs.aboutdialog.contactline"
+msgid "For questions or feedback, contact me at"
+msgstr "Para perguntas ou feedback, entre em contato em"
+
+#: tformpobatch.appdialogs.aboutdialog.copyright
+msgid "© 2026"
+msgstr "© 2026"
+
+#: tformpobatch.appdialogs.aboutdialog.emailcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.emailcaption"
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformpobatch.appdialogs.aboutdialog.emailurl
+msgctxt "tformpobatch.appdialogs.aboutdialog.emailurl"
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformpobatch.appdialogs.aboutdialog.githubcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.githubcaption"
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformpobatch.appdialogs.aboutdialog.githuburl
+msgctxt "tformpobatch.appdialogs.aboutdialog.githuburl"
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformpobatch.appdialogs.aboutdialog.licenseline1
+msgctxt "tformpobatch.appdialogs.aboutdialog.licenseline1"
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "por Alexander Tverskoy está licenciado sob"
+
+#: tformpobatch.appdialogs.aboutdialog.licenseline2
+msgctxt "tformpobatch.appdialogs.aboutdialog.licenseline2"
+msgid "the GNU General Public License, Version 3"
+msgstr "a GNU General Public License, Versão 3"
+
+#: tformpobatch.appdialogs.aboutdialog.okcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.okcaption"
+msgid "OK"
+msgstr "OK"
+
+#: tformpobatch.appdialogs.aboutdialog.version
+msgctxt "tformpobatch.appdialogs.aboutdialog.version"
+msgid "Version"
+msgstr "Versão"
+
+#: tformpobatch.appdialogs.donatedialog.bankcaption
+msgctxt "tformpobatch.appdialogs.donatedialog.bankcaption"
+msgid "Donate with Bank Card or PayPal"
+msgstr "Doar com cartão bancário ou PayPal"
+
+#: tformpobatch.appdialogs.donatedialog.bankurl
+msgctxt "tformpobatch.appdialogs.donatedialog.bankurl"
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformpobatch.appdialogs.donatedialog.caption
+msgctxt "tformpobatch.appdialogs.donatedialog.caption"
+msgid "Buy me a coffee"
+msgstr "Pague-me um café"
+
+#: tformpobatch.appdialogs.donatedialog.contribution
+msgctxt "tformpobatch.appdialogs.donatedialog.contribution"
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "Cada contribuição ajuda a manter o projeto ativo e avançando. Obrigado pelo seu apoio!"
+
+#: tformpobatch.appdialogs.donatedialog.cryptocaption
+msgctxt "tformpobatch.appdialogs.donatedialog.cryptocaption"
+msgid "Donate with Cryptocurrency"
+msgstr "Doar com criptomoeda"
+
+#: tformpobatch.appdialogs.donatedialog.cryptourl
+msgctxt "tformpobatch.appdialogs.donatedialog.cryptourl"
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformpobatch.appdialogs.donatedialog.header
+msgctxt "tformpobatch.appdialogs.donatedialog.header"
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "Olá! Alimente este projeto de paixão com um pequeno impulso de cafeína! Cada doação ajuda a manter o código rodando e o café passando. Obrigado por apoiar o trabalho e o desenvolvedor por trás dele!"
+
+#: tformpobatch.appdialogs.donatedialog.okcaption
+msgctxt "tformpobatch.appdialogs.donatedialog.okcaption"
+msgid "OK"
+msgstr "OK"
+
+#: tformpobatch.appdialogs.donatedialog.supportline
+msgctxt "tformpobatch.appdialogs.donatedialog.supportline"
+msgid "You can support development through one of the following options:"
+msgstr "Você pode apoiar o desenvolvimento através de uma das seguintes opções:"
 
 #: tformpobatch.arememberfile.caption
 msgid "Remember File..."

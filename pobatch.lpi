@@ -129,6 +129,9 @@
       <Item>
         <PackageName Value="richkit"/>
       </Item>
+      <Item>
+        <PackageName Value="designkit"/>
+      </Item>
     </RequiredPackages>
     <Units>
       <Unit>
@@ -159,22 +162,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="FormSettings"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\formabout.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="formAboutPoBatch"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="FormAbout"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\formdonate.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="formDonatePoBatch"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="FormDonate"/>
       </Unit>
       <Unit>
         <Filename Value="src\settings.pas"/>

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-08 23:20-0300\n"
+"PO-Revision-Date: 2026-11-12 22:23-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh\n"
@@ -326,7 +326,7 @@ msgid "Remove fuzzy flag"
 msgstr "移除模糊标记"
 
 #: batchop.rrenameconfirm
-#, object-pascal-format
+#, object-pascal-format, badformat
 msgid ""
 "Rename the following %d file(s) using base name \"%s\"?\n"
 "\n"
@@ -1013,88 +1013,6 @@ msgctxt "pocheck.rsqaspacetrailing"
 msgid "Trailing space in translation"
 msgstr "翻译中有尾随空格"
 
-#: tformaboutpobatch.buttonok.caption
-msgctxt "tformaboutpobatch.buttonok.caption"
-msgid "OK"
-msgstr "确定"
-
-#: tformaboutpobatch.caption
-msgid "About"
-msgstr "关于"
-
-#: tformaboutpobatch.label1.caption
-msgid "the GNU General Public License, Version 3"
-msgstr "GNU 通用公共许可证第 3 版"
-
-#: tformaboutpobatch.labelby.caption
-msgid "by Alexander Tverskoy is licensed under"
-msgstr "由 Alexander Tverskoy 开发，遵循"
-
-#: tformaboutpobatch.labellic.caption
-msgid "For questions or feedback, contact me at"
-msgstr "如有问题或反馈，请通过以下方式联系我"
-
-#: tformaboutpobatch.labellicurl.caption
-msgid "astverskoy@gmail.com"
-msgstr "astverskoy@gmail.com"
-
-#: tformaboutpobatch.labellicurl.hint
-msgid "mailto:astverskoy@gmail.com"
-msgstr "mailto:astverskoy@gmail.com"
-
-#: tformaboutpobatch.labelname.caption
-msgid "PoBatch © 2026"
-msgstr "PoBatch © 2026"
-
-#: tformaboutpobatch.labelurlgithub.caption
-msgid "github: plaintool/pobatch"
-msgstr "github: plaintool/pobatch"
-
-#: tformaboutpobatch.labelurlgithub.hint
-msgid "https://github.com/plaintool/pobatch"
-msgstr "https://github.com/plaintool/pobatch"
-
-#: tformaboutpobatch.labelversion.caption
-msgid "Version"
-msgstr "版本"
-
-#: tformdonatepobatch.btnok.caption
-msgctxt "tformdonatepobatch.btnok.caption"
-msgid "OK"
-msgstr "确定"
-
-#: tformdonatepobatch.caption
-msgid "Buy me a coffee"
-msgstr "请我喝杯咖啡"
-
-#: tformdonatepobatch.labelbank.caption
-msgid "Donate with Bank Card or PayPal"
-msgstr "使用银行卡或 PayPal 捐赠"
-
-#: tformdonatepobatch.labelbank.hint
-msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
-msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
-
-#: tformdonatepobatch.labelcontribution.caption
-msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
-msgstr "每一份贡献都有助于项目保持活跃并向前发展。感谢您的支持！"
-
-#: tformdonatepobatch.labelcrypto.caption
-msgid "Donate with Cryptocurrency"
-msgstr "使用加密货币捐赠"
-
-#: tformdonatepobatch.labelcrypto.hint
-msgid "https://nowpayments.io/donation/astverskoy"
-msgstr "https://nowpayments.io/donation/astverskoy"
-
-#: tformdonatepobatch.labeldonate.caption
-msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
-msgstr "嘿！用一点咖啡因助推这个热情项目吧！每一笔捐赠都有助于代码持续运行、咖啡不断冲泡。感谢您对这项工作和背后开发者的支持！"
-
-#: tformdonatepobatch.labelsupport.caption
-msgid "You can support development through one of the following options:"
-msgstr "您可以通过以下选项之一支持开发："
-
 #: tformpobatch.acheckcaseallupper.caption
 msgid "Case mismatch: source is all uppercase"
 msgstr "大小写不匹配：源全为大写"
@@ -1433,6 +1351,113 @@ msgstr "从记忆库翻译文件中缺失的内容"
 #: tformpobatch.apathvalidfiles.caption
 msgid "Mark File(s) As Valid"
 msgstr "将文件标记为有效"
+
+#: tformpobatch.appdialogs.aboutdialog.abouttext
+msgid "PoBatch is an easy-to-use PO file editor for l10n workflows. It displays source strings and translations in a grid, allowing selection of columns or rows and bulk copy and paste operations. This makes it easy to quickly update translations within a PO file."
+msgstr "PoBatch 是一款易于使用的采购订单文件编辑器，专为本地化工作流程而设计。它以网格形式显示源字符串和翻译，支持选择列或行，并可进行批量复制和粘贴操作。这使得快速更新采购订单文件中的翻译变得轻而易举。"
+
+#: tformpobatch.appdialogs.aboutdialog.appname
+msgid "PoBatch"
+msgstr "PoBatch"
+
+#: tformpobatch.appdialogs.aboutdialog.caption
+msgctxt "tformpobatch.appdialogs.aboutdialog.caption"
+msgid "About"
+msgstr "关于"
+
+#: tformpobatch.appdialogs.aboutdialog.contactline
+msgctxt "tformpobatch.appdialogs.aboutdialog.contactline"
+msgid "For questions or feedback, contact me at"
+msgstr "如有问题或反馈，请通过以下方式联系我"
+
+#: tformpobatch.appdialogs.aboutdialog.copyright
+msgid "© 2026"
+msgstr "© 2026"
+
+#: tformpobatch.appdialogs.aboutdialog.emailcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.emailcaption"
+msgid "astverskoy@gmail.com"
+msgstr "astverskoy@gmail.com"
+
+#: tformpobatch.appdialogs.aboutdialog.emailurl
+msgctxt "tformpobatch.appdialogs.aboutdialog.emailurl"
+msgid "mailto:astverskoy@gmail.com"
+msgstr "mailto:astverskoy@gmail.com"
+
+#: tformpobatch.appdialogs.aboutdialog.githubcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.githubcaption"
+msgid "github: plaintool/pobatch"
+msgstr "github: plaintool/pobatch"
+
+#: tformpobatch.appdialogs.aboutdialog.githuburl
+msgctxt "tformpobatch.appdialogs.aboutdialog.githuburl"
+msgid "https://github.com/plaintool/pobatch"
+msgstr "https://github.com/plaintool/pobatch"
+
+#: tformpobatch.appdialogs.aboutdialog.licenseline1
+msgctxt "tformpobatch.appdialogs.aboutdialog.licenseline1"
+msgid "by Alexander Tverskoy is licensed under"
+msgstr "由 Alexander Tverskoy 开发，遵循"
+
+#: tformpobatch.appdialogs.aboutdialog.licenseline2
+msgctxt "tformpobatch.appdialogs.aboutdialog.licenseline2"
+msgid "the GNU General Public License, Version 3"
+msgstr "GNU 通用公共许可证第 3 版"
+
+#: tformpobatch.appdialogs.aboutdialog.okcaption
+msgctxt "tformpobatch.appdialogs.aboutdialog.okcaption"
+msgid "OK"
+msgstr "确定"
+
+#: tformpobatch.appdialogs.aboutdialog.version
+msgctxt "tformpobatch.appdialogs.aboutdialog.version"
+msgid "Version"
+msgstr "版本"
+
+#: tformpobatch.appdialogs.donatedialog.bankcaption
+msgctxt "tformpobatch.appdialogs.donatedialog.bankcaption"
+msgid "Donate with Bank Card or PayPal"
+msgstr "使用银行卡或 PayPal 捐赠"
+
+#: tformpobatch.appdialogs.donatedialog.bankurl
+msgctxt "tformpobatch.appdialogs.donatedialog.bankurl"
+msgid "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+msgstr "https://app.lava.top/en/astverskoy?tabId=about&currency=EUR"
+
+#: tformpobatch.appdialogs.donatedialog.caption
+msgctxt "tformpobatch.appdialogs.donatedialog.caption"
+msgid "Buy me a coffee"
+msgstr "请我喝杯咖啡"
+
+#: tformpobatch.appdialogs.donatedialog.contribution
+msgctxt "tformpobatch.appdialogs.donatedialog.contribution"
+msgid "Every contribution helps keep the project active and moving forward. Thank you for your support!"
+msgstr "每一份贡献都有助于项目保持活跃并向前发展。感谢您的支持！"
+
+#: tformpobatch.appdialogs.donatedialog.cryptocaption
+msgctxt "tformpobatch.appdialogs.donatedialog.cryptocaption"
+msgid "Donate with Cryptocurrency"
+msgstr "使用加密货币捐赠"
+
+#: tformpobatch.appdialogs.donatedialog.cryptourl
+msgctxt "tformpobatch.appdialogs.donatedialog.cryptourl"
+msgid "https://nowpayments.io/donation/astverskoy"
+msgstr "https://nowpayments.io/donation/astverskoy"
+
+#: tformpobatch.appdialogs.donatedialog.header
+msgctxt "tformpobatch.appdialogs.donatedialog.header"
+msgid "Hey there! Fuel this passion project with a little caffeine boost! Every donation helps keep the code rolling and the coffee brewing. Thanks for supporting the work and the developer behind it!"
+msgstr "嘿！用一点咖啡因助推这个热情项目吧！每一笔捐赠都有助于代码持续运行、咖啡不断冲泡。感谢您对这项工作和背后开发者的支持！"
+
+#: tformpobatch.appdialogs.donatedialog.okcaption
+msgctxt "tformpobatch.appdialogs.donatedialog.okcaption"
+msgid "OK"
+msgstr "确定"
+
+#: tformpobatch.appdialogs.donatedialog.supportline
+msgctxt "tformpobatch.appdialogs.donatedialog.supportline"
+msgid "You can support development through one of the following options:"
+msgstr "您可以通过以下选项之一支持开发："
 
 #: tformpobatch.arememberfile.caption
 msgid "Remember File..."
@@ -1977,3 +2002,4 @@ msgstr "等待响应和数据的时间。若为 0，则使用默认的 300 秒"
 #: tformsettingspobatch.spintmmaxsourcelength.hint
 msgid "Entries with a longer source text are ignored to keep the memory small."
 msgstr "源文本较长的条目将被忽略，以保持记忆库较小。"
+

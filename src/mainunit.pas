@@ -41,6 +41,7 @@ uses
   PoWrap,
   PoCheck,
   PoTM,
+  AppDialogs,
   Translate,
   ConfigManager;
 
@@ -66,6 +67,7 @@ type
     ACheckPlaceholderExtra: TAction;
     ACheckPlaceholderMissing: TAction;
     ACheckEnabled: TAction;
+    AppDialogs: TAppDialogs;
     ARememberPath: TAction;
     ARememberFile: TAction;
     APathTranslateMissingFromMemory: TAction;
@@ -333,6 +335,7 @@ type
     Separator21: TMenuItem;
     Separator22: TMenuItem;
     Separator23: TMenuItem;
+    Separator24: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
@@ -739,7 +742,7 @@ var
 
 implementation
 
-uses Consts, FormSettings, FormAbout, FormDonate, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper,
+uses Consts, FormSettings, Settings, StringGridHelper, StringHelper, ColorHelper, ControlsHelper,
   DarkUtils, CheckUpdates, OSUtils,
   RichMemoHelper, Localize, PascalUtils, BatchOp;
 
@@ -811,6 +814,7 @@ begin
   GridPlural.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   GridComments.GridLineColor := TDarkUtils.ThemeColor(clLine, clLineDark);
   ImageSwitch.ImageIndex := TDarkUtils.ThemeValue(0, 2);
+  Grid.ExtendedColSizing := True;
 
   // Create FPoFile object
   FPoFile := TPoFile.Create;
@@ -923,7 +927,7 @@ begin
   try
     SaveFormSettings(Self);
   except
-    // Swallow; leaves the next run without the last layout, but no leaks
+    ; // Swallow; leaves the next run without the last layout, but no leaks
   end;
 
   FreeAndNil(FPoFile);
@@ -1117,7 +1121,9 @@ begin
             Changed := False;
             StatusBar.Panels[0].Text := rfilereloaded;
           end;
-        // mrCancel (or any other result): do nothing, ask again next time
+          // mrCancel (or any other result): do nothing, ask again next time
+        else
+          ;
       end;
     end;
   finally
@@ -1193,7 +1199,7 @@ end;
 
 procedure TformPoBatch.MenuBuyMeACoffeeClick(Sender: TObject);
 begin
-  formDonatePoBatch.ShowModal;
+  AppDialogs.ShowDonate;
 end;
 
 procedure TformPoBatch.MenuCheckForUpdatesClick(Sender: TObject);
@@ -1215,7 +1221,7 @@ end;
 
 procedure TformPoBatch.MenuAboutClick(Sender: TObject);
 begin
-  formAboutPoBatch.ShowModal;
+  AppDialogs.ShowAbout;
 end;
 
 procedure TformPoBatch.MenuLineEndingClick(Sender: TObject);
@@ -3619,6 +3625,8 @@ begin
         TRichMemo(Sender).RedoEx;
         Key := 0;
       end;
+      else
+        ;
     end;
   end
   else if (ssShift in Shift) and (Key = VK_INSERT) then
@@ -3738,6 +3746,9 @@ begin
   finally
     MemoTranslation.OnChange := SavedOnChange;
   end;
+
+  // Update the translation of AppDiaolog dialog forms
+  AppDialogs.UpdateCaptions;
 
   // Keep spell checker dictionary in sync with the document language
   if Assigned(SpellTranslation) then
@@ -4441,7 +4452,7 @@ begin
         try
           RememberCurrentFileIntoMemory;
         except
-          // Ignore TM errors on save
+          ; // Ignore TM errors on save
         end;
 
         AnalizePath(FPathIndex);
@@ -5622,7 +5633,7 @@ begin
     try
       FTM.Save;
     except
-      // Ignore save errors, the pending data stays in memory
+      ; // Ignore save errors, the pending data stays in memory
     end;
   end;
 
@@ -5631,7 +5642,7 @@ begin
   try
     FTM.Load;
   except
-    // Ignore load errors, memory starts empty
+    ; // Ignore load errors, memory starts empty
   end;
 end;
 
@@ -5683,7 +5694,7 @@ begin
     try
       FTM.Save;
     except
-      // Ignore save errors
+      ; // Ignore save errors
     end;
   end;
 end;
@@ -5709,13 +5720,13 @@ begin
     try
       FTM.Save;
     except
-      // Ignore save errors
+      ; // Ignore save errors
     end;
   end;
   try
     FTM.Load;
   except
-    // Ignore load errors
+    ; // Ignore load errors
   end;
 end;
 

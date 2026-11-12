@@ -163,6 +163,9 @@ call :BuildComponent RichKit richkit main richkit.lpk "" %DO_PULL% %DO_BUILD%
 :: Build Translator
 call :BuildComponent Translator translator main translator.lpk "" %DO_PULL% %DO_BUILD%
 
+:: Build DesignKit
+call :BuildComponent DesignKit designkit main design.lpk "" %DO_PULL% %DO_BUILD%
+
 echo.
 echo Dependencies OK
 exit /b 0

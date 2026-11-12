@@ -28,8 +28,6 @@ uses
   {$ENDIF}
   MainUnit,
   Localize,
-  FormAbout,
-  FormDonate,
   ConsoleOp, Consts;
 
   {$R *.res}
@@ -117,8 +115,6 @@ begin
   ApplyDarkStyle;
   {$ENDIF}
   Application.CreateForm(TformPoBatch, formPoBatch);
-  Application.CreateForm(TformAboutPoBatch, formAboutPoBatch);
-  Application.CreateForm(TformDonatePoBatch, formDonatePoBatch);
   TLocalize.ApplicationTranslate(APP_NAME, Language, nil, TLocalize.LoadCustomPoFile(Localize.CustomPoFile));
   TLocalize.UpdatePackageTranslations(APP_NAME, 'checkupdates', Language, ['CheckUpdates']);
   Application.Run;

@@ -30,3 +30,7 @@
 	path = libs/synapse
 	url = https://github.com/plainlib/synapse.git
 	branch = master
+[submodule "libs/designkit"]
+	path = libs/designkit
+	url = https://github.com/plainlib/designkit.git
+	branch = main
