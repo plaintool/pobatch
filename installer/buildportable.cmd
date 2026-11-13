@@ -41,7 +41,7 @@ IF "%VERSION%"=="" (
 
 echo.
 echo ############################################################
-echo              Build Portable %PLATFORM% %VERSION%
+echo              Build Portable %VERSION% %PLATFORM%
 echo ############################################################
 echo.
 
