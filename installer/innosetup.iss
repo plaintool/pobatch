@@ -1,4 +1,4 @@
-#define MyAppName      "PoBatch"
+#define MyAppName          "PoBatch"
 
 // --- Version resolving ---
 #define MyAppExeName       "pobatch.exe"
@@ -7,7 +7,8 @@
 #define MyAppURL           "https://github.com/plaintool/pobatch"
 #define MyAppExeName32     "pobatch32.exe"
 #define CopyrightStartYear "2026"
-#define CurrentYear         GetDateTimeString('yyyy','','')
+#define CurrentYear        GetDateTimeString('yyyy','','')
+#define OutputFile         MyAppName + "-" + MyAppVersion + "-x86-x64-installer"
 
 [Setup]
 AppId={{D1E4B5C2-8F9A-4B6D-AB12-3F7C9E4D8A21}
@@ -52,7 +53,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=.\
-OutputBaseFilename=pobatch-{#MyAppVersion}-any-x86-x64
+OutputBaseFilename={#OutputFile}
 Compression=lzma
 SolidCompression=yes
 
