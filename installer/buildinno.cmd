@@ -1,6 +1,9 @@
 @echo off
 setlocal
 
+SET INNO-SETUP-PATH=C:\Program Files (x86)\Inno Setup 6
+SET SIGN-TOOL-PATH=C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64
+
 echo.
 echo ############################################################
 echo #                Build InnoSetup installer                 #
@@ -17,14 +20,12 @@ IF "%VERSION%"=="" (
     FOR /F "usebackq delims=" %%i IN ("%SOURCE_DIR%..\VERSION") DO SET "VERSION=%%i"
 )
 
-:: --- Copying languages ---
-set "source=%~dp0innolanguages"
-set "destination=C:\Program Files (x86)\Inno Setup 6\Languages"
-xcopy "%source%\*" "%destination%\" /y /i /s
+SET OUTPUT-FILE=pobatch-%VERSION%-x86-x64-installer.exe
 
 :: --- Build inno setup ---
-"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyVersion=%VERSION% "%SOURCE_DIR%\innosetup.iss"
-echo File created: pobatch-any-x86-x64.exe
+"%INNO-SETUP-PATH%\ISCC.exe" "%SOURCE_DIR%\innosetup.iss"
+echo.
+echo File created: %OUTPUT-FILE%
 echo.
 
 echo.
@@ -38,7 +39,7 @@ ping 127.0.0.1 -n 3 >nul
 
 :: --- Sign installers ---
 IF "%SIGNTOOL%"=="" (
-    SET "SIGNTOOL=C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe"
+    SET "SIGNTOOL=%SIGN-TOOL-PATH%\signtool.exe"
 )
 IF "%CERTFILE%"=="" (
     IF EXIST "%SOURCE_DIR%AlexanderT.pfx" (
@@ -61,11 +62,11 @@ if not "%CERTFILE%"=="" (
     if exist "%CERTFILE%" (
         if exist "%SIGNTOOL%" (
             echo Signing file...
-            "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%SOURCE_DIR%\pobatch-%VERSION%-any-x86-x64.exe" < nul
+            "%SIGNTOOL%" sign /f "%CERTFILE%" /p "%CERTPASS%" /fd SHA256 /tr %TIMESTAMP_URL% /td SHA256 "%SOURCE_DIR%\%OUTPUT-FILE%" < nul
             IF %ERRORLEVEL% EQU 0 (
-                echo Signing of pobatch-%VERSION%-any-x86-x64.exe completed successfully
+                echo Signing of '%OUTPUT-FILE%' completed successfully
             ) else (
-                echo Signing failed for pobatch-%VERSION%-any-x86-x64.exe
+                echo Signing failed for '%OUTPUT-FILE%'
             )
         ) else (
             echo Skipping signing: signtool not found.
@@ -77,5 +78,18 @@ if not "%CERTFILE%"=="" (
     echo Skipping signing: CERTFILE not set.
 )
 
+echo.
+echo Build and signing '%OUTPUT-FILE%' completed successfully!
+
 endlocal
-echo Build and signing pobatch-%VERSION%-any-x86-x64.exe completed successfully!
+
+
+IF "%1" == "" (
+   echo.
+   echo.
+
+   ECHO *** Press any key to exit ***
+   pause >NUL
+)
+SET INNO-SETUP-PATH=
+SET SIGN-TOOL-PATH=
