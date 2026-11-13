@@ -934,7 +934,7 @@ msgstr "Общо"
 
 #: formsettings.rtmstoragetitle
 msgid "Select translation memory folder"
-msgstr "Изберете папка за памет за преводи"
+msgstr "Изберете папка за памет на преводи"
 
 #: formsettings.ruserparameterkey
 msgctxt "formsettings.ruserparameterkey"
@@ -1664,9 +1664,8 @@ msgid "Translate"
 msgstr "Превод"
 
 #: tformpobatch.menutranslateconfig.caption
-msgctxt "tformpobatch.menutranslate.caption"
 msgid "Config"
-msgstr "ПреводКонфиг"
+msgstr "Конфигурация"
 
 #: tformpobatch.menuview.caption
 msgid "View"
