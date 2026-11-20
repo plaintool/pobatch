@@ -132,13 +132,13 @@ object formSettingsPoBatch: TformSettingsPoBatch
       end
       object GroupBehavior: TGroupBox
         Left = 5
-        Height = 129
+        Height = 155
         Top = 221
         Width = 436
         Align = alTop
         BorderSpacing.Around = 5
         Caption = 'Behavior'
-        ClientHeight = 109
+        ClientHeight = 135
         ClientWidth = 432
         TabOrder = 2
         object CheckSwitchToTable: TCheckBox
@@ -175,6 +175,18 @@ object formSettingsPoBatch: TformSettingsPoBatch
           Checked = True
           State = cbChecked
           TabOrder = 2
+          OnChange = SettingChange
+        end
+        object CheckShowArrow: TCheckBox
+          Left = 16
+          Height = 19
+          Hint = 'Draw an arrow next to the currently opened file in the file list'
+          Top = 104
+          Width = 116
+          Caption = 'Show Arrow in List'
+          Checked = True
+          State = cbChecked
+          TabOrder = 3
           OnChange = SettingChange
         end
       end

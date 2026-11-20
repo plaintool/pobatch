@@ -235,6 +235,7 @@ begin
     JSONObj.Add('RememberLastFile', Form.RememberLastFile);
     JSONObj.Add('SwitchToTable', Form.SwitchToTable);
     JSONObj.Add('ShowSuccess', Form.ShowSuccess);
+    JSONObj.Add('ShowArrow', Form.ShowArrow);
     JSONObj.Add('LastFile', Form.FileName);
 
     // Save PO files list
@@ -648,6 +649,9 @@ begin
 
       if JSONObj.FindPath('ShowSuccess') <> nil then
         Form.ShowSuccess := JSONObj.FindPath('ShowSuccess').AsBoolean;
+
+      if JSONObj.FindPath('ShowArrow') <> nil then
+        Form.ShowArrow := JSONObj.FindPath('ShowArrow').AsBoolean;
 
       if JSONObj.FindPath('LastFile') <> nil then
         Form.LastFile := JSONObj.FindPath('LastFile').AsString;

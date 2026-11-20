@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-11-12 22:23-0300\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2026-11-20 18:49-0300\n"
+"Last-Translator: plaintool <astverskoy@gmail.com>\n"
 "Language-Team: \n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -1760,6 +1760,14 @@ msgstr "Pamatovat si poslední otevřený soubor"
 #: tformsettingspobatch.checkrememberlastfile.hint
 msgid "Automatically reopen the last opened translation file when the application starts."
 msgstr "Automaticky znovu otevřít poslední otevřený překladový soubor při spuštění aplikace."
+
+#: tformsettingspobatch.checkshowarrow.caption
+msgid "Show Arrow in List"
+msgstr "Zobrazit šipku v seznamu"
+
+#: tformsettingspobatch.checkshowarrow.hint
+msgid "Draw an arrow next to the currently opened file in the file list"
+msgstr "Zobrazit šipku vedle aktuálně otevřeného souboru v seznamu souborů"
 
 #: tformsettingspobatch.checkshowsuccess.caption
 msgid "Show Success Notifications"

@@ -1678,6 +1678,14 @@ msgstr ""
 msgid "Automatically reopen the last opened translation file when the application starts."
 msgstr ""
 
+#: tformsettingspobatch.checkshowarrow.caption
+msgid "Show Arrow in List"
+msgstr ""
+
+#: tformsettingspobatch.checkshowarrow.hint
+msgid "Draw an arrow next to the currently opened file in the file list"
+msgstr ""
+
 #: tformsettingspobatch.checkshowsuccess.caption
 msgid "Show Success Notifications"
 msgstr ""

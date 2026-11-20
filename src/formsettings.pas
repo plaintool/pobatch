@@ -48,6 +48,7 @@ type
     CheckRememberLastFile: TCheckBox;
     CheckProxyAuthentication: TCheckBox;
     CheckShowSuccess: TCheckBox;
+    CheckShowArrow: TCheckBox;
     ClbProxiedConfigs: TCheckListBox;
     ComboProxyMode: TComboBox;
     ComboProxyType: TComboBox;
@@ -153,6 +154,7 @@ type
     FOriginalRememberLastFile: boolean;
     FOriginalSwitchToTable: boolean;
     FOriginalShowSuccess: boolean;
+    FOriginalShowArrow: boolean;
     FOriginalTranslatorName: string;
     FOriginalTranslatorEmail: string;
     FOriginalTmEnabled: boolean;
@@ -263,6 +265,7 @@ begin
   CheckSkipTmMultiLineStrings.OnChange := @SettingChange;
   EditButtonTmStorage.OnChange := @SettingChange;
   SpinTmMaxSourceLength.OnChange := @SettingChange;
+  CheckShowArrow.OnChange := @SettingChange;
 
   // Configure the stats grid columns; column 0 holds row numbers and is
   // left empty, the remaining columns hold the archive metadata. The first
@@ -423,6 +426,7 @@ begin
   CheckRememberLastFile.Checked := True;
   CheckSwitchToTable.Checked := True;
   CheckShowSuccess.Checked := True;
+  CheckShowArrow.Checked := True;
 
   // Translation memory defaults
   CheckTmEnabled.Checked := True;
@@ -1304,6 +1308,7 @@ begin
     formPoBatch.RememberLastFile := CheckRememberLastFile.Checked;
     formPoBatch.SwitchToTable := CheckSwitchToTable.Checked;
     formPoBatch.ShowSuccess := CheckShowSuccess.Checked;
+    formPoBatch.ShowArrow := CheckShowArrow.Checked;
 
     formPoBatch.ApplyFont(PanelFont.Font);
 
@@ -1355,6 +1360,7 @@ begin
   FOriginalRememberLastFile := formPoBatch.RememberLastFile;
   FOriginalSwitchToTable := formPoBatch.SwitchToTable;
   FOriginalShowSuccess := formPoBatch.ShowSuccess;
+  FOriginalShowArrow := formPoBatch.ShowArrow;
   FOriginalTranslatorName := formPoBatch.TranslatorName;
   FOriginalTranslatorEmail := formPoBatch.TranslatorEmail;
 
@@ -1389,6 +1395,7 @@ begin
   CheckRememberLastFile.Checked := FOriginalRememberLastFile;
   CheckSwitchToTable.Checked := FOriginalSwitchToTable;
   CheckShowSuccess.Checked := FOriginalShowSuccess;
+  CheckShowArrow.Checked := FOriginalShowArrow;
 
   for i := 0 to ClbProxiedConfigs.Count - 1 do
     if formPoBatch.ConfigManager.ConfigFiles.Count > i then

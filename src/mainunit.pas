@@ -594,6 +594,7 @@ type
     FRememberLastFile: boolean;
     FSwitchToTable: boolean;
     FShowSuccess: boolean;
+    FShowArrow: boolean;
     FLastFile: string;
     FMaxRowHeight: integer;
     FTranslatorName: string;
@@ -719,6 +720,7 @@ type
     property RememberLastFile: boolean read FRememberLastFile write FRememberLastFile;
     property SwitchToTable: boolean read FSwitchToTable write FSwitchToTable;
     property ShowSuccess: boolean read FShowSuccess write FShowSuccess;
+    property ShowArrow: boolean read FShowArrow write FShowArrow;
     property LastFile: string read FLastFile write FLastFile;
     // Exposed for TBatchOp
     property FileName: string read FFileName write FFileName;
@@ -775,6 +777,7 @@ begin
   FRememberLastFile := True;
   FSwitchToTable := True;
   FShowSuccess := True;
+  FShowArrow := True;
   FLastFile := string.Empty;
   FSortColumn := -1;
   FSortOrder := soAscending;
@@ -3389,7 +3392,8 @@ begin
         else
           MarkerColor := ListPath.Color;
       end;
-      DrawTriangle(MarkerLeft, CY, MarkerSize, MarkerColor, clWindowText);
+      if formPoBatch.ShowArrow then
+        DrawTriangle(MarkerLeft, CY, MarkerSize, MarkerColor, clWindowText);
     end;
 
     // Draw focus rectangle if the control is focused and item is selected
