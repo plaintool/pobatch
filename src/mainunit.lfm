@@ -1556,43 +1556,43 @@ object formPoBatch: TformPoBatch
   object PopupGrid: TPopupMenu
     Left = 392
     Top = 120
-    object MenuPopupCopySourceText: TMenuItem
+    object ContextPopupCopySourceText: TMenuItem
       Action = ACopySourceText
     end
-    object MenuPopupClearIdentical: TMenuItem
+    object ContextPopupClearIdentical: TMenuItem
       Action = AClearIdentical
     end
-    object MenuPopupEditPluralForm: TMenuItem
+    object ContextPopupEditPluralForm: TMenuItem
       Action = AEditPluralForm
     end
-    object MenuPopupMarkValid: TMenuItem
+    object ContextPopupMarkValid: TMenuItem
       Action = AMarkAsValid
     end
-    object MenuPopupTranslate: TMenuItem
+    object ContextPopupTranslate: TMenuItem
       Action = ATranslateSelected
     end
-    object MenuItem1: TMenuItem
+    object ContextTranslateFromMemory: TMenuItem
       Action = ATranslateFromMemory
     end
     object Separator7: TMenuItem
       Caption = '-'
     end
-    object MenuPopupCut: TMenuItem
+    object ContextPopupCut: TMenuItem
       Action = ACut
     end
-    object MenuPopupCopy: TMenuItem
+    object ContextPopupCopy: TMenuItem
       Action = ACopy
     end
-    object MenuPopupPaste: TMenuItem
+    object ContextPopupPaste: TMenuItem
       Action = APaste
     end
-    object MenuPopupDelete: TMenuItem
+    object ContextPopupDelete: TMenuItem
       Action = ADelete
     end
     object Separator8: TMenuItem
       Caption = '-'
     end
-    object MenuPopupSelectAll: TMenuItem
+    object ContextPopupSelectAll: TMenuItem
       Action = ASelectAll
     end
   end
@@ -2059,52 +2059,52 @@ object formPoBatch: TformPoBatch
     OnClose = PopupPathClose
     Left = 472
     Top = 120
-    object MenuPathNewFilesFromPot: TMenuItem
+    object ContextPathNewFilesFromPot: TMenuItem
       Action = APathNewFilesFromPot
     end
-    object MenuPathRenameFile: TMenuItem
+    object ContextPathRenameFile: TMenuItem
       Action = APathRenameFiles
     end
-    object MenuPathDeleteFile: TMenuItem
+    object ContextPathDeleteFile: TMenuItem
       Action = APathDeleteFiles
     end
     object Separator19: TMenuItem
       Caption = '-'
     end
-    object MenuPathTranslateEmpty: TMenuItem
+    object ContextPathTranslateEmpty: TMenuItem
       Action = APathTranslateMissing
     end
-    object MenuPathTranslateMissingFromMemoryInFiles: TMenuItem
+    object ContextPathTranslateMissingFromMemoryInFiles: TMenuItem
       Action = APathTranslateMissingFromMemory
     end
-    object MenuPathSyncFilesWithPot: TMenuItem
+    object ContextPathSyncFilesWithPot: TMenuItem
       Action = APathSyncFilesWithPot
     end
-    object MenuPathValidFile: TMenuItem
+    object ContextPathValidFile: TMenuItem
       Action = APathValidFiles
     end
-    object MenuPathCopySource: TMenuItem
+    object ContextPathCopySource: TMenuItem
       Action = APathCopySource
     end
-    object MenuPathClearFuzzy: TMenuItem
+    object ContextPathClearFuzzy: TMenuItem
       Action = APathClearFuzzy
     end
-    object MenuPathClearAll: TMenuItem
+    object ContextPathClearAll: TMenuItem
       Action = APathClearAll
     end
-    object MenuRememberTranslations: TMenuItem
+    object ContextRememberTranslations: TMenuItem
       Action = APathRemember
     end
     object Separator11: TMenuItem
       Caption = '-'
     end
-    object MenuPathShowFileInExplorer: TMenuItem
+    object ContextPathShowFileInExplorer: TMenuItem
       Action = APathShowFileInExplorer
     end
-    object MenuPathRescan: TMenuItem
+    object ContextPathRescan: TMenuItem
       Action = APathRescan
     end
-    object MenuPathSelectAll: TMenuItem
+    object ContextPathSelectAll: TMenuItem
       Action = APathSelectAll
     end
   end
@@ -2112,38 +2112,38 @@ object formPoBatch: TformPoBatch
     OnPopup = PopupMemoPopup
     Left = 552
     Top = 120
-    object MenuMemoUndo: TMenuItem
+    object ContextMemoUndo: TMenuItem
       Action = AMemoUndo
     end
     object Separator13: TMenuItem
       Caption = '-'
     end
-    object MenuMemoCut: TMenuItem
+    object ContextMemoCut: TMenuItem
       Action = AMemoCut
     end
-    object MenuMemoCopy: TMenuItem
+    object ContextMemoCopy: TMenuItem
       Action = AMemoCopy
     end
-    object MenuMemoPaste: TMenuItem
+    object ContextMemoPaste: TMenuItem
       Action = AMemoPaste
     end
-    object MenuMemoClear: TMenuItem
+    object ContextMemoClear: TMenuItem
       Action = AMemoClear
     end
     object Separator14: TMenuItem
       Caption = '-'
     end
-    object MenuMemoSelectAll: TMenuItem
+    object ContextMemoSelectAll: TMenuItem
       Action = AMemoSelectAll
     end
     object Separator15: TMenuItem
       Caption = '-'
     end
-    object MenuMemoBidiMode: TMenuItem
+    object ContextMemoBidiMode: TMenuItem
       Action = AMemoBidiRightToLeft
       AutoCheck = True
     end
-    object MenuMemoDefaultZoom: TMenuItem
+    object ContextMemoDefaultZoom: TMenuItem
       Action = AMemoDefaultZoom
     end
   end
@@ -2223,17 +2223,17 @@ object formPoBatch: TformPoBatch
   object PopupLineEnding: TPopupMenu
     Left = 632
     Top = 120
-    object contextWindowsCRLF: TMenuItem
+    object ContextWindowsCRLF: TMenuItem
       Caption = 'WindowsCRLF'
       RadioItem = True
       OnClick = MenuLineEndingClick
     end
-    object contextUnixLF: TMenuItem
+    object ContextUnixLF: TMenuItem
       Caption = 'UnixLF'
       RadioItem = True
       OnClick = MenuLineEndingClick
     end
-    object contextMacintoshCR: TMenuItem
+    object ContextMacintoshCR: TMenuItem
       Caption = 'MacintoshCR'
       RadioItem = True
       OnClick = MenuLineEndingClick

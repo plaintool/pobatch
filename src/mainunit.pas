@@ -153,9 +153,9 @@ type
     ALangCustom: TAction;
     ActionList: TActionList;
     ConfigManager: TConfigManager;
-    contextMacintoshCR: TMenuItem;
-    contextUnixLF: TMenuItem;
-    contextWindowsCRLF: TMenuItem;
+    ContextMacintoshCR: TMenuItem;
+    ContextUnixLF: TMenuItem;
+    ContextWindowsCRLF: TMenuItem;
     Filter: TEdit;
     GridHeaders: TStringGrid;
     GridComments: TStringGrid;
@@ -190,7 +190,7 @@ type
     MenuEditClearIdentical: TMenuItem;
     MenuEditPluralForm: TMenuItem;
     MenuHelpGNUgettext: TMenuItem;
-    MenuItem1: TMenuItem;
+    ContextTranslateFromMemory: TMenuItem;
     MenuTranslateRememberFile: TMenuItem;
     MenuTranslateRememberPath: TMenuItem;
     MenuViewColumnContext: TMenuItem;
@@ -205,63 +205,63 @@ type
     MenuCheckSpaceAfterPunct: TMenuItem;
     MenuCheckPunctEnd: TMenuItem;
     MenuCheckPunctBracket: TMenuItem;
-    MenuPathShowFileInExplorer: TMenuItem;
+    ContextPathShowFileInExplorer: TMenuItem;
     MenuTranslateMissingFromMemoryInFiles: TMenuItem;
-    MenuPathTranslateMissingFromMemoryInFiles: TMenuItem;
+    ContextPathTranslateMissingFromMemoryInFiles: TMenuItem;
     MenuFormatQAEnabled: TMenuItem;
     MenuTranslateMissingInFiles: TMenuItem;
-    MenuPopupMarkValid: TMenuItem;
+    ContextPopupMarkValid: TMenuItem;
     MenuFileSettings: TMenuItem;
     MenuEditGoTo: TMenuItem;
     MenuTranslateFromMemory: TMenuItem;
     MenuTranslateMissingFromMemory: TMenuItem;
-    MenuRememberTranslations: TMenuItem;
+    ContextRememberTranslations: TMenuItem;
     MenuFileOpenRecent: TMenuItem;
-    MenuPathClearAll: TMenuItem;
-    MenuPathTranslateEmpty: TMenuItem;
+    ContextPathClearAll: TMenuItem;
+    ContextPathTranslateEmpty: TMenuItem;
     MenuTranslateMissing: TMenuItem;
-    MenuPopupTranslate: TMenuItem;
+    ContextPopupTranslate: TMenuItem;
     MenuTranslateSelected: TMenuItem;
     MenuTranslateConfig: TMenuItem;
     MenuTranslate: TMenuItem;
-    MenuPathRescan: TMenuItem;
-    MenuPathCopySource: TMenuItem;
-    MenuPathClearFuzzy: TMenuItem;
+    ContextPathRescan: TMenuItem;
+    ContextPathCopySource: TMenuItem;
+    ContextPathClearFuzzy: TMenuItem;
     MenuSpellCheckSource: TMenuItem;
     MenuCheckNewlines: TMenuItem;
     MenuSpellCheckTranslation: TMenuItem;
     MenuFileNewFromPot: TMenuItem;
-    MenuPathNewFilesFromPot: TMenuItem;
+    ContextPathNewFilesFromPot: TMenuItem;
     MenuCheckPlaceholderMissing: TMenuItem;
     MenuCheckPlaceholderExtra: TMenuItem;
     MenuFormatQAChecks: TMenuItem;
-    MenuPathDeleteFile: TMenuItem;
+    ContextPathDeleteFile: TMenuItem;
     MenuFormat: TMenuItem;
-    MenuPathSelectAll: TMenuItem;
-    MenuPathValidFile: TMenuItem;
+    ContextPathSelectAll: TMenuItem;
+    ContextPathValidFile: TMenuItem;
     MenuEditValidFile: TMenuItem;
-    MenuPathRenameFile: TMenuItem;
-    MenuMemoBidiMode: TMenuItem;
-    MenuMemoClear: TMenuItem;
-    MenuMemoCopy: TMenuItem;
-    MenuMemoCut: TMenuItem;
-    MenuMemoDefaultZoom: TMenuItem;
-    MenuMemoPaste: TMenuItem;
-    MenuMemoSelectAll: TMenuItem;
-    MenuMemoUndo: TMenuItem;
+    ContextPathRenameFile: TMenuItem;
+    ContextMemoBidiMode: TMenuItem;
+    ContextMemoClear: TMenuItem;
+    ContextMemoCopy: TMenuItem;
+    ContextMemoCut: TMenuItem;
+    ContextMemoDefaultZoom: TMenuItem;
+    ContextMemoPaste: TMenuItem;
+    ContextMemoSelectAll: TMenuItem;
+    ContextMemoUndo: TMenuItem;
     MenuSyncWithPot: TMenuItem;
-    MenuPathSyncFilesWithPot: TMenuItem;
+    ContextPathSyncFilesWithPot: TMenuItem;
     MenuWordWrapTranslatePanel: TMenuItem;
     MenuWordWrapGrid: TMenuItem;
-    MenuPopupEditPluralForm: TMenuItem;
+    ContextPopupEditPluralForm: TMenuItem;
     MenuViewTranslatePanel: TMenuItem;
-    MenuPopupCut: TMenuItem;
-    MenuPopupCopy: TMenuItem;
-    MenuPopupPaste: TMenuItem;
-    MenuPopupDelete: TMenuItem;
-    MenuPopupSelectAll: TMenuItem;
-    MenuPopupCopySourceText: TMenuItem;
-    MenuPopupClearIdentical: TMenuItem;
+    ContextPopupCut: TMenuItem;
+    ContextPopupCopy: TMenuItem;
+    ContextPopupPaste: TMenuItem;
+    ContextPopupDelete: TMenuItem;
+    ContextPopupSelectAll: TMenuItem;
+    ContextPopupCopySourceText: TMenuItem;
+    ContextPopupClearIdentical: TMenuItem;
     MenuEditSelectAll: TMenuItem;
     MenuEditPaste: TMenuItem;
     MenuEditDelete: TMenuItem;
@@ -3222,7 +3222,7 @@ begin
       // matching the left-click behaviour
       if idx = FLastPathIndex then
         Exit;
-      // MenuMemoClear and set selection to force visual update (fixes initial zero-state highlight)
+      // ContextMemoClear and set selection to force visual update (fixes initial zero-state highlight)
       ListPath.ClearSelection;
       ListPath.Selected[idx] := True;
       ListPath.ItemIndex := idx; // also set focus rectangle
@@ -5319,7 +5319,7 @@ end;
 
 function TformPoBatch.CutGridsSelection: boolean;
 begin
-  // Perform copy first, then MenuMemoClear the selection
+  // Perform copy first, then ContextMemoClear the selection
   Result := CopyGridsSelection;
   if Result then
     Result := DeleteGridsSelection;
