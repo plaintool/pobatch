@@ -28,29 +28,50 @@ uses
   {$ENDIF}
   MainUnit,
   Localize,
-  ConsoleOp, Consts;
+  ConsoleOp,
+  Consts;
 
   {$R *.res}
 
   {$IFDEF WINDOWS}
-procedure InitConsole;
-var
-  StdHandle: THandle;
-begin
-  // Attach to the parent console when launched from cmd.exe.
-  // On failure (launch from Explorer), redirect stdio to NUL so that
-  // WriteLn calls do not raise an exception in a GUI application.
-  if AttachConsole(ATTACH_PARENT_PROCESS) then
+  procedure InitConsole;
+  var
+    StdHandle: THandle;
+    OutHandle: THandle;
+    ErrorHandle: THandle;
+    HandleType: DWORD;
   begin
-    IsConsole := True;
-    StdInputHandle := GetStdHandle(STD_INPUT_HANDLE);
-    StdOutputHandle := GetStdHandle(STD_OUTPUT_HANDLE);
-    StdErrorHandle := GetStdHandle(STD_ERROR_HANDLE);
-    SysInitStdIO;
-  end
-  else
-  begin
-    // No parent console - send output to NUL to keep WriteLn harmless
+    // Preserve redirected standard handles supplied by the parent process
+    OutHandle := GetStdHandle(STD_OUTPUT_HANDLE);
+    ErrorHandle := GetStdHandle(STD_ERROR_HANDLE);
+
+    if (OutHandle <> 0) and (OutHandle <> INVALID_HANDLE_VALUE) then
+    begin
+      HandleType := GetFileType(OutHandle);
+
+      if HandleType <> FILE_TYPE_UNKNOWN then
+      begin
+        IsConsole := True;
+        StdInputHandle := GetStdHandle(STD_INPUT_HANDLE);
+        StdOutputHandle := OutHandle;
+        StdErrorHandle := ErrorHandle;
+        SysInitStdIO;
+        Exit;
+      end;
+    end;
+
+    // Attach to the parent console when launched from cmd.exe
+    if AttachConsole(ATTACH_PARENT_PROCESS) then
+    begin
+      IsConsole := True;
+      StdInputHandle := GetStdHandle(STD_INPUT_HANDLE);
+      StdOutputHandle := GetStdHandle(STD_OUTPUT_HANDLE);
+      StdErrorHandle := GetStdHandle(STD_ERROR_HANDLE);
+      SysInitStdIO;
+      Exit;
+    end;
+
+    // No parent console or redirected output - send stdio to NUL
     StdHandle := FileOpen('NUL', fmOpenReadWrite);
     if StdHandle <> THandle(-1) then
     begin
@@ -61,7 +82,6 @@ begin
       SysInitStdIO;
     end;
   end;
-end;
   {$ENDIF}
 
 begin
