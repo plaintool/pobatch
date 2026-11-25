@@ -1759,15 +1759,15 @@ msgstr "Запомни последния отворен файл"
 
 #: tformsettingspobatch.checkrememberlastfile.hint
 msgid "Automatically reopen the last opened translation file when the application starts."
-msgstr "Автоматично отвари последния отворян преводен файл, когато приложението стартира."
+msgstr "Автоматично отвори последния отворян преводен файл, когато приложението стартира."
 
 #: tformsettingspobatch.checkshowarrow.caption
 msgid "Show Arrow in List"
-msgstr "Показване на стрелка в списъка"
+msgstr "Показвай стрелка в списъка"
 
 #: tformsettingspobatch.checkshowarrow.hint
 msgid "Draw an arrow next to the currently opened file in the file list"
-msgstr "Показване на стрелка до текущо отворения файл в списъка с файлове"
+msgstr "Показвай стрелка до текущо отворения файл в списъка с файлове"
 
 #: tformsettingspobatch.checkshowsuccess.caption
 msgid "Show Success Notifications"
@@ -1775,7 +1775,7 @@ msgstr "Показвай съобщения за успех"
 
 #: tformsettingspobatch.checkshowsuccess.hint
 msgid "Display a notification when an operation completes successfully"
-msgstr "Показване на съобщение, когато операцията е завършена успешно"
+msgstr "Показвай съобщение, когато операцията е завършена успешно"
 
 #: tformsettingspobatch.checkskiptmmultilinestrings.caption
 msgid "Skip Multi-Line Strings"
