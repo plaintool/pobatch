@@ -65,12 +65,13 @@ powershell -NoProfile -Command ^
     "$license='%~dp0LICENSE.rtf';" ^
     "$configDir='%~dp0..\config';" ^
     "$destZip='%DESTZIP%';" ^
+    "$configFiles=@('deepl-oneshot.ini','duckduckgo.ini','google-get-apis.ini','google-get-clients5.ini','google-post.ini','google-webtran.ini','laratranslate.ini','LLM7-ai-api.ini','microsofttranslator.ini','mozhi-duckduckgo.ini','mozhi-reverso.ini','mymemory.ini','reverso.ini','yandex.ini');" ^
     "if ((Test-Path $exe) -and (Test-Path $configDir)) {" ^
     "  if (Test-Path $tmp) { Remove-Item -Recurse -Force $tmp };" ^
     "  New-Item -ItemType Directory -Path \"$tmp/config\" -Force | Out-Null;" ^
     "  Copy-Item $exe, $portable, $license -Destination $tmp;" ^
     "  Copy-Item $dlls -Destination $tmp;" ^
-    "  Copy-Item \"$configDir\*.ini\" -Destination \"$tmp/config\";" ^
+    "  foreach ($file in $configFiles) { Copy-Item (Join-Path $configDir $file) -Destination \"$tmp/config\" };" ^
     "  Start-Sleep -Seconds 2;" ^
     "  Compress-Archive -Force -Path \"$tmp\*\" -DestinationPath $destZip;" ^
     "  Remove-Item -Recurse -Force $tmp;" ^

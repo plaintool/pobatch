@@ -142,6 +142,9 @@ Source: "..\config\microsofttranslator.ini"; DestDir: "{app}\config"; Flags: ign
 Source: "..\config\mymemory.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 Source: "..\config\reverso.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 Source: "..\config\yandex.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\duckduckgo.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\mozhi-reverso.ini"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: "..\config\mozhi-duckduckgo.ini"; DestDir: "{app}\config"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
